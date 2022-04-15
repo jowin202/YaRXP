@@ -30,6 +30,7 @@ public:
 public slots:
     void set_selection(QList<int> vars);
     void redraw();
+    void draw_selection_rectangle();
 
 private:
     QImage img = QImage("/home/johannes/RPG_maker/Pokemon Essentials v19.1 2021-05-22/Graphics/Tilesets/Outside.png");
@@ -43,7 +44,11 @@ private:
     QList <int> selection_vars;
     QPoint curr_pos;
     int *map_values = 0;
+    bool mouse_pressed_left = false;
+    bool mouse_pressed_right = false;
 
+    //QPoint tmp_point_selection_rectangle; //rightclick
+    QRect tmp_selection;
 
 };
 

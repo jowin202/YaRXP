@@ -21,21 +21,28 @@ MapWidget::~MapWidget()
 void MapWidget::mouseMoveEvent(QMouseEvent *ev)
 {
     this->curr_pos = QPoint(ev->pos().x()/32,ev->pos().y()/32);
+    this->draw_selection_rectangle();
+
+    if (mouse_pressed_right)
+    {
+        //this->selection_rectangle_x = qAbs(curr_pos.x() - tmp_point_selection_rectangle.x());
+        //this->selection_rectangle_y = qAbs(curr_pos.y() - tmp_point_selection_rectangle.y());
+    }
+
+    if (mouse_pressed_left)
+    {
+        for (int x = 0; x < this->selection_rectangle_x; x++ )
+        {
+            for (int y = 0; y < this->selection_rectangle_y; y++ )
+            {
+                int index = array_position(QPoint(this->curr_pos.x()+x,this->curr_pos.y()+y), this->current_layer);
+                map_values[index] = selection_vars[x + selection_rectangle_x*y];
+            }
+        }
+        this->redraw();
+    }
 
 
-    int rect_x = this->curr_pos.x()*32;
-    int rect_y = this->curr_pos.y()*32;
-    int rect_w = this->selection_rectangle_x*32;
-    int rect_h = this->selection_rectangle_y*32;
-
-    QImage newimg = QImage(current_pic);
-    QPainter painter;
-    painter.begin(&newimg);
-    painter.setPen( QPen(QColor(200,200,200),3));
-    painter.drawRect(rect_x, rect_y, rect_w, rect_h);
-    painter.end();
-
-    this->setPixmap(QPixmap::fromImage(newimg));
 }
 
 void MapWidget::mousePressEvent(QMouseEvent *ev)
@@ -43,21 +50,23 @@ void MapWidget::mousePressEvent(QMouseEvent *ev)
     this->curr_pos = QPoint(ev->pos().x()/32,ev->pos().y()/32);
     if (ev->button() == Qt::RightButton)
     {
+        this->mouse_pressed_right = true;
+        //this->tmp_point_selection_rectangle = curr_pos;
+        this->tmp_selection = QRect(curr_pos.x(), curr_pos.y(),1,1);
+        /* //right click, only one tile
         QList<int> list;
-        list.append(1);
+        list.append(1);tmp_point_selection_rectangle.x(
         list.append(1);
         int index = array_position(curr_pos, this->current_layer);
         list.append(this->map_values[index]);
         this->set_selection(list);
-
+        */
     }
     else //Left mouse button
     {
-
+        this->mouse_pressed_left = true;
         if (selection_vars.length() <= 0)
             return; //no selection, cant edit map
-
-
 
 
         for (int x = 0; x < this->selection_rectangle_x; x++ )
@@ -66,8 +75,6 @@ void MapWidget::mousePressEvent(QMouseEvent *ev)
             {
                 int index = array_position(QPoint(this->curr_pos.x()+x,this->curr_pos.y()+y), this->current_layer);
                 map_values[index] = selection_vars[x + selection_rectangle_x*y];
-                //qDebug() << map_values[index];
-                //qDebug() << index;
             }
         }
 
@@ -87,7 +94,29 @@ void MapWidget::mousePressEvent(QMouseEvent *ev)
 
 void MapWidget::mouseReleaseEvent(QMouseEvent *ev)
 {
+    this->curr_pos = QPoint(ev->pos().x()/32,ev->pos().y()/32);
 
+    if (ev->button() == Qt::RightButton)
+    {
+        qDebug() << tmp_selection;
+        this->mouse_pressed_right = false;
+        QList<int> list;
+        list.append(tmp_selection.width());
+        list.append(tmp_selection.height());
+
+        int index;
+        for (int y = 0; y < tmp_selection.height(); y++)
+        {
+            for (int x = 0; x < tmp_selection.width(); x++)
+            {
+                index = array_position(tmp_selection.topLeft() + QPoint(x,y), this->current_layer);
+                list.append(this->map_values[index]);
+            }
+        }
+        this->set_selection(list);
+    }
+    else
+        this->mouse_pressed_left = false;
 }
 
 int MapWidget::array_position(QPoint p, int layer)
@@ -103,8 +132,8 @@ void MapWidget::set_layer(int layer)
 
 void MapWidget::set_selection(QList<int> vars)
 {
-    qDebug() << "selection changed to MapWidget";
-    qDebug() << vars;
+    //qDebug() << "selection changed to MapWidget";
+    //qDebug() << vars;
     this->selection_rectangle_x = vars.at(0);
     this->selection_rectangle_y = vars.at(1);
 
@@ -157,9 +186,43 @@ void MapWidget::redraw()
         }
     }
 
+
+    painter.end();
+    this->setPixmap(QPixmap::fromImage(this->current_pic));
+    this->draw_selection_rectangle();
+}
+
+void MapWidget::draw_selection_rectangle()
+{
+    int rect_x;
+    int rect_y;
+    int rect_w;
+    int rect_h;
+
+    if (mouse_pressed_right)
+    {
+        rect_x = 32*tmp_selection.left();
+        rect_y = 32*tmp_selection.top();
+        rect_w = 32 * (1+curr_pos.x() - tmp_selection.left());
+        rect_h = 32 * (1+curr_pos.y() - tmp_selection.top());
+        this->tmp_selection.setSize(QSize((1+curr_pos.x() - tmp_selection.left()),(1+curr_pos.y() - tmp_selection.top())));
+    }
+    else{
+        rect_x = this->curr_pos.x()*32;
+        rect_y = this->curr_pos.y()*32;
+        rect_w = this->selection_rectangle_x*32;
+        rect_h = this->selection_rectangle_y*32;
+    }
+
+
+    QImage newimg = QImage(current_pic);
+    QPainter painter;
+    painter.begin(&newimg);
+    painter.setPen( QPen(QColor(200,200,200),3));
+    painter.drawRect(rect_x, rect_y, rect_w, rect_h);
     painter.end();
 
-    this->setPixmap(QPixmap::fromImage(this->current_pic));
+    this->setPixmap(QPixmap::fromImage(newimg));
 }
 
 
