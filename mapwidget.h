@@ -22,6 +22,7 @@ public:
     void mousePressEvent(QMouseEvent *ev);
     void mouseReleaseEvent(QMouseEvent *ev);
     int array_position(QPoint p, int layer);
+    void set_layer(int layer);
 
     int coordinate_to_bin(QPoint p);
     QPoint bin_to_coordinate(int b);
@@ -36,7 +37,7 @@ private:
     int height;
     int width;
     int current_layer;
-    QImage empty;
+    QImage current_pic;
     int selection_rectangle_x = 1;
     int selection_rectangle_y = 1;
     QList <int> selection_vars;

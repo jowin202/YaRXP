@@ -4,6 +4,8 @@
 #include "tilesetwidget.h"
 
 #include <QDebug>
+#include <QToolButton>
+
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -23,3 +25,23 @@ void MainWindow::test_slot()
     qDebug() << "bla blubb";
 }
 
+
+void MainWindow::on_actionLayer1_triggered()
+{
+    this->ui->map_label->set_layer(0);
+}
+
+void MainWindow::on_actionLayer2_triggered()
+{
+    this->ui->map_label->set_layer(1);
+}
+
+void MainWindow::on_actionLayer3_triggered()
+{
+    this->ui->map_label->set_layer(2);
+}
+
+void MainWindow::on_actionEvents_triggered()
+{
+
+}

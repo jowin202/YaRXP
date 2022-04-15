@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QToolButton>
 #include "tilesetwidget.h"
 
 QT_BEGIN_NAMESPACE
@@ -21,6 +22,15 @@ signals:
 
 public slots:
     void test_slot();
+
+private slots:
+    void on_actionLayer1_triggered();
+
+    void on_actionLayer2_triggered();
+
+    void on_actionLayer3_triggered();
+
+    void on_actionEvents_triggered();
 
 private:
     Ui::MainWindow *ui;
