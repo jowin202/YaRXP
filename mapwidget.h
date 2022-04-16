@@ -23,6 +23,7 @@ public:
     void mouseReleaseEvent(QMouseEvent *ev);
     int array_position(QPoint p, int layer);
     void set_layer(int layer);
+    void set_dim(bool dim);
 
     int coordinate_to_bin(QPoint p);
     QPoint bin_to_coordinate(int b);
@@ -46,9 +47,11 @@ private:
     int *map_values = 0;
     bool mouse_pressed_left = false;
     bool mouse_pressed_right = false;
+    bool dim_other_layers = false;
 
     //QPoint tmp_point_selection_rectangle; //rightclick
     QRect tmp_selection;
+    QPoint left_click_pos; //when drawing multiple tiles
 
 };
 

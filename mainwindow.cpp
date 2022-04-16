@@ -45,3 +45,8 @@ void MainWindow::on_actionEvents_triggered()
 {
 
 }
+
+void MainWindow::on_actionDim_other_Layers_toggled(bool arg1)
+{
+    this->ui->map_label->set_dim(arg1);
+}

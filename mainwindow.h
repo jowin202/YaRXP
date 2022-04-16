@@ -32,6 +32,8 @@ private slots:
 
     void on_actionEvents_triggered();
 
+    void on_actionDim_other_Layers_toggled(bool arg1);
+
 private:
     Ui::MainWindow *ui;
     TilesetWidget *tileset_widget;

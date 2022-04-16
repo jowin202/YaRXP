@@ -253,7 +253,7 @@
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
-     <string>View</string>
+     <string>&amp;View</string>
     </property>
     <addaction name="actionLayer1"/>
     <addaction name="actionLayer2"/>
@@ -294,6 +294,9 @@
   </action>
   <action name="actionLayer1">
    <property name="text">
+    <string>Layer&amp;1</string>
+   </property>
+   <property name="toolTip">
     <string>Layer1</string>
    </property>
    <property name="shortcut">
@@ -302,7 +305,7 @@
   </action>
   <action name="actionLayer2">
    <property name="text">
-    <string>Layer2</string>
+    <string>Layer&amp;2</string>
    </property>
    <property name="shortcut">
     <string>F6</string>
@@ -310,7 +313,7 @@
   </action>
   <action name="actionLayer3">
    <property name="text">
-    <string>Layer3</string>
+    <string>Layer&amp;3</string>
    </property>
    <property name="shortcut">
     <string>F7</string>
@@ -318,15 +321,18 @@
   </action>
   <action name="actionEvents">
    <property name="text">
-    <string>Events</string>
+    <string>&amp;Events</string>
    </property>
    <property name="shortcut">
     <string>F8</string>
    </property>
   </action>
   <action name="actionDim_other_Layers">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
-    <string>Dim other Layers</string>
+    <string>&amp;Dim other Layers</string>
    </property>
    <property name="shortcut">
     <string>F4</string>
@@ -334,7 +340,7 @@
   </action>
   <action name="actionCurrent_Layers_and_below">
    <property name="text">
-    <string>Current Layers and below</string>
+    <string>&amp;Current Layers and below</string>
    </property>
    <property name="shortcut">
     <string>F2</string>
@@ -342,7 +348,7 @@
   </action>
   <action name="actionAll_Layers">
    <property name="text">
-    <string>All Layers</string>
+    <string>&amp;All Layers</string>
    </property>
    <property name="shortcut">
     <string>F3</string>
