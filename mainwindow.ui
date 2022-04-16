@@ -266,9 +266,18 @@
     <addaction name="actionCurrent_Layers_and_below"/>
     <addaction name="actionAll_Layers"/>
    </widget>
+   <widget class="QMenu" name="menuDraw">
+    <property name="title">
+     <string>Draw</string>
+    </property>
+    <addaction name="actionPen"/>
+    <addaction name="actionRectangle_Fill"/>
+    <addaction name="actionFlood_Fill"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
    <addaction name="menuView"/>
+   <addaction name="menuDraw"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionNew">
@@ -352,6 +361,21 @@
    </property>
    <property name="shortcut">
     <string>F3</string>
+   </property>
+  </action>
+  <action name="actionPen">
+   <property name="text">
+    <string>Pen</string>
+   </property>
+  </action>
+  <action name="actionRectangle_Fill">
+   <property name="text">
+    <string>Rectangle Fill</string>
+   </property>
+  </action>
+  <action name="actionFlood_Fill">
+   <property name="text">
+    <string>Flood Fill</string>
    </property>
   </action>
  </widget>

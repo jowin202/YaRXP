@@ -96,10 +96,7 @@ void MapWidget::mousePressEvent(QMouseEvent *ev)
 
 void MapWidget::mouseReleaseEvent(QMouseEvent *ev)
 {
-    if (ev->x() < 0 || ev->y() < 0)
-        return; //out of range
-    if (ev->x()/32 >= this->width || ev->y()/32 >= this->height)
-        return; //out of range
+
 
     this->curr_pos = QPoint(ev->pos().x()/32,ev->pos().y()/32);
 
