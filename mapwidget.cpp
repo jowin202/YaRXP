@@ -3,7 +3,7 @@
 MapWidget::MapWidget(QWidget *parent)
 {
     this->setMouseTracking(true);
-    this->height = 32;
+    this->height = 20;
     this->width = 32;
     this->current_layer = 0;
     this->map_values = (int*)calloc(this->height * this->width * 3, sizeof(int));
@@ -45,8 +45,11 @@ void MapWidget::mouseMoveEvent(QMouseEvent *ev)
                 if (curr_pos.y() + y >= this->height)
                     continue;
                 int index = array_position(QPoint(this->curr_pos.x()+x,this->curr_pos.y()+y), this->current_layer);
-                int shift_x = (x + qAbs(left_click_pos.x()-curr_pos.x()))%selection_rectangle_x;
-                int shift_y = (y + qAbs(left_click_pos.y()-curr_pos.y()))%selection_rectangle_y;
+
+                int shift_x = (x + shitty_mod(left_click_pos.x()-curr_pos.x(),selection_rectangle_x))%selection_rectangle_x;
+                int shift_y = (y + shitty_mod(left_click_pos.y()-curr_pos.y(),selection_rectangle_y))%selection_rectangle_y;
+                if (x == y == 0)
+                    qDebug () << shift_x;
                 map_values[index] = selection_vars[shift_x + selection_rectangle_x*shift_y];
             }
         }

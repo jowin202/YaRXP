@@ -24,6 +24,13 @@ public:
     int array_position(QPoint p, int layer);
     void set_layer(int layer);
     void set_dim(bool dim);
+    int shitty_mod(int a, int m)
+    {
+        //thx to MW, bro
+        if (a <= 0)
+            return (-a)%m;
+        return (m-(a%m))%m;
+    }
 
     int coordinate_to_bin(QPoint p);
     QPoint bin_to_coordinate(int b);
