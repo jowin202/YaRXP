@@ -18,11 +18,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     main.cpp \
     mainwindow.cpp \
+    maptreewidget.cpp \
     mapwidget.cpp \
     tilesetwidget.cpp
 
 HEADERS += \
     mainwindow.h \
+    maptreewidget.h \
     mapwidget.h \
     tilesetwidget.h
 

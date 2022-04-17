@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QToolButton>
+#include <QFileDialog>
 #include "tilesetwidget.h"
 
 QT_BEGIN_NAMESPACE
@@ -34,8 +35,11 @@ private slots:
 
     void on_actionDim_other_Layers_toggled(bool arg1);
 
+    void on_actionOpen_triggered();
+
 private:
     Ui::MainWindow *ui;
     TilesetWidget *tileset_widget;
+    QString current_project_dir;
 };
 #endif // MAINWINDOW_H

@@ -50,3 +50,14 @@ void MainWindow::on_actionDim_other_Layers_toggled(bool arg1)
 {
     this->ui->map_label->set_dim(arg1);
 }
+
+void MainWindow::on_actionOpen_triggered()
+{
+    QString name = QFileDialog::getOpenFileName(this, "Choose Project", QDir::homePath(), "RPG Maker Project Files (*.rxproj);;Data Files(*.rxdata)");
+    QFileInfo fi(name);
+    if (fi.exists() && fi.isFile())
+    {
+        this->current_project_dir = fi.absoluteDir().path();
+    }
+    this->ui->map_tree_widget->list_maps(this->current_project_dir);
+}

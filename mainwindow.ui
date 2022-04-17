@@ -121,7 +121,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QTreeWidget" name="map_tree_widget">
+         <widget class="MapTreeWidget" name="map_tree_widget">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
             <horstretch>0</horstretch>
@@ -136,39 +136,9 @@
           </property>
           <column>
            <property name="text">
-            <string>1</string>
+            <string>Map Names</string>
            </property>
           </column>
-          <item>
-           <property name="text">
-            <string>Klagenfurt</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Viktring</string>
-           </property>
-           <item>
-            <property name="text">
-             <string>Player House</string>
-            </property>
-           </item>
-          </item>
-          <item>
-           <property name="text">
-            <string>Route 91</string>
-           </property>
-           <item>
-            <property name="text">
-             <string>Haider Denkmal</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Gate House</string>
-            </property>
-           </item>
-          </item>
          </widget>
         </item>
        </layout>
@@ -389,6 +359,11 @@
    <class>MapWidget</class>
    <extends>QLabel</extends>
    <header>mapwidget.h</header>
+  </customwidget>
+  <customwidget>
+   <class>MapTreeWidget</class>
+   <extends>QTreeWidget</extends>
+   <header>maptreewidget.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
