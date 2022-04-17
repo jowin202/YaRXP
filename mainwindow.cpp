@@ -29,16 +29,22 @@ void MainWindow::test_slot()
 void MainWindow::on_actionLayer1_triggered()
 {
     this->ui->map_label->set_layer(0);
+    this->ui->actionLayer2->setChecked(false);
+    this->ui->actionLayer3->setChecked(false);
 }
 
 void MainWindow::on_actionLayer2_triggered()
 {
     this->ui->map_label->set_layer(1);
+    this->ui->actionLayer1->setChecked(false);
+    this->ui->actionLayer3->setChecked(false);
 }
 
 void MainWindow::on_actionLayer3_triggered()
 {
     this->ui->map_label->set_layer(2);
+    this->ui->actionLayer1->setChecked(false);
+    this->ui->actionLayer2->setChecked(false);
 }
 
 void MainWindow::on_actionEvents_triggered()
@@ -55,9 +61,10 @@ void MainWindow::on_actionOpen_triggered()
 {
     QString name = QFileDialog::getOpenFileName(this, "Choose Project", QDir::homePath(), "RPG Maker Project Files (*.rxproj);;Data Files(*.rxdata)");
     QFileInfo fi(name);
-    if (fi.exists() && fi.isFile())
+
+    if (name != "" && fi.exists() && fi.isFile())
     {
         this->current_project_dir = fi.absoluteDir().path();
+        this->ui->map_tree_widget->list_maps(this->current_project_dir);
     }
-    this->ui->map_tree_widget->list_maps(this->current_project_dir);
 }
