@@ -45,7 +45,7 @@
              <x>0</x>
              <y>0</y>
              <width>296</width>
-             <height>297</height>
+             <height>291</height>
             </rect>
            </property>
            <layout class="QGridLayout" name="gridLayout_2">
@@ -109,7 +109,7 @@
            <x>0</x>
            <y>0</y>
            <width>474</width>
-           <height>497</height>
+           <height>491</height>
           </rect>
          </property>
          <layout class="QGridLayout" name="gridLayout_3">
@@ -179,6 +179,7 @@
      <string>Edit</string>
     </property>
     <addaction name="actionUndo"/>
+    <addaction name="actionRedo"/>
     <addaction name="separator"/>
     <addaction name="actionCut"/>
     <addaction name="actionCopy"/>
@@ -244,9 +245,21 @@
     <bool>false</bool>
    </attribute>
    <addaction name="actionOpen"/>
+   <addaction name="actionSave"/>
+   <addaction name="separator"/>
+   <addaction name="actionCut"/>
+   <addaction name="actionCopy"/>
+   <addaction name="actionPaste"/>
+   <addaction name="actionDelete"/>
+   <addaction name="separator"/>
+   <addaction name="actionUndo"/>
+   <addaction name="actionRedo"/>
+   <addaction name="separator"/>
    <addaction name="actionLayer1"/>
    <addaction name="actionLayer2"/>
    <addaction name="actionLayer3"/>
+   <addaction name="actionEvents"/>
+   <addaction name="separator"/>
   </widget>
   <action name="actionNew">
    <property name="text">
@@ -254,6 +267,11 @@
    </property>
   </action>
   <action name="actionOpen">
+   <property name="icon">
+    <iconset>
+     <normalon>:/icons/icons/bx-folder-open.svg</normalon>
+    </iconset>
+   </property>
    <property name="text">
     <string>Open</string>
    </property>
@@ -262,6 +280,11 @@
    </property>
   </action>
   <action name="actionSave">
+   <property name="icon">
+    <iconset>
+     <normalon>:/icons/icons/bx-save.svg</normalon>
+    </iconset>
+   </property>
    <property name="text">
     <string>Save</string>
    </property>
@@ -272,6 +295,10 @@
   <action name="actionLayer1">
    <property name="checkable">
     <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/icons/bx-layer1.svg</normaloff>:/icons/icons/bx-layer1.svg</iconset>
    </property>
    <property name="text">
     <string>Layer&amp;1</string>
@@ -287,6 +314,10 @@
    <property name="checkable">
     <bool>true</bool>
    </property>
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/icons/bx-layer2.svg</normaloff>:/icons/icons/bx-layer2.svg</iconset>
+   </property>
    <property name="text">
     <string>Layer&amp;2</string>
    </property>
@@ -298,6 +329,11 @@
    <property name="checkable">
     <bool>true</bool>
    </property>
+   <property name="icon">
+    <iconset>
+     <normalon>:/icons/icons/bx-layer3.svg</normalon>
+    </iconset>
+   </property>
    <property name="text">
     <string>Layer&amp;3</string>
    </property>
@@ -306,6 +342,11 @@
    </property>
   </action>
   <action name="actionEvents">
+   <property name="icon">
+    <iconset>
+     <normalon>:/icons/icons/bx-cube.svg</normalon>
+    </iconset>
+   </property>
    <property name="text">
     <string>&amp;Events</string>
    </property>
@@ -356,11 +397,21 @@
    </property>
   </action>
   <action name="actionUndo">
+   <property name="icon">
+    <iconset>
+     <normalon>:/icons/icons/bx-undo.svg</normalon>
+    </iconset>
+   </property>
    <property name="text">
     <string>Undo</string>
    </property>
   </action>
   <action name="actionCut">
+   <property name="icon">
+    <iconset>
+     <normalon>:/icons/icons/bx-cut.svg</normalon>
+    </iconset>
+   </property>
    <property name="text">
     <string>Cut</string>
    </property>
@@ -369,6 +420,11 @@
    </property>
   </action>
   <action name="actionCopy">
+   <property name="icon">
+    <iconset>
+     <normalon>:/icons/icons/bx-copy.svg</normalon>
+    </iconset>
+   </property>
    <property name="text">
     <string>Copy</string>
    </property>
@@ -377,6 +433,11 @@
    </property>
   </action>
   <action name="actionPaste">
+   <property name="icon">
+    <iconset>
+     <normalon>:/icons/icons/bx-paste.svg</normalon>
+    </iconset>
+   </property>
    <property name="text">
     <string>Paste</string>
    </property>
@@ -385,6 +446,11 @@
    </property>
   </action>
   <action name="actionDelete">
+   <property name="icon">
+    <iconset>
+     <normalon>:/icons/icons/bx-x.svg</normalon>
+    </iconset>
+   </property>
    <property name="text">
     <string>Delete</string>
    </property>
@@ -432,6 +498,16 @@
     <string>About</string>
    </property>
   </action>
+  <action name="actionRedo">
+   <property name="icon">
+    <iconset>
+     <normalon>:/icons/icons/bx-redo.svg</normalon>
+    </iconset>
+   </property>
+   <property name="text">
+    <string>Redo</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>
@@ -450,6 +526,8 @@
    <header>maptreewidget.h</header>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="icons.qrc"/>
+ </resources>
  <connections/>
 </ui>

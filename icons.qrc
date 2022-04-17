@@ -1,0 +1,26 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>icons/bx-copy.svg</file>
+        <file>icons/bx-cube.svg</file>
+        <file>icons/bx-cut.svg</file>
+        <file>icons/bx-paste.svg</file>
+        <file>icons/bx-redo.svg</file>
+        <file>icons/bx-undo.svg</file>
+        <file>icons/bx-save.svg</file>
+        <file>icons/bx-folder-open.svg</file>
+        <file>icons/bx-layer.svg</file>
+        <file>icons/bx-layer1.svg</file>
+        <file>icons/bx-layer2.svg</file>
+        <file>icons/bx-layer3.svg</file>
+        <file>icons/bx-x.svg</file>
+        <file>icons/bx-play.svg</file>
+        <file>icons/bx-zoom-out.svg</file>
+        <file>icons/bx-zoom-in.svg</file>
+        <file>icons/bx-wrench.svg</file>
+        <file>icons/bx-world.svg</file>
+        <file>icons/bx-volume-mute.svg</file>
+        <file>icons/bx-volume-low.svg</file>
+        <file>icons/bx-volume-full.svg</file>
+        <file>icons/bx-rectangle.svg</file>
+    </qresource>
+</RCC>
