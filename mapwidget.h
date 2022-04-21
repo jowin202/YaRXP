@@ -35,29 +35,33 @@ public:
     int coordinate_to_bin(QPoint p);
     QPoint bin_to_coordinate(int b);
 
+    enum {PEN, RECT, FLOOD, SELECT};
+    void set_mode(int mode);
+
 public slots:
-    void set_selection(QList<int> vars);
+    void set_brush(QList<int> vars);
     void redraw();
-    void draw_selection_rectangle();
+    void draw_brush_rectangle();
 
 private:
     QImage img = QImage("/home/johannes/RPG_maker/Pokemon Essentials v19.1 2021-05-22/Graphics/Tilesets/Outside.png");
     QImage img2 = QImage("/home/johannes/RPG_maker/pokemon_decrypted/Graphics/Tilesets/RSEFRLG Complete.png");
+    int mode;
     int height;
     int width;
     int current_layer;
     QImage current_pic;
-    int selection_rectangle_x = 1;
-    int selection_rectangle_y = 1;
-    QList <int> selection_vars;
+    int brush_rectangle_x = 1;
+    int brush_rectangle_y = 1;
+    QList <int> brush_vars;
     QPoint curr_pos;
     int *map_values = 0;
     bool mouse_pressed_left = false;
     bool mouse_pressed_right = false;
     bool dim_other_layers = false;
 
-    //QPoint tmp_point_selection_rectangle; //rightclick
-    QRect tmp_selection;
+    //QPoint tmp_point_brush_rectangle; //rightclick
+    QRect tmp_brush;
     QPoint left_click_pos; //when drawing multiple tiles
 
 };

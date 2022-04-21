@@ -37,6 +37,11 @@ private slots:
 
     void on_actionOpen_triggered();
 
+
+    void on_actionPen_triggered();
+
+    void on_actionSelect_triggered();
+
 private:
     Ui::MainWindow *ui;
     TilesetWidget *tileset_widget;

@@ -20,7 +20,11 @@ void MapTreeWidget::list_maps(QString project_dir)
     {
         if (map_list.at(i)->parent_id == 0)
         {
-            QTreeWidgetItem *item = new QTreeWidgetItem(QStringList(map_list.at(i)->name));
+            QStringList columns;
+            columns << map_list.at(i)->name;
+            columns << QString::number(map_list.at(i)->order).rightJustified(3,'0');
+
+            QTreeWidgetItem *item = new QTreeWidgetItem(columns);
             this->id_map.insert(map_list.at(i)->id, item);
             this->addTopLevelItem(item);
         }
@@ -34,8 +38,13 @@ void MapTreeWidget::list_maps(QString project_dir)
         {
             if (map_list.at(i)->parent_id != 0)
             {
-                QTreeWidgetItem *item = new QTreeWidgetItem(QStringList(map_list.at(i)->name));
-                if (this->id_map.value(map_list.at(i)->parent_id, 0) != 0)
+                QStringList columns;
+                columns << map_list.at(i)->name;
+                columns << QString::number(map_list.at(i)->order).rightJustified(3,'0');
+
+                QTreeWidgetItem *item = new QTreeWidgetItem(columns);
+                //parent ID exists, id doesnt exist yet
+                if (this->id_map.value(map_list.at(i)->parent_id, 0) != 0 && this->id_map.value(map_list.at(i)->id, 0) == 0)
                 {
                     this->id_map.insert(map_list.at(i)->id, item);
                     this->id_map.value(map_list.at(i)->parent_id, 0)->addChild(item);
@@ -44,6 +53,7 @@ void MapTreeWidget::list_maps(QString project_dir)
         }
     }
     while(old_size != id_map.size());
+    this->sortItems(1,Qt::SortOrder::AscendingOrder);
 
     /*
     QDir map_dir(this->project_dir + QDir::separator() + "Data");

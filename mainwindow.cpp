@@ -12,7 +12,9 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    connect(this->ui->tileset_label, SIGNAL(selection_changed(QList<int>)), this->ui->map_label, SLOT(set_selection(QList<int>)));
+    connect(this->ui->tileset_label, SIGNAL(selection_changed(QList<int>)), this->ui->map_label, SLOT(set_brush(QList<int>)));
+    this->ui->actionLayer1->setChecked(true);
+    this->ui->actionPen->setChecked(true);
 }
 
 MainWindow::~MainWindow()
@@ -68,4 +70,14 @@ void MainWindow::on_actionOpen_triggered()
         this->current_project_dir = fi.absoluteDir().path();
         this->ui->map_tree_widget->list_maps(this->current_project_dir);
     }
+}
+
+void MainWindow::on_actionPen_triggered()
+{
+    this->ui->actionSelect->setChecked(false);
+}
+
+void MainWindow::on_actionSelect_triggered()
+{
+    this->ui->actionPen->setChecked(false);
 }
