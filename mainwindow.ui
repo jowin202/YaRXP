@@ -351,6 +351,9 @@
    </property>
   </action>
   <action name="actionEvents">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset>
      <normalon>:/icons/icons/bx-cube.svg</normalon>

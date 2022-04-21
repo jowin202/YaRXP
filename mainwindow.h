@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QActionGroup>
 #include <QToolButton>
 #include <QFileDialog>
 #include "tilesetwidget.h"
@@ -46,5 +47,7 @@ private:
     Ui::MainWindow *ui;
     TilesetWidget *tileset_widget;
     QString current_project_dir;
+    QActionGroup *layergroup;
+    QActionGroup *modegroup;
 };
 #endif // MAINWINDOW_H
