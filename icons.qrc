@@ -22,5 +22,7 @@
         <file>icons/bx-volume-low.svg</file>
         <file>icons/bx-volume-full.svg</file>
         <file>icons/bx-rectangle.svg</file>
+        <file>icons/bx-selection.svg</file>
+        <file>icons/bx-pencil.svg</file>
     </qresource>
 </RCC>

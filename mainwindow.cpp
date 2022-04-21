@@ -60,6 +60,7 @@ void MainWindow::on_actionDim_other_Layers_toggled(bool arg1)
 void MainWindow::on_actionOpen_triggered()
 {
     QString name = QFileDialog::getOpenFileName(this, "Choose Project", QDir::homePath(), "RPG Maker Project Files (*.rxproj);;Data Files(*.rxdata)");
+    //QString name = "/home/johannes/RPG_maker/Pokemon Klagenfurt Vibes/Game.rxproj";
     QFileInfo fi(name);
 
     if (name != "" && fi.exists() && fi.isFile())

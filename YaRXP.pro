@@ -19,13 +19,19 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     maptreewidget.cpp \
+    maptreewidgetitem.cpp \
     mapwidget.cpp \
+    parser/rxdataparser.cpp \
+    parser/rxvariant.cpp \
     tilesetwidget.cpp
 
 HEADERS += \
     mainwindow.h \
     maptreewidget.h \
+    maptreewidgetitem.h \
     mapwidget.h \
+    parser/rxdataparser.h \
+    parser/rxvariant.h \
     tilesetwidget.h
 
 FORMS += \

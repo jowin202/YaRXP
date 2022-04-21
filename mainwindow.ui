@@ -260,6 +260,8 @@
    <addaction name="actionLayer3"/>
    <addaction name="actionEvents"/>
    <addaction name="separator"/>
+   <addaction name="actionPen"/>
+   <addaction name="actionSelect"/>
   </widget>
   <action name="actionNew">
    <property name="text">
@@ -382,6 +384,11 @@
    </property>
   </action>
   <action name="actionPen">
+   <property name="icon">
+    <iconset>
+     <normalon>:/icons/icons/bx-pencil.svg</normalon>
+    </iconset>
+   </property>
    <property name="text">
     <string>Pen</string>
    </property>
@@ -459,6 +466,11 @@
    </property>
   </action>
   <action name="actionSelect">
+   <property name="icon">
+    <iconset>
+     <normalon>:/icons/icons/bx-selection.svg</normalon>
+    </iconset>
+   </property>
    <property name="text">
     <string>Select</string>
    </property>
