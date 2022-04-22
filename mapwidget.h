@@ -43,6 +43,14 @@ public slots:
     void redraw();
     void draw_brush_rectangle();
 
+    //for selection
+    void draw_selection_rectangle();
+    QList<int> do_copy();
+    QList<int> do_cut();
+    void do_delete();
+    void do_paste(QList<int> data);
+    void merge_selection();
+
 private:
     QImage img = QImage("/home/johannes/RPG_maker/Pokemon Essentials v19.1 2021-05-22/Graphics/Tilesets/Outside.png");
     QImage img2 = QImage("/home/johannes/RPG_maker/pokemon_decrypted/Graphics/Tilesets/RSEFRLG Complete.png");
@@ -63,6 +71,16 @@ private:
     //QPoint tmp_point_brush_rectangle; //rightclick
     QRect tmp_brush;
     QPoint left_click_pos; //when drawing multiple tiles
+
+
+    //for selection
+    bool selection_button = false;
+    bool moving_selection = false;
+    bool selection_rectangle_is_released = false;
+    QPoint selection_first_click_pos;
+    QPoint move_pos_temp;
+    QRect selection_rectangle;
+    QList<int> selection_list;
 
 };
 

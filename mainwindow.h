@@ -43,11 +43,21 @@ private slots:
 
     void on_actionSelect_triggered();
 
+    void on_actionCut_triggered();
+
+    void on_actionCopy_triggered();
+
+    void on_actionPaste_triggered();
+
+    void on_actionDelete_triggered();
+
 private:
     Ui::MainWindow *ui;
     TilesetWidget *tileset_widget;
     QString current_project_dir;
     QActionGroup *layergroup;
     QActionGroup *modegroup;
+
+    QList<int> clipboard;
 };
 #endif // MAINWINDOW_H

@@ -13,6 +13,9 @@ TilesetWidget::TilesetWidget(QWidget *parent)
 
 void TilesetWidget::mouseMoveEvent(QMouseEvent *ev)
 {
+    if (ev->pos().x()/32 > 7)
+        return; //out of range
+
     this->curr_pos = QPoint(ev->pos().x()/32,ev->pos().y()/32);
     if (this->click_pos.x() >= 0)
     {

@@ -13,6 +13,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     connect(this->ui->tileset_label, SIGNAL(selection_changed(QList<int>)), this->ui->map_label, SLOT(set_brush(QList<int>)));
+    connect(this->ui->tileset_label, SIGNAL(selection_changed(QList<int>)), this, SLOT(on_actionPen_triggered())); //set pen when select tile
 
     this->layergroup = new QActionGroup(this);
     this->layergroup->addAction(this->ui->actionLayer1);
@@ -87,9 +88,31 @@ void MainWindow::on_actionOpen_triggered()
 void MainWindow::on_actionPen_triggered()
 {
     this->ui->map_label->set_mode(MapWidget::PEN);
+    this->ui->actionPen->setChecked(true); // if activated per signal, pen should be selected in gui
 }
 
 void MainWindow::on_actionSelect_triggered()
 {
     this->ui->map_label->set_mode(MapWidget::SELECT);
+}
+
+void MainWindow::on_actionCut_triggered()
+{
+    this->clipboard = this->ui->map_label->do_cut();
+}
+
+void MainWindow::on_actionCopy_triggered()
+{
+    this->clipboard = this->ui->map_label->do_cut();
+}
+
+void MainWindow::on_actionPaste_triggered()
+{
+    if (this->clipboard.length() >= 3)
+        this->ui->map_label->do_paste(this->clipboard);
+}
+
+void MainWindow::on_actionDelete_triggered()
+{
+    this->ui->map_label->do_delete();
 }
