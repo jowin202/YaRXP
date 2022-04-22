@@ -1,18 +1,16 @@
-#include "parser/rxdataparser.h"
 #include "mainwindow.h"
 #include <QDebug>
-
 #include <QApplication>
+
+#include "eventdialog.h"
 
 int main(int argc, char *argv[])
 {
-    //QString file = "/home/johannes/RPG_maker/Pokemon Klagenfurt Vibes/Data/MapInfos.rxdata";
-    //RXDataParser parser(file);
-
-    //parser.parseMapInfo();
-
-
     QApplication a(argc, argv);
+
+    EventDialog ev;
+    ev.show();
+
     MainWindow w;
     w.show();
     return a.exec();

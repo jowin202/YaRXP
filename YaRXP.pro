@@ -16,26 +16,32 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    eventdialog.cpp \
     main.cpp \
     mainwindow.cpp \
     maptreewidget.cpp \
     maptreewidgetitem.cpp \
     mapwidget.cpp \
+    eventpage.cpp \
     parser/rxdataparser.cpp \
     parser/rxvariant.cpp \
     tilesetwidget.cpp
 
 HEADERS += \
+    eventdialog.h \
     mainwindow.h \
     maptreewidget.h \
     maptreewidgetitem.h \
     mapwidget.h \
+    eventpage.h \
     parser/rxdataparser.h \
     parser/rxvariant.h \
     tilesetwidget.h
 
 FORMS += \
-    mainwindow.ui
+    eventdialog.ui \
+    mainwindow.ui \
+    eventpage.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
