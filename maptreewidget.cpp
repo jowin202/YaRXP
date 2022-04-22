@@ -3,6 +3,33 @@
 MapTreeWidget::MapTreeWidget(QWidget *parent)
 {
     connect(this, SIGNAL(itemClicked(QTreeWidgetItem*,int)), this, SLOT(clicked_at_item(QTreeWidgetItem*,int)));
+    connect(this, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(prepare_context_menu(QPoint)));
+
+
+    action1.setText("&Map properties");
+    action1.setShortcut(QKeySequence(Qt::Key_Space));
+    action2.setText("&New Map");
+    action2.setShortcut(QKeySequence(Qt::Key_Insert));
+    action3.setText("&Copy");
+    action3.setShortcut(QKeySequence(tr("Ctrl+C")));
+    action4.setText("&Paste");
+    action4.setShortcut(QKeySequence(tr("Ctrl+V")));
+    action5.setText("&Delete");
+    action5.setShortcut(QKeySequence(Qt::Key_Delete));
+    action6.setText("&Shift");
+    action6.setShortcut(QKeySequence(tr("Ctrl+T")));
+
+
+    menu.addAction(&action1);
+    menu.addSeparator();
+    menu.addAction(&action2);
+    menu.addSeparator();
+    menu.addAction(&action3);
+    menu.addAction(&action4);
+    menu.addAction(&action5);
+    menu.addSeparator();
+    menu.addAction(&action6);
+
 }
 
 void MapTreeWidget::list_maps(QString project_dir)
@@ -81,4 +108,11 @@ void MapTreeWidget::clicked_at_item(QTreeWidgetItem *item, int column)
 {
     RXDataParser parser(project_dir + QDir::separator() + "Data" + QDir::separator() + item->text(0));
     parser.parse();
+}
+
+void MapTreeWidget::prepare_context_menu( const QPoint & pos )
+{
+    qDebug() << "test";
+
+    menu.exec(this->mapToGlobal(pos));
 }

@@ -10,6 +10,8 @@
 #include "maptreewidgetitem.h"
 
 #include <QDebug>
+#include <QMenu>
+#include <QAction>
 
 class MapTreeWidget : public QTreeWidget
 {
@@ -20,6 +22,7 @@ public:
 public slots:
     void list_maps(QString project_dir);
     void clicked_at_item(QTreeWidgetItem *item, int column);
+    void prepare_context_menu(const QPoint & pos );
 
 
 private:
@@ -27,6 +30,14 @@ private:
     QString map_info_file;
     QList<MapTreeWidgetItem*> map_list;
     QHash<int,QTreeWidgetItem*> id_map;
-};
 
+    QMenu menu;
+    QAction action1;
+    QAction action2;
+    QAction action3;
+    QAction action4;
+    QAction action5;
+    QAction action6;
+
+};
 #endif // MAPTREEWIDGET_H

@@ -12,6 +12,7 @@
 #include <QPainter>
 #include <QEvent>
 
+
 class MapWidget : public QLabel
 {
     Q_OBJECT
@@ -51,6 +52,8 @@ public slots:
     void do_paste(QList<int> data);
     void merge_selection();
 
+    void flood_fill(QPoint clicked, QPoint next);
+
 private:
     QImage img = QImage("/home/johannes/RPG_maker/Pokemon Essentials v19.1 2021-05-22/Graphics/Tilesets/Outside.png");
     QImage img2 = QImage("/home/johannes/RPG_maker/pokemon_decrypted/Graphics/Tilesets/RSEFRLG Complete.png");
@@ -59,8 +62,6 @@ private:
     int width;
     int current_layer;
     QImage current_pic;
-    int brush_rectangle_x = 1;
-    int brush_rectangle_y = 1;
     QList <int> brush_vars;
     QPoint curr_pos;
     int *map_values = 0;
@@ -69,8 +70,9 @@ private:
     bool dim_other_layers = false;
 
     //QPoint tmp_point_brush_rectangle; //rightclick
-    QRect tmp_brush;
     QPoint left_click_pos; //when drawing multiple tiles
+    QPoint brush_first_click_pos; //right click on map
+    QRect brush_rectangle;
 
 
     //for selection

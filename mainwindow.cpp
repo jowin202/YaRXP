@@ -24,6 +24,7 @@ MainWindow::MainWindow(QWidget *parent)
     this->modegroup = new QActionGroup(this);
     this->modegroup->addAction(this->ui->actionPen);
     this->modegroup->addAction(this->ui->actionSelect);
+    this->modegroup->addAction(this->ui->actionFlood_Fill);
 
 
     this->ui->actionLayer1->setChecked(true);
@@ -115,4 +116,9 @@ void MainWindow::on_actionPaste_triggered()
 void MainWindow::on_actionDelete_triggered()
 {
     this->ui->map_label->do_delete();
+}
+
+void MainWindow::on_actionFlood_Fill_triggered()
+{
+    this->ui->map_label->set_mode(MapWidget::FLOOD);
 }
