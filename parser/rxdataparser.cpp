@@ -223,6 +223,7 @@ void RXDataParser::parseMapInfo(QList<MapTreeWidgetItem*> *map_list)
             qDebug() << "integer as key expected";
             return;
         }
+        std::cout << std::endl;
     }
 
 

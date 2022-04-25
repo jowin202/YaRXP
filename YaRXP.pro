@@ -23,8 +23,17 @@ SOURCES += \
     maptreewidgetitem.cpp \
     mapwidget.cpp \
     eventpage.cpp \
+    parser/rpgaudiofile.cpp \
+    parser/rpgevent.cpp \
+    parser/rpgeventcommand.cpp \
+    parser/rpgeventpage.cpp \
+    parser/rpgeventpagecondition.cpp \
+    parser/rpgeventpagegraphic.cpp \
+    parser/rpgmap.cpp \
+    parser/rpgmapinfo.cpp \
+    parser/rpgmovecommand.cpp \
+    parser/rpgmoveroute.cpp \
     parser/rxdataparser.cpp \
-    parser/rxvariant.cpp \
     tilesetwidget.cpp
 
 HEADERS += \
@@ -34,8 +43,17 @@ HEADERS += \
     maptreewidgetitem.h \
     mapwidget.h \
     eventpage.h \
+    parser/rpgaudiofile.h \
+    parser/rpgevent.h \
+    parser/rpgeventcommand.h \
+    parser/rpgeventpage.h \
+    parser/rpgeventpagecondition.h \
+    parser/rpgeventpagegraphic.h \
+    parser/rpgmap.h \
+    parser/rpgmapinfo.h \
+    parser/rpgmovecommand.h \
+    parser/rpgmoveroute.h \
     parser/rxdataparser.h \
-    parser/rxvariant.h \
     tilesetwidget.h
 
 FORMS += \

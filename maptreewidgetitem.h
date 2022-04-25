@@ -1,6 +1,7 @@
 #ifndef MAPTREEWIDGETITEM_H
 #define MAPTREEWIDGETITEM_H
 
+#include <iostream>
 #include <QTreeWidgetItem>
 #include <iostream>
 #include <QDebug>
