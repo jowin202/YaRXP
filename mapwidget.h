@@ -73,6 +73,7 @@ private:
     QPoint left_click_pos; //when drawing multiple tiles
     QPoint brush_first_click_pos; //right click on map
     QRect brush_rectangle;
+    QPoint brush_rectangle_mouse_alignment;
 
 
     //for selection

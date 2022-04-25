@@ -3,8 +3,8 @@
 MapWidget::MapWidget(QWidget *parent)
 {
     this->setMouseTracking(true);
-    this->height = 20;
-    this->width = 32;
+    this->height = 30;
+    this->width = 60;
     this->current_layer = 0;
     this->mode = PEN;
     this->map_values = (int*)calloc(this->height * this->width * 3, sizeof(int));
@@ -43,15 +43,16 @@ void MapWidget::mouseMoveEvent(QMouseEvent *ev)
         }
         else if (mouse_pressed_left) //draw brush content
         {
+            QPoint draw_pos = this->curr_pos + brush_rectangle_mouse_alignment;
             for (int x = 0; x < this->brush_rectangle.width(); x++ )
             {
-                if (curr_pos.x() + x >= this->width)
+                if (draw_pos.x() + x >= this->width || draw_pos.x() + x < 0)
                     continue;
                 for (int y = 0; y < this->brush_rectangle.height(); y++ )
                 {
-                    if (curr_pos.y() + y >= this->height)
+                    if (draw_pos.y() + y >= this->height || draw_pos.y() + y < 0)
                         continue;
-                    int index = array_position(QPoint(this->curr_pos.x()+x,this->curr_pos.y()+y), this->current_layer);
+                    int index = array_position(QPoint(draw_pos.x()+x,draw_pos.y()+y), this->current_layer);
 
                     int shift_x = (x + shitty_mod(left_click_pos.x()-curr_pos.x(),brush_rectangle.width()))%brush_rectangle.width();
                     int shift_y = (y + shitty_mod(left_click_pos.y()-curr_pos.y(),brush_rectangle.height()))%brush_rectangle.height();
@@ -63,13 +64,13 @@ void MapWidget::mouseMoveEvent(QMouseEvent *ev)
         //brush follow mouse if right clicked
         if (!mouse_pressed_right)
         {
-            this->brush_rectangle.moveTo(this->curr_pos);
+            this->brush_rectangle.moveTo(this->curr_pos + this->brush_rectangle_mouse_alignment);
         }
 
     } //end PEN
     else if (this->mode == SELECT)
     {
-        if (this->selection_rectangle.x() >= 0 && this->selection_rectangle.y() >= 0)
+        if (this->selection_rectangle.width() > 0 && this->selection_rectangle.height() > 0)
         {
             if (this->selection_rectangle.contains(this->curr_pos)){
                 this->setCursor(Qt::SizeAllCursor);
@@ -128,16 +129,17 @@ void MapWidget::mousePressEvent(QMouseEvent *ev)
                 return; //no brush, cant edit map
 
             this->left_click_pos = this->curr_pos;
+            QPoint draw_pos = this->curr_pos + brush_rectangle_mouse_alignment;
 
             for (int x = 0; x < this->brush_rectangle.width(); x++ )
             {
-                if (curr_pos.x() + x >= this->width)
+                if (draw_pos.x() + x >= this->width || draw_pos.x() + x < 0)
                     continue;
                 for (int y = 0; y < this->brush_rectangle.height(); y++ )
                 {
-                    if (curr_pos.y() + y >= this->height)
+                    if (draw_pos.y() + y >= this->height || draw_pos.y() + y < 0)
                         continue;
-                    int index = array_position(QPoint(this->curr_pos.x()+x,this->curr_pos.y()+y), this->current_layer);
+                    int index = array_position(QPoint(draw_pos.x()+x,draw_pos.y()+y), this->current_layer);
                     map_values[index] = brush_vars[x + brush_rectangle.width()*y];
                 }
             }
@@ -146,7 +148,7 @@ void MapWidget::mousePressEvent(QMouseEvent *ev)
     else if (this->mode == SELECT)
     {
         this->selection_button = true;
-        if (this->selection_rectangle.x() >= 0 & this->selection_rectangle.y() >= 0) //when selection rect exists
+        if (this->selection_rectangle.width() > 0 & this->selection_rectangle.height() > 0) //when selection rect exists
         {
             if (this->selection_rectangle.contains(this->curr_pos)) //click inside means moving
             {
@@ -182,7 +184,6 @@ void MapWidget::mouseReleaseEvent(QMouseEvent *ev)
     {
         if (ev->button() == Qt::RightButton) //new brush on right click
         {
-            qDebug() << brush_rectangle;
             this->mouse_pressed_right = false;
             QList<int> list;
             list.append(brush_rectangle.width());
@@ -198,6 +199,7 @@ void MapWidget::mouseReleaseEvent(QMouseEvent *ev)
                 }
             }
             this->set_brush(list);
+            this->brush_rectangle_mouse_alignment = this->brush_rectangle.topLeft() - this->curr_pos;
         }
         else //left button
             this->mouse_pressed_left = false;
@@ -255,6 +257,7 @@ void MapWidget::set_brush(QList<int> vars)
     vars.pop_front();
 
     this->brush_vars = vars;
+    this->brush_rectangle_mouse_alignment = QPoint(0,0);
 }
 
 void MapWidget::redraw()
@@ -287,7 +290,7 @@ void MapWidget::redraw()
                 painter.drawImage(target_rect, img2, source_rect);
             }
         }
-        if (mode == SELECT && this->selection_rectangle.x() >= 0 && this->selection_rectangle.y() >= 0
+        if (mode == SELECT && this->selection_rectangle.width() > 0 && this->selection_rectangle.height() > 0
                 && selection_rectangle_is_released)
         {
             //insert selection
@@ -332,7 +335,7 @@ void MapWidget::draw_brush_rectangle()
 
 void MapWidget::draw_selection_rectangle()
 {
-    if (this->selection_rectangle.x() >= 0 && this->selection_rectangle.y() >= 0)
+    if (this->selection_rectangle.width() > 0 && this->selection_rectangle.height() > 0)
     {
         QImage newimg = QImage(current_pic);
         QPainter painter;
