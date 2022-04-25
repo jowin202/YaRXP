@@ -182,6 +182,7 @@ void MapWidget::mouseReleaseEvent(QMouseEvent *ev)
     {
         if (ev->button() == Qt::RightButton) //new brush on right click
         {
+            qDebug() << brush_rectangle;
             this->mouse_pressed_right = false;
             QList<int> list;
             list.append(brush_rectangle.width());
@@ -352,8 +353,12 @@ QList<int> MapWidget::do_copy()
 
 QList<int> MapWidget::do_cut()
 {
-    return this->selection_list;
-    this->do_delete();
+    this->selection_rectangle = QRect(-1,-1,0,0);
+    this->redraw();
+
+    QList <int>list = QList<int>(this->selection_list);
+    this->selection_list.clear();
+    return list;
 }
 
 void MapWidget::do_delete()
