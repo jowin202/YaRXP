@@ -5,6 +5,7 @@
 #include <QFile>
 #include <QRegExp>
 #include <QHash>
+#include <QVariant>
 
 #include "rpgmapinfo.h"
 #include "rpgmap.h"
@@ -24,6 +25,7 @@ public:
 
     QString read_symbol_or_link();
     QString read_string();
+    QVariant read_variant();
     int read_integer();
     bool read_bool();
 

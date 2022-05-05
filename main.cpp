@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
     */
 
 
-    RXDataParser parser("/home/johannes/RPG_maker/Pokemon Klagenfurt Vibes/Data/Map005.rxdata");
+    RXDataParser parser("/home/johannes/RPG_maker/Pokemon Klagenfurt Vibes/Data/Map048.rxdata");
     parser.parseMap();
 
     return 0;

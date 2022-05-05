@@ -95,6 +95,7 @@ QString RXDataParser::read_symbol_or_link()
     else
     {
         qDebug() << "error: symbol or link expected";
+        exit(1);
     }
 
     return symbol;
@@ -112,6 +113,18 @@ QString RXDataParser::read_string()
         qDebug() << "error: string expected";
         return "";
     }
+}
+
+QVariant RXDataParser::read_variant()
+{
+    int read_byte = this->read_one_byte();
+    if (read_byte == 'i')
+        return QVariant(this->read_fixnum());
+    else if (read_byte == '"'){
+        int str_len = this->read_fixnum();
+        return QVariant(this->file.read(str_len));
+    }
+    return QVariant();
 }
 
 int RXDataParser::read_integer()
@@ -215,9 +228,11 @@ void RXDataParser::read_event_list(QList<RPGEvent *> *list)
     for (int i = 0; i < num_events; i++)
     {
         event_key = this->read_integer();
+        //qDebug() << "start with event " << event_key;
         RPGEvent *event = this->read_event_object();
-        event->set_id(event_key);
+        //qDebug() << "----- " << event->id;
         list->append(event);
+
     }
 }
 
@@ -239,7 +254,7 @@ RPGEvent *RXDataParser::read_event_object()
     for (int j = 0; j < attribute_count; j++)
     {
         current_symbol = read_symbol_or_link();
-        if (current_symbol == "@x" || current_symbol == "@y")
+        if (current_symbol == "@x" || current_symbol == "@y" || current_symbol == "@id")
             event_object->setParameter(current_symbol, this->read_integer());
         else if (current_symbol == "@name")
             event_object->setParameter(current_symbol, this->read_string());
@@ -282,7 +297,7 @@ RPGEventPage *RXDataParser::read_event_page_object()
     for (int j = 0; j < attribute_count; j++)
     {
         current_symbol = read_symbol_or_link();
-        qDebug() << j << " " << current_symbol;
+        //qDebug() << current_symbol;
         if (current_symbol == "@move_speed" || current_symbol == "@move_frequency" || current_symbol == "@move_type" || current_symbol == "@trigger")
             event_page_object->setParameter(current_symbol, this->read_integer());
         else if (current_symbol == "@walk_anime" || current_symbol == "@step_anime" || current_symbol == "@through" || current_symbol == "@direction_fix" || current_symbol == "@always_on_top")
@@ -327,9 +342,7 @@ RPGEventCommand *RXDataParser::read_event_command_object()
     {
         qDebug() << "error: wrong object, RPG::EventCommand expected";
     }
-
     int attribute_count = this->read_fixnum();
-
 
     for (int j = 0; j < attribute_count; j++)
     {
@@ -342,11 +355,11 @@ RPGEventCommand *RXDataParser::read_event_command_object()
             {
                 qDebug() << "error: 0x5B (array) expected for command list";
             }
-            QStringList list;
+            QList<QVariant> list;
             int count = this->read_fixnum();
             for (int k = 0; k < count; k++)
             {
-                list << this->read_string();
+                list << this->read_variant();
             }
             event_command_object->setParameter(current_symbol, list);
         }
@@ -545,13 +558,12 @@ RPGMap* RXDataParser::parseMap()
 
     if (read_symbol_or_link() != "RPG::Map")
     {
-        qDebug() << "error: wrong object, RPG::Mapexpected";
+        qDebug() << "error: wrong object, RPG::Map expected";
     }
     int attribute_count = this->read_fixnum(); // should be 11
     for (int j = 0; j < attribute_count; j++)
     {
         current_symbol = read_symbol_or_link();
-
         if (current_symbol == "@bgm" || current_symbol == "@bgs")
             map->setParameter(current_symbol, read_audiofile_object());
         else if (current_symbol == "@tileset_id" || current_symbol == "@width" || current_symbol == "@height" || current_symbol == "@encounter_step")

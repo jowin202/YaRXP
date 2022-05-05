@@ -2,6 +2,7 @@
 #define RPGMOVEROUTE_H
 
 #include <QObject>
+#include <QDebug>
 #include "rpgmovecommand.h"
 
 class RPGMoveRoute : public QObject
@@ -10,11 +11,12 @@ class RPGMoveRoute : public QObject
 public:
     explicit RPGMoveRoute(QObject *parent = nullptr);
     void setParameter(QString param, bool val);
-
+    void debug();
 
     bool skippable;
     bool repeat;
     QList<RPGMoveCommand*> list;
+
 
 
 

@@ -13,7 +13,7 @@ void RPGEventCommand::setParameter(QString param, int val)
         this->indent = val;
 }
 
-void RPGEventCommand::setParameter(QString param, QStringList val)
+void RPGEventCommand::setParameter(QString param, QList<QVariant> val)
 {
     if (param == "@parameters")
         this->parameters = val;

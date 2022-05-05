@@ -12,3 +12,9 @@ void RPGMoveRoute::setParameter(QString param, bool val)
     else if (param == "@repeat")
         this->repeat = val;
 }
+
+void RPGMoveRoute::debug()
+{
+    qDebug() << skippable << " " << repeat << " ";
+
+}

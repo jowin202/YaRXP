@@ -2,6 +2,7 @@
 #define RPGEVENTCOMMAND_H
 
 #include <QObject>
+#include <QVariant>
 
 class RPGEventCommand : public QObject
 {
@@ -9,12 +10,12 @@ class RPGEventCommand : public QObject
 public:
     explicit RPGEventCommand(QObject *parent = nullptr);
     void setParameter(QString param, int val);
-    void setParameter(QString param, QStringList val);
+    void setParameter(QString param, QList<QVariant> val);
 
 
     int code;
     int indent;
-    QStringList parameters;
+    QList<QVariant> parameters;
 
 signals:
 
