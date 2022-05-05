@@ -45,22 +45,16 @@ void MainWindow::test_slot()
 void MainWindow::on_actionLayer1_triggered()
 {
     this->ui->map_label->set_layer(0);
-    //this->ui->actionLayer2->setChecked(false);
-    //this->ui->actionLayer3->setChecked(false);
 }
 
 void MainWindow::on_actionLayer2_triggered()
 {
     this->ui->map_label->set_layer(1);
-    //this->ui->actionLayer1->setChecked(false);
-    //this->ui->actionLayer3->setChecked(false);
 }
 
 void MainWindow::on_actionLayer3_triggered()
 {
     this->ui->map_label->set_layer(2);
-    //this->ui->actionLayer1->setChecked(false);
-    //this->ui->actionLayer2->setChecked(false);
 }
 
 void MainWindow::on_actionEvents_triggered()
@@ -104,7 +98,7 @@ void MainWindow::on_actionCut_triggered()
 
 void MainWindow::on_actionCopy_triggered()
 {
-    this->clipboard = this->ui->map_label->do_cut();
+    this->clipboard = this->ui->map_label->do_copy();
 }
 
 void MainWindow::on_actionPaste_triggered()

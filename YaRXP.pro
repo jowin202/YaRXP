@@ -20,7 +20,6 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     maptreewidget.cpp \
-    maptreewidgetitem.cpp \
     mapwidget.cpp \
     eventpage.cpp \
     parser/rpgaudiofile.cpp \
@@ -40,7 +39,6 @@ HEADERS += \
     eventdialog.h \
     mainwindow.h \
     maptreewidget.h \
-    maptreewidgetitem.h \
     mapwidget.h \
     eventpage.h \
     parser/rpgaudiofile.h \

@@ -7,7 +7,7 @@
 #include <QDir>
 #include <QMessageBox>
 #include "parser/rxdataparser.h"
-#include "maptreewidgetitem.h"
+#include "parser/rpgmapinfo.h"
 
 #include <QDebug>
 #include <QMenu>
@@ -28,7 +28,7 @@ public slots:
 private:
     QString project_dir;
     QString map_info_file;
-    QList<MapTreeWidgetItem*> map_list;
+    QList<RPGMapInfo*> map_list;
     QHash<int,QTreeWidgetItem*> id_map;
 
     QMenu menu;

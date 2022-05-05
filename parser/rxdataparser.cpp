@@ -4,28 +4,27 @@ RXDataParser::RXDataParser(QString file) : QObject()
 {
     this->filePath = file;
     this->file.setFileName(file); //absolute path
-    this->file.open(QIODevice::ReadOnly);
 }
 
-int RXDataParser::check_version()
+void RXDataParser::check_header()
 {
+    this->file.open(QIODevice::ReadOnly);
     if (this->file.exists())
     {
         QByteArray buffer = file.read(2);
         if (buffer.length() < 2)
-        {
-            qDebug() << "too short";
-            return -2;
-        }
+            qDebug() << "error: file too short";
         if (buffer.at(0) != 0x04 || buffer.at(1) != 0x08)
-        {
-            qDebug() << "wrong version";
-            return -1;
-        }
-        return 0;
+            qDebug() << "error: wrong version in header";
     }
     else
-        return -3;
+        qDebug() << "error: file does not exist";
+}
+
+void RXDataParser::close_file_if_open()
+{
+    if (this->file.isOpen())
+        this->file.close();
 }
 
 int RXDataParser::get_byte_and_rev()
@@ -78,158 +77,57 @@ int RXDataParser::read_one_byte()
     return (one_byte.at(0));
 }
 
-void RXDataParser::parse()
+QString RXDataParser::read_symbol_or_link()
 {
-    if (this->file.exists())
+    QString symbol;
+    int current_byte = this->read_one_byte();
+    if (current_byte == ':') //name of the object, should be "RPG::MapInfo" or the link
     {
-        QByteArray buffer = file.read(2);
-        if (buffer.length() < 2)
-        {
-            qDebug() << "too short";
-            return;
-        }
-        if (buffer.at(0) != 0x04 || buffer.at(1) != 0x08)
-        {
-            qDebug() << "wrong version";
-            return;
-        }
+        int symbol_len = this->read_fixnum();
+        symbol = QString(this->file.read(symbol_len));
+        this->symbol_cache << symbol;
+    }
+    else if (current_byte == ';')
+    {
+        int symbol_index = this->read_fixnum(); // todo: check if it is RPG::MapInfo ..
+        symbol = this->symbol_cache.at(symbol_index);
+    }
+    else
+    {
+        qDebug() << "error: symbol or link expected";
+    }
 
-        int type = this->read_one_byte();
+    return symbol;
+}
 
-        if (type == '@')
-        {
-
-        }
-        else if(type == 'I')
-        {
-
-        }
-        else if (type == 'o')
-        {
-            //object
-        }
-        else if (type == ':')
-        {
-            //string
-        }
-
-        //file.close();
+QString RXDataParser::read_string()
+{
+    if (this->read_one_byte() == '"')
+    {
+        int str_len = this->read_fixnum();
+        return this->file.read(str_len);
+    }
+    else
+    {
+        qDebug() << "error: string expected";
+        return "";
     }
 }
 
-void RXDataParser::parseMapInfo(QList<MapTreeWidgetItem*> *map_list)
+int RXDataParser::read_integer()
 {
-    this->symbol_cache.clear();
-    if (this->check_version() < 0) //file exists, version correct
+    if (this->read_one_byte() == 'i') //get object id (key)
     {
-        qDebug() << "error";
-        return;
+        return this->read_fixnum();
     }
-
-    if (this->read_one_byte() != 0x7b)
+    else
     {
-        qDebug() << "byte 7b expected";
-        return;
+        qDebug() << "error: integer expected";
+        return -1;
     }
-    int length = this->read_fixnum(); //expected: 0x7b length key value key value key value ...
-
-    int current_byte;
-    int symbol_index;
-    int key;
-    int symbol_len;
-    int name_len;
-    int attribute_count;
-    QString current_symbol;
-    QString current_name;
-
-    for (int i = 0; i < length; i++) //browse all objects
-    {
-        map_list->append(new MapTreeWidgetItem());
-
-        if (this->read_one_byte() == 'i') //get object id (key)
-        {
-            key = this->read_fixnum();
-            map_list->last()->set_id(key);
-
-            if (this->read_one_byte() == 'o')
-            {
-                current_byte = this->read_one_byte();
-                if (current_byte == ':') //name of the object, should be "RPG::MapInfo" or the link
-                {
-                    symbol_len = this->read_fixnum();
-                    this->symbol_cache << QString(this->file.read(symbol_len));
-                }
-                else if (current_byte == ';')
-                {
-                    symbol_index = this->read_fixnum(); // todo: check if it is RPG::MapInfo ..
-                }
-                //else error
-
-                attribute_count = this->read_fixnum(); //should always be 6
-                for (int j = 0; j < attribute_count; j++)
-                {
-                    current_byte = this->read_one_byte();
-                    if (current_byte == ':') //symbol
-                    {
-                        symbol_len = this->read_fixnum();
-                        current_symbol = QString(this->file.read(symbol_len));
-                        this->symbol_cache << current_symbol;
-                    }
-                    else if (current_byte == ';')
-                    {
-                        symbol_index = this->read_fixnum();
-                        current_symbol = symbol_cache.at(symbol_index);
-                    }
-
-                    if (current_symbol == "@scroll_x" || current_symbol == "@scroll_y"  || current_symbol == "@parent_id" || current_symbol == "@order") //value
-                    {
-                        if (this->read_one_byte() == 'i') //must be integer
-                        {
-                            map_list->last()->setParameter(current_symbol, this->read_fixnum());
-                        }
-                    }
-                    else if (current_symbol == "@name")
-                    {
-                        if (this->read_one_byte() == '"')
-                        {
-                            name_len = this->read_fixnum();
-                            current_name = this->file.read(name_len);
-                            map_list->last()->setName(current_name);
-                        }
-                        else
-                        {
-                            qDebug() << "string expected for name";
-                            return;
-                        }
-                    }
-                    else if (current_symbol == "@expanded")
-                    {
-                        if (this->read_one_byte() == 'F')
-                            map_list->last()->setExpanded(false);
-                        else map_list->last()->setExpanded(true);
-                    }
-
-                }
-
-            }
-            else
-            {
-                qDebug() << "object as value expected";
-                return;
-            }
-        }
-        else
-        {
-            qDebug() << "integer as key expected";
-            return;
-        }
-        std::cout << std::endl;
-    }
-
-
 }
 
-bool RXDataParser::parseBool()
+bool RXDataParser::read_bool()
 {
     int val = this->read_one_byte();
     if (val == 'T')
@@ -243,3 +141,429 @@ bool RXDataParser::parseBool()
     qDebug() << "error: bool expected";
     return false;
 }
+
+RPGMapInfo* RXDataParser::read_mapinfo_object()
+{
+    RPGMapInfo *mapinfo_item = new RPGMapInfo();
+    QString current_symbol;
+
+    if (this->read_one_byte() != 'o')
+    {
+        qDebug() << "error: object as value expected";
+    }
+
+
+    if (read_symbol_or_link() != "RPG::MapInfo")
+    {
+        qDebug() << "error: wrong object, RPG::MapInfo expected";
+    }
+
+
+    int attribute_count = this->read_fixnum(); //should always be 6
+    for (int j = 0; j < attribute_count; j++)
+    {
+        current_symbol = read_symbol_or_link();
+
+        if (current_symbol == "@scroll_x" || current_symbol == "@scroll_y"  || current_symbol == "@parent_id" || current_symbol == "@order") //value
+            mapinfo_item->setParameter(current_symbol, this->read_integer());
+        else if (current_symbol == "@name")
+            mapinfo_item->setParameter(current_symbol, this->read_string());
+        else if (current_symbol == "@expanded")
+            mapinfo_item->setParameter(current_symbol, this->read_bool());
+    }
+    return mapinfo_item;
+}
+
+RPGAudioFile* RXDataParser::read_audiofile_object()
+{
+    RPGAudioFile *audiofile = new RPGAudioFile();
+    QString current_symbol;
+
+    if (this->read_one_byte() != 'o')
+    {
+        qDebug() << "error: object as value expected";
+    }
+
+
+    if (read_symbol_or_link() != "RPG::AudioFile")
+    {
+        qDebug() << "error: wrong object, RPG::AudioFile expected";
+    }
+    int attribute_count = this->read_fixnum();
+    for (int j = 0; j < attribute_count; j++)
+    {
+        current_symbol = read_symbol_or_link();
+
+        if (current_symbol == "@pitch" || current_symbol == "@volume")
+            audiofile->setParameter(current_symbol, this->read_integer());
+        else if (current_symbol == "@name")
+            audiofile->setParameter(current_symbol, this->read_string());
+    }
+    return audiofile;
+}
+
+void RXDataParser::read_event_list(QList<RPGEvent *> *list)
+{
+    if (this->read_one_byte() != 0x7b)
+    {
+        qDebug() << "byte 7b (list) expected";
+    }
+    int num_events = this->read_fixnum();
+    int event_key;
+    QString current_symbol;
+
+    for (int i = 0; i < num_events; i++)
+    {
+        event_key = this->read_integer();
+        RPGEvent *event = this->read_event_object();
+        event->set_id(event_key);
+        list->append(event);
+    }
+}
+
+RPGEvent *RXDataParser::read_event_object()
+{
+    RPGEvent *event_object = new RPGEvent();
+    QString current_symbol;
+
+    if (this->read_one_byte() != 'o')
+    {
+        qDebug() << "error: object as value expected";
+    }
+
+    if (read_symbol_or_link() != "RPG::Event")
+    {
+        qDebug() << "error: wrong object, RPG::Event expected";
+    }
+    int attribute_count = this->read_fixnum();
+    for (int j = 0; j < attribute_count; j++)
+    {
+        current_symbol = read_symbol_or_link();
+        if (current_symbol == "@x" || current_symbol == "@y")
+            event_object->setParameter(current_symbol, this->read_integer());
+        else if (current_symbol == "@name")
+            event_object->setParameter(current_symbol, this->read_string());
+        else if (current_symbol == "@pages")
+            this->read_event_pages_list(&event_object->pages);
+    }
+    return event_object;
+}
+
+void RXDataParser::read_event_pages_list(QList<RPGEventPage *> *list)
+{
+    if (this->read_one_byte() != 0x5b)
+    {
+        qDebug() << "byte 5b (array) expected";
+    }
+    int num_pages = this->read_fixnum();
+
+    for (int i = 0; i < num_pages; i++)
+    {
+        list->append(this->read_event_page_object());
+    }
+}
+
+RPGEventPage *RXDataParser::read_event_page_object()
+{
+    RPGEventPage *event_page_object = new RPGEventPage();
+    QString current_symbol;
+
+    if (this->read_one_byte() != 'o')
+    {
+        qDebug() << "error: object as value expected";
+    }
+
+    if (read_symbol_or_link() != "RPG::Event::Page")
+    {
+        qDebug() << "error: wrong object, RPG::EventPage expected";
+    }
+
+    int attribute_count = this->read_fixnum(); // 13
+    for (int j = 0; j < attribute_count; j++)
+    {
+        current_symbol = read_symbol_or_link();
+        qDebug() << j << " " << current_symbol;
+        if (current_symbol == "@move_speed" || current_symbol == "@move_frequency" || current_symbol == "@move_type" || current_symbol == "@trigger")
+            event_page_object->setParameter(current_symbol, this->read_integer());
+        else if (current_symbol == "@walk_anime" || current_symbol == "@step_anime" || current_symbol == "@through" || current_symbol == "@direction_fix" || current_symbol == "@always_on_top")
+            event_page_object->setParameter(current_symbol, this->read_bool());
+        else if (current_symbol == "@list")
+            this->read_event_command_list(&event_page_object->list);
+        else if (current_symbol == "@condition")
+            event_page_object->setParameter(current_symbol, this->read_event_page_condition_object());
+        else if (current_symbol == "@move_route")
+            event_page_object->setParameter(current_symbol, this->read_move_route_object());
+        else if (current_symbol == "@graphic")
+            event_page_object->setParameter(current_symbol, this->read_event_page_graphic());
+    }
+    return event_page_object;
+}
+
+void RXDataParser::read_event_command_list(QList<RPGEventCommand *> *list)
+{
+    if (this->read_one_byte() != 0x5b)
+    {
+        qDebug() << "byte 5b (array) expected";
+    }
+    int num_commands = this->read_fixnum();
+
+    for (int i = 0; i < num_commands; i++)
+    {
+        list->append(this->read_event_command_object());
+    }
+}
+
+RPGEventCommand *RXDataParser::read_event_command_object()
+{
+    RPGEventCommand *event_command_object = new RPGEventCommand();
+    QString current_symbol;
+
+    if (this->read_one_byte() != 'o')
+    {
+        qDebug() << "error: object as value expected";
+    }
+
+    if (read_symbol_or_link() != "RPG::EventCommand")
+    {
+        qDebug() << "error: wrong object, RPG::EventCommand expected";
+    }
+
+    int attribute_count = this->read_fixnum();
+
+
+    for (int j = 0; j < attribute_count; j++)
+    {
+        current_symbol = read_symbol_or_link();
+        if (current_symbol == "@code" || current_symbol == "@indent")
+            event_command_object->setParameter(current_symbol, this->read_integer());
+        else if (current_symbol == "@parameters")
+        {
+            if (read_one_byte() != 0x5B)
+            {
+                qDebug() << "error: 0x5B (array) expected for command list";
+            }
+            QStringList list;
+            int count = this->read_fixnum();
+            for (int k = 0; k < count; k++)
+            {
+                list << this->read_string();
+            }
+            event_command_object->setParameter(current_symbol, list);
+        }
+
+    }
+    return event_command_object;
+}
+
+RPGEventPageCondition *RXDataParser::read_event_page_condition_object()
+{
+    RPGEventPageCondition *event_page_condition_object = new RPGEventPageCondition();
+    QString current_symbol;
+
+    if (this->read_one_byte() != 'o')
+    {
+        qDebug() << "error: object as value expected";
+    }
+
+    if (read_symbol_or_link() != "RPG::Event::Page::Condition")
+    {
+        qDebug() << "error: wrong object, RPG::Event::Page::Condition expected";
+    }
+
+    int attribute_count = this->read_fixnum();
+    for (int j = 0; j < attribute_count; j++)
+    {
+        current_symbol = read_symbol_or_link();
+        if (current_symbol == "@switch1_id" || current_symbol == "@switch2_id" || current_symbol == "@variable_id" || current_symbol == "@variable_value")
+            event_page_condition_object->setParameter(current_symbol, this->read_integer());
+        else if (current_symbol == "@self_switch_valid" || current_symbol == "@variable_valid" || current_symbol == "@switch1_valid" || current_symbol == "@switch2_valid")
+            event_page_condition_object->setParameter(current_symbol, this->read_bool());
+        else if(current_symbol == "@self_switch_ch")
+        {
+            QString self_switch = this->read_string();
+            if (self_switch == "A")
+                event_page_condition_object->setParameter(current_symbol, 1);
+            else if (self_switch == "B")
+                event_page_condition_object->setParameter(current_symbol, 2);
+            else if (self_switch == "C")
+                event_page_condition_object->setParameter(current_symbol, 3);
+            else if (self_switch == "D")
+                event_page_condition_object->setParameter(current_symbol, 4);
+        }
+    }
+    return event_page_condition_object;
+}
+
+RPGMoveRoute *RXDataParser::read_move_route_object()
+{
+    RPGMoveRoute *move_route_object = new RPGMoveRoute();
+    QString current_symbol;
+
+    if (this->read_one_byte() != 'o')
+    {
+        qDebug() << "error: object as value expected";
+    }
+
+    if (read_symbol_or_link() != "RPG::MoveRoute")
+    {
+        qDebug() << "error: wrong object, RPG::MoveRoute expected";
+    }
+
+    int attribute_count = this->read_fixnum();
+    for (int j = 0; j < attribute_count; j++)
+    {
+        current_symbol = read_symbol_or_link();
+        if (current_symbol == "@list")
+            this->read_move_command_list(&move_route_object->list);
+        else if (current_symbol == "@skippable" || current_symbol == "@repeat")
+            move_route_object->setParameter(current_symbol, this->read_bool());
+    }
+    return move_route_object;
+}
+
+RPGMoveCommand *RXDataParser::read_move_command_object()
+{
+    RPGMoveCommand *move_command_object = new RPGMoveCommand();
+    QString current_symbol;
+
+    if (this->read_one_byte() != 'o')
+    {
+        qDebug() << "error: object as value expected";
+    }
+
+    if (read_symbol_or_link() != "RPG::MoveCommand")
+    {
+        qDebug() << "error: wrong object, RPG::MoveCommand expected";
+    }
+
+    int attribute_count = this->read_fixnum();
+    for (int j = 0; j < attribute_count; j++)
+    {
+        current_symbol = read_symbol_or_link();
+        if (current_symbol == "@parameters")
+        {
+            if (this->read_one_byte() != 0x5B)
+            {
+                qDebug() << "error: parameters in MoveCommand expects array";
+            }
+            int params_len = this->read_fixnum(); // = 0, finished TODO CHECK THIS
+            //TODO
+        }
+        else if (current_symbol == "@code")
+        {
+            move_command_object->setParameter(current_symbol, this->read_integer());
+        }
+    }
+    return move_command_object;
+}
+
+void RXDataParser::read_move_command_list(QList<RPGMoveCommand *> *list)
+{
+    if (this->read_one_byte() != 0x5b)
+    {
+        qDebug() << "byte 5b (array) expected";
+    }
+    int num_commands = this->read_fixnum();
+
+    for (int i = 0; i < num_commands; i++)
+    {
+        list->append(this->read_move_command_object());
+    }
+}
+
+RPGEventPageGraphic *RXDataParser::read_event_page_graphic()
+{
+    RPGEventPageGraphic *event_page_graphic_object = new RPGEventPageGraphic();
+    QString current_symbol;
+
+    if (this->read_one_byte() != 'o')
+    {
+        qDebug() << "error: object as value expected";
+    }
+
+    if (read_symbol_or_link() != "RPG::Event::Page::Graphic")
+    {
+        qDebug() << "error: wrong object, RPG::Event::Page::Graphic expected";
+    }
+
+    int attribute_count = this->read_fixnum();
+    for (int j = 0; j < attribute_count; j++)
+    {
+        current_symbol = read_symbol_or_link();
+        if (current_symbol == "@direction" || current_symbol == "@blend_type" || current_symbol == "@tile_id" || current_symbol == "@pattern" || current_symbol == "@character_hue" || current_symbol == "@opacity")
+            event_page_graphic_object->setParameter(current_symbol, this->read_integer());
+        else if (current_symbol == "@character_name")
+            event_page_graphic_object->setParameter(current_symbol, this->read_string());
+    }
+
+    return event_page_graphic_object;
+}
+
+
+
+void RXDataParser::parseMapInfo(QList<RPGMapInfo*> *map_list)
+{
+    this->symbol_cache.clear();
+    map_list->clear();
+    this->check_header();
+
+    if (this->read_one_byte() != 0x7b)
+    {
+        qDebug() << "byte 7b (list) expected";
+        return;
+    }
+    int length = this->read_fixnum(); //expected: 0x7b length key value key value key value ...
+
+    int key;
+    QString current_symbol;
+    QString current_name;
+
+    for (int i = 0; i < length; i++) //browse all objects in list
+    {
+        key = this->read_integer();
+        RPGMapInfo *mapinfo_item = this->read_mapinfo_object();
+        mapinfo_item->set_id(key);
+        map_list->append(mapinfo_item);
+    }
+
+    this->close_file_if_open();
+}
+
+RPGMap* RXDataParser::parseMap()
+{
+    this->symbol_cache.clear();
+    this->check_header();
+
+    RPGMap *map = new RPGMap();
+    QString current_symbol;
+
+    if (this->read_one_byte() != 'o')
+    {
+        qDebug() << "error: object as value expected";
+    }
+
+
+    if (read_symbol_or_link() != "RPG::Map")
+    {
+        qDebug() << "error: wrong object, RPG::Mapexpected";
+    }
+    int attribute_count = this->read_fixnum(); // should be 11
+    for (int j = 0; j < attribute_count; j++)
+    {
+        current_symbol = read_symbol_or_link();
+
+        if (current_symbol == "@bgm" || current_symbol == "@bgs")
+            map->setParameter(current_symbol, read_audiofile_object());
+        else if (current_symbol == "@tileset_id" || current_symbol == "@width" || current_symbol == "@height" || current_symbol == "@encounter_step")
+            map->setParameter(current_symbol, read_integer());
+        else if (current_symbol == "@autoplay_bgs" || current_symbol == "@autoplay_bgm")
+            map->setParameter(current_symbol, read_bool());
+        else if (current_symbol == "@events")
+            this->read_event_list(&map->events);
+    }
+
+
+    this->close_file_if_open();
+    return map;
+}
+

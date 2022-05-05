@@ -9,16 +9,23 @@ class RPGEvent : public QObject
     Q_OBJECT
 public:
     explicit RPGEvent(QObject *parent = nullptr);
+    void set_id(int id);
 
-signals:
+    void setParameter(QString param, int val);
+    void setParameter(QString param, QString val);
 
-
-private:
     int id;
     int x;
     int y;
     QString name;
     QList<RPGEventPage*> pages;
+
+
+signals:
+
+
+private:
+
 };
 
 #endif // RPGEVENT_H

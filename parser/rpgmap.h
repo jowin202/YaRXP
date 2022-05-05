@@ -10,14 +10,20 @@ class RPGMap : public QObject
     Q_OBJECT
 public:
     explicit RPGMap(QObject *parent = nullptr);
+    void setParameter(QString param, int val);
+    void setParameter(QString param, bool val);
+    void setParameter(QString param, RPGAudioFile *val);
 
-signals:
+    void debug();
 
-private:
     int width;
     int height;
+    int tileset_id;
+    int encounter_step;
+
     bool autoplay_bgs;
     bool autoplay_bgm;
+
     //encounter_list (empty for pokemon)
     //z=3
     //size=x*y*z don't need that
@@ -25,9 +31,12 @@ private:
 
     QList<RPGEvent*> events;
 
-    RPGAudioFile bgs, bgm;
-    int tileset_id;
-    int encounter_step;
+    RPGAudioFile *bgs = 0, *bgm = 0;
+
+
+signals:
+
+private:
 
 
 };

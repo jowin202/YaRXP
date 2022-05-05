@@ -85,8 +85,7 @@ void MapTreeWidget::list_maps(QString project_dir)
 
 void MapTreeWidget::clicked_at_item(QTreeWidgetItem *item, int column)
 {
-    RXDataParser parser(project_dir + QDir::separator() + "Data" + QDir::separator() + item->text(0));
-    parser.parse();
+    //RXDataParser parser(project_dir + QDir::separator() + "Data" + QDir::separator() + item->text(0));
 }
 
 void MapTreeWidget::prepare_context_menu( const QPoint & pos )
