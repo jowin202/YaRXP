@@ -365,6 +365,7 @@ RPGEventCommand *RXDataParser::read_event_command_object()
         }
 
     }
+    event_command_object->debug();
     return event_command_object;
 }
 
