@@ -18,6 +18,8 @@ class RXDataParser : public QObject
     Q_OBJECT
 public:
     explicit RXDataParser(QString file = "");
+    void print_file_pos_as_hex();
+
     void check_header();
     void close_file_if_open();
     int get_byte_and_rev();
@@ -27,7 +29,8 @@ public:
     QString look_ahead_object_type();
 
 
-    QString read_symbol_or_link();
+
+    QString read_symbol_or_link(bool save_symbol=true);
     QString read_string();
     QVariant read_variant();
     int read_integer();
@@ -58,7 +61,7 @@ private:
     QString filePath;
     QFile file;
     QStringList symbol_cache;
-    bool test = false;
+
 
 };
 

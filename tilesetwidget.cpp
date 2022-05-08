@@ -5,7 +5,7 @@ TilesetWidget::TilesetWidget(QWidget *parent)
     this->setMouseTracking(true);
     this->click_pos = QPoint(-1,-1);
 
-    this->setPixmap(QPixmap::fromImage(img2));
+    this->setPixmap(QPixmap::fromImage(img));
     qDebug() << "init_tiles";
 
     //connect(this, SIGNAL(selection_changed()), this, SLOT(test_slot()));
@@ -19,7 +19,7 @@ void TilesetWidget::mouseMoveEvent(QMouseEvent *ev)
     this->curr_pos = QPoint(ev->pos().x()/32,ev->pos().y()/32);
     if (this->click_pos.x() >= 0)
     {
-        QImage newimg = QImage(img2);
+        QImage newimg = QImage(img);
         QPainter painter;
         painter.begin(&newimg);
         painter.setPen(QPen(Qt::black,3));
@@ -39,7 +39,7 @@ void TilesetWidget::mousePressEvent(QMouseEvent *ev)
 {
     this->click_pos = QPoint(ev->pos().x()/32, ev->pos().y()/32);
 
-    QImage neu = QImage(img2);
+    QImage neu = QImage(img);
     QPainter painter;
     painter.begin(&neu);
     painter.setPen(QPen(Qt::black,3));

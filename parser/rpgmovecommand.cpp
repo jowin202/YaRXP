@@ -10,3 +10,8 @@ void RPGMoveCommand::setParameter(QString param, int val)
     //if (param == "@code")
     this->code = val;
 }
+
+void RPGMoveCommand::debug()
+{
+    qDebug() << "RPGMoveCommand: " << code;
+}

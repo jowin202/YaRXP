@@ -2,6 +2,10 @@
 #define RPGMOVECOMMAND_H
 
 #include <QObject>
+#include <QDebug>
+#include <QVariant>
+
+#include "rpgaudiofile.h"
 
 class RPGMoveCommand : public QObject
 {
@@ -11,6 +15,9 @@ public:
     void setParameter(QString param, int val);
     int code;
 
+    void debug();
+    QList<QVariant> parameters;
+    RPGAudioFile *audiofile;
 signals:
 private:
     //parameters

@@ -25,10 +25,10 @@ int main(int argc, char *argv[])
     */
 
 
-    RXDataParser parser("/home/johannes/RPG_maker/Pokemon Klagenfurt Vibes/Data/Map048.rxdata");
-    parser.parseMap();
+    //RXDataParser parser("/home/johannes/RPG_maker/Pokemon Klagenfurt Vibes/Data/Map077.rxdata");
+    //parser.parseMap();
 
-    return 0;
+    //return 0;
     MainWindow w;
     w.show();
     return a.exec();

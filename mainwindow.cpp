@@ -31,8 +31,9 @@ MainWindow::MainWindow(QWidget *parent)
     this->ui->actionLayer1->setChecked(true);
     this->ui->actionPen->setChecked(true);
 
-    //this->ui->map_tree_widget->hideColumn(1);
-    //this->ui->map_tree_widget->hideColumn(2);
+    this->ui->map_tree_widget->hideColumn(1);
+    this->ui->map_tree_widget->hideColumn(2);
+    this->ui->map_tree_widget->hideColumn(3);
 }
 
 MainWindow::~MainWindow()

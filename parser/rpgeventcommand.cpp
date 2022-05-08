@@ -117,6 +117,8 @@ QString RPGEventCommand::getType()
         return "Change Transparent Flag";
     else if (code == 209)
         return "Set Move Route"; //BUGGY TODO
+    else if (code == 509)
+        return "Set Move Route multiline";
     else if (code == 210)
         return "Wait for Move's Completition";
     else if (code == 221)

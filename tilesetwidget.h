@@ -33,7 +33,7 @@ private:
     QPoint curr_pos;
     QPoint click_pos;
     QRect selection;
-    QImage img = QImage("/home/johannes/RPG_maker/Pokemon Essentials v19.1 2021-05-22/Graphics/Tilesets/Outside.png");
+    QImage img = QImage("/home/johannes/RPG_maker/Pokemon Klagenfurt Vibes/Graphics/Tilesets/Outside.png");
     QImage img2 = QImage("/home/johannes/RPG_maker/pokemon_decrypted/Graphics/Tilesets/RSEFRLG Complete.png");
 };
 

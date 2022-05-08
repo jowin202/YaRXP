@@ -289,7 +289,7 @@ void MapWidget::redraw()
                 QRect target_rect(map_coord, map_coord + QPoint(31,31));
                 QRect source_rect(tile_coord, tile_coord + QPoint(31,31));
 
-                painter.drawImage(target_rect, img2, source_rect);
+                painter.drawImage(target_rect, img, source_rect);
             }
         }
         if (mode == SELECT && this->selection_rectangle.width() > 0 && this->selection_rectangle.height() > 0
@@ -307,7 +307,7 @@ void MapWidget::redraw()
                 QRect target_rect(map_coord, map_coord + QPoint(31,31));
                 QRect source_rect(tile_coord, tile_coord + QPoint(31,31));
 
-                painter.drawImage(target_rect, img2, source_rect);
+                painter.drawImage(target_rect, img, source_rect);
 
             }
         }

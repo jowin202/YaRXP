@@ -6,6 +6,11 @@ RXDataParser::RXDataParser(QString file) : QObject()
     this->file.setFileName(file); //absolute path
 }
 
+void RXDataParser::print_file_pos_as_hex()
+{
+    qDebug() << QString::number(this->file.pos(),16).toUpper();
+}
+
 void RXDataParser::check_header()
 {
     this->file.open(QIODevice::ReadOnly);
@@ -104,24 +109,25 @@ QString RXDataParser::look_ahead_object_type()
         qDebug() << "error with object";
         return "";
     }
-    QString object_type = this->read_symbol_or_link();
+    QString object_type = this->read_symbol_or_link(false);
     this->file.seek(position);
     return object_type;
 }
 
-QString RXDataParser::read_symbol_or_link()
+QString RXDataParser::read_symbol_or_link(bool save_symbol)
 {
     QString symbol;
     int current_byte = this->read_one_byte();
-    if (current_byte == ':') //name of the object, should be "RPG::MapInfo" or the link
+    if (current_byte == ':')
     {
         int symbol_len = this->read_fixnum();
         symbol = QString(this->file.read(symbol_len));
-        this->symbol_cache << symbol;
+        if (save_symbol)
+            this->symbol_cache << symbol;
     }
     else if (current_byte == ';')
     {
-        int symbol_index = this->read_fixnum(); // todo: check if it is RPG::MapInfo ..
+        int symbol_index = this->read_fixnum();
         symbol = this->symbol_cache.at(symbol_index);
     }
     else
@@ -135,10 +141,24 @@ QString RXDataParser::read_symbol_or_link()
 
 QString RXDataParser::read_string()
 {
-    if (this->read_one_byte() == '"')
+    int var = this->read_one_byte();
+    if (var == '"')
     {
         int str_len = this->read_fixnum();
         return this->file.read(str_len);
+    }
+    else if (var == 'I')
+    {
+        QString str = this->read_string();
+        int val = this->read_fixnum(); //should be 1
+        if (val != 1) //instance variable E=True is for encoding.
+        {
+            qDebug() << "instance var error weird"; //should never be reached
+            exit(1);
+        }
+        this->read_symbol_or_link(); //should be E
+        this->read_bool(); //should be (T)rue
+        return str;
     }
     else
     {
@@ -147,14 +167,16 @@ QString RXDataParser::read_string()
     }
 }
 
-QVariant RXDataParser::read_variant()
+QVariant RXDataParser::read_variant() //string int or symbol
 {
-    int read_byte = this->read_one_byte();
+    int read_byte = this->look_one_byte_ahead();
     if (read_byte == 'i')
-        return QVariant(this->read_fixnum());
-    else if (read_byte == '"'){
-        int str_len = this->read_fixnum();
-        return QVariant(this->file.read(str_len));
+        return QVariant(this->read_integer());
+    else if (read_byte == '"')
+        return QVariant(this->read_string());
+    else if (read_byte == 'I') // Instance Variable
+    {
+        return QVariant(this->read_string());
     }
     return QVariant();
 }
@@ -229,11 +251,11 @@ RPGAudioFile* RXDataParser::read_audiofile_object()
         qDebug() << "error: object as value expected";
     }
 
-
     if (read_symbol_or_link() != "RPG::AudioFile")
     {
         qDebug() << "error: wrong object, RPG::AudioFile expected";
     }
+
     int attribute_count = this->read_fixnum();
     for (int j = 0; j < attribute_count; j++)
     {
@@ -256,6 +278,7 @@ void RXDataParser::read_event_list(QList<RPGEvent *> *list)
     int num_events = this->read_fixnum();
     int event_key;
     QString current_symbol;
+
 
     for (int i = 0; i < num_events; i++)
     {
@@ -363,6 +386,8 @@ void RXDataParser::read_event_command_list(QList<RPGEventCommand *> *list)
     }
     int num_commands = this->read_fixnum();
 
+
+    qDebug() << symbol_cache;
     for (int i = 0; i < num_commands; i++)
     {
         list->append(this->read_event_command_object());
@@ -383,8 +408,9 @@ RPGEventCommand *RXDataParser::read_event_command_object()
     {
         qDebug() << "error: wrong object, RPG::EventCommand expected";
     }
-    int attribute_count = this->read_fixnum();
 
+
+    int attribute_count = this->read_fixnum();
     for (int j = 0; j < attribute_count; j++)
     {
         current_symbol = read_symbol_or_link();
@@ -396,53 +422,61 @@ RPGEventCommand *RXDataParser::read_event_command_object()
             {
                 qDebug() << "error: 0x5B (array) expected for command list";
             }
+
             QList<QVariant> list;
             int count = this->read_fixnum();
             for (int k = 0; k < count; k++)
             {
-                if (this->look_one_byte_ahead() == 'o') //audiofile
+                if (this->look_one_byte_ahead() == 'o') //audiofile or move route
                 {
                     if (this->look_ahead_object_type() == "RPG::AudioFile")
                         event_command_object->audiofile = this->read_audiofile_object();
+                    else if (this->look_ahead_object_type() == "RPG::MoveRoute")
+                    {
+                        this->read_move_route_object();
+                    }
                     else
                     {
-                        qDebug() << "Error parsing command";
+                        qDebug() << "Error parsing command: object expected";
                         exit(1);
                     }
+                }
+                else if (this->look_one_byte_ahead() == '@')
+                {
+                    //There is a link to the 209 object in the first 509 object
+                    //link is used as '@' + object number. It is redundant, hence ignored.
+                    this->read_one_byte(); //throw away the @ sign
+                    this->read_fixnum();
                 }
                 else if (this->look_one_byte_ahead() == 'u') //color tone
                 {
                     this->read_one_byte(); //skip this byte
                     if (this->read_symbol_or_link() == "Tone")
                     {
-                        this->read_one_byte();
-                        qDebug() << this->file.pos();
-                        QDataStream stream(&this->file);
+                        this->read_fixnum(); //int size = ... 32 bytes for 4 doubles. unused
                         double red,green,blue,gray;
-                        stream >> red;
-                        stream >> green;
-                        stream >> blue;
-                        stream >> gray;
-                        qDebug() << red << " " << green << " " << blue << " " << gray;
-                        qDebug() << this->file.pos();
-                        int frames = this->read_integer(); // this works
-
-
+                        this->file.read((char*)&red, 8);
+                        this->file.read((char*)&green, 8);
+                        this->file.read((char*)&blue, 8);
+                        this->file.read((char*)&gray, 8);
                     }
                     else
                     {
-                        qDebug() << "Error parsing command";
+                        qDebug() << "Error parsing command: Tone expected";
                         exit(1);
                     }
                 }
                 else //string or int
+                {
                     list << this->read_variant();
+                }
             }
             event_command_object->setParameter(current_symbol, list);
         }
 
     }
     event_command_object->debug();
+
     return event_command_object;
 }
 
@@ -500,6 +534,7 @@ RPGMoveRoute *RXDataParser::read_move_route_object()
         qDebug() << "error: wrong object, RPG::MoveRoute expected";
     }
 
+
     int attribute_count = this->read_fixnum();
     for (int j = 0; j < attribute_count; j++)
     {
@@ -520,13 +555,14 @@ RPGMoveCommand *RXDataParser::read_move_command_object()
     if (this->read_one_byte() != 'o')
     {
         qDebug() << "error: object as value expected";
+        exit(1);
     }
 
     if (read_symbol_or_link() != "RPG::MoveCommand")
     {
         qDebug() << "error: wrong object, RPG::MoveCommand expected";
+        exit(1);
     }
-
     int attribute_count = this->read_fixnum();
     for (int j = 0; j < attribute_count; j++)
     {
@@ -537,8 +573,25 @@ RPGMoveCommand *RXDataParser::read_move_command_object()
             {
                 qDebug() << "error: parameters in MoveCommand expects array";
             }
+
             int params_len = this->read_fixnum(); // = 0, finished TODO CHECK THIS
-            //TODO
+            //parameters are needed for advanced move command (e.g. direction for jumping)
+            //TODO: list can contain audiofiles (see setmoveroute dialog)
+            for (int p = 0; p < params_len; p++) //assumed parameters are string or int
+            {
+                int current_byte = this->look_one_byte_ahead();
+                if (current_byte == '"' || current_byte == 'i' || current_byte == 'I')
+                    move_command_object->parameters.append(QVariant(this->read_variant()));
+                else if (current_byte == 'o')
+                {
+
+                    //TODO: e.g. audiofile
+                    if (this->look_ahead_object_type() == "RPG::AudioFile")
+                    {
+                        move_command_object->audiofile = this->read_audiofile_object();
+                    }
+                }
+            }
         }
         else if (current_symbol == "@code")
         {
@@ -555,7 +608,6 @@ void RXDataParser::read_move_command_list(QList<RPGMoveCommand *> *list)
         qDebug() << "byte 5b (array) expected";
     }
     int num_commands = this->read_fixnum();
-
     for (int i = 0; i < num_commands; i++)
     {
         list->append(this->read_move_command_object());
