@@ -3,6 +3,7 @@
 
 #include <QDebug>
 #include <QObject>
+#include "rpgmap.h"
 
 class RPGMapInfo : public QObject
 {
@@ -23,6 +24,7 @@ public:
     int scroll_y;
     int order;
     QString name;
+    RPGMap *map = 0;
 
 signals:
 

@@ -12,6 +12,7 @@
 #include <QPainter>
 #include <QEvent>
 
+#include "parser/rpgmap.h"
 
 class MapWidget : public QLabel
 {
@@ -40,6 +41,7 @@ public:
     void set_mode(int mode);
 
 public slots:
+    void set_map(RPGMap *map);
     void set_brush(QList<int> vars);
     void redraw();
     void draw_brush_rectangle();
@@ -55,6 +57,7 @@ public slots:
     void flood_fill(QPoint clicked, QPoint next);
 
 private:
+    RPGMap *map;
     QImage img = QImage("/home/johannes/RPG_maker/Pokemon Essentials v19.1 2021-05-22/Graphics/Tilesets/Outside.png");
     QImage img2 = QImage("/home/johannes/RPG_maker/pokemon_decrypted/Graphics/Tilesets/RSEFRLG Complete.png");
     int mode;
@@ -64,7 +67,7 @@ private:
     QImage current_pic;
     QList <int> brush_vars;
     QPoint curr_pos;
-    int *map_values = 0;
+    QList<int> map_values;
     bool mouse_pressed_left = false;
     bool mouse_pressed_right = false;
     bool dim_other_layers = false;

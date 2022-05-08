@@ -86,9 +86,10 @@ QString RPGEventCommand::getType()
         return "Change Party Member"; //Not Relevant for Pokemon
     else if (code == 131)
         return "Change Window Skin";
-    /**
-      Here comes the Music stuff. Code cannot be determined due to parsing error, code 132 and 133
-      **/
+    else if (code == 132)
+        return "Change Battle BGM";
+    else if (code == 133)
+        return "Change Battle End ME";
     else if (code == 134)
         return "Change Save access"; //allow to save the game
     else if (code == 135)
@@ -140,8 +141,12 @@ QString RPGEventCommand::getType()
         return "Erase Picture";
     else if (code == 236)
         return "Set Weather Effects";
+    else if (code == 241)
+        return "Play BGM";
     else if (code == 242)
         return "Fade out BGM";
+    else if (code == 245)
+        return "Play BGS";
     else if (code == 246)
         return "Fade out BGS";
     else if (code == 247)
@@ -149,7 +154,7 @@ QString RPGEventCommand::getType()
     else if (code == 248)
         return "Restore BGM/BGS";
     else if (code == 249)
-        return "Play ME"; //Buggy TODO
+        return "Play ME";
     else if (code == 250)
         return "Play SE"; //Buggy TODO
     else if (code == 251)

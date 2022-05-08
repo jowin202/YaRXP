@@ -14,6 +14,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     connect(this->ui->tileset_label, SIGNAL(selection_changed(QList<int>)), this->ui->map_label, SLOT(set_brush(QList<int>)));
     connect(this->ui->tileset_label, SIGNAL(selection_changed(QList<int>)), this, SLOT(on_actionPen_triggered())); //set pen when select tile
+    connect(this->ui->map_tree_widget, SIGNAL(on_map_selected(RPGMap*)), this->ui->map_label, SLOT(set_map(RPGMap*)));
 
     this->layergroup = new QActionGroup(this);
     this->layergroup->addAction(this->ui->actionLayer1);
@@ -29,6 +30,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     this->ui->actionLayer1->setChecked(true);
     this->ui->actionPen->setChecked(true);
+
+    //this->ui->map_tree_widget->hideColumn(1);
+    //this->ui->map_tree_widget->hideColumn(2);
 }
 
 MainWindow::~MainWindow()
@@ -69,8 +73,14 @@ void MainWindow::on_actionDim_other_Layers_toggled(bool arg1)
 
 void MainWindow::on_actionOpen_triggered()
 {
-    QString name = QFileDialog::getOpenFileName(this, "Choose Project", QDir::homePath(), "RPG Maker Project Files (*.rxproj);;Data Files(*.rxdata)");
+    QSettings settings;
+    QString dir = settings.value("lastopened").toString();
+    if (dir.isEmpty())
+        dir = QDir::homePath();
+
+    QString name = QFileDialog::getOpenFileName(this, "Choose Project", dir, "RPG Maker Project Files (*.rxproj);;Data Files(*.rxdata)");
     //QString name = "/home/johannes/RPG_maker/Pokemon Klagenfurt Vibes/Game.rxproj";
+    settings.setValue("lastopened", name);
     QFileInfo fi(name);
 
     if (name != "" && fi.exists() && fi.isFile())

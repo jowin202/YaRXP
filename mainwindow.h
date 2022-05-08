@@ -5,6 +5,7 @@
 #include <QActionGroup>
 #include <QToolButton>
 #include <QFileDialog>
+#include <QSettings>
 #include "tilesetwidget.h"
 
 QT_BEGIN_NAMESPACE

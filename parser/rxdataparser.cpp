@@ -71,10 +71,42 @@ int RXDataParser::read_one_byte()
     QByteArray one_byte = file.read(1);
     if (one_byte.length() != 1)
     {
-        qDebug() << "weird error";
+        qDebug() << "unexpected eof";
         return -1;
     }
     return (one_byte.at(0));
+}
+
+int RXDataParser::look_one_byte_ahead()
+{
+    qint64 position = this->file.pos();
+    QByteArray one_byte = this->file.read(1);
+    if (one_byte.length() != 1)
+    {
+        qDebug() << "unexpected eof";
+        return -1;
+    }
+    this->file.seek(position);
+    return (one_byte.at(0));
+}
+
+QString RXDataParser::look_ahead_object_type()
+{
+    qint64 position = this->file.pos();
+    QByteArray one_byte = this->file.read(1);
+    if (one_byte.length() != 1)
+    {
+        qDebug() << "unexpected eof";
+        return "";
+    }
+    if (one_byte.at(0) != 'o')
+    {
+        qDebug() << "error with object";
+        return "";
+    }
+    QString object_type = this->read_symbol_or_link();
+    this->file.seek(position);
+    return object_type;
 }
 
 QString RXDataParser::read_symbol_or_link()
@@ -94,7 +126,7 @@ QString RXDataParser::read_symbol_or_link()
     }
     else
     {
-        qDebug() << "error: symbol or link expected";
+        qDebug() << ("error: symbol or link expected: 0x" + QString::number(this->file.pos(),16).toUpper());
         exit(1);
     }
 
@@ -260,6 +292,11 @@ RPGEvent *RXDataParser::read_event_object()
             event_object->setParameter(current_symbol, this->read_string());
         else if (current_symbol == "@pages")
             this->read_event_pages_list(&event_object->pages);
+        else
+        {
+            qDebug() << "Error parsing RPGEvent object: attribute " << current_symbol;
+            exit(1);
+        }
     }
     return event_object;
 }
@@ -297,7 +334,6 @@ RPGEventPage *RXDataParser::read_event_page_object()
     for (int j = 0; j < attribute_count; j++)
     {
         current_symbol = read_symbol_or_link();
-        //qDebug() << current_symbol;
         if (current_symbol == "@move_speed" || current_symbol == "@move_frequency" || current_symbol == "@move_type" || current_symbol == "@trigger")
             event_page_object->setParameter(current_symbol, this->read_integer());
         else if (current_symbol == "@walk_anime" || current_symbol == "@step_anime" || current_symbol == "@through" || current_symbol == "@direction_fix" || current_symbol == "@always_on_top")
@@ -310,6 +346,11 @@ RPGEventPage *RXDataParser::read_event_page_object()
             event_page_object->setParameter(current_symbol, this->read_move_route_object());
         else if (current_symbol == "@graphic")
             event_page_object->setParameter(current_symbol, this->read_event_page_graphic());
+        else
+        {
+            qDebug() << "Error parsing RPGEventPage object: attribute " << current_symbol;
+            exit(1);
+        }
     }
     return event_page_object;
 }
@@ -359,7 +400,43 @@ RPGEventCommand *RXDataParser::read_event_command_object()
             int count = this->read_fixnum();
             for (int k = 0; k < count; k++)
             {
-                list << this->read_variant();
+                if (this->look_one_byte_ahead() == 'o') //audiofile
+                {
+                    if (this->look_ahead_object_type() == "RPG::AudioFile")
+                        event_command_object->audiofile = this->read_audiofile_object();
+                    else
+                    {
+                        qDebug() << "Error parsing command";
+                        exit(1);
+                    }
+                }
+                else if (this->look_one_byte_ahead() == 'u') //color tone
+                {
+                    this->read_one_byte(); //skip this byte
+                    if (this->read_symbol_or_link() == "Tone")
+                    {
+                        this->read_one_byte();
+                        qDebug() << this->file.pos();
+                        QDataStream stream(&this->file);
+                        double red,green,blue,gray;
+                        stream >> red;
+                        stream >> green;
+                        stream >> blue;
+                        stream >> gray;
+                        qDebug() << red << " " << green << " " << blue << " " << gray;
+                        qDebug() << this->file.pos();
+                        int frames = this->read_integer(); // this works
+
+
+                    }
+                    else
+                    {
+                        qDebug() << "Error parsing command";
+                        exit(1);
+                    }
+                }
+                else //string or int
+                    list << this->read_variant();
             }
             event_command_object->setParameter(current_symbol, list);
         }
@@ -573,6 +650,64 @@ RPGMap* RXDataParser::parseMap()
             map->setParameter(current_symbol, read_bool());
         else if (current_symbol == "@events")
             this->read_event_list(&map->events);
+        else if (current_symbol == "@encounter_list")
+        {
+            if (this->read_one_byte() != '[')
+            {
+                qDebug() << "error: expect byte [ for encounter list";
+                exit(1);
+            }
+            if (this->read_one_byte() != '\0')
+            {
+                qDebug() << "error: expect empty encounter list (not relevant for Pokemon)";
+                exit(1);
+            }
+
+        }
+        else if (current_symbol == "@data")
+        {
+            if (this->read_one_byte() != 'u') //user defined data structure
+            {
+                qDebug() << "error: table expected for attribute data, expect byte 'u'";
+                exit(1);
+            }
+            if (this->read_symbol_or_link() != "Table")
+            {
+                qDebug() << "error: table expected for attribute data, expetect symbol 'Table'";
+                exit(1);
+            }
+
+            //skip 4 bytes don't know why -.-
+            for (int i = 0; i < 4; i++)
+                this->read_one_byte();
+            int x=0, y=0, z=0;
+
+            for (int i = 0; i < 4; i++)
+                x = (x<<8)|(this->read_one_byte() & 0xFF);
+            for (int i = 0; i < 4; i++)
+                y = (y<<8)|(this->read_one_byte() & 0xFF);
+            for (int i = 0; i < 4; i++)
+                z = (z<<8)|(this->read_one_byte() & 0xFF);
+
+            map->width = x;
+            map->height = y;
+            if (z != 3)
+            {
+                qDebug() << "Error: z of map has to be 3";
+                exit(1);
+            }
+
+            //skip 7 bytes for redundancy. file size is given by coordinates
+            for (int i = 0; i < 7; i++)
+                this->read_one_byte();
+
+            for (int i = 0; i < x*y*z; i++)
+                map->data.append((this->read_one_byte()&0xFF) | ((this->read_one_byte() & 0xFF) << 8));
+        }
+        else {
+            qDebug() << "error: unknown attribute " << current_symbol << " at parsing RPGMap";
+            exit(1);
+        }
     }
 
 

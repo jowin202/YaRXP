@@ -6,6 +6,8 @@
 #include <QRegExp>
 #include <QHash>
 #include <QVariant>
+#include <QColor>
+#include <QDataStream>
 
 #include "rpgmapinfo.h"
 #include "rpgmap.h"
@@ -21,6 +23,8 @@ public:
     int get_byte_and_rev();
     int read_fixnum();
     int read_one_byte();
+    int look_one_byte_ahead();
+    QString look_ahead_object_type();
 
 
     QString read_symbol_or_link();

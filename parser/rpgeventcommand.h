@@ -5,6 +5,8 @@
 #include <QObject>
 #include <QVariant>
 
+#include "rpgaudiofile.h"
+
 class RPGEventCommand : public QObject
 {
     Q_OBJECT
@@ -20,6 +22,7 @@ public:
     int indent;
     QList<QVariant> parameters;
     QString type;
+    RPGAudioFile *audiofile;
 
 signals:
 

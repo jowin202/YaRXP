@@ -24,6 +24,8 @@ public slots:
     void clicked_at_item(QTreeWidgetItem *item, int column);
     void prepare_context_menu(const QPoint & pos );
 
+signals:
+    void on_map_selected(RPGMap*);
 
 private:
     QString project_dir;

@@ -93,7 +93,7 @@
           <enum>Qt::CustomContextMenu</enum>
          </property>
          <property name="sortingEnabled">
-          <bool>true</bool>
+          <bool>false</bool>
          </property>
          <column>
           <property name="text">
@@ -103,6 +103,16 @@
          <column>
           <property name="text">
            <string>order</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>list_id</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>file_id</string>
           </property>
          </column>
         </widget>

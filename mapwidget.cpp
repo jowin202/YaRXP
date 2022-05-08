@@ -7,7 +7,9 @@ MapWidget::MapWidget(QWidget *parent)
     this->width = 60;
     this->current_layer = 0;
     this->mode = PEN;
-    this->map_values = (int*)calloc(this->height * this->width * 3, sizeof(int));
+    //this->map_values = (int*)calloc(this->height * this->width * 3, sizeof(int));
+    for (int i = 0; i < height * width * 3; i++)
+        this->map_values.append(0);
     this->brush_rectangle.setRect(0,0,1,1);
 
     this->redraw();
@@ -15,8 +17,8 @@ MapWidget::MapWidget(QWidget *parent)
 
 MapWidget::~MapWidget()
 {
-    if(map_values != 0)
-        free(map_values);
+    //if(map_values != 0)
+     //   free(map_values);
 }
 
 void MapWidget::mouseMoveEvent(QMouseEvent *ev)
@@ -451,5 +453,14 @@ void MapWidget::set_mode(int mode)
 {
     this->mode = mode;
     this->selection_rectangle = QRect(-1,-1,0,0);
+    this->redraw();
+}
+
+void MapWidget::set_map(RPGMap *map)
+{
+    this->map = map;
+    this->height = map->height;
+    this->width = map->width;
+    this->map_values = map->data;
     this->redraw();
 }

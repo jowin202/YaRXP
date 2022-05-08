@@ -29,7 +29,6 @@ MapTreeWidget::MapTreeWidget(QWidget *parent)
     menu.addAction(&action5);
     menu.addSeparator();
     menu.addAction(&action6);
-
 }
 
 void MapTreeWidget::list_maps(QString project_dir)
@@ -50,6 +49,8 @@ void MapTreeWidget::list_maps(QString project_dir)
             QStringList columns;
             columns << map_list.at(i)->name;
             columns << QString::number(map_list.at(i)->order).rightJustified(3,'0');
+            columns << QString::number(i);
+            columns << QString::number(map_list.at(i)->id);
 
             QTreeWidgetItem *item = new QTreeWidgetItem(columns);
             this->id_map.insert(map_list.at(i)->id, item);
@@ -68,6 +69,8 @@ void MapTreeWidget::list_maps(QString project_dir)
                 QStringList columns;
                 columns << map_list.at(i)->name;
                 columns << QString::number(map_list.at(i)->order).rightJustified(3,'0');
+                columns << QString::number(i);
+                columns << QString::number(map_list.at(i)->id);
 
                 QTreeWidgetItem *item = new QTreeWidgetItem(columns);
                 //parent ID exists, id doesnt exist yet
@@ -85,7 +88,9 @@ void MapTreeWidget::list_maps(QString project_dir)
 
 void MapTreeWidget::clicked_at_item(QTreeWidgetItem *item, int column)
 {
-    //RXDataParser parser(project_dir + QDir::separator() + "Data" + QDir::separator() + item->text(0));
+    RXDataParser parser(project_dir + QDir::separator() + "Data" + QDir::separator() + "Map" + item->text(3).rightJustified(3,'0') + ".rxdata");
+    map_list.at(item->text(2).toInt())->map = parser.parseMap();
+    emit on_map_selected(map_list.at(item->text(2).toInt())->map);
 }
 
 void MapTreeWidget::prepare_context_menu( const QPoint & pos )
