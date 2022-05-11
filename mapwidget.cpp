@@ -3,6 +3,7 @@
 MapWidget::MapWidget(QWidget *parent)
 {
     this->setMouseTracking(true);
+    connect(this, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(prepare_context_menu(QPoint)));
     this->height = 30;
     this->width = 60;
     this->current_layer = 0;
@@ -462,5 +463,23 @@ void MapWidget::set_map(RPGMap *map)
     this->height = map->height;
     this->width = map->width;
     this->map_values = map->data;
+    this->img = QImage(this->current_project_dir + QDir::separator() + "Graphics" + QDir::separator() + "Tilesets" + QDir::separator() + map->tileset->tileset_name + ".png");
+    if (this->img.isNull())
+    {
+        this->img = QImage(this->current_project_dir + QDir::separator() + "Graphics" + QDir::separator() + "Tilesets" + QDir::separator() + map->tileset->tileset_name + ".PNG");
+        //shitty windows workaround
+    }
+
+    if (this->img.isNull())
+    {
+        qDebug() << this->current_project_dir + QDir::separator() + "Graphics" + QDir::separator() + "Tilesets" + QDir::separator() + map->tileset->tileset_name + ".png";
+        exit(1);
+    }
     this->redraw();
+}
+
+void MapWidget::prepare_context_menu(QPoint p)
+{
+
+    //preparation for event stuff.
 }

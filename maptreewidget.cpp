@@ -18,6 +18,8 @@ MapTreeWidget::MapTreeWidget(QWidget *parent)
     action5.setShortcut(QKeySequence(Qt::Key_Delete));
     action6.setText("&Shift");
     action6.setShortcut(QKeySequence(tr("Ctrl+T")));
+    action7.setText("&Extend");
+    action7.setShortcut(QKeySequence(tr("Ctrl+E")));
 
 
     menu.addAction(&action1);
@@ -29,6 +31,7 @@ MapTreeWidget::MapTreeWidget(QWidget *parent)
     menu.addAction(&action5);
     menu.addSeparator();
     menu.addAction(&action6);
+    menu.addAction(&action7);
 }
 
 void MapTreeWidget::list_maps(QString project_dir)
@@ -89,8 +92,6 @@ void MapTreeWidget::list_maps(QString project_dir)
 
     RXDataParser parser2(tileset_file);
     parser2.parseTilesetList(&this->tileset_list);
-    qDebug() << this->tileset_list.length();
-
 
 }
 
@@ -98,12 +99,21 @@ void MapTreeWidget::clicked_at_item(QTreeWidgetItem *item, int column)
 {
     RXDataParser parser(project_dir + QDir::separator() + "Data" + QDir::separator() + "Map" + item->text(3).rightJustified(3,'0') + ".rxdata");
     map_list.at(item->text(2).toInt())->map = parser.parseMap();
+    int tileset_id = map_list.at(item->text(2).toInt())->map->tileset_id;
+    for (int i = 0; i < tileset_list.length(); i++)
+    {
+        if (tileset_list.at(i)->id == tileset_id)
+        {
+            map_list.at(item->text(2).toInt())->map->tileset = tileset_list.at(i);
+            emit on_tileset_changed(tileset_list.at(i));
+            break;
+        }
+    }
     emit on_map_selected(map_list.at(item->text(2).toInt())->map);
 }
 
 void MapTreeWidget::prepare_context_menu( const QPoint & pos )
 {
-    qDebug() << "test";
 
     menu.exec(this->mapToGlobal(pos));
 }

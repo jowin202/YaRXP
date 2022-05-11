@@ -387,7 +387,6 @@ void RXDataParser::read_event_command_list(QList<RPGEventCommand *> *list)
     int num_commands = this->read_fixnum();
 
 
-    qDebug() << symbol_cache;
     for (int i = 0; i < num_commands; i++)
     {
         list->append(this->read_event_command_object());
@@ -485,7 +484,7 @@ RPGEventCommand *RXDataParser::read_event_command_object()
         }
 
     }
-    event_command_object->debug();
+    //event_command_object->debug();
 
     return event_command_object;
 }

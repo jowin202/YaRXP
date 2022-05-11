@@ -4,6 +4,7 @@
 #include <QObject>
 #include "rpgevent.h"
 #include "rpgaudiofile.h"
+#include "rpgtileset.h"
 
 class RPGMap : public QObject
 {
@@ -32,6 +33,8 @@ public:
     QList<RPGEvent*> events;
 
     RPGAudioFile *bgs = 0, *bgm = 0;
+
+    RPGTileset *tileset;
 
 
 signals:

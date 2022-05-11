@@ -5,10 +5,13 @@ TilesetWidget::TilesetWidget(QWidget *parent)
     this->setMouseTracking(true);
     this->click_pos = QPoint(-1,-1);
 
-    this->setPixmap(QPixmap::fromImage(img));
-    qDebug() << "init_tiles";
+    this->updateView();
 
-    //connect(this, SIGNAL(selection_changed()), this, SLOT(test_slot()));
+}
+
+void TilesetWidget::updateView()
+{
+    this->setPixmap(QPixmap::fromImage(img));
 }
 
 void TilesetWidget::mouseMoveEvent(QMouseEvent *ev)
@@ -96,8 +99,22 @@ QPoint TilesetWidget::bin_to_coordinate(int b)
     return QPoint(b % 8, b/8);
 }
 
-void TilesetWidget::test_slot()
+void TilesetWidget::change_tileset(RPGTileset *tileset)
 {
-    qDebug() << "selection changed signal emitted";
+
+    this->tileset = tileset;
+    this->img = QImage(this->current_project_dir + QDir::separator() + "Graphics" + QDir::separator() + "Tilesets" + QDir::separator() + this->tileset->tileset_name + ".png");
+    if (this->img.isNull())
+    {
+        this->img = QImage(this->current_project_dir + QDir::separator() + "Graphics" + QDir::separator() + "Tilesets" + QDir::separator() + this->tileset->tileset_name + ".PNG");
+        //shitty windows workaround
+    }
+
+    if (this->img.isNull())
+    {
+        qDebug() << this->current_project_dir + QDir::separator() + "Graphics" + QDir::separator() + "Tilesets" + QDir::separator() + this->tileset->tileset_name + ".png";
+        exit(1);
+    }
+    this->updateView();
 }
 

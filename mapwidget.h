@@ -11,6 +11,7 @@
 #include <QMouseEvent>
 #include <QPainter>
 #include <QEvent>
+#include <QDir>
 
 #include "parser/rpgmap.h"
 
@@ -20,6 +21,10 @@ class MapWidget : public QLabel
 public:
     MapWidget(QWidget *parent);
     ~MapWidget();
+    void set_project_dir(QString dir)
+    {
+        this->current_project_dir = dir;
+    }
     void mouseMoveEvent(QMouseEvent *ev);
     void mousePressEvent(QMouseEvent *ev);
     void mouseReleaseEvent(QMouseEvent *ev);
@@ -42,6 +47,7 @@ public:
 
 public slots:
     void set_map(RPGMap *map);
+    void prepare_context_menu(QPoint p);
     void set_brush(QList<int> vars);
     void redraw();
     void draw_brush_rectangle();
@@ -58,8 +64,8 @@ public slots:
 
 private:
     RPGMap *map;
-    QImage img  = QImage("/home/johannes/RPG_maker/Pokemon Klagenfurt Vibes/Graphics/Tilesets/Outside.png");
-    QImage img2 = QImage("/home/johannes/RPG_maker/pokemon_decrypted/Graphics/Tilesets/RSEFRLG Complete.png");
+    QString current_project_dir;
+    QImage img  = QImage(256,256,QImage::Format_ARGB32);
     int mode;
     int height;
     int width;

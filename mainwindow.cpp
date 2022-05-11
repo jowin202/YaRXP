@@ -16,6 +16,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(this->ui->tileset_label, SIGNAL(selection_changed(QList<int>)), this, SLOT(on_actionPen_triggered())); //set pen when select tile
     connect(this->ui->map_tree_widget, SIGNAL(on_map_selected(RPGMap*)), this->ui->map_label, SLOT(set_map(RPGMap*)));
 
+    connect(this->ui->map_tree_widget, SIGNAL(on_tileset_changed(RPGTileset*)), this->ui->tileset_label, SLOT(change_tileset(RPGTileset*)));
+
+
     this->layergroup = new QActionGroup(this);
     this->layergroup->addAction(this->ui->actionLayer1);
     this->layergroup->addAction(this->ui->actionLayer2);
@@ -87,6 +90,8 @@ void MainWindow::on_actionOpen_triggered()
     if (name != "" && fi.exists() && fi.isFile())
     {
         this->current_project_dir = fi.absoluteDir().path();
+        this->ui->map_label->set_project_dir(this->current_project_dir);
+        this->ui->tileset_label->set_project_dir(this->current_project_dir);
         this->ui->map_tree_widget->list_maps(this->current_project_dir);
     }
 }

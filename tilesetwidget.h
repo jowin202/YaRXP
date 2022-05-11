@@ -8,6 +8,9 @@
 #include <QMouseEvent>
 #include <QPainter>
 #include <QEvent>
+#include <QDir>
+
+#include "parser/rpgtileset.h"
 
 class TilesetWidget : public QLabel
 {
@@ -15,6 +18,11 @@ class TilesetWidget : public QLabel
 
 public:
     TilesetWidget(QWidget *parent);
+    void set_project_dir(QString dir)
+    {
+        this->current_project_dir = dir;
+    }
+    void updateView();
     void mouseMoveEvent(QMouseEvent *ev);
     void mousePressEvent(QMouseEvent *ev);
     void mouseReleaseEvent(QMouseEvent *ev);
@@ -27,14 +35,15 @@ signals:
     void selection_changed(QList<int>);
 
 public slots:
-    void test_slot();
+    void change_tileset(RPGTileset* tileset);
 
 private:
+    QString current_project_dir;
+    RPGTileset *tileset;
     QPoint curr_pos;
     QPoint click_pos;
     QRect selection;
-    QImage img = QImage("/home/johannes/RPG_maker/Pokemon Klagenfurt Vibes/Graphics/Tilesets/Outside.png");
-    QImage img2 = QImage("/home/johannes/RPG_maker/pokemon_decrypted/Graphics/Tilesets/RSEFRLG Complete.png");
+    QImage img = QImage(256,256,QImage::Format_ARGB32);
 };
 
 #endif // TILESETWIDGET_H

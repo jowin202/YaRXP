@@ -27,6 +27,7 @@ public slots:
 
 signals:
     void on_map_selected(RPGMap*);
+    void on_tileset_changed(RPGTileset*);
 
 private:
     QString project_dir;
@@ -43,6 +44,7 @@ private:
     QAction action4;
     QAction action5;
     QAction action6;
+    QAction action7;
 
 };
 #endif // MAPTREEWIDGET_H
