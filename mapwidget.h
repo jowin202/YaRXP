@@ -58,7 +58,7 @@ public slots:
 
 private:
     RPGMap *map;
-    QImage img = QImage("/home/johannes/RPG_maker/Pokemon Klagenfurt Vibes/Graphics/Tilesets/Outside.png");
+    QImage img  = QImage("/home/johannes/RPG_maker/Pokemon Klagenfurt Vibes/Graphics/Tilesets/Outside.png");
     QImage img2 = QImage("/home/johannes/RPG_maker/pokemon_decrypted/Graphics/Tilesets/RSEFRLG Complete.png");
     int mode;
     int height;

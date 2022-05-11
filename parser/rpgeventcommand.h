@@ -23,6 +23,7 @@ public:
     QList<QVariant> parameters;
     QString type;
     RPGAudioFile *audiofile;
+    QStringList choices_list;
 
 signals:
 

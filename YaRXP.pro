@@ -32,6 +32,7 @@ SOURCES += \
     parser/rpgmapinfo.cpp \
     parser/rpgmovecommand.cpp \
     parser/rpgmoveroute.cpp \
+    parser/rpgtileset.cpp \
     parser/rpgtone.cpp \
     parser/rxdataparser.cpp \
     tilesetwidget.cpp
@@ -52,6 +53,7 @@ HEADERS += \
     parser/rpgmapinfo.h \
     parser/rpgmovecommand.h \
     parser/rpgmoveroute.h \
+    parser/rpgtileset.h \
     parser/rpgtone.h \
     parser/rxdataparser.h \
     tilesetwidget.h

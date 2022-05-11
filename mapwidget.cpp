@@ -150,7 +150,7 @@ void MapWidget::mousePressEvent(QMouseEvent *ev)
     else if (this->mode == SELECT)
     {
         this->selection_button = true;
-        if (this->selection_rectangle.width() > 0 & this->selection_rectangle.height() > 0) //when selection rect exists
+        if (this->selection_rectangle.width() > 0 && this->selection_rectangle.height() > 0) //when selection rect exists
         {
             if (this->selection_rectangle.contains(this->curr_pos)) //click inside means moving
             {

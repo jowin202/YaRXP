@@ -89,8 +89,6 @@ void MapTreeWidget::list_maps(QString project_dir)
 
     RXDataParser parser2(tileset_file);
     parser2.parseTilesetList(&this->tileset_list);
-    qDebug() << this->tileset_list.length();
-
 
 }
 

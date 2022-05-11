@@ -6,6 +6,9 @@
 
 #include "parser/rxdataparser.h"
 #include "parser/rpgmapinfo.h"
+#include "parser/rpgtileset.h"
+
+#include <QList>
 
 int main(int argc, char *argv[])
 {    
@@ -24,11 +27,22 @@ int main(int argc, char *argv[])
         map_list.at(i)->debug();
     */
 
+    /*
+    RXDataParser parser("/home/johannes/RPG_maker/Pokemon Klagenfurt Vibes/Data/Map048.rxdata");
+    parser.parseMap();
+    qDebug() << "finished";
 
-    //RXDataParser parser("/home/johannes/RPG_maker/Pokemon Klagenfurt Vibes/Data/Map077.rxdata");
-    //parser.parseMap();
+    return 0;*/
 
-    //return 0;
+
+    /*
+    QList<RPGTileset*> tileset_list;
+    RXDataParser parser2("/home/johannes/RPG_maker/Pokemon Klagenfurt Vibes/Data/Tilesets.rxdata");
+    parser2.parseTilesetList(&tileset_list);
+
+    return 0;
+    */
+
     MainWindow w;
     w.show();
     return a.exec();

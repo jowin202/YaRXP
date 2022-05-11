@@ -31,7 +31,11 @@ QString RPGEventCommand::getType()
     else if (code == 101)
         return "Show Text";
     else if (code == 102)
-        return "Show Choices"; //not implemented //Buggy TODO
+        return "Show Choices";
+    else if (code == 402)
+        return "Show Choices Multiline";
+    else if (code == 402)
+        return "Show Choices Branch End";
     else if (code == 103)
         return "Input number";
     else if (code == 104)

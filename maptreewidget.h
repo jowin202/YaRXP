@@ -8,6 +8,7 @@
 #include <QMessageBox>
 #include "parser/rxdataparser.h"
 #include "parser/rpgmapinfo.h"
+#include "parser/rpgtileset.h"
 
 #include <QDebug>
 #include <QMenu>
@@ -30,8 +31,10 @@ signals:
 private:
     QString project_dir;
     QString map_info_file;
+    QString tileset_file;
     QList<RPGMapInfo*> map_list;
     QHash<int,QTreeWidgetItem*> id_map;
+    QList<RPGTileset*> tileset_list;
 
     QMenu menu;
     QAction action1;

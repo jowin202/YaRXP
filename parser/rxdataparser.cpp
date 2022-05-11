@@ -437,7 +437,7 @@ RPGEventCommand *RXDataParser::read_event_command_object()
                     }
                     else
                     {
-                        qDebug() << "Error parsing command: object expected";
+                        qDebug() << "Error parsing command: object (audiofile or moveroute) expected";
                         exit(1);
                     }
                 }
@@ -464,6 +464,16 @@ RPGEventCommand *RXDataParser::read_event_command_object()
                     {
                         qDebug() << "Error parsing command: Tone expected";
                         exit(1);
+                    }
+                }
+                else if (this->look_one_byte_ahead() == '[') //another list in parameters. stringlist for choices
+                {
+                    //show choices list
+                    this->read_one_byte();
+                    int num_choices = this->read_fixnum();
+                    for (int i = 0; i < num_choices; i++)
+                    {
+                        event_command_object->choices_list << this->read_string();
                     }
                 }
                 else //string or int
@@ -729,17 +739,24 @@ RPGMap* RXDataParser::parseMap()
                 exit(1);
             }
 
+            this->read_fixnum(); //ignore this value ... it is the size of the table
+
+
             //skip 4 bytes don't know why -.-
             for (int i = 0; i < 4; i++)
                 this->read_one_byte();
-            int x=0, y=0, z=0;
+            int x=0, y=0, z=0, size;
 
             for (int i = 0; i < 4; i++)
-                x = (x<<8)|(this->read_one_byte() & 0xFF);
+                x |= ((this->read_one_byte() & 0xFF) << (8*i)) ;
             for (int i = 0; i < 4; i++)
-                y = (y<<8)|(this->read_one_byte() & 0xFF);
+                y |= ((this->read_one_byte() & 0xFF) << (8*i)) ;
             for (int i = 0; i < 4; i++)
-                z = (z<<8)|(this->read_one_byte() & 0xFF);
+                z |= ((this->read_one_byte() & 0xFF) << (8*i)) ;
+            for (int i = 0; i < 4; i++)
+                size |= ((this->read_one_byte() & 0xFF) << (8*i)) ;
+
+
 
             map->width = x;
             map->height = y;
@@ -749,9 +766,6 @@ RPGMap* RXDataParser::parseMap()
                 exit(1);
             }
 
-            //skip 7 bytes for redundancy. file size is given by coordinates
-            for (int i = 0; i < 7; i++)
-                this->read_one_byte();
 
             for (int i = 0; i < x*y*z; i++)
                 map->data.append((this->read_one_byte()&0xFF) | ((this->read_one_byte() & 0xFF) << 8));
@@ -765,5 +779,232 @@ RPGMap* RXDataParser::parseMap()
 
     this->close_file_if_open();
     return map;
+}
+
+RPGTileset *RXDataParser::parseTileset()
+{
+    RPGTileset *tileset_object = new RPGTileset();
+    QString current_symbol;
+
+    if (this->read_one_byte() != 'o')
+    {
+        qDebug() << "error: object as value expected";
+        exit(1);
+    }
+
+
+    if (read_symbol_or_link() != "RPG::Tileset")
+    {
+        qDebug() << "error: wrong object, RPG::Tileset expected";
+        exit(1);
+    }
+
+    int attribute_count = this->read_fixnum(); //17
+    for (int j = 0; j < attribute_count; j++)
+    {
+        current_symbol = read_symbol_or_link();
+        if (current_symbol == "@id")
+        {
+            tileset_object->id = this->read_integer();
+        }
+        else if (current_symbol == "@tileset_name")
+        {
+            tileset_object->tileset_name = this->read_string();
+        }
+        else if (current_symbol == "@battleback_name")
+        {
+            tileset_object->battleback_name = this->read_string();
+        }
+        else if (current_symbol == "@panorama_hue")
+        {
+            tileset_object->panorama_hue = this->read_integer();
+        }
+        else if (current_symbol == "@panorama_name")
+        {
+            tileset_object->panorama_name = this->read_string();
+        }
+        else if (current_symbol == "@name")
+        {
+            tileset_object->name = this->read_string();
+        }
+        else if (current_symbol == "@fog_sx")
+        {
+            tileset_object->fog_sx = this->read_integer();
+        }
+        else if (current_symbol == "@fog_sy")
+        {
+            tileset_object->fog_sy = this->read_integer();
+        }
+        else if (current_symbol == "@fog_hue")
+        {
+            tileset_object->fog_hue = this->read_integer();
+        }
+        else if (current_symbol == "@fog_zoom")
+        {
+            tileset_object->fog_zoom = this->read_integer();
+        }
+        else if (current_symbol == "@fog_name")
+        {
+            tileset_object->fog_name = this->read_string();
+        }
+        else if (current_symbol == "@fog_opacity")
+        {
+            tileset_object->fog_opacity = this->read_integer();
+        }
+        else if (current_symbol == "@fog_blend_type")
+        {
+            tileset_object->fog_blend_type = this->read_integer();
+        }
+        else if (current_symbol == "@autotile_names")
+        {
+            if (this->read_one_byte() != '[')
+            {
+                qDebug() << "error: list expected";
+                exit(1);
+            }
+            int num_autotiles = this->read_fixnum(); // 7
+            for (int i = 0; i < num_autotiles; i++)
+                tileset_object->autotile_names.append(this->read_string());
+        }
+        else if (current_symbol == "@passages")
+        {
+            if (this->read_one_byte() != 'u') //user defined data structure
+            {
+                qDebug() << "error: table expected, expect byte 'u'";
+                exit(1);
+            }
+            if (this->read_symbol_or_link() != "Table")
+            {
+                qDebug() << "error: table expected, expetect symbol 'Table'";
+                exit(1);
+            }
+
+            this->read_fixnum(); //ignore this value ... it is the size of the table
+
+
+            //skip 4 bytes don't know why -.-
+            for (int i = 0; i < 4; i++)
+                this->read_one_byte();
+            int x=0, y=0, z=0;
+
+            for (int i = 0; i < 4; i++)
+                x |= ((this->read_one_byte() & 0xFF) << (8*i)) ;
+            for (int i = 0; i < 4; i++)
+                y |= ((this->read_one_byte() & 0xFF) << (8*i)) ;
+            for (int i = 0; i < 4; i++)
+                z |= ((this->read_one_byte() & 0xFF) << (8*i)) ;
+            for (int i = 0; i < 4; i++)
+                this->read_one_byte() ; //withdraw result, size can be calculated
+
+            int size = x*y*z;
+
+
+            for (int i = 0; i < size*2; i++)
+                tileset_object->passages.append(this->read_one_byte());
+        }
+        else if (current_symbol == "@priorities")
+        {
+            if (this->read_one_byte() != 'u') //user defined data structure
+            {
+                qDebug() << "error: table expected, expect byte 'u'";
+                exit(1);
+            }
+            if (this->read_symbol_or_link() != "Table")
+            {
+                qDebug() << "error: table expected, expetect symbol 'Table'";
+                exit(1);
+            }
+
+            this->read_fixnum(); //ignore this value ... it is the size of the table
+
+
+            //skip 4 bytes don't know why -.-
+            for (int i = 0; i < 4; i++)
+                this->read_one_byte();
+            int x=0, y=0, z=0;
+
+            for (int i = 0; i < 4; i++)
+                x |= ((this->read_one_byte() & 0xFF) << (8*i)) ;
+            for (int i = 0; i < 4; i++)
+                y |= ((this->read_one_byte() & 0xFF) << (8*i)) ;
+            for (int i = 0; i < 4; i++)
+                z |= ((this->read_one_byte() & 0xFF) << (8*i)) ;
+            for (int i = 0; i < 4; i++)
+                this->read_one_byte() ; //withdraw result, size can be calculated
+
+            int size = x*y*z;
+
+
+            for (int i = 0; i < size*2; i++)
+                tileset_object->priorities.append(this->read_one_byte());
+        }
+        else if (current_symbol == "@terrain_tags")
+        {
+            if (this->read_one_byte() != 'u') //user defined data structure
+            {
+                qDebug() << "error: table expected, expect byte 'u'";
+                exit(1);
+            }
+            if (this->read_symbol_or_link() != "Table")
+            {
+                qDebug() << "error: table expected, expetect symbol 'Table'";
+                exit(1);
+            }
+
+            this->read_fixnum(); //ignore this value ... it is the size of the table
+
+
+            //skip 4 bytes don't know why -.-
+            for (int i = 0; i < 4; i++)
+                this->read_one_byte();
+            int x=0, y=0, z=0;
+
+            for (int i = 0; i < 4; i++)
+                x |= ((this->read_one_byte() & 0xFF) << (8*i)) ;
+            for (int i = 0; i < 4; i++)
+                y |= ((this->read_one_byte() & 0xFF) << (8*i)) ;
+            for (int i = 0; i < 4; i++)
+                z |= ((this->read_one_byte() & 0xFF) << (8*i)) ;
+            for (int i = 0; i < 4; i++)
+                this->read_one_byte() ; //withdraw result, size can be calculated
+
+            int size = x*y*z;
+
+            for (int i = 0; i < size*2; i++)
+                tileset_object->terrain_tag.append(this->read_one_byte());
+
+            //qDebug() << this->file.pos();
+        }
+    }
+    return tileset_object;
+}
+
+void RXDataParser::parseTilesetList(QList<RPGTileset *> *tileset_list)
+{
+    tileset_list->clear();
+    this->symbol_cache.clear();
+    this->check_header();
+
+    if (this->read_one_byte() != '[')
+    {
+        qDebug() << "Error parsing tileset: list expected";
+        exit(1);
+    }
+    int num_list = this->read_fixnum();
+
+
+    for (int i = 0; i < num_list; i++)
+    {
+        if (this->look_one_byte_ahead() == '0')
+        {
+            this->read_one_byte(); //ignore and do nothing
+        }
+        else if (this->look_one_byte_ahead() == 'o')
+        {
+            RPGTileset *tileset = this->parseTileset();
+            tileset_list->append(tileset);
+        }
+    }
+    this->close_file_if_open();
 }
 
