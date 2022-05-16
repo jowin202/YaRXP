@@ -19,35 +19,6 @@ int main(int argc, char *argv[])
     QCoreApplication::setApplicationName("YaRXP");
 
 
-    //QImage img = QImage("/home/johannes/RPG_maker/Pokemon Klagenfurt Vibes/Graphics/Autotiles/Sand shore.png");
-    //Autotileset at(img);
-
-
-    /*
-    QList<RPGMapInfo *> map_list;
-    RXDataParser parser("/home/johannes/RPG_maker/Pokemon Klagenfurt Vibes/Data/MapInfos.rxdata");
-    parser.parseMapInfo(&map_list);
-
-    for (int i = 0; i < map_list.length(); i++)
-        map_list.at(i)->debug();
-    */
-
-    /*
-    RXDataParser parser("/home/johannes/RPG_maker/Pokemon Klagenfurt Vibes/Data/Map048.rxdata");
-    parser.parseMap();
-    qDebug() << "finished";
-
-    return 0;*/
-
-
-    /*
-    QList<RPGTileset*> tileset_list;
-    RXDataParser parser2("/home/johannes/RPG_maker/Pokemon Klagenfurt Vibes/Data/Tilesets.rxdata");
-    parser2.parseTilesetList(&tileset_list);
-
-    return 0;
-    */
-
     MainWindow w;
     w.show();
     return a.exec();

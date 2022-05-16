@@ -59,7 +59,7 @@ public slots:
     void flood_fill(QPoint clicked, QPoint next);
 
 private:
-    RPGMap *map;
+    RPGMap *map = 0;
     QImage *img = new QImage(256,256,QImage::Format_ARGB32);
     int mode;
     int height;
@@ -68,7 +68,7 @@ private:
     QImage current_pic;
     QList <int> brush_vars;
     QPoint curr_pos;
-    QList<int> map_values;
+    //QList<int> map_values;
     bool mouse_pressed_left = false;
     bool mouse_pressed_right = false;
     bool dim_other_layers = false;

@@ -1,5 +1,20 @@
 #include "autotileset.h"
 
+Autotileset::Autotileset()
+{
+    this->thumb = QImage(32,32,QImage::Format_ARGB32);
+    this->tileset_full = QImage(32,32,QImage::Format_ARGB32);
+
+    QPainter painter1(&thumb);
+    painter1.fillRect(0,0,thumb.width(),thumb.height(),Qt::green);
+    painter1.end();
+
+    QPainter painter2(&tileset_full);
+    painter2.fillRect(0,0,tileset_full.width(),tileset_full.height(),Qt::green);
+    painter2.end();
+
+}
+
 Autotileset::Autotileset(QImage tileset)
 {
     this->tileset = tileset;
@@ -77,7 +92,7 @@ Autotileset::Autotileset(QImage tileset)
             {0,1,36,37}, //31
 
             {16,21,22,27}, //32
-            {6,7,12,13}, //same as 20? (check this)
+            {6,7,36,37}, // check this
             {4,5,10,11},
             {4,5,10,3},
 

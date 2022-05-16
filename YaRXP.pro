@@ -20,6 +20,7 @@ SOURCES += \
     eventdialog.cpp \
     main.cpp \
     mainwindow.cpp \
+    mapproperties.cpp \
     maptreewidget.cpp \
     mapwidget.cpp \
     eventpage.cpp \
@@ -42,6 +43,7 @@ HEADERS += \
     autotileset.h \
     eventdialog.h \
     mainwindow.h \
+    mapproperties.h \
     maptreewidget.h \
     mapwidget.h \
     eventpage.h \
@@ -63,7 +65,8 @@ HEADERS += \
 FORMS += \
     eventdialog.ui \
     mainwindow.ui \
-    eventpage.ui
+    eventpage.ui \
+    mapproperties.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

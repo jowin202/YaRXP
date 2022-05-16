@@ -42,7 +42,7 @@ private:
     QPoint curr_pos;
     QPoint click_pos;
     QRect selection;
-    QImage *img = new QImage(256,256,QImage::Format_ARGB32);
+    QImage *img = 0;
 };
 
 #endif // TILESETWIDGET_H

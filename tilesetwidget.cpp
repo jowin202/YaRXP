@@ -11,7 +11,15 @@ TilesetWidget::TilesetWidget(QWidget *parent)
 
 void TilesetWidget::updateView()
 {
-    this->setPixmap(QPixmap::fromImage(*img));
+    if (this->img == 0)
+        return;
+
+    QImage background(img->width(),img->height(), QImage::Format_ARGB32);
+    QPainter painter(&background);
+    painter.fillRect(0,0,img->width(),img->height(), QColor(0xaa,0x16,0xa0));
+    painter.drawImage(QRect(0,0,img->width(),img->height()), *img, QRect(0,0,img->width(),img->height()));
+    painter.end();
+    this->setPixmap(QPixmap::fromImage(background));
 }
 
 void TilesetWidget::mouseMoveEvent(QMouseEvent *ev)

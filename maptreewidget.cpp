@@ -140,19 +140,18 @@ void MapTreeWidget::clicked_at_item(QTreeWidgetItem *item, int column)
                 if (QFile(this->project_dir + QDir::separator() + "Graphics" + QDir::separator() + "Autotiles" + QDir::separator() + current_tileset->autotile_names.at(i) + ".png").exists())
                 {
                      autotiles = QImage(this->project_dir + QDir::separator() + "Graphics" + QDir::separator() + "Autotiles" + QDir::separator() +current_tileset->autotile_names.at(i) + ".png");
+                     current_tileset->autotiles.append(Autotileset(autotiles));
                 }
                 else if (QFile(this->project_dir + QDir::separator() + "Graphics" + QDir::separator() + "Autotiles" + QDir::separator() +current_tileset->autotile_names.at(i) + ".PNG").exists())
                 {
                      autotiles = QImage(this->project_dir + QDir::separator() + "Graphics" + QDir::separator() + "Autotiles" + QDir::separator() +current_tileset->autotile_names.at(i) + ".PNG");
+                     current_tileset->autotiles.append(Autotileset(autotiles));
                 }
                 else
                 {
-                    qDebug() << "error: tileset does not exist: " << this->project_dir + QDir::separator() + "Graphics" + QDir::separator() + "Autotiles" + QDir::separator() +current_tileset->autotile_names.at(i) + ".png";
-                    exit(1);
+                    current_tileset->autotiles.append(Autotileset());
                 }
 
-                qDebug() <<current_tileset->autotile_names.at(i);
-                current_tileset->autotiles.append(Autotileset(autotiles));
             }
         }
 

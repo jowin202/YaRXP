@@ -3,12 +3,18 @@
 
 #include "eventpage.h"
 
-EventDialog::EventDialog(QWidget *parent) :
+EventDialog::EventDialog(QWidget *parent, RPGEvent *event) :
     QWidget(parent),
     ui(new Ui::EventDialog)
 {
     ui->setupUi(this);
-    this->on_button_new_clicked();
+    this->event = event;
+    this->ui->label_event_name->setText(event->name);
+    for (int i = 0; i < this->event->pages.size(); i++)
+    {
+        this->ui->tab_widget->addTab(new EventPage(nullptr,this->event->pages.at(i)), QString::number(i+1));
+    }
+
 }
 
 EventDialog::~EventDialog()

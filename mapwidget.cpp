@@ -8,9 +8,6 @@ MapWidget::MapWidget(QWidget *parent)
     this->width = 60;
     this->current_layer = 0;
     this->mode = PEN;
-    //this->map_values = (int*)calloc(this->height * this->width * 3, sizeof(int));
-    for (int i = 0; i < height * width * 3; i++)
-        this->map_values.append(0);
     this->brush_rectangle.setRect(0,0,1,1);
 
     this->redraw();
@@ -18,8 +15,6 @@ MapWidget::MapWidget(QWidget *parent)
 
 MapWidget::~MapWidget()
 {
-    //if(map_values != 0)
-     //   free(map_values);
 }
 
 void MapWidget::mouseMoveEvent(QMouseEvent *ev)
@@ -59,7 +54,7 @@ void MapWidget::mouseMoveEvent(QMouseEvent *ev)
 
                     int shift_x = (x + shitty_mod(left_click_pos.x()-curr_pos.x(),brush_rectangle.width()))%brush_rectangle.width();
                     int shift_y = (y + shitty_mod(left_click_pos.y()-curr_pos.y(),brush_rectangle.height()))%brush_rectangle.height();
-                    map_values[index] = brush_vars[shift_x + brush_rectangle.width()*shift_y];
+                    this->map->data[index] = brush_vars[shift_x + brush_rectangle.width()*shift_y];
                 }
             }
         }
@@ -143,7 +138,7 @@ void MapWidget::mousePressEvent(QMouseEvent *ev)
                     if (draw_pos.y() + y >= this->height || draw_pos.y() + y < 0)
                         continue;
                     int index = array_position(QPoint(draw_pos.x()+x,draw_pos.y()+y), this->current_layer);
-                    map_values[index] = brush_vars[x + brush_rectangle.width()*y];
+                    this->map->data[index] = brush_vars[x + brush_rectangle.width()*y];
                 }
             }
         }
@@ -198,7 +193,7 @@ void MapWidget::mouseReleaseEvent(QMouseEvent *ev)
                 for (int x = 0; x < brush_rectangle.width(); x++)
                 {
                     index = array_position(brush_rectangle.topLeft() + QPoint(x,y), this->current_layer);
-                    list.append(this->map_values[index]);
+                    list.append(this->map->data[index]);
                 }
             }
             this->set_brush(list);
@@ -225,8 +220,8 @@ void MapWidget::mouseReleaseEvent(QMouseEvent *ev)
                     for (int x = 0; x < selection_rectangle.width()-1; x++)
                     {
                         int index = array_position(selection_rectangle.topLeft() + QPoint(x,y), z);
-                        this->selection_list.append(map_values[index]);
-                        map_values[index] = 0;
+                        this->selection_list.append(this->map->data[index]);
+                        this->map->data[index] = 0;
                     }
             selection_rectangle_is_released = true; //draw content of sel. rect now
         }
@@ -265,11 +260,13 @@ void MapWidget::set_brush(QList<int> vars)
 
 void MapWidget::redraw()
 {
+    if (this->map == 0)
+        return;
     this->current_pic = QImage(this->width*32, this->height*32,QImage::Format_ARGB32);
 
     QPainter painter;
     painter.begin(&this->current_pic);
-    painter.fillRect(0,0,this->current_pic.width(), this->current_pic.height(),Qt::black);
+    painter.fillRect(0,0,this->current_pic.width(), this->current_pic.height(), Qt::black); ;
 
 
     for (int layer = 0; layer <= this->current_layer; layer++)
@@ -282,15 +279,18 @@ void MapWidget::redraw()
         for (int i = 0; i < this->height * this->width; i++)
         {
             int index = layer * this->height * this->width + i;
-            if (this->map_values[index] == 0)
+            if (this->map->data[index] == 0 && layer == 0)
             {
                 //empty, do nothing
+                QPoint map_coord = 32*QPoint(i % this->width, i/this->width);
+                QRect target_rect(map_coord, map_coord + QPoint(31,31));
+                painter.fillRect(target_rect, QColor(0xaa,0x16,0xa0));
             }
-            else if (this->map_values[index] > 0 && this->map_values[index] < 0x0180)
+            else if (this->map->data[index] > 0 && this->map->data[index] < 0x0180)
             {
                 //autotiles
-                int tileset_num = this->map_values[index] / 48 - 1;
-                int tile_num = this->map_values[index] % 48;
+                int tileset_num = this->map->data[index] / 48 - 1;
+                int tile_num = this->map->data[index] % 48;
 
                 QPoint map_coord = 32*QPoint(i % this->width, i/this->width);
                 QRect target_rect(map_coord, map_coord + QPoint(31,31));
@@ -300,7 +300,7 @@ void MapWidget::redraw()
 
             }
             else{
-                QPoint tile_coord = 32*bin_to_coordinate(map_values[index]);
+                QPoint tile_coord = 32*bin_to_coordinate(this->map->data[index]);
                 QPoint map_coord = 32*QPoint(i % this->width, i/this->width);
 
                 QRect target_rect(map_coord, map_coord + QPoint(31,31));
@@ -324,6 +324,7 @@ void MapWidget::redraw()
                 QRect target_rect(map_coord, map_coord + QPoint(31,31));
                 QRect source_rect(tile_coord, tile_coord + QPoint(31,31));
 
+                //TODO Autotiles
                 painter.drawImage(target_rect, *img, source_rect);
 
             }
@@ -414,7 +415,7 @@ void MapWidget::merge_selection()
             for (int x = 0; x < selection_rectangle.width()-1; x++)
             {
                 int index = array_position(selection_rectangle.topLeft() + QPoint(x,y), z);
-                map_values[index] = this->selection_list[2 + sel_width*sel_height*z + x + sel_width*y];
+                this->map->data[index] = this->selection_list[2 + sel_width*sel_height*z + x + sel_width*y];
             }
 }
 
@@ -426,9 +427,9 @@ void MapWidget::flood_fill(QPoint clicked, QPoint next)
 
 
     int index = array_position(next, this->current_layer);
-    if (map_values[index] == 0)
+    if (this->map->data[index] == 0)
     {
-        map_values[index] = this->brush_vars[brush_rectangle.width()*brush_rectangle.height()*current_layer + shift_x + this->brush_rectangle.width()*shift_y];
+        this->map->data[index] = this->brush_vars[brush_rectangle.width()*brush_rectangle.height()*current_layer + shift_x + this->brush_rectangle.width()*shift_y];
         if (next.x()-1 >= 0)
         {
             this->flood_fill(clicked, next + QPoint(-1,0));
@@ -478,7 +479,7 @@ void MapWidget::set_map(RPGMap *map)
     this->map = map;
     this->height = map->height;
     this->width = map->width;
-    this->map_values = map->data;
+    //this->map_values = map->data;
     this->img = &map->tileset->tileset;
 
     /*

@@ -4,6 +4,10 @@
 #include <QWidget>
 #include "eventpage.h"
 
+#include "parser/rpgevent.h"
+#include "parser/rpgeventpage.h"
+#include "parser/rpgeventpagecondition.h"
+
 namespace Ui {
 class EventDialog;
 }
@@ -13,7 +17,7 @@ class EventDialog : public QWidget
     Q_OBJECT
 
 public:
-    explicit EventDialog(QWidget *parent = nullptr);
+    explicit EventDialog(QWidget *parent = nullptr, RPGEvent *event = nullptr);
     ~EventDialog();
 
 public slots:
@@ -26,6 +30,7 @@ private slots:
 
 private:
     Ui::EventDialog *ui;
+    RPGEvent *event;
 };
 
 #endif // EVENTDIALOG_H

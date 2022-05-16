@@ -30,6 +30,7 @@ public:
 
     QList<RPGEventCommand*> list;
 
+
 signals:
 
 private:
