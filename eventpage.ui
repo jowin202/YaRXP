@@ -380,6 +380,11 @@
      <property name="title">
       <string>Event List</string>
      </property>
+     <layout class="QGridLayout" name="gridLayout_10">
+      <item row="0" column="0">
+       <widget class="QListView" name="listView"/>
+      </item>
+     </layout>
     </widget>
    </item>
   </layout>

@@ -1,7 +1,10 @@
 #ifndef RPGTILESET_H
 #define RPGTILESET_H
 
+#include <QImage>
 #include <QObject>
+
+#include "../autotileset.h"
 
 class RPGTileset : public QObject
 {
@@ -27,6 +30,11 @@ public:
     QStringList autotile_names;
     QString tileset_name;
     QString battleback_name;
+
+    QImage tileset;
+    QList<Autotileset> autotiles;
+
+
 signals:
 
 };

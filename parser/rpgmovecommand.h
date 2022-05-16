@@ -12,12 +12,12 @@ class RPGMoveCommand : public QObject
     Q_OBJECT
 public:
     explicit RPGMoveCommand(QObject *parent = nullptr);
-    void setParameter(QString param, int val);
     int code;
 
     void debug();
     QList<QVariant> parameters;
     RPGAudioFile *audiofile;
+    static int instances;
 signals:
 private:
     //parameters

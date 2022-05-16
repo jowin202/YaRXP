@@ -18,10 +18,9 @@ class TilesetWidget : public QLabel
 
 public:
     TilesetWidget(QWidget *parent);
-    void set_project_dir(QString dir)
-    {
-        this->current_project_dir = dir;
-    }
+    void setTilesets(QHash<int, RPGTileset*> *tilesets)
+    { this->tilesets = tilesets; }
+
     void updateView();
     void mouseMoveEvent(QMouseEvent *ev);
     void mousePressEvent(QMouseEvent *ev);
@@ -35,15 +34,15 @@ signals:
     void selection_changed(QList<int>);
 
 public slots:
-    void change_tileset(RPGTileset* tileset);
+    void change_tileset(int id);
 
 private:
-    QString current_project_dir;
+    QHash<int, RPGTileset*> *tilesets;
     RPGTileset *tileset;
     QPoint curr_pos;
     QPoint click_pos;
     QRect selection;
-    QImage img = QImage(256,256,QImage::Format_ARGB32);
+    QImage *img = new QImage(256,256,QImage::Format_ARGB32);
 };
 
 #endif // TILESETWIDGET_H

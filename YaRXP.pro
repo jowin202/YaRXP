@@ -16,6 +16,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    autotileset.cpp \
     eventdialog.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -38,6 +39,7 @@ SOURCES += \
     tilesetwidget.cpp
 
 HEADERS += \
+    autotileset.h \
     eventdialog.h \
     mainwindow.h \
     maptreewidget.h \

@@ -9,8 +9,7 @@ class RPGEventPageCondition : public QObject
 public:
     explicit RPGEventPageCondition(QObject *parent = nullptr);
 
-    void setParameter(QString param, int val);
-    void setParameter(QString param, bool val);
+
 
 
     int switch1_id;

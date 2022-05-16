@@ -21,10 +21,6 @@ class MapWidget : public QLabel
 public:
     MapWidget(QWidget *parent);
     ~MapWidget();
-    void set_project_dir(QString dir)
-    {
-        this->current_project_dir = dir;
-    }
     void mouseMoveEvent(QMouseEvent *ev);
     void mousePressEvent(QMouseEvent *ev);
     void mouseReleaseEvent(QMouseEvent *ev);
@@ -64,8 +60,7 @@ public slots:
 
 private:
     RPGMap *map;
-    QString current_project_dir;
-    QImage img  = QImage(256,256,QImage::Format_ARGB32);
+    QImage *img = new QImage(256,256,QImage::Format_ARGB32);
     int mode;
     int height;
     int width;

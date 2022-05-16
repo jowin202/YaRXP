@@ -282,15 +282,31 @@ void MapWidget::redraw()
         for (int i = 0; i < this->height * this->width; i++)
         {
             int index = layer * this->height * this->width + i;
-            if (this->map_values[index] != 0)
+            if (this->map_values[index] == 0)
             {
+                //empty, do nothing
+            }
+            else if (this->map_values[index] > 0 && this->map_values[index] < 0x0180)
+            {
+                //autotiles
+                int tileset_num = this->map_values[index] / 48 - 1;
+                int tile_num = this->map_values[index] % 48;
+
+                QPoint map_coord = 32*QPoint(i % this->width, i/this->width);
+                QRect target_rect(map_coord, map_coord + QPoint(31,31));
+
+                painter.drawImage(target_rect,this->map->tileset->autotiles[tileset_num].tileset_full,QRect((tile_num%8)*32,(tile_num/8)*32,32,32));
+
+
+            }
+            else{
                 QPoint tile_coord = 32*bin_to_coordinate(map_values[index]);
                 QPoint map_coord = 32*QPoint(i % this->width, i/this->width);
 
                 QRect target_rect(map_coord, map_coord + QPoint(31,31));
                 QRect source_rect(tile_coord, tile_coord + QPoint(31,31));
 
-                painter.drawImage(target_rect, img, source_rect);
+                painter.drawImage(target_rect, *img, source_rect);
             }
         }
         if (mode == SELECT && this->selection_rectangle.width() > 0 && this->selection_rectangle.height() > 0
@@ -308,7 +324,7 @@ void MapWidget::redraw()
                 QRect target_rect(map_coord, map_coord + QPoint(31,31));
                 QRect source_rect(tile_coord, tile_coord + QPoint(31,31));
 
-                painter.drawImage(target_rect, img, source_rect);
+                painter.drawImage(target_rect, *img, source_rect);
 
             }
         }
@@ -463,6 +479,9 @@ void MapWidget::set_map(RPGMap *map)
     this->height = map->height;
     this->width = map->width;
     this->map_values = map->data;
+    this->img = &map->tileset->tileset;
+
+    /*
     this->img = QImage(this->current_project_dir + QDir::separator() + "Graphics" + QDir::separator() + "Tilesets" + QDir::separator() + map->tileset->tileset_name + ".png");
     if (this->img.isNull())
     {
@@ -475,6 +494,8 @@ void MapWidget::set_map(RPGMap *map)
         qDebug() << this->current_project_dir + QDir::separator() + "Graphics" + QDir::separator() + "Tilesets" + QDir::separator() + map->tileset->tileset_name + ".png";
         exit(1);
     }
+    */
+
     this->redraw();
 }
 

@@ -10,9 +10,6 @@ class RPGEvent : public QObject
 public:
     explicit RPGEvent(QObject *parent = nullptr);
 
-    void setParameter(QString param, int val);
-    void setParameter(QString param, QString val);
-
     int id;
     int x;
     int y;

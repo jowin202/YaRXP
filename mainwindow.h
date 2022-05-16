@@ -7,6 +7,7 @@
 #include <QFileDialog>
 #include <QSettings>
 #include "tilesetwidget.h"
+#include "autotileset.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -63,5 +64,7 @@ private:
     QActionGroup *modegroup;
 
     QList<int> clipboard;
+    QHash<int,RPGTileset*> tilesets;
+    QHash<QString,Autotileset*> autotilesets;
 };
 #endif // MAINWINDOW_H

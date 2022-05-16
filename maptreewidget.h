@@ -13,12 +13,15 @@
 #include <QDebug>
 #include <QMenu>
 #include <QAction>
+#include <QHash>
 
 class MapTreeWidget : public QTreeWidget
 {
     Q_OBJECT
 public:
     MapTreeWidget(QWidget* parent = 0);
+    void setTilesets(QHash<int, RPGTileset*> *tilesets)
+    { this->tilesets = tilesets; }
 
 public slots:
     void list_maps(QString project_dir);
@@ -27,15 +30,15 @@ public slots:
 
 signals:
     void on_map_selected(RPGMap*);
-    void on_tileset_changed(RPGTileset*);
+    void on_tileset_changed(int);
 
 private:
     QString project_dir;
     QString map_info_file;
     QString tileset_file;
-    QList<RPGMapInfo*> map_list;
+    QList<RPGMapInfo*> map_info_list;
     QHash<int,QTreeWidgetItem*> id_map;
-    QList<RPGTileset*> tileset_list;
+    QHash<int, RPGTileset*> *tilesets;
 
     QMenu menu;
     QAction action1;

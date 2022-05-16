@@ -11,9 +11,6 @@ class RPGMap : public QObject
     Q_OBJECT
 public:
     explicit RPGMap(QObject *parent = nullptr);
-    void setParameter(QString param, int val);
-    void setParameter(QString param, bool val);
-    void setParameter(QString param, RPGAudioFile *val);
 
     void debug();
 
@@ -35,7 +32,6 @@ public:
     RPGAudioFile *bgs = 0, *bgm = 0;
 
     RPGTileset *tileset;
-
 
 signals:
 

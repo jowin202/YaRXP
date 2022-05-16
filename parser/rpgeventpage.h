@@ -12,11 +12,6 @@ class RPGEventPage : public QObject
     Q_OBJECT
 public:
     explicit RPGEventPage(QObject *parent = nullptr);
-    void setParameter(QString param, int val);
-    void setParameter(QString param, bool val);
-    void setParameter(QString param, RPGEventPageCondition *val);
-
-
     int move_speed;
     int move_frequency;
     int move_type;
@@ -28,7 +23,7 @@ public:
     bool direction_fix;
     bool always_on_top;
 
-    RPGMoveRoute *route;
+    RPGMoveRoute *move_route;
 
     RPGEventPageCondition *condition;
     RPGEventPageGraphic *graphic;

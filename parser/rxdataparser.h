@@ -58,7 +58,7 @@ public:
 
 
     RPGTileset *parseTileset();
-    void parseTilesetList(QList<RPGTileset *> *tileset_list);
+    void parseTilesetList(QHash<int, RPGTileset *> *tileset_list);
 
 
 signals:

@@ -12,8 +12,6 @@ class RPGEventCommand : public QObject
     Q_OBJECT
 public:
     explicit RPGEventCommand(QObject *parent = nullptr);
-    void setParameter(QString param, int val);
-    void setParameter(QString param, QList<QVariant> val);
 
     void debug();
     QString getType();
@@ -24,6 +22,7 @@ public:
     QString type;
     RPGAudioFile *audiofile;
     QStringList choices_list;
+
 
 signals:
 

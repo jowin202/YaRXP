@@ -10,13 +10,11 @@ class RPGMoveRoute : public QObject
     Q_OBJECT
 public:
     explicit RPGMoveRoute(QObject *parent = nullptr);
-    void setParameter(QString param, bool val);
     void debug();
 
     bool skippable;
     bool repeat;
     QList<RPGMoveCommand*> list;
-
 
 
 

@@ -11,7 +11,7 @@ TilesetWidget::TilesetWidget(QWidget *parent)
 
 void TilesetWidget::updateView()
 {
-    this->setPixmap(QPixmap::fromImage(img));
+    this->setPixmap(QPixmap::fromImage(*img));
 }
 
 void TilesetWidget::mouseMoveEvent(QMouseEvent *ev)
@@ -22,7 +22,7 @@ void TilesetWidget::mouseMoveEvent(QMouseEvent *ev)
     this->curr_pos = QPoint(ev->pos().x()/32,ev->pos().y()/32);
     if (this->click_pos.x() >= 0)
     {
-        QImage newimg = QImage(img);
+        QImage newimg = QImage(*img);
         QPainter painter;
         painter.begin(&newimg);
         painter.setPen(QPen(Qt::black,3));
@@ -42,7 +42,7 @@ void TilesetWidget::mousePressEvent(QMouseEvent *ev)
 {
     this->click_pos = QPoint(ev->pos().x()/32, ev->pos().y()/32);
 
-    QImage neu = QImage(img);
+    QImage neu = QImage(*img);
     QPainter painter;
     painter.begin(&neu);
     painter.setPen(QPen(Qt::black,3));
@@ -99,22 +99,9 @@ QPoint TilesetWidget::bin_to_coordinate(int b)
     return QPoint(b % 8, b/8);
 }
 
-void TilesetWidget::change_tileset(RPGTileset *tileset)
+void TilesetWidget::change_tileset(int id)
 {
-
-    this->tileset = tileset;
-    this->img = QImage(this->current_project_dir + QDir::separator() + "Graphics" + QDir::separator() + "Tilesets" + QDir::separator() + this->tileset->tileset_name + ".png");
-    if (this->img.isNull())
-    {
-        this->img = QImage(this->current_project_dir + QDir::separator() + "Graphics" + QDir::separator() + "Tilesets" + QDir::separator() + this->tileset->tileset_name + ".PNG");
-        //shitty windows workaround
-    }
-
-    if (this->img.isNull())
-    {
-        qDebug() << this->current_project_dir + QDir::separator() + "Graphics" + QDir::separator() + "Tilesets" + QDir::separator() + this->tileset->tileset_name + ".png";
-        exit(1);
-    }
+    this->img = &this->tilesets->value(id)->tileset;
     this->updateView();
 }
 

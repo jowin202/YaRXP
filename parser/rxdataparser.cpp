@@ -231,12 +231,18 @@ RPGMapInfo* RXDataParser::read_mapinfo_object()
     {
         current_symbol = read_symbol_or_link();
 
-        if (current_symbol == "@scroll_x" || current_symbol == "@scroll_y"  || current_symbol == "@parent_id" || current_symbol == "@order") //value
-            mapinfo_item->setParameter(current_symbol, this->read_integer());
+        if (current_symbol == "@scroll_x")
+            mapinfo_item->scroll_x = this->read_integer();
+        else if (current_symbol == "@scroll_y")
+            mapinfo_item->scroll_y = this->read_integer();
+        else if (current_symbol == "@parent_id")
+            mapinfo_item->parent_id = this->read_integer();
+        else if (current_symbol == "@order")
+            mapinfo_item->order = this->read_integer();
         else if (current_symbol == "@name")
-            mapinfo_item->setParameter(current_symbol, this->read_string());
+            mapinfo_item->name = this->read_string();
         else if (current_symbol == "@expanded")
-            mapinfo_item->setParameter(current_symbol, this->read_bool());
+            mapinfo_item->expanded = this->read_bool();
     }
     return mapinfo_item;
 }
@@ -261,10 +267,12 @@ RPGAudioFile* RXDataParser::read_audiofile_object()
     {
         current_symbol = read_symbol_or_link();
 
-        if (current_symbol == "@pitch" || current_symbol == "@volume")
-            audiofile->setParameter(current_symbol, this->read_integer());
+        if (current_symbol == "@pitch")
+            audiofile->pitch = read_integer();
+        else if (current_symbol == "@volume")
+            audiofile->volume = this->read_integer();
         else if (current_symbol == "@name")
-            audiofile->setParameter(current_symbol, this->read_string());
+            audiofile->name = this->read_string();
     }
     return audiofile;
 }
@@ -309,10 +317,14 @@ RPGEvent *RXDataParser::read_event_object()
     for (int j = 0; j < attribute_count; j++)
     {
         current_symbol = read_symbol_or_link();
-        if (current_symbol == "@x" || current_symbol == "@y" || current_symbol == "@id")
-            event_object->setParameter(current_symbol, this->read_integer());
+        if (current_symbol == "@x")
+            event_object->x = this->read_integer();
+        else if (current_symbol == "@y")
+            event_object->y = this->read_integer();
+        else if (current_symbol == "@id")
+            event_object->id = this->read_integer();
         else if (current_symbol == "@name")
-            event_object->setParameter(current_symbol, this->read_string());
+            event_object->name = this->read_string();
         else if (current_symbol == "@pages")
             this->read_event_pages_list(&event_object->pages);
         else
@@ -357,18 +369,32 @@ RPGEventPage *RXDataParser::read_event_page_object()
     for (int j = 0; j < attribute_count; j++)
     {
         current_symbol = read_symbol_or_link();
-        if (current_symbol == "@move_speed" || current_symbol == "@move_frequency" || current_symbol == "@move_type" || current_symbol == "@trigger")
-            event_page_object->setParameter(current_symbol, this->read_integer());
-        else if (current_symbol == "@walk_anime" || current_symbol == "@step_anime" || current_symbol == "@through" || current_symbol == "@direction_fix" || current_symbol == "@always_on_top")
-            event_page_object->setParameter(current_symbol, this->read_bool());
+        if (current_symbol == "@move_speed")
+            event_page_object->move_speed = this->read_integer();
+        else if (current_symbol == "@move_frequency")
+            event_page_object->move_frequency = this->read_integer();
+        else if (current_symbol == "@move_type")
+            event_page_object->move_type = this->read_integer();
+        else if (current_symbol == "@trigger")
+            event_page_object->trigger = this->read_integer();
+        else if (current_symbol == "@walk_anime")
+            event_page_object->walk_anime = this->read_bool();
+        else if (current_symbol == "@step_anime")
+            event_page_object->step_anime = this->read_bool();
+        else if (current_symbol == "@through")
+            event_page_object->through = this->read_bool();
+        else if (current_symbol == "@direction_fix")
+            event_page_object->direction_fix = this->read_bool();
+        else if (current_symbol == "@always_on_top")
+            event_page_object->always_on_top = this->read_bool();
         else if (current_symbol == "@list")
             this->read_event_command_list(&event_page_object->list);
         else if (current_symbol == "@condition")
-            event_page_object->setParameter(current_symbol, this->read_event_page_condition_object());
+            event_page_object->condition = this->read_event_page_condition_object();
         else if (current_symbol == "@move_route")
-            event_page_object->setParameter(current_symbol, this->read_move_route_object());
+            event_page_object->move_route = this->read_move_route_object();
         else if (current_symbol == "@graphic")
-            event_page_object->setParameter(current_symbol, this->read_event_page_graphic());
+            event_page_object->graphic = this->read_event_page_graphic();
         else
         {
             qDebug() << "Error parsing RPGEventPage object: attribute " << current_symbol;
@@ -413,8 +439,10 @@ RPGEventCommand *RXDataParser::read_event_command_object()
     for (int j = 0; j < attribute_count; j++)
     {
         current_symbol = read_symbol_or_link();
-        if (current_symbol == "@code" || current_symbol == "@indent")
-            event_command_object->setParameter(current_symbol, this->read_integer());
+        if (current_symbol == "@code")
+            event_command_object->code =  this->read_integer();
+        else if (current_symbol == "@indent")
+            event_command_object->indent = this->read_integer();
         else if (current_symbol == "@parameters")
         {
             if (read_one_byte() != 0x5B)
@@ -480,7 +508,7 @@ RPGEventCommand *RXDataParser::read_event_command_object()
                     list << this->read_variant();
                 }
             }
-            event_command_object->setParameter(current_symbol, list);
+            event_command_object->parameters = list;
         }
 
     }
@@ -508,21 +536,33 @@ RPGEventPageCondition *RXDataParser::read_event_page_condition_object()
     for (int j = 0; j < attribute_count; j++)
     {
         current_symbol = read_symbol_or_link();
-        if (current_symbol == "@switch1_id" || current_symbol == "@switch2_id" || current_symbol == "@variable_id" || current_symbol == "@variable_value")
-            event_page_condition_object->setParameter(current_symbol, this->read_integer());
-        else if (current_symbol == "@self_switch_valid" || current_symbol == "@variable_valid" || current_symbol == "@switch1_valid" || current_symbol == "@switch2_valid")
-            event_page_condition_object->setParameter(current_symbol, this->read_bool());
+        if (current_symbol == "@switch1_id")
+            event_page_condition_object->switch1_id = this->read_integer();
+        else if (current_symbol == "@switch2_id")
+            event_page_condition_object->switch2_id = this->read_integer();
+        else if (current_symbol == "@variable_id")
+            event_page_condition_object->variable_id = this->read_integer();
+        else if(current_symbol == "@variable_value")
+            event_page_condition_object->variable_value = this->read_integer();
+        else if (current_symbol == "@self_switch_valid")
+            event_page_condition_object->self_switch_valid = this->read_bool();
+        else if (current_symbol == "@variable_valid")
+            event_page_condition_object->variable_valid = this->read_bool();
+        else if (current_symbol == "@switch1_valid")
+            event_page_condition_object->switch1_valid = this->read_bool();
+        else if(current_symbol == "@switch2_valid")
+            event_page_condition_object->switch2_valid = this->read_bool();
         else if(current_symbol == "@self_switch_ch")
         {
             QString self_switch = this->read_string();
             if (self_switch == "A")
-                event_page_condition_object->setParameter(current_symbol, 1);
+                event_page_condition_object->self_switch_ch = 1;
             else if (self_switch == "B")
-                event_page_condition_object->setParameter(current_symbol, 2);
+                event_page_condition_object->self_switch_ch = 2;
             else if (self_switch == "C")
-                event_page_condition_object->setParameter(current_symbol, 3);
+                event_page_condition_object->self_switch_ch = 3;
             else if (self_switch == "D")
-                event_page_condition_object->setParameter(current_symbol, 4);
+                event_page_condition_object->self_switch_ch = 4;
         }
     }
     return event_page_condition_object;
@@ -550,8 +590,10 @@ RPGMoveRoute *RXDataParser::read_move_route_object()
         current_symbol = read_symbol_or_link();
         if (current_symbol == "@list")
             this->read_move_command_list(&move_route_object->list);
-        else if (current_symbol == "@skippable" || current_symbol == "@repeat")
-            move_route_object->setParameter(current_symbol, this->read_bool());
+        else if (current_symbol == "@skippable")
+            move_route_object->skippable = this->read_bool();
+        else if (current_symbol == "@repeat")
+            move_route_object->repeat = this->read_bool();
     }
     return move_route_object;
 }
@@ -604,7 +646,7 @@ RPGMoveCommand *RXDataParser::read_move_command_object()
         }
         else if (current_symbol == "@code")
         {
-            move_command_object->setParameter(current_symbol, this->read_integer());
+            move_command_object->code = this->read_integer();
         }
     }
     return move_command_object;
@@ -703,12 +745,22 @@ RPGMap* RXDataParser::parseMap()
     for (int j = 0; j < attribute_count; j++)
     {
         current_symbol = read_symbol_or_link();
-        if (current_symbol == "@bgm" || current_symbol == "@bgs")
-            map->setParameter(current_symbol, read_audiofile_object());
-        else if (current_symbol == "@tileset_id" || current_symbol == "@width" || current_symbol == "@height" || current_symbol == "@encounter_step")
-            map->setParameter(current_symbol, read_integer());
-        else if (current_symbol == "@autoplay_bgs" || current_symbol == "@autoplay_bgm")
-            map->setParameter(current_symbol, read_bool());
+        if (current_symbol == "@bgm")
+            map->bgm = this->read_audiofile_object();
+        else if (current_symbol == "@bgs")
+            map->bgs = read_audiofile_object();
+        else if (current_symbol == "@tileset_id")
+            map->tileset_id = this->read_integer();
+        else if (current_symbol == "@width")
+            map->width = this->read_integer();
+        else if (current_symbol == "@height")
+            map->height = this->read_integer();
+        else if (current_symbol == "@encounter_step")
+            map->encounter_step = read_integer();
+        else if (current_symbol == "@autoplay_bgs")
+            map->autoplay_bgs = this->read_bool();
+        else if (current_symbol == "@autoplay_bgm")
+            map->autoplay_bgm = read_bool();
         else if (current_symbol == "@events")
             this->read_event_list(&map->events);
         else if (current_symbol == "@encounter_list")
@@ -978,7 +1030,7 @@ RPGTileset *RXDataParser::parseTileset()
     return tileset_object;
 }
 
-void RXDataParser::parseTilesetList(QList<RPGTileset *> *tileset_list)
+void RXDataParser::parseTilesetList(QHash<int,RPGTileset *> *tileset_list)
 {
     tileset_list->clear();
     this->symbol_cache.clear();
@@ -1001,7 +1053,7 @@ void RXDataParser::parseTilesetList(QList<RPGTileset *> *tileset_list)
         else if (this->look_one_byte_ahead() == 'o')
         {
             RPGTileset *tileset = this->parseTileset();
-            tileset_list->append(tileset);
+            tileset_list->insert(tileset->id, tileset);
         }
     }
     this->close_file_if_open();

@@ -7,6 +7,7 @@
 #include "parser/rxdataparser.h"
 #include "parser/rpgmapinfo.h"
 #include "parser/rpgtileset.h"
+#include "autotileset.h"
 
 #include <QList>
 
@@ -16,6 +17,10 @@ int main(int argc, char *argv[])
     QCoreApplication::setOrganizationName("jowin202");
     QCoreApplication::setOrganizationDomain("github.com/jowin202");
     QCoreApplication::setApplicationName("YaRXP");
+
+
+    //QImage img = QImage("/home/johannes/RPG_maker/Pokemon Klagenfurt Vibes/Graphics/Autotiles/Sand shore.png");
+    //Autotileset at(img);
 
 
     /*
