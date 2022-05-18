@@ -34,9 +34,14 @@ MainWindow::MainWindow(QWidget *parent)
     this->modegroup->addAction(this->ui->actionSelect);
     this->modegroup->addAction(this->ui->actionFlood_Fill);
 
+    this->viewgroup = new QActionGroup(this);
+    this->modegroup->addAction(this->ui->actionCurrent_Layers_and_below);
+    this->modegroup->addAction(this->ui->actionAll_Layers);
+
 
     this->ui->actionLayer1->setChecked(true);
     this->ui->actionPen->setChecked(true);
+    this->ui->actionAll_Layers->setChecked(true);
 
     this->ui->map_tree_widget->hideColumn(1);
     this->ui->map_tree_widget->hideColumn(2);
@@ -71,7 +76,7 @@ void MainWindow::on_actionLayer3_triggered()
 
 void MainWindow::on_actionEvents_triggered()
 {
-
+    this->ui->map_label->set_event_mode();
 }
 
 void MainWindow::on_actionDim_other_Layers_toggled(bool arg1)
@@ -133,4 +138,18 @@ void MainWindow::on_actionDelete_triggered()
 void MainWindow::on_actionFlood_Fill_triggered()
 {
     this->ui->map_label->set_mode(MapWidget::FLOOD);
+}
+
+
+
+
+
+void MainWindow::on_actionAll_Layers_triggered()
+{
+    this->ui->map_label->set_show_other_layers(true);
+}
+
+void MainWindow::on_actionCurrent_Layers_and_below_triggered()
+{
+    this->ui->map_label->set_show_other_layers(false);
 }

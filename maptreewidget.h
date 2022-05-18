@@ -10,6 +10,8 @@
 #include "parser/rpgmapinfo.h"
 #include "parser/rpgtileset.h"
 
+#include "mapproperties.h"
+
 #include <QDebug>
 #include <QMenu>
 #include <QAction>
@@ -25,8 +27,9 @@ public:
 
 public slots:
     void list_maps(QString project_dir);
-    void clicked_at_item(QTreeWidgetItem *item, int column);
+    void clicked_at_item(QTreeWidgetItem *current_item, QTreeWidgetItem *previous);
     void prepare_context_menu(const QPoint & pos );
+    void show_map_properties_dialog();
 
 signals:
     void on_map_selected(RPGMap*);

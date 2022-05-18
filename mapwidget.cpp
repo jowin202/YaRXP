@@ -112,7 +112,18 @@ void MapWidget::mousePressEvent(QMouseEvent *ev)
         return; //out of range
 
     this->curr_pos = QPoint(ev->pos().x()/32,ev->pos().y()/32);
-    if (this->mode == PEN)
+
+
+    if (this->mode == EVENT)
+    {
+        if (ev->button() == Qt::LeftButton)
+            return; // do nothing when leftclick //TODO: move events
+        if (ev->button() == Qt::RightButton)
+        {
+            //prepare context menu
+        }
+    }
+    else if (this->mode == PEN)
     {
         if (ev->button() == Qt::RightButton)
         {
@@ -234,17 +245,8 @@ int MapWidget::array_position(QPoint p, int layer)
     return p.x() + p.y() * this->width + this->height * this->width * layer;
 }
 
-void MapWidget::set_layer(int layer)
-{
-    this->current_layer = layer;
-    this->redraw();
-}
 
-void MapWidget::set_dim(bool dim)
-{
-    this->dim_other_layers = dim;
-    this->redraw();
-}
+
 
 void MapWidget::set_brush(QList<int> vars)
 {
@@ -269,13 +271,27 @@ void MapWidget::redraw()
     painter.fillRect(0,0,this->current_pic.width(), this->current_pic.height(), Qt::black); ;
 
 
-    for (int layer = 0; layer <= this->current_layer; layer++)
+    for (int layer = 0; layer <= (this->show_all_layers ? 2 : this->current_layer); layer++)
     {
         painter.setOpacity(1);
         if (this->dim_other_layers == true && layer < this->current_layer)
         {
             painter.setOpacity(0.5);
         }
+        else if (this->show_all_layers == true && layer == this->current_layer)
+        {
+            //opacity already 1
+        }
+        else if (this->show_all_layers == true && layer != this->current_layer)
+        {
+            painter.setOpacity(0.5); //always transparent when show all layers (different to original)
+        }
+
+        if (this->mode == EVENT)
+        {
+            painter.setOpacity(1); //no transparent when event
+        }
+
         for (int i = 0; i < this->height * this->width; i++)
         {
             int index = layer * this->height * this->width + i;
@@ -333,12 +349,58 @@ void MapWidget::redraw()
     }
 
 
+    if (this->mode == EVENT) //grid lines
+    {
+        QPen pen;
+        pen.setWidth(2);
+        pen.setColor(QColor(100,100,100));
+        painter.setPen(pen);
+
+        for (int y = 0; y < this->height; y++)
+        {
+            painter.drawLine(0,32*y,this->width*32,32*y);
+        }
+        for (int x = 0; x < this->width; x++)
+        {
+            painter.drawLine(32*x,0,32*x,this->height*32);
+        }
+    }
+
+
     painter.end();
     this->setPixmap(QPixmap::fromImage(this->current_pic));
-    if (this->mode == PEN)
-        this->draw_brush_rectangle();
-    else if (this->mode == SELECT)
-        this->draw_selection_rectangle();
+    if (this->mode != EVENT)
+    {
+        if (this->mode == PEN)
+            this->draw_brush_rectangle();
+        else if (this->mode == SELECT)
+            this->draw_selection_rectangle();
+    }
+
+    if (this->mode == EVENT)
+    {
+        this->draw_events();
+    }
+}
+
+void MapWidget::draw_events()
+{
+    QImage newimg = QImage(current_pic);
+    QPainter painter;
+    painter.begin(&newimg);
+
+    painter.setPen(Qt::white);
+    for (int i = 0; i < map->events.length(); i++)
+    {
+        RPGEvent *event = map->events.at(i);
+        painter.drawRect(32*event->x, 32*event->y, 31,31);
+        painter.setOpacity(0.5);
+        painter.fillRect(32*event->x, 32*event->y, 31,31, Qt::white);
+        painter.setOpacity(1);
+    }
+
+    painter.end();
+    this->setPixmap(QPixmap::fromImage(newimg));
 }
 
 void MapWidget::draw_brush_rectangle()

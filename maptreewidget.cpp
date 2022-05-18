@@ -2,12 +2,13 @@
 
 MapTreeWidget::MapTreeWidget(QWidget *parent)
 {
-    connect(this, SIGNAL(itemClicked(QTreeWidgetItem*,int)), this, SLOT(clicked_at_item(QTreeWidgetItem*,int)));
+    connect(this, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)), this, SLOT(clicked_at_item(QTreeWidgetItem*,QTreeWidgetItem*)));
     connect(this, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(prepare_context_menu(QPoint)));
 
 
     action1.setText("&Map properties");
     action1.setShortcut(QKeySequence(Qt::Key_Space));
+    connect(&action1, SIGNAL(triggered()), this, SLOT(show_map_properties_dialog()));
     action2.setText("&New Map");
     action2.setShortcut(QKeySequence(Qt::Key_Insert));
     action3.setText("&Copy");
@@ -23,6 +24,7 @@ MapTreeWidget::MapTreeWidget(QWidget *parent)
 
 
     menu.addAction(&action1);
+    this->addAction(&action1); //for shortcut
     menu.addSeparator();
     menu.addAction(&action2);
     menu.addSeparator();
@@ -95,15 +97,18 @@ void MapTreeWidget::list_maps(QString project_dir)
 
 }
 
-void MapTreeWidget::clicked_at_item(QTreeWidgetItem *item, int column)
+void MapTreeWidget::clicked_at_item(QTreeWidgetItem *current_item, QTreeWidgetItem* previous)
 {
-    if (map_info_list.at(item->text(2).toInt())->map == 0) // do not reload the map (changes should be saved)
+    int list_id = current_item->text(2).toInt(); //id (2nd column) which it has in the list
+    QString file_id = current_item->text(3); //id of the file, used as string
+
+    if (map_info_list.at(list_id)->map == 0) // do not reload the map (changes should be saved)
     {
-        RXDataParser parser(project_dir + QDir::separator() + "Data" + QDir::separator() + "Map" + item->text(3).rightJustified(3,'0') + ".rxdata");
+        RXDataParser parser(project_dir + QDir::separator() + "Data" + QDir::separator() + "Map" + file_id.rightJustified(3,'0') + ".rxdata");
 
 
-        map_info_list.at(item->text(2).toInt())->map = parser.parseMap();
-        int tileset_id = map_info_list.at(item->text(2).toInt())->map->tileset_id;
+        map_info_list.at(list_id)->map = parser.parseMap();
+        int tileset_id = map_info_list.at(list_id)->map->tileset_id;
         if (!this->tilesets->contains(tileset_id))
         {
             //error tileset
@@ -155,15 +160,23 @@ void MapTreeWidget::clicked_at_item(QTreeWidgetItem *item, int column)
             }
         }
 
-        map_info_list.at(item->text(2).toInt())->map->tileset = tilesets->value(tileset_id);
+        map_info_list.at(list_id)->map->tileset = tilesets->value(tileset_id);
 
     }
-    emit on_map_selected(map_info_list.at(item->text(2).toInt())->map);
-    emit on_tileset_changed(map_info_list.at(item->text(2).toInt())->map->tileset_id);
+    emit on_map_selected(map_info_list.at(list_id)->map);
+    emit on_tileset_changed(map_info_list.at(list_id)->map->tileset_id);
 }
 
 void MapTreeWidget::prepare_context_menu( const QPoint & pos )
 {
-
     menu.exec(this->mapToGlobal(pos));
+}
+
+void MapTreeWidget::show_map_properties_dialog()
+{
+    if (this->selectedItems().size() <= 0)
+        return;
+    RPGMapInfo *mapinfo = map_info_list.at(this->selectedItems().at(0)->text(2).toInt());
+    MapProperties *dialog = new MapProperties(mapinfo, tilesets, 0);
+    dialog->show();
 }

@@ -391,6 +391,9 @@
    </property>
   </action>
   <action name="actionCurrent_Layers_and_below">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>&amp;Current Layers and below</string>
    </property>
@@ -399,6 +402,9 @@
    </property>
   </action>
   <action name="actionAll_Layers">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>&amp;All Layers</string>
    </property>

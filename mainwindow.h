@@ -56,12 +56,19 @@ private slots:
     void on_actionFlood_Fill_triggered();
 
 
+
+
+    void on_actionAll_Layers_triggered();
+
+    void on_actionCurrent_Layers_and_below_triggered();
+
 private:
     Ui::MainWindow *ui;
     TilesetWidget *tileset_widget;
     QString current_project_dir;
     QActionGroup *layergroup;
     QActionGroup *modegroup;
+    QActionGroup *viewgroup;
 
     QList<int> clipboard;
     QHash<int,RPGTileset*> tilesets;

@@ -25,8 +25,28 @@ public:
     void mousePressEvent(QMouseEvent *ev);
     void mouseReleaseEvent(QMouseEvent *ev);
     int array_position(QPoint p, int layer);
-    void set_layer(int layer);
-    void set_dim(bool dim);
+
+    void set_event_mode()
+    {
+        this->mode = EVENT;
+        this->current_layer = 2; //show all layers
+        this->redraw();
+    }
+    void set_layer(int layer)
+    {
+        if (this->mode == EVENT) this->mode = PEN; //leave event_mode when choosing another layer
+        this->current_layer = layer;
+        this->redraw();
+    }
+    void set_dim(bool dim)
+    {    this->dim_other_layers = dim;
+         this->redraw();
+    }
+    void set_show_other_layers(bool var)
+    {
+        this->show_all_layers = var;
+        this->redraw();
+    }
     int shitty_mod(int a, int m)
     {
         //thx to MW, bro
@@ -35,10 +55,11 @@ public:
         return (m-(a%m))%m;
     }
 
+
     int coordinate_to_bin(QPoint p);
     QPoint bin_to_coordinate(int b);
 
-    enum {PEN, RECT, FLOOD, SELECT};
+    enum {PEN, RECT, FLOOD, SELECT, EVENT};
     void set_mode(int mode);
 
 public slots:
@@ -46,6 +67,7 @@ public slots:
     void prepare_context_menu(QPoint p);
     void set_brush(QList<int> vars);
     void redraw();
+    void draw_events();
     void draw_brush_rectangle();
 
     //for selection
@@ -72,6 +94,7 @@ private:
     bool mouse_pressed_left = false;
     bool mouse_pressed_right = false;
     bool dim_other_layers = false;
+    bool show_all_layers = true;
 
     //QPoint tmp_point_brush_rectangle; //rightclick
     QPoint left_click_pos; //when drawing multiple tiles
