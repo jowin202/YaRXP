@@ -14,11 +14,18 @@ void TilesetWidget::updateView()
     if (this->img == 0)
         return;
 
-    QImage background(img->width(),img->height(), QImage::Format_ARGB32);
+    QImage background(img->width(),img->height()+32, QImage::Format_ARGB32);
     QPainter painter(&background);
-    painter.fillRect(0,0,img->width(),img->height(), QColor(0xaa,0x16,0xa0));
-    painter.drawImage(QRect(0,0,img->width(),img->height()), *img, QRect(0,0,img->width(),img->height()));
+    painter.fillRect(0,0,img->width(),img->height()+32, QColor(0xaa,0x16,0xa0));
+    painter.drawImage(QRect(0,32,img->width(),img->height()), *img, QRect(0,0,img->width(),img->height()));
+
+    if (this->current_tileset->autotiles.length() == 7)
+    {
+        for (int i = 0; i < 7; i++)
+        painter.drawImage(QRect(32*(1+i),0,32,32), current_tileset->autotiles.at(i).thumb, QRect(0,0,32,32));
+    }
     painter.end();
+    this->current_image = background;
     this->setPixmap(QPixmap::fromImage(background));
 }
 
@@ -30,7 +37,7 @@ void TilesetWidget::mouseMoveEvent(QMouseEvent *ev)
     this->curr_pos = QPoint(ev->pos().x()/32,ev->pos().y()/32);
     if (this->click_pos.x() >= 0)
     {
-        QImage newimg = QImage(*img);
+        QImage newimg = QImage(this->current_image);
         QPainter painter;
         painter.begin(&newimg);
         painter.setPen(QPen(Qt::black,3));
@@ -50,7 +57,7 @@ void TilesetWidget::mousePressEvent(QMouseEvent *ev)
 {
     this->click_pos = QPoint(ev->pos().x()/32, ev->pos().y()/32);
 
-    QImage neu = QImage(*img);
+    QImage neu = QImage(this->current_image);
     QPainter painter;
     painter.begin(&neu);
     painter.setPen(QPen(Qt::black,3));
@@ -76,29 +83,34 @@ void TilesetWidget::mouseReleaseEvent(QMouseEvent *ev)
 
 QList<int> TilesetWidget::getCurrentTiles()
 {
-    QList<int> liste;
-    liste.append(selection.width());
-    liste.append(selection.height());
+    QList<int> list;
+    list.append(selection.width());
+    list.append(selection.height());
 
     for (int y = selection.top(); y <= selection.bottom(); y++)
     {
         for (int x = selection.left(); x <= selection.right(); x++)
         {
-            liste.append(coordinate_to_bin(QPoint(x,y)));
+            list.append(coordinate_to_bin(QPoint(x,y)));
         }
     }
 
-    return liste;
+    return list;
 }
 
 
 
 int TilesetWidget::coordinate_to_bin(QPoint p)
 {
-    int val = 0x0180; //topleft value
-    val += p.x();
-    val += p.y() * 8;
-    return val;
+    if (p.y() >= 1) // non autotile
+    {
+        int val = 0x0180; //topleft value
+        val += p.x();
+        val += (p.y()-1) * 8;
+        return val;
+    }
+    else
+        return 0x30 * p.x();
 }
 
 QPoint TilesetWidget::bin_to_coordinate(int b)
@@ -109,7 +121,8 @@ QPoint TilesetWidget::bin_to_coordinate(int b)
 
 void TilesetWidget::change_tileset(int id)
 {
-    this->img = &this->tilesets->value(id)->tileset;
+    this->img = &this->settings->tilesets.value(id)->tileset;
+    this->current_tileset = this->settings->tilesets.value(id);
     this->updateView();
 }
 

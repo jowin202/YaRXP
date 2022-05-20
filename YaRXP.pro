@@ -16,6 +16,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    audiowidget.cpp \
     autotileset.cpp \
     eventdialog.cpp \
     main.cpp \
@@ -37,9 +38,11 @@ SOURCES += \
     parser/rpgtileset.cpp \
     parser/rpgtone.cpp \
     parser/rxdataparser.cpp \
+    settings.cpp \
     tilesetwidget.cpp
 
 HEADERS += \
+    audiowidget.h \
     autotileset.h \
     eventdialog.h \
     mainwindow.h \
@@ -60,9 +63,11 @@ HEADERS += \
     parser/rpgtileset.h \
     parser/rpgtone.h \
     parser/rxdataparser.h \
+    settings.h \
     tilesetwidget.h
 
 FORMS += \
+    audiowidget.ui \
     eventdialog.ui \
     mainwindow.ui \
     eventpage.ui \

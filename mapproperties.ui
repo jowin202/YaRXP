@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>594</height>
+    <width>609</width>
+    <height>522</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -83,11 +83,62 @@
    <item row="2" column="0">
     <layout class="QGridLayout" name="gridLayout_3">
      <item row="0" column="0">
-      <widget class="QLabel" name="label_6">
-       <property name="text">
-        <string>BGM/BGS widget</string>
-       </property>
-      </widget>
+      <layout class="QHBoxLayout" name="horizontalLayout_4">
+       <item>
+        <widget class="QGroupBox" name="groupBox">
+         <property name="title">
+          <string>BGM</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_5">
+          <item row="0" column="0">
+           <layout class="QGridLayout" name="gridLayout_4">
+            <item row="0" column="0">
+             <widget class="QCheckBox" name="check_auto_change_bgm">
+              <property name="text">
+               <string>Auto-Change BGM</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="AudioWidget" name="widget_bgm" native="true">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBox_2">
+         <property name="title">
+          <string>BGS</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_7">
+          <item row="0" column="0">
+           <layout class="QGridLayout" name="gridLayout_6">
+            <item row="0" column="0">
+             <widget class="QCheckBox" name="check_auto_change_bgs">
+              <property name="text">
+               <string>Auto-Change BGS</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="AudioWidget" name="widget_bgs" native="true">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
      </item>
      <item row="2" column="0">
       <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -137,6 +188,14 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>AudioWidget</class>
+   <extends>QWidget</extends>
+   <header>audiowidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

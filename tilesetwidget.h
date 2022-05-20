@@ -11,6 +11,7 @@
 #include <QDir>
 
 #include "parser/rpgtileset.h"
+#include "settings.h"
 
 class TilesetWidget : public QLabel
 {
@@ -18,8 +19,8 @@ class TilesetWidget : public QLabel
 
 public:
     TilesetWidget(QWidget *parent);
-    void setTilesets(QHash<int, RPGTileset*> *tilesets)
-    { this->tilesets = tilesets; }
+    void setSettings(Settings *settings)
+    { this->settings = settings; }
 
     void updateView();
     void mouseMoveEvent(QMouseEvent *ev);
@@ -37,12 +38,14 @@ public slots:
     void change_tileset(int id);
 
 private:
-    QHash<int, RPGTileset*> *tilesets;
-    RPGTileset *tileset;
+    RPGTileset *current_tileset = 0;
+    QImage current_image;
     QPoint curr_pos;
     QPoint click_pos;
     QRect selection;
     QImage *img = 0;
+
+    Settings *settings;
 };
 
 #endif // TILESETWIDGET_H

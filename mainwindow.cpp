@@ -13,8 +13,8 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    this->ui->map_tree_widget->setTilesets(&this->tilesets);
-    this->ui->tileset_label->setTilesets(&this->tilesets);
+    this->ui->map_tree_widget->setSettings(&this->settings);
+    this->ui->tileset_label->setSettings(&this->settings);
 
     connect(this->ui->tileset_label, SIGNAL(selection_changed(QList<int>)), this->ui->map_label, SLOT(set_brush(QList<int>)));
     connect(this->ui->tileset_label, SIGNAL(selection_changed(QList<int>)), this, SLOT(on_actionPen_triggered())); //set pen when select tile
@@ -52,12 +52,6 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
-
-void MainWindow::test_slot()
-{
-    qDebug() << "bla blubb";
-}
-
 
 void MainWindow::on_actionLayer1_triggered()
 {
@@ -98,8 +92,14 @@ void MainWindow::on_actionOpen_triggered()
 
     if (name != "" && fi.exists() && fi.isFile())
     {
-        this->current_project_dir = fi.absoluteDir().path();
-        this->ui->map_tree_widget->list_maps(this->current_project_dir);
+        this->settings.current_project_dir = fi.absoluteDir().path();
+        this->settings.data_dir = this->settings.current_project_dir + QDir::separator() + "Data" + QDir::separator();
+        this->settings.grahpics_dir = this->settings.current_project_dir + QDir::separator() + "Graphics" + QDir::separator();
+        this->settings.tileset_dir = this->settings.current_project_dir + QDir::separator() + "Graphics" + QDir::separator() + "Tilesets" + QDir::separator();
+        this->settings.autotiles_dir = this->settings.current_project_dir + QDir::separator() + "Graphics" + QDir::separator() + "Autotiles" + QDir::separator();
+        this->settings.characters_dir = this->settings.current_project_dir + QDir::separator() + "Graphics" + QDir::separator() + "Characters" + QDir::separator();
+        this->settings.characters_dir = this->settings.current_project_dir + QDir::separator() + "Graphics" + QDir::separator() + "Characters" + QDir::separator();
+        this->ui->map_tree_widget->list_maps();
     }
 }
 

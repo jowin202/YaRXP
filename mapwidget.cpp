@@ -2,6 +2,7 @@
 
 MapWidget::MapWidget(QWidget *parent)
 {
+    this->setParent(parent);
     this->setMouseTracking(true);
     connect(this, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(prepare_context_menu(QPoint)));
     this->height = 30;
@@ -9,6 +10,56 @@ MapWidget::MapWidget(QWidget *parent)
     this->current_layer = 0;
     this->mode = PEN;
     this->brush_rectangle.setRect(0,0,1,1);
+
+    this->event_move_from_pos = QPoint(-1,-1);
+
+
+
+    this->action_new.setText("&New Event");
+    this->action_new.setShortcut(QKeySequence(Qt::Key_Enter));
+    this->addAction(&action_new);
+    this->event_menu_with_new.addAction(&this->action_new);
+
+    this->action_edit.setText("&Edit Event");
+    this->action_edit.setShortcut(QKeySequence(Qt::Key_Enter));
+    this->addAction(&action_edit);
+    this->event_menu_with_edit.addAction(&this->action_edit);
+
+
+    this->event_menu_with_new.addSeparator();
+    this->event_menu_with_edit.addSeparator();
+
+    this->action_cut.setText("&Cut");
+    this->action_cut.setShortcut(QKeySequence(tr("Ctrl+X")));
+    this->event_menu_with_new.addAction(&this->action_cut);
+    this->event_menu_with_edit.addAction(&this->action_cut);
+
+    this->action_copy.setText("&Copy");
+    this->action_copy.setShortcut(QKeySequence(tr("Ctrl+C")));
+    this->event_menu_with_new.addAction(&this->action_copy);
+    this->event_menu_with_edit.addAction(&this->action_copy);
+
+    this->action_paste.setText("&Paste");
+    this->action_paste.setShortcut(QKeySequence(tr("Ctrl+V")));
+    this->event_menu_with_new.addAction(&this->action_paste);
+    this->event_menu_with_edit.addAction(&this->action_paste);
+
+
+    this->action_delete.setText("&Delete");
+    this->action_delete.setShortcut(QKeySequence(Qt::Key_Delete));
+    this->event_menu_with_new.addAction(&this->action_delete);
+    this->event_menu_with_edit.addAction(&this->action_delete);
+
+
+
+    this->event_menu_with_new.addSeparator();
+    this->event_menu_with_edit.addSeparator();
+
+
+    this->action_player_starting_pos.setText("&Set Player's starting Pos");
+    this->event_menu_with_new.addAction(&this->action_player_starting_pos);
+    this->event_menu_with_edit.addAction(&this->action_player_starting_pos);
+
 
     this->redraw();
 }
@@ -117,10 +168,13 @@ void MapWidget::mousePressEvent(QMouseEvent *ev)
     if (this->mode == EVENT)
     {
         if (ev->button() == Qt::LeftButton)
+        {
+            this->event_move_from_pos = this->curr_pos;
             return; // do nothing when leftclick //TODO: move events
+        }
         if (ev->button() == Qt::RightButton)
         {
-            //prepare context menu
+            //context menu
         }
     }
     else if (this->mode == PEN)
@@ -189,7 +243,35 @@ void MapWidget::mouseReleaseEvent(QMouseEvent *ev)
 {
     this->curr_pos = QPoint(ev->pos().x()/32,ev->pos().y()/32);
 
-    if (this->mode == PEN)
+    if (this->mode == EVENT) //move event
+    {
+        if (ev->button() == Qt::LeftButton)
+        {
+            if (this->event_move_from_pos != QPoint(-1,-1))
+            {
+                int new_pos;
+                bool move_allowed = true;
+                for (int i = 0; i < this->map->events.length(); i++)
+                {
+                    if (this->map->events.at(i)->x == this->event_move_from_pos.x() && this->map->events.at(i)->y == this->event_move_from_pos.y())
+                    {
+                        new_pos = i;
+                    }
+                    if (this->map->events.at(i)->x == this->curr_pos.x() && this->map->events.at(i)->y == this->curr_pos.y())
+                    {
+                        move_allowed = false;
+                    }
+                }
+                if (move_allowed)
+                {
+                    this->map->events.at(new_pos)->x = this->curr_pos.x();
+                    this->map->events.at(new_pos)->y = this->curr_pos.y();
+                    this->redraw();
+                }
+            }
+        }
+    }
+    else if (this->mode == PEN)
     {
         if (ev->button() == Qt::RightButton) //new brush on right click
         {
@@ -240,10 +322,6 @@ void MapWidget::mouseReleaseEvent(QMouseEvent *ev)
     }
 }
 
-int MapWidget::array_position(QPoint p, int layer)
-{
-    return p.x() + p.y() * this->width + this->height * this->width * layer;
-}
 
 
 
@@ -393,8 +471,19 @@ void MapWidget::draw_events()
     for (int i = 0; i < map->events.length(); i++)
     {
         RPGEvent *event = map->events.at(i);
+
+
+
+
         painter.drawRect(32*event->x, 32*event->y, 31,31);
         painter.setOpacity(0.5);
+        if (event->pages.length() >= 1)
+        {
+            if (!event->pages.at(0)->graphic->graphics.isNull())
+            {
+                painter.drawImage(QRect(32*event->x, 32*event->y, 31,31),event->pages.at(0)->graphic->graphics,QRect(0,0,32,32));
+            }
+        }
         painter.fillRect(32*event->x, 32*event->y, 31,31, Qt::white);
         painter.setOpacity(1);
     }
@@ -413,6 +502,14 @@ void MapWidget::draw_brush_rectangle()
     painter.end();
 
     this->setPixmap(QPixmap::fromImage(newimg));
+}
+
+void MapWidget::prepare_context_menu(const QPoint &pos)
+{
+    if (this->mode == EVENT)
+    {
+        this->event_menu_with_new.exec(this->mapToGlobal(pos));
+    }
 }
 
 void MapWidget::draw_selection_rectangle()
@@ -541,29 +638,7 @@ void MapWidget::set_map(RPGMap *map)
     this->map = map;
     this->height = map->height;
     this->width = map->width;
-    //this->map_values = map->data;
     this->img = &map->tileset->tileset;
 
-    /*
-    this->img = QImage(this->current_project_dir + QDir::separator() + "Graphics" + QDir::separator() + "Tilesets" + QDir::separator() + map->tileset->tileset_name + ".png");
-    if (this->img.isNull())
-    {
-        this->img = QImage(this->current_project_dir + QDir::separator() + "Graphics" + QDir::separator() + "Tilesets" + QDir::separator() + map->tileset->tileset_name + ".PNG");
-        //shitty windows workaround
-    }
-
-    if (this->img.isNull())
-    {
-        qDebug() << this->current_project_dir + QDir::separator() + "Graphics" + QDir::separator() + "Tilesets" + QDir::separator() + map->tileset->tileset_name + ".png";
-        exit(1);
-    }
-    */
-
     this->redraw();
-}
-
-void MapWidget::prepare_context_menu(QPoint p)
-{
-
-    //preparation for event stuff.
 }

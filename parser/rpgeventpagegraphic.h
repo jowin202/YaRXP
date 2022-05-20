@@ -2,14 +2,13 @@
 #define RPGEVENTPAGEGRAPHIC_H
 
 #include <QObject>
+#include <QImage>
 
 class RPGEventPageGraphic : public QObject
 {
     Q_OBJECT
 public:
     explicit RPGEventPageGraphic(QObject *parent = nullptr);
-    void setParameter(QString param, int val);
-    void setParameter(QString param, QString val);
 
     int direction;
     int blend_type;
@@ -18,6 +17,8 @@ public:
     int character_hue;
     int opacity;
     QString character_name;
+
+    QImage graphics;
 
 signals:
 

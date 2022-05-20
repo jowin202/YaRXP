@@ -8,6 +8,7 @@
 #include <QSettings>
 #include "tilesetwidget.h"
 #include "autotileset.h"
+#include "settings.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -25,53 +26,32 @@ signals:
     void test_signal();
 
 public slots:
-    void test_slot();
-
-private slots:
     void on_actionLayer1_triggered();
-
     void on_actionLayer2_triggered();
-
     void on_actionLayer3_triggered();
-
     void on_actionEvents_triggered();
-
     void on_actionDim_other_Layers_toggled(bool arg1);
-
     void on_actionOpen_triggered();
-
-
     void on_actionPen_triggered();
-
     void on_actionSelect_triggered();
-
     void on_actionCut_triggered();
-
     void on_actionCopy_triggered();
-
     void on_actionPaste_triggered();
-
     void on_actionDelete_triggered();
-
     void on_actionFlood_Fill_triggered();
-
-
-
-
     void on_actionAll_Layers_triggered();
-
     void on_actionCurrent_Layers_and_below_triggered();
 
 private:
     Ui::MainWindow *ui;
-    TilesetWidget *tileset_widget;
-    QString current_project_dir;
     QActionGroup *layergroup;
     QActionGroup *modegroup;
     QActionGroup *viewgroup;
 
-    QList<int> clipboard;
-    QHash<int,RPGTileset*> tilesets;
-    QHash<QString,Autotileset*> autotilesets;
+    QList<int> clipboard; //only for copy paste at map (no events
+
+
+    Settings settings;
+
 };
 #endif // MAINWINDOW_H

@@ -148,6 +148,9 @@
           </item>
           <item row="0" column="0">
            <widget class="MapWidget" name="map_label">
+            <property name="contextMenuPolicy">
+             <enum>Qt::CustomContextMenu</enum>
+            </property>
             <property name="text">
              <string/>
             </property>

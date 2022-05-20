@@ -684,10 +684,20 @@ RPGEventPageGraphic *RXDataParser::read_event_page_graphic()
     for (int j = 0; j < attribute_count; j++)
     {
         current_symbol = read_symbol_or_link();
-        if (current_symbol == "@direction" || current_symbol == "@blend_type" || current_symbol == "@tile_id" || current_symbol == "@pattern" || current_symbol == "@character_hue" || current_symbol == "@opacity")
-            event_page_graphic_object->setParameter(current_symbol, this->read_integer());
+        if (current_symbol == "@direction")
+            event_page_graphic_object->direction = this->read_integer();
+        else if (current_symbol == "@blend_type")
+            event_page_graphic_object->blend_type = this->read_integer();
+        else if (current_symbol == "@tile_id")
+            event_page_graphic_object->tile_id = this->read_integer();
+        else if (current_symbol == "@pattern")
+            event_page_graphic_object->pattern = this->read_integer();
+        else if (current_symbol == "@character_hue")
+            event_page_graphic_object->character_hue = this->read_integer();
+        else if (current_symbol == "@opacity")
+            event_page_graphic_object->opacity = this->read_integer();
         else if (current_symbol == "@character_name")
-            event_page_graphic_object->setParameter(current_symbol, this->read_string());
+            event_page_graphic_object->character_name = this->read_string();
     }
 
     return event_page_graphic_object;

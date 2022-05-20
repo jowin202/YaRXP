@@ -13,6 +13,10 @@
 #include <QEvent>
 #include <QDir>
 
+#include <QAction>
+#include <QMenu>
+
+#include "settings.h"
 #include "parser/rpgmap.h"
 
 class MapWidget : public QLabel
@@ -21,10 +25,18 @@ class MapWidget : public QLabel
 public:
     MapWidget(QWidget *parent);
     ~MapWidget();
+
     void mouseMoveEvent(QMouseEvent *ev);
     void mousePressEvent(QMouseEvent *ev);
     void mouseReleaseEvent(QMouseEvent *ev);
-    int array_position(QPoint p, int layer);
+
+    int array_position(QPoint p, int layer)
+    {
+        return p.x() + p.y() * this->width + this->height * this->width * layer;
+    }
+
+    void setSettings(Settings* settings)
+    { this->settings = settings; }
 
     void set_event_mode()
     {
@@ -64,11 +76,13 @@ public:
 
 public slots:
     void set_map(RPGMap *map);
-    void prepare_context_menu(QPoint p);
     void set_brush(QList<int> vars);
     void redraw();
     void draw_events();
     void draw_brush_rectangle();
+
+    void prepare_context_menu( const QPoint & pos );
+
 
     //for selection
     void draw_selection_rectangle();
@@ -90,13 +104,11 @@ private:
     QImage current_pic;
     QList <int> brush_vars;
     QPoint curr_pos;
-    //QList<int> map_values;
     bool mouse_pressed_left = false;
     bool mouse_pressed_right = false;
     bool dim_other_layers = false;
     bool show_all_layers = true;
 
-    //QPoint tmp_point_brush_rectangle; //rightclick
     QPoint left_click_pos; //when drawing multiple tiles
     QPoint brush_first_click_pos; //right click on map
     QRect brush_rectangle;
@@ -112,6 +124,23 @@ private:
     QRect selection_rectangle;
     QList<int> selection_list;
 
+
+
+    //event_move stuff
+    QPoint event_move_from_pos;
+
+
+    //event menu
+    QMenu event_menu_with_new;
+    QMenu event_menu_with_edit;
+
+    QAction action_cut, action_copy, action_paste, action_delete;
+    QAction action_new;
+    QAction action_edit;
+    QAction action_player_starting_pos;
+
+
+    Settings *settings;
 };
 
 #endif // MAPWIDGET_H
