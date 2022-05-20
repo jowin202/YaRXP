@@ -84,7 +84,7 @@ void MapTreeWidget::list_maps()
 
 
     RXDataParser parser2(settings->data_dir + "Tilesets.rxdata");
-    parser2.parseTilesetList(&this->settings->tilesets);
+    parser2.parseTilesetList(&this->settings->tileset_hash, &this->settings->tileset_list);
 
 }
 
@@ -100,13 +100,12 @@ void MapTreeWidget::clicked_at_item(QTreeWidgetItem *current_item, QTreeWidgetIt
         RPGMap *map = parser.parseMap();
         settings->map_info_list.at(list_id)->map = map;
         int tileset_id = map->tileset_id;
-        if (!this->settings->tilesets.contains(tileset_id))
+        if (!this->settings->tileset_hash.contains(tileset_id))
         {
             //error tileset
             qDebug() << "error: tileset not found at predefined tilesets";
             exit(1);
         }
-        RPGTileset *current_tileset = this->settings->tilesets.value(tileset_id);
 
 
         //Load event graphics (only once)
@@ -132,6 +131,7 @@ void MapTreeWidget::clicked_at_item(QTreeWidgetItem *current_item, QTreeWidgetIt
 
 
         //Load tileset image (only once)
+        RPGTileset *current_tileset = this->settings->tileset_hash.value(tileset_id);
         if (current_tileset->tileset.isNull())
         {
             if (QFile(settings->tileset_dir + current_tileset->tileset_name + ".png").exists())
@@ -174,9 +174,6 @@ void MapTreeWidget::clicked_at_item(QTreeWidgetItem *current_item, QTreeWidgetIt
             }
         }
 
-
-
-        settings->map_info_list.at(list_id)->map->tileset = this->settings->tilesets.value(tileset_id);
 
     }
     emit on_map_selected(settings->map_info_list.at(list_id)->map);

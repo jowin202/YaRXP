@@ -2,6 +2,9 @@
 <ui version="4.0">
  <class>EventDialog</class>
  <widget class="QWidget" name="EventDialog">
+  <property name="windowModality">
+   <enum>Qt::ApplicationModal</enum>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -21,21 +24,21 @@
        <item row="3" column="1" colspan="5">
         <layout class="QGridLayout" name="gridLayout_3">
          <item row="0" column="1">
-          <widget class="QPushButton" name="pushButton">
+          <widget class="QPushButton" name="button_ok">
            <property name="text">
             <string>Ok</string>
            </property>
           </widget>
          </item>
          <item row="0" column="2">
-          <widget class="QPushButton" name="pushButton_2">
+          <widget class="QPushButton" name="button_cancel">
            <property name="text">
             <string>Cancel</string>
            </property>
           </widget>
          </item>
          <item row="0" column="3">
-          <widget class="QPushButton" name="pushButton_3">
+          <widget class="QPushButton" name="button_apply">
            <property name="text">
             <string>Apply</string>
            </property>

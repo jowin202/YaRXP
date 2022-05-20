@@ -1040,9 +1040,11 @@ RPGTileset *RXDataParser::parseTileset()
     return tileset_object;
 }
 
-void RXDataParser::parseTilesetList(QHash<int,RPGTileset *> *tileset_list)
+void RXDataParser::parseTilesetList(QHash<int,RPGTileset *> *tileset_hash, QList<RPGTileset*> *tileset_list)
 {
     tileset_list->clear();
+    tileset_hash->clear();
+
     this->symbol_cache.clear();
     this->check_header();
 
@@ -1063,7 +1065,8 @@ void RXDataParser::parseTilesetList(QHash<int,RPGTileset *> *tileset_list)
         else if (this->look_one_byte_ahead() == 'o')
         {
             RPGTileset *tileset = this->parseTileset();
-            tileset_list->insert(tileset->id, tileset);
+            tileset_hash->insert(tileset->id, tileset);
+            tileset_list->append(tileset);
         }
     }
     this->close_file_if_open();

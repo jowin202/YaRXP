@@ -8,18 +8,18 @@ EventPage::EventPage(QWidget *parent, RPGEventPage *page) :
     ui->setupUi(this);
     this->page = page;
 
-    this->ui->check_switch1->setEnabled(page->condition->switch1_valid);
+    this->ui->check_switch1->setChecked(page->condition->switch1_valid);
     this->ui->combo_switch1->setEnabled(page->condition->switch1_valid);
 
-    this->ui->check_switch2->setEnabled(page->condition->switch2_valid);
+    this->ui->check_switch2->setChecked(page->condition->switch2_valid);
     this->ui->combo_switch2->setEnabled(page->condition->switch2_valid);
 
-    this->ui->check_variable->setEnabled(page->condition->variable_valid);
+    this->ui->check_variable->setChecked(page->condition->variable_valid);
     this->ui->combo_variable->setEnabled(page->condition->variable_valid);
     this->ui->spin_variable->setEnabled(page->condition->variable_valid);
     this->ui->spin_variable->setValue(page->condition->variable_value);
 
-    this->ui->check_self_switch->setEnabled(page->condition->self_switch_valid);
+    this->ui->check_self_switch->setChecked(page->condition->self_switch_valid);
     this->ui->combo_self_switch->setEnabled(page->condition->self_switch_valid);
 
     this->ui->combo_self_switch->setCurrentIndex(page->condition->self_switch_ch-1);

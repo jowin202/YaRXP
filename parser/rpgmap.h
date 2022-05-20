@@ -22,6 +22,8 @@ public:
     bool autoplay_bgs;
     bool autoplay_bgm;
 
+    RPGEvent *event_on_pos(QPoint pos);
+
     //encounter_list (empty for pokemon)
     //z=3
     //size=x*y*z don't need that
@@ -31,7 +33,6 @@ public:
 
     RPGAudioFile *bgs = 0, *bgm = 0;
 
-    RPGTileset *tileset;
 
 signals:
 

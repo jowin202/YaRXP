@@ -24,6 +24,9 @@ public:
     void setSettings(Settings *settings)
     { this->settings = settings; }
 
+    void save_data_to_object();
+
+
 
     enum {BGM, BGS, ME, SE};
     void setData(int mode, RPGAudioFile *audiofile);

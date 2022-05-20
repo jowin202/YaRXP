@@ -14,6 +14,18 @@ AudioWidget::~AudioWidget()
     delete ui;
 }
 
+void AudioWidget::save_data_to_object()
+{
+    if (this->audiofile != 0)
+    {
+        if (this->ui->listWidget->selectedItems().size() == 1)
+            this->audiofile->name = this->ui->listWidget->currentItem()->text().chopped(4);
+        this->audiofile->pitch = this->ui->verticalSlider_pitch->value();
+        this->audiofile->volume = this->ui->verticalSlider_volume->value();
+
+    }
+}
+
 
 void AudioWidget::setData(int mode, RPGAudioFile *audiofile)
 {

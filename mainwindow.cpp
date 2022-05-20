@@ -15,6 +15,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     this->ui->map_tree_widget->setSettings(&this->settings);
     this->ui->tileset_label->setSettings(&this->settings);
+    this->ui->map_label->setSettings(&this->settings);
 
     connect(this->ui->tileset_label, SIGNAL(selection_changed(QList<int>)), this->ui->map_label, SLOT(set_brush(QList<int>)));
     connect(this->ui->tileset_label, SIGNAL(selection_changed(QList<int>)), this, SLOT(on_actionPen_triggered())); //set pen when select tile

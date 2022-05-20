@@ -121,8 +121,8 @@ QPoint TilesetWidget::bin_to_coordinate(int b)
 
 void TilesetWidget::change_tileset(int id)
 {
-    this->img = &this->settings->tilesets.value(id)->tileset;
-    this->current_tileset = this->settings->tilesets.value(id);
+    this->img = &this->settings->tileset_hash.value(id)->tileset;
+    this->current_tileset = this->settings->tileset_hash.value(id);
     this->updateView();
 }
 

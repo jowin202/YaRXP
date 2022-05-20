@@ -20,10 +20,12 @@ MapWidget::MapWidget(QWidget *parent)
     this->addAction(&action_new);
     this->event_menu_with_new.addAction(&this->action_new);
 
+
     this->action_edit.setText("&Edit Event");
     this->action_edit.setShortcut(QKeySequence(Qt::Key_Enter));
     this->addAction(&action_edit);
     this->event_menu_with_edit.addAction(&this->action_edit);
+    connect(&this->action_edit, SIGNAL(triggered()), this, SLOT(show_event_dialog()));
 
 
     this->event_menu_with_new.addSeparator();
@@ -389,7 +391,8 @@ void MapWidget::redraw()
                 QPoint map_coord = 32*QPoint(i % this->width, i/this->width);
                 QRect target_rect(map_coord, map_coord + QPoint(31,31));
 
-                painter.drawImage(target_rect,this->map->tileset->autotiles[tileset_num].tileset_full,QRect((tile_num%8)*32,(tile_num/8)*32,32,32));
+                RPGTileset *tileset = settings->tileset_hash.value(map->tileset_id);
+                painter.drawImage(target_rect,tileset->autotiles[tileset_num].tileset_full,QRect((tile_num%8)*32,(tile_num/8)*32,32,32));
 
 
             }
@@ -431,7 +434,7 @@ void MapWidget::redraw()
     {
         QPen pen;
         pen.setWidth(2);
-        pen.setColor(QColor(100,100,100));
+        pen.setColor(QColor(150,150,150));
         painter.setPen(pen);
 
         for (int y = 0; y < this->height; y++)
@@ -472,20 +475,29 @@ void MapWidget::draw_events()
     {
         RPGEvent *event = map->events.at(i);
 
-
-
-
-        painter.drawRect(32*event->x, 32*event->y, 31,31);
+        painter.drawRect(32*event->x+1, 32*event->y+1, 30,30);
         painter.setOpacity(0.5);
+        painter.fillRect(32*event->x+1, 32*event->y+1, 30,30, Qt::white);
+        painter.setOpacity(1);
         if (event->pages.length() >= 1)
         {
             if (!event->pages.at(0)->graphic->graphics.isNull())
             {
-                painter.drawImage(QRect(32*event->x, 32*event->y, 31,31),event->pages.at(0)->graphic->graphics,QRect(0,0,32,32));
+
+                //direction:
+                //2 down, 4 left, 6 right, 8 up
+
+                //pattern 0,1,2,3
+
+                int dir_offset = (event->pages.at(0)->graphic->direction / 2) - 1;
+                int pattern_offset = event->pages.at(0)->graphic->pattern;
+
+                int pic_height = event->pages.at(0)->graphic->graphics.size().height()/4; //persons have 48 pixels, pokeballs 32
+
+                painter.drawImage(QRect(32*event->x, 32*event->y, 31,31),event->pages.at(0)->graphic->graphics,QRect(32*pattern_offset,pic_height*dir_offset,32,32));
             }
         }
-        painter.fillRect(32*event->x, 32*event->y, 31,31, Qt::white);
-        painter.setOpacity(1);
+
     }
 
     painter.end();
@@ -508,8 +520,18 @@ void MapWidget::prepare_context_menu(const QPoint &pos)
 {
     if (this->mode == EVENT)
     {
-        this->event_menu_with_new.exec(this->mapToGlobal(pos));
+        event_for_editing = map->event_on_pos(this->curr_pos);
+        if (event_for_editing == 0)
+            this->event_menu_with_new.exec(this->mapToGlobal(pos));
+        else
+            this->event_menu_with_edit.exec(this->mapToGlobal(pos));
     }
+}
+
+void MapWidget::show_event_dialog()
+{
+    EventDialog *dialog = new EventDialog(event_for_editing, this->settings, 0);
+    dialog->show();
 }
 
 void MapWidget::draw_selection_rectangle()
@@ -638,7 +660,7 @@ void MapWidget::set_map(RPGMap *map)
     this->map = map;
     this->height = map->height;
     this->width = map->width;
-    this->img = &map->tileset->tileset;
+    this->img = &settings->tileset_hash.value(map->tileset_id)->tileset;
 
     this->redraw();
 }

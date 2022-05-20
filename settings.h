@@ -18,7 +18,10 @@ public:
     QString characters_dir;
     QString data_dir;
     QString autotiles_dir;
-    QHash<int,RPGTileset*> tilesets;
+
+    QHash<int,RPGTileset*> tileset_hash;
+    QList<RPGTileset*> tileset_list;  //TODO Remove one of these
+
     QHash<QString,Autotileset*> autotilesets;
     QList<RPGMapInfo*> map_info_list; //map infos same order as in MapInfo.rxdata
 

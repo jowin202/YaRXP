@@ -16,6 +16,7 @@
 #include <QAction>
 #include <QMenu>
 
+#include "eventdialog.h"
 #include "settings.h"
 #include "parser/rpgmap.h"
 
@@ -82,6 +83,7 @@ public slots:
     void draw_brush_rectangle();
 
     void prepare_context_menu( const QPoint & pos );
+    void show_event_dialog();
 
 
     //for selection
@@ -131,6 +133,7 @@ private:
 
 
     //event menu
+    RPGEvent *event_for_editing = 0;
     QMenu event_menu_with_new;
     QMenu event_menu_with_edit;
 
