@@ -10,6 +10,8 @@
 #include "parser/rpgeventcommand.h"
 #include "parser/rpgeventpagegraphic.h"
 
+#include "settings.h"
+
 
 namespace Ui {
 class EventPage;
@@ -20,8 +22,11 @@ class EventPage : public QWidget
     Q_OBJECT
 
 public:
-    explicit EventPage(QWidget *parent = nullptr, RPGEventPage *page = 0);
+    explicit EventPage(QWidget *parent = nullptr, RPGEventPage *page = 0, Settings *settings = 0);
     ~EventPage();
+
+private slots:
+    void move_type_changed(int val);
 
 private:
     Ui::EventPage *ui;

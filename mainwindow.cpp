@@ -101,6 +101,9 @@ void MainWindow::on_actionOpen_triggered()
         this->settings.characters_dir = this->settings.current_project_dir + QDir::separator() + "Graphics" + QDir::separator() + "Characters" + QDir::separator();
         this->settings.characters_dir = this->settings.current_project_dir + QDir::separator() + "Graphics" + QDir::separator() + "Characters" + QDir::separator();
         this->ui->map_tree_widget->list_maps();
+
+        RXDataParser parser;
+        parser.parseSystem(&this->settings);
     }
 }
 

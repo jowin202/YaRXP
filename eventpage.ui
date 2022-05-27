@@ -204,14 +204,17 @@
          </widget>
         </item>
         <item row="1" column="1">
-         <widget class="QPushButton" name="pushButton">
+         <widget class="QPushButton" name="button_move_route">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="text">
            <string>Move Route</string>
           </property>
          </widget>
         </item>
         <item row="0" column="1">
-         <widget class="QComboBox" name="comboBox_5">
+         <widget class="QComboBox" name="combo_move_type">
           <item>
            <property name="text">
             <string>Fixed</string>
@@ -249,7 +252,7 @@
          </widget>
         </item>
         <item row="2" column="1">
-         <widget class="QComboBox" name="comboBox_6">
+         <widget class="QComboBox" name="combo_speed">
           <item>
            <property name="text">
             <string>1: Slowest</string>
@@ -283,7 +286,7 @@
          </widget>
         </item>
         <item row="3" column="1">
-         <widget class="QComboBox" name="comboBox_7">
+         <widget class="QComboBox" name="combo_freq">
           <item>
            <property name="text">
             <string>1: Lowest</string>
@@ -397,5 +400,86 @@
   </layout>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>check_switch2</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>combo_switch2</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>68</x>
+     <y>95</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>154</x>
+     <y>99</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>check_switch1</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>combo_switch1</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>78</x>
+     <y>53</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>156</x>
+     <y>52</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>check_variable</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>combo_variable</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>59</x>
+     <y>137</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>134</x>
+     <y>136</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>check_self_switch</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>combo_self_switch</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>56</x>
+     <y>210</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>185</x>
+     <y>215</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>check_variable</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>spin_variable</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>78</x>
+     <y>139</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>142</x>
+     <y>175</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

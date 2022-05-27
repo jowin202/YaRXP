@@ -12,6 +12,8 @@
 #include "rpgmapinfo.h"
 #include "rpgmap.h"
 #include "rpgtileset.h"
+
+#include "../settings.h"
 #include <QDebug>
 
 class RXDataParser : public QObject
@@ -59,6 +61,10 @@ public:
 
     RPGTileset *parseTileset();
     void parseTilesetList(QHash<int, RPGTileset *> *tileset_hash, QList<RPGTileset *> *tileset_list);
+
+
+    void parseSystem(Settings *settings);
+
 
 
 signals:

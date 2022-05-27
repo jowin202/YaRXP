@@ -17,7 +17,7 @@ EventDialog::EventDialog(RPGEvent *event, Settings *settings, QWidget *parent) :
         this->ui->label_event_name->setText(event->name);
         for (int i = 0; i < this->event->pages.size(); i++)
         {
-            this->ui->tab_widget->addTab(new EventPage(nullptr,this->event->pages.at(i)), QString::number(i+1));
+            this->ui->tab_widget->addTab(new EventPage(this->ui->tab_widget,this->event->pages.at(i),settings), QString::number(i+1));
         }
     }
 

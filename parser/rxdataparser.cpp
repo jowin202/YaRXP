@@ -1072,3 +1072,257 @@ void RXDataParser::parseTilesetList(QHash<int,RPGTileset *> *tileset_hash, QList
     this->close_file_if_open();
 }
 
+void RXDataParser::parseSystem(Settings *settings)
+{
+    this->symbol_cache.clear();
+    this->file.setFileName(settings->data_dir + "System.rxdata");
+    this->check_header();
+
+    QString current_symbol;
+
+    if (this->read_one_byte() != 'o')
+    {
+        qDebug() << "error: object as value expected";
+    }
+
+
+    if (read_symbol_or_link() != "RPG::System")
+    {
+        qDebug() << "error: wrong object, RPG::System expected";
+    }
+    int attribute_count = this->read_fixnum(); // should be 36 (?)
+    for (int j = 0; j < attribute_count; j++)
+    {
+        current_symbol = read_symbol_or_link();
+        //qDebug() << current_symbol;
+        if (current_symbol == "@variables")
+        {
+            if (this->read_one_byte() != '[')
+            {
+                qDebug() << "error: list expected";
+                exit(1);
+            }
+            int list_size = this->read_fixnum();
+
+            this->read_one_byte(); //withdraw zero, as we start counting at 1
+            for (int i = 1; i < list_size; i++)
+            {
+                settings->variable_names.append(this->read_string());
+            }
+        }
+        else if (current_symbol == "@cancel_se")
+        {
+            settings->cancel_se = this->read_audiofile_object();
+        }
+        else if (current_symbol == "@magic_number")
+        {
+            settings->magic_number = this->read_integer();
+        }
+        else if (current_symbol == "@escape_se")
+        {
+            settings->escape_se = this->read_audiofile_object();
+        }
+        else if (current_symbol == "@battle_end_me")
+        {
+            settings->escape_se = this->read_audiofile_object();
+        }
+        else if (current_symbol == "@start_map_id")
+        {
+            settings->start_map_id = this->read_integer();
+        }
+        else if (current_symbol == "@shop_se")
+        {
+            settings->shop_se = this->read_audiofile_object();
+        }
+        else if (current_symbol == "@gameover_name")
+        {
+            settings->gameover_name = this->read_string();
+        }
+        else if (current_symbol == "@words")
+        {
+            if (this->read_one_byte() != 'o')
+            {
+                qDebug() << "error: words object expected";
+                exit(1);
+            }
+            if (this->read_symbol_or_link() != "RPG::System::Words")
+            {
+                qDebug() << "error: words object expected";
+                exit(1);
+            }
+            int num_words = this->read_fixnum();
+            for (int i = 0; i < num_words; i++)
+            {
+                QString key = this->read_symbol_or_link();
+                QString value = this->read_string();
+                settings->words.insert(key,value);
+            }
+        }
+        else if (current_symbol == "@switches")
+        {
+            if (this->read_one_byte() != '[')
+            {
+                qDebug() << "error: list expected";
+                exit(1);
+            }
+            int list_size = this->read_fixnum();
+
+            this->read_one_byte(); //withdraw zero, as we start counting at 1
+            for (int i = 1; i < list_size; i++)
+            {
+                settings->switches_names.append(this->read_string());
+            }
+        }
+        else if (current_symbol == "@decision_se")
+        {
+            settings->decision_se = this->read_audiofile_object();
+        }
+        else if (current_symbol == "@edit_map_id")
+        {
+            settings->edit_map_id = this->read_integer();
+        }
+        else if (current_symbol == "@battle_start_se")
+        {
+            settings->battle_start_se = this->read_audiofile_object();
+        }
+        else if (current_symbol == "@battle_bgm")
+        {
+            settings->battle_bgm = this->read_audiofile_object();
+        }
+        else if (current_symbol == "@test_troop_id")
+        {
+            settings->test_troop_id = this->read_integer();
+        }
+        else if (current_symbol == "@equip_se")
+        {
+            settings->equip_se = this->read_audiofile_object();
+        }
+        else if (current_symbol == "@title_name")
+        {
+            settings->title_name = this->read_string();
+        }
+        else if (current_symbol == "@enemy_collapse_se")
+        {
+            settings->enemy_collapse_se = this->read_audiofile_object();
+        }
+        else if (current_symbol == "@cursor_se")
+        {
+            settings->cursor_se = this->read_audiofile_object();
+        }
+        else if (current_symbol == "@elements")
+        {
+            if (this->read_one_byte() != '[')
+            {
+                qDebug() << "error: list expected";
+                exit(1);
+            }
+            int list_num = this->read_fixnum();
+            for (int i = 0; i < list_num; i++)
+            {
+                settings->elements.append(this->read_string());
+            }
+        }
+        else if (current_symbol == "@start_y")
+        {
+            settings->start_y = this->read_integer();
+        }
+        else if (current_symbol == "@battler_hue")
+        {
+            settings->battler_hue = this->read_integer();
+        }
+        else if (current_symbol == "@load_se")
+        {
+            settings->load_se = this->read_audiofile_object();
+        }
+        else if (current_symbol == "@title_bgm")
+        {
+            settings->title_bgm = this->read_audiofile_object();
+        }
+        else if (current_symbol == "@buzzer_se")
+        {
+            settings->buzzer_se = this->read_audiofile_object();
+        }
+        else if (current_symbol == "@windowskin_name")
+        {
+            settings->windowskin_name = this->read_string();
+        }
+        else if (current_symbol == "@test_battlers")
+        {
+            if (this->read_one_byte() != '[')
+            {
+                qDebug() << "error: list expected";
+                exit(1);
+            }
+            int list_num = this->read_fixnum();
+
+            for (int i = 0; i < list_num; i++)
+            {
+                if (this->read_one_byte() != 'o')
+                {
+                    qDebug() << "RPG::System::TestBattler expected";
+                    exit(1);
+                }
+                if (this->read_symbol_or_link() != "RPG::System::TestBattler")
+                {
+                    qDebug() << "RPG::System::TestBattler expected";
+                    exit(1);
+                }
+                int num_params = this->read_fixnum(); //should be 7
+                for (int k = 0; k < num_params; k++)
+                {
+                    //TODO: not withdrawing this (for file saving)
+                    this->read_symbol_or_link(); //withdraw
+                    this->read_integer(); //withdraw
+                }
+            }
+        }
+        else if (current_symbol == "@_")
+        {
+            settings->_ = this->read_integer();
+        }
+        else if (current_symbol == "@battleback_name")
+        {
+            settings->battleback_name = this->read_string();
+        }
+        else if (current_symbol == "@party_members")
+        {
+            if (this->read_one_byte() != '[')
+            {
+                qDebug() << "error: list expected";
+                exit(1);
+            }
+            int list_num = this->read_fixnum();
+            for (int i = 0; i < list_num; i++)
+            {
+                settings->party_members.append(this->read_integer());
+            }
+
+        }
+        else if (current_symbol == "@actor_collapse_se")
+        {
+            settings->actor_collapse_se = this->read_audiofile_object();
+        }
+        else if (current_symbol == "@gameover_me")
+        {
+            settings->gameover_me = this->read_audiofile_object();
+        }
+        else if (current_symbol == "@battler_name")
+        {
+            settings->battler_name = this->read_string();
+        }
+        else if (current_symbol == "@save_se")
+        {
+            settings->save_se = this->read_audiofile_object();
+        }
+        else if (current_symbol == "@battle_transition")
+        {
+            settings->battle_transition = this->read_string();
+        }
+        else if (current_symbol == "@start_x")
+        {
+            settings->start_y = this->read_integer();
+        }
+    }
+    this->close_file_if_open();
+}
+

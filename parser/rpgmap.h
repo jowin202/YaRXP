@@ -23,6 +23,7 @@ public:
     bool autoplay_bgm;
 
     RPGEvent *event_on_pos(QPoint pos);
+    void fix_autotile_stuff(QPoint start, int layer);
 
     //encounter_list (empty for pokemon)
     //z=3

@@ -164,7 +164,8 @@ void MapWidget::mousePressEvent(QMouseEvent *ev)
     if (ev->x()/32 >= this->width || ev->y()/32 >= this->height)
         return; //out of range
 
-    this->curr_pos = QPoint(ev->pos().x()/32,ev->pos().y()/32);
+    this->curr_pos = QPoint(ev->pos().x()/32,ev->pos().y()/32); // pos()/32 is not possible because coordinates are rounded
+    //map->fix_autotile_stuff(this->curr_pos, this->current_layer); //TODO
 
 
     if (this->mode == EVENT)
@@ -172,11 +173,12 @@ void MapWidget::mousePressEvent(QMouseEvent *ev)
         if (ev->button() == Qt::LeftButton)
         {
             this->event_move_from_pos = this->curr_pos;
-            return; // do nothing when leftclick //TODO: move events
+            return; // do nothing when leftclick
         }
         if (ev->button() == Qt::RightButton)
         {
             //context menu
+            return; //nothing else should happen here
         }
     }
     else if (this->mode == PEN)
@@ -231,7 +233,7 @@ void MapWidget::mousePressEvent(QMouseEvent *ev)
         {
             this->selection_first_click_pos = this->curr_pos;
         }
-     }
+    }
     else if (this->mode == FLOOD)
     {
         this->flood_fill(this->curr_pos, this->curr_pos);
@@ -251,7 +253,7 @@ void MapWidget::mouseReleaseEvent(QMouseEvent *ev)
         {
             if (this->event_move_from_pos != QPoint(-1,-1))
             {
-                int new_pos;
+                int new_pos = -1;
                 bool move_allowed = true;
                 for (int i = 0; i < this->map->events.length(); i++)
                 {
@@ -261,10 +263,10 @@ void MapWidget::mouseReleaseEvent(QMouseEvent *ev)
                     }
                     if (this->map->events.at(i)->x == this->curr_pos.x() && this->map->events.at(i)->y == this->curr_pos.y())
                     {
-                        move_allowed = false;
+                        move_allowed = false; // no other event on this place
                     }
                 }
-                if (move_allowed)
+                if (move_allowed && new_pos >= 0) // first click pos must contain event and move destination must be free
                 {
                     this->map->events.at(new_pos)->x = this->curr_pos.x();
                     this->map->events.at(new_pos)->y = this->curr_pos.y();
@@ -321,6 +323,18 @@ void MapWidget::mouseReleaseEvent(QMouseEvent *ev)
             selection_rectangle_is_released = true; //draw content of sel. rect now
         }
         this->redraw();
+    }
+}
+
+void MapWidget::mouseDoubleClickEvent(QMouseEvent *ev)
+{
+    if (this->mode == EVENT)
+    {
+        if (map->event_on_pos(this->curr_pos) != 0)
+        {
+            event_for_editing = map->event_on_pos(this->curr_pos);
+            this->show_event_dialog();
+        }
     }
 }
 
@@ -393,8 +407,6 @@ void MapWidget::redraw()
 
                 RPGTileset *tileset = settings->tileset_hash.value(map->tileset_id);
                 painter.drawImage(target_rect,tileset->autotiles[tileset_num].tileset_full,QRect((tile_num%8)*32,(tile_num/8)*32,32,32));
-
-
             }
             else{
                 QPoint tile_coord = 32*bin_to_coordinate(this->map->data[index]);
@@ -406,6 +418,11 @@ void MapWidget::redraw()
                 painter.drawImage(target_rect, *img, source_rect);
             }
         }
+    }
+    painter.setOpacity(1); //disable opacity in selection rectangle
+
+    for (int layer = 0; layer <= (this->show_all_layers ? 2 : this->current_layer); layer++)
+    {
         if (mode == SELECT && this->selection_rectangle.width() > 0 && this->selection_rectangle.height() > 0
                 && selection_rectangle_is_released)
         {
@@ -421,7 +438,8 @@ void MapWidget::redraw()
                 QRect target_rect(map_coord, map_coord + QPoint(31,31));
                 QRect source_rect(tile_coord, tile_coord + QPoint(31,31));
 
-                //TODO Autotiles
+                //autotiles
+
                 painter.drawImage(target_rect, *img, source_rect);
 
             }
@@ -604,7 +622,6 @@ void MapWidget::flood_fill(QPoint clicked, QPoint next)
 {
     int shift_x = (clicked.x() > next.x() ? shitty_mod(clicked.x() - next.x(),this->brush_rectangle.width()) : ((next.x() - clicked.x())% this->brush_rectangle.width()));
     int shift_y = (clicked.y() > next.y() ? shitty_mod(clicked.y() - next.y(),this->brush_rectangle.height()) : ((next.y() - clicked.y())% this->brush_rectangle.height()));
-
 
 
     int index = array_position(next, this->current_layer);

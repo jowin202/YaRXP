@@ -30,6 +30,8 @@ public:
     void mouseMoveEvent(QMouseEvent *ev);
     void mousePressEvent(QMouseEvent *ev);
     void mouseReleaseEvent(QMouseEvent *ev);
+    void mouseDoubleClickEvent(QMouseEvent *ev); //event dialog
+
 
     int array_position(QPoint p, int layer)
     {

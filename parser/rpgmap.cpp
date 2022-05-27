@@ -24,3 +24,21 @@ RPGEvent* RPGMap::event_on_pos(QPoint pos)
     }
     return 0;
 }
+
+void RPGMap::fix_autotile_stuff(QPoint start, int layer)
+{
+    if (start.x() < 0 || start.x() >= width || start.y() < 0 || start.y() >= height)
+        return;
+
+    int offset_center = this->height * this->width * layer;
+    offset_center += this->width * start.y() + start.x();
+
+    if (data[offset_center] >= 0x180 || data[offset_center] == 0)
+        return; // only for autotiles
+
+    int autotiles_num = data[offset_center]/0x30 - 1;
+    int default_autotile = 0x30 * (autotiles_num+1);
+
+
+
+}
