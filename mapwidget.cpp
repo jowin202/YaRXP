@@ -313,8 +313,8 @@ void MapWidget::mouseReleaseEvent(QMouseEvent *ev)
             this->selection_list.append(this->selection_rectangle.height());
 
             for (int z = 0; z < 3; z++)
-                for (int y = 0; y < selection_rectangle.height()-1; y++)
-                    for (int x = 0; x < selection_rectangle.width()-1; x++)
+                for (int y = 0; y < selection_rectangle.height(); y++)
+                    for (int x = 0; x < selection_rectangle.width(); x++)
                     {
                         int index = array_position(selection_rectangle.topLeft() + QPoint(x,y), z);
                         this->selection_list.append(this->map->data[index]);
@@ -427,8 +427,8 @@ void MapWidget::redraw()
                 && selection_rectangle_is_released)
         {
             //insert selection
-            int sel_width = this->selection_rectangle.width()-1;
-            int sel_height = this->selection_rectangle.height()-1;
+            int sel_width = this->selection_rectangle.width();
+            int sel_height = this->selection_rectangle.height();
 
             for (int i = 0; i < sel_width*sel_height;i++)
             {
@@ -560,9 +560,9 @@ void MapWidget::draw_selection_rectangle()
         QPainter painter;
         painter.begin(&newimg);
         painter.setPen( QPen(QColor(0,0,0),3,Qt::DotLine));
-        painter.drawRect(QRect(this->selection_rectangle.topLeft()*32, this->selection_rectangle.bottomRight()*32));
+        painter.drawRect(QRect(this->selection_rectangle.topLeft()*32, (QPoint(1,1) + this->selection_rectangle.bottomRight())*32));
         painter.setPen( QPen(QColor(255,255,255),1,Qt::DotLine));
-        painter.drawRect(QRect(this->selection_rectangle.topLeft()*32, this->selection_rectangle.bottomRight()*32));
+        painter.drawRect(QRect(this->selection_rectangle.topLeft()*32, (QPoint(1,1) + this->selection_rectangle.bottomRight())*32));
         painter.end();
         this->setPixmap(QPixmap::fromImage(newimg));
     }
@@ -606,12 +606,12 @@ void MapWidget::merge_selection()
     if (this->selection_rectangle.x() < 0 || this->selection_rectangle.y() < 0)
         return; //dont do merge if no selection rectangle is available
 
-    int sel_height = this->selection_rectangle.height()-1;
-    int sel_width = this->selection_rectangle.width()-1;
+    int sel_height = this->selection_rectangle.height();
+    int sel_width = this->selection_rectangle.width();
 
     for (int z = 0; z < 3; z++)
-        for (int y = 0; y < selection_rectangle.height()-1; y++)
-            for (int x = 0; x < selection_rectangle.width()-1; x++)
+        for (int y = 0; y < selection_rectangle.height(); y++)
+            for (int x = 0; x < selection_rectangle.width(); x++)
             {
                 int index = array_position(selection_rectangle.topLeft() + QPoint(x,y), z);
                 this->map->data[index] = this->selection_list[2 + sel_width*sel_height*z + x + sel_width*y];
