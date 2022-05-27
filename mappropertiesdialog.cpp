@@ -1,9 +1,9 @@
-#include "mapproperties.h"
-#include "ui_mapproperties.h"
+#include "mappropertiesdialog.h"
+#include "ui_mappropertiesdialog.h"
 
-MapProperties::MapProperties(RPGMapInfo *info, Settings *settings, QWidget *parent) :
+MapPropertiesDialog::MapPropertiesDialog(RPGMapInfo *info, Settings *settings, QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::MapProperties)
+    ui(new Ui::MapPropertiesDialog)
 {
     ui->setupUi(this);
     this->mapinfo = info;
@@ -36,28 +36,28 @@ MapProperties::MapProperties(RPGMapInfo *info, Settings *settings, QWidget *pare
 
 }
 
-MapProperties::~MapProperties()
+MapPropertiesDialog::~MapPropertiesDialog()
 {
     //qDebug() << "dialog deleted";
     delete ui;
 }
 
-void MapProperties::closeEvent(QCloseEvent *event)
+void MapPropertiesDialog::closeEvent(QCloseEvent *event)
 {
     this->deleteLater();
 }
 
-void MapProperties::on_check_auto_change_bgm_toggled(bool checked)
+void MapPropertiesDialog::on_check_auto_change_bgm_toggled(bool checked)
 {
     this->ui->widget_bgm->setEnabled(checked);
 }
 
-void MapProperties::on_check_auto_change_bgs_toggled(bool checked)
+void MapPropertiesDialog::on_check_auto_change_bgs_toggled(bool checked)
 {
     this->ui->widget_bgs->setEnabled(checked);
 }
 
-void MapProperties::on_button_ok_clicked()
+void MapPropertiesDialog::on_button_ok_clicked()
 {
     this->mapinfo->name = this->ui->line_name->text();
     this->mapinfo->map->width = this->ui->spin_x->value();
@@ -74,7 +74,7 @@ void MapProperties::on_button_ok_clicked()
 
 }
 
-void MapProperties::on_button_cancel_clicked()
+void MapPropertiesDialog::on_button_cancel_clicked()
 {
     this->close();
 }

@@ -1,5 +1,5 @@
-#ifndef MAPPROPERTIES_H
-#define MAPPROPERTIES_H
+#ifndef MAPPROPERTIESDIALOG_H
+#define MAPPROPERTIESDIALOG_H
 
 #include <QWidget>
 #include <QDebug>
@@ -10,16 +10,16 @@
 #include "settings.h"
 
 namespace Ui {
-class MapProperties;
+class MapPropertiesDialog;
 }
 
-class MapProperties : public QWidget
+class MapPropertiesDialog : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit MapProperties(RPGMapInfo* info, Settings *settings, QWidget *parent = nullptr);
-    ~MapProperties();
+    explicit MapPropertiesDialog(RPGMapInfo* info, Settings *settings, QWidget *parent = nullptr);
+    ~MapPropertiesDialog();
     void closeEvent(QCloseEvent *event);
 
     void keyPressEvent(QKeyEvent *event)
@@ -39,8 +39,8 @@ private slots:
     void on_button_cancel_clicked();
 
 private:
-    Ui::MapProperties *ui;
+    Ui::MapPropertiesDialog *ui;
     RPGMapInfo *mapinfo;
 };
 
-#endif // MAPPROPERTIES_H
+#endif // MAPPROPERTIESDIALOG_H

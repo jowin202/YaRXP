@@ -18,13 +18,17 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     audiowidget.cpp \
     autotileset.cpp \
-    eventdialog.cpp \
+    event_dialogs/choicesdialog.cpp \
+    event_dialogs/conditionalbranchdialog.cpp \
+    event_dialogs/eventcommanddialog.cpp \
+    event_dialogs/eventdialog.cpp \
+    event_dialogs/eventpage.cpp \
+    event_dialogs/moveroutedialog.cpp \
     main.cpp \
     mainwindow.cpp \
-    mapproperties.cpp \
+    mappropertiesdialog.cpp \
     maptreewidget.cpp \
     mapwidget.cpp \
-    eventpage.cpp \
     parser/rpgaudiofile.cpp \
     parser/rpgevent.cpp \
     parser/rpgeventcommand.cpp \
@@ -44,12 +48,16 @@ SOURCES += \
 HEADERS += \
     audiowidget.h \
     autotileset.h \
-    eventdialog.h \
+    event_dialogs/choicesdialog.h \
+    event_dialogs/conditionalbranchdialog.h \
+    event_dialogs/eventcommanddialog.h \
+    event_dialogs/eventdialog.h \
+    event_dialogs/eventpage.h \
+    event_dialogs/moveroutedialog.h \
     mainwindow.h \
-    mapproperties.h \
+    mappropertiesdialog.h \
     maptreewidget.h \
     mapwidget.h \
-    eventpage.h \
     parser/rpgaudiofile.h \
     parser/rpgevent.h \
     parser/rpgeventcommand.h \
@@ -68,10 +76,14 @@ HEADERS += \
 
 FORMS += \
     audiowidget.ui \
-    eventdialog.ui \
+    event_dialogs/choicesdialog.ui \
+    event_dialogs/conditionalbranchdialog.ui \
+    event_dialogs/eventcommanddialog.ui \
+    event_dialogs/eventdialog.ui \
+    event_dialogs/eventpage.ui \
+    event_dialogs/moveroutedialog.ui \
     mainwindow.ui \
-    eventpage.ui \
-    mapproperties.ui
+    mappropertiesdialog.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

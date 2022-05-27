@@ -2,7 +2,7 @@
 #include <QDebug>
 #include <QApplication>
 
-#include "eventdialog.h"
+#include "event_dialogs/eventdialog.h"
 
 #include "parser/rxdataparser.h"
 #include "parser/rpgmapinfo.h"

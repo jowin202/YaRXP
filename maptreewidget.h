@@ -10,7 +10,7 @@
 #include "parser/rpgmapinfo.h"
 #include "parser/rpgtileset.h"
 
-#include "mapproperties.h"
+#include "mappropertiesdialog.h"
 #include "settings.h"
 
 #include <QDebug>

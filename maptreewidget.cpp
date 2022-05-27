@@ -190,6 +190,6 @@ void MapTreeWidget::show_map_properties_dialog()
     if (this->selectedItems().size() <= 0)
         return;
     RPGMapInfo *mapinfo = settings->map_info_list.at(this->selectedItems().at(0)->text(2).toInt());
-    MapProperties *dialog = new MapProperties(mapinfo, this->settings, 0);
+    MapPropertiesDialog *dialog = new MapPropertiesDialog(mapinfo, this->settings, 0);
     dialog->show();
 }

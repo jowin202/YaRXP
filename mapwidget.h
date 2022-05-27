@@ -16,7 +16,7 @@
 #include <QAction>
 #include <QMenu>
 
-#include "eventdialog.h"
+#include "event_dialogs/eventdialog.h"
 #include "settings.h"
 #include "parser/rpgmap.h"
 
