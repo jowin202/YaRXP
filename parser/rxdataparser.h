@@ -41,7 +41,7 @@ public:
 
 
     RPGMapInfo* read_mapinfo_object();
-    RPGAudioFile* read_audiofile_object();
+    void read_audiofile_object(RPGAudioFile *audiofile);
     void read_event_list(QList<RPGEvent*> *list);
     RPGEvent *read_event_object();
     void read_event_pages_list(QList<RPGEventPage*> *list);

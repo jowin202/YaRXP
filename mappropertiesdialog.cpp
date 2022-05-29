@@ -11,8 +11,8 @@ MapPropertiesDialog::MapPropertiesDialog(RPGMapInfo *info, Settings *settings, Q
     this->ui->widget_bgs->setSettings(settings);
 
 
-    this->ui->widget_bgm->setData(AudioWidget::BGM, info->map->bgm);
-    this->ui->widget_bgs->setData(AudioWidget::BGS, info->map->bgs);
+    this->ui->widget_bgm->setData(AudioWidget::BGM, &info->map->bgm);
+    this->ui->widget_bgs->setData(AudioWidget::BGS, &info->map->bgs);
 
 
     this->ui->line_id->setText(QString::number(this->mapinfo->id));

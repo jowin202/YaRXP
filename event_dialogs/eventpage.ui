@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>950</width>
-    <height>629</height>
+    <width>1163</width>
+    <height>628</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -357,7 +357,7 @@
        </widget>
       </item>
       <item row="0" column="0" colspan="2">
-       <widget class="QListView" name="listView"/>
+       <widget class="EventList" name="eventList"/>
       </item>
      </layout>
     </widget>
@@ -425,6 +425,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>EventList</class>
+   <extends>QListView</extends>
+   <header>event_dialogs/eventlist.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections>
   <connection>

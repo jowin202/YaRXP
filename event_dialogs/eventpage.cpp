@@ -30,6 +30,9 @@ EventPage::EventPage(QWidget *parent, RPGEventPage *page, Settings *settings) :
             this->ui->combo_variable->setCurrentIndex(page->condition->variable_id-1);
             this->ui->spin_variable->setValue(page->condition->variable_value);
         }
+
+        this->ui->eventList->set_data(settings, &page->list);
+        this->ui->eventList->fill_list(); // happens only if settings are valid ... TODO: check
     }
 
     connect(this->ui->combo_move_type, SIGNAL(currentIndexChanged(int)), this, SLOT(move_type_changed(int)));
@@ -73,6 +76,7 @@ EventPage::EventPage(QWidget *parent, RPGEventPage *page, Settings *settings) :
         this->ui->radio_autorun->setChecked(true);
     else if (page->trigger == 4)
         this->ui->radio_parallel_process->setChecked(true);
+
 
 
 }

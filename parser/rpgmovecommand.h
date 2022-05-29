@@ -16,7 +16,7 @@ public:
 
     void debug();
     QList<QVariant> parameters;
-    RPGAudioFile *audiofile;
+    RPGAudioFile audiofile;
     static int instances;
 signals:
 private:

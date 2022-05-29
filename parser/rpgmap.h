@@ -12,7 +12,6 @@ class RPGMap : public QObject
 public:
     explicit RPGMap(QObject *parent = nullptr);
 
-    void debug();
 
     int width;
     int height;
@@ -32,7 +31,8 @@ public:
 
     QList<RPGEvent*> events;
 
-    RPGAudioFile *bgs = 0, *bgm = 0;
+    RPGAudioFile bgs;
+    RPGAudioFile bgm;
 
 
 signals:

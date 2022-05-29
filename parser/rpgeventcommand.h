@@ -20,7 +20,7 @@ public:
     int indent;
     QList<QVariant> parameters;
     QString type;
-    RPGAudioFile *audiofile;
+    RPGAudioFile audiofile;
     QStringList choices_list;
 
 

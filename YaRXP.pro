@@ -19,9 +19,11 @@ SOURCES += \
     audiowidget.cpp \
     autotileset.cpp \
     event_dialogs/choicesdialog.cpp \
+    event_dialogs/commands/showtext.cpp \
     event_dialogs/conditionalbranchdialog.cpp \
     event_dialogs/eventcommanddialog.cpp \
     event_dialogs/eventdialog.cpp \
+    event_dialogs/eventlist.cpp \
     event_dialogs/eventpage.cpp \
     event_dialogs/moveroutedialog.cpp \
     main.cpp \
@@ -42,6 +44,7 @@ SOURCES += \
     parser/rpgtileset.cpp \
     parser/rpgtone.cpp \
     parser/rxdataparser.cpp \
+    parser/rxdatawriter.cpp \
     settings.cpp \
     tilesetwidget.cpp
 
@@ -49,9 +52,11 @@ HEADERS += \
     audiowidget.h \
     autotileset.h \
     event_dialogs/choicesdialog.h \
+    event_dialogs/commands/showtext.h \
     event_dialogs/conditionalbranchdialog.h \
     event_dialogs/eventcommanddialog.h \
     event_dialogs/eventdialog.h \
+    event_dialogs/eventlist.h \
     event_dialogs/eventpage.h \
     event_dialogs/moveroutedialog.h \
     mainwindow.h \
@@ -71,6 +76,7 @@ HEADERS += \
     parser/rpgtileset.h \
     parser/rpgtone.h \
     parser/rxdataparser.h \
+    parser/rxdatawriter.h \
     settings.h \
     tilesetwidget.h
 

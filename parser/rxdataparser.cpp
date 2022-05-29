@@ -247,9 +247,8 @@ RPGMapInfo* RXDataParser::read_mapinfo_object()
     return mapinfo_item;
 }
 
-RPGAudioFile* RXDataParser::read_audiofile_object()
+void RXDataParser::read_audiofile_object(RPGAudioFile *audiofile)
 {
-    RPGAudioFile *audiofile = new RPGAudioFile();
     QString current_symbol;
 
     if (this->read_one_byte() != 'o')
@@ -274,7 +273,6 @@ RPGAudioFile* RXDataParser::read_audiofile_object()
         else if (current_symbol == "@name")
             audiofile->name = this->read_string();
     }
-    return audiofile;
 }
 
 void RXDataParser::read_event_list(QList<RPGEvent *> *list)
@@ -457,7 +455,7 @@ RPGEventCommand *RXDataParser::read_event_command_object()
                 if (this->look_one_byte_ahead() == 'o') //audiofile or move route
                 {
                     if (this->look_ahead_object_type() == "RPG::AudioFile")
-                        event_command_object->audiofile = this->read_audiofile_object();
+                        this->read_audiofile_object(&event_command_object->audiofile);
                     else if (this->look_ahead_object_type() == "RPG::MoveRoute")
                     {
                         this->read_move_route_object();
@@ -639,7 +637,7 @@ RPGMoveCommand *RXDataParser::read_move_command_object()
                     //TODO: e.g. audiofile
                     if (this->look_ahead_object_type() == "RPG::AudioFile")
                     {
-                        move_command_object->audiofile = this->read_audiofile_object();
+                        this->read_audiofile_object(&move_command_object->audiofile);
                     }
                 }
             }
@@ -756,9 +754,9 @@ RPGMap* RXDataParser::parseMap()
     {
         current_symbol = read_symbol_or_link();
         if (current_symbol == "@bgm")
-            map->bgm = this->read_audiofile_object();
+            this->read_audiofile_object(&map->bgm);
         else if (current_symbol == "@bgs")
-            map->bgs = read_audiofile_object();
+             this->read_audiofile_object(&map->bgs);
         else if (current_symbol == "@tileset_id")
             map->tileset_id = this->read_integer();
         else if (current_symbol == "@width")
@@ -1112,7 +1110,7 @@ void RXDataParser::parseSystem(Settings *settings)
         }
         else if (current_symbol == "@cancel_se")
         {
-            settings->cancel_se = this->read_audiofile_object();
+            this->read_audiofile_object(&settings->cancel_se);
         }
         else if (current_symbol == "@magic_number")
         {
@@ -1120,11 +1118,11 @@ void RXDataParser::parseSystem(Settings *settings)
         }
         else if (current_symbol == "@escape_se")
         {
-            settings->escape_se = this->read_audiofile_object();
+            this->read_audiofile_object(&settings->escape_se);
         }
         else if (current_symbol == "@battle_end_me")
         {
-            settings->escape_se = this->read_audiofile_object();
+            this->read_audiofile_object(&settings->escape_se);
         }
         else if (current_symbol == "@start_map_id")
         {
@@ -1132,7 +1130,7 @@ void RXDataParser::parseSystem(Settings *settings)
         }
         else if (current_symbol == "@shop_se")
         {
-            settings->shop_se = this->read_audiofile_object();
+            this->read_audiofile_object(&settings->shop_se);
         }
         else if (current_symbol == "@gameover_name")
         {
@@ -1175,7 +1173,7 @@ void RXDataParser::parseSystem(Settings *settings)
         }
         else if (current_symbol == "@decision_se")
         {
-            settings->decision_se = this->read_audiofile_object();
+            this->read_audiofile_object(&settings->decision_se);
         }
         else if (current_symbol == "@edit_map_id")
         {
@@ -1183,11 +1181,11 @@ void RXDataParser::parseSystem(Settings *settings)
         }
         else if (current_symbol == "@battle_start_se")
         {
-            settings->battle_start_se = this->read_audiofile_object();
+            this->read_audiofile_object(&settings->battle_start_se);
         }
         else if (current_symbol == "@battle_bgm")
         {
-            settings->battle_bgm = this->read_audiofile_object();
+            this->read_audiofile_object(&settings->battle_bgm);
         }
         else if (current_symbol == "@test_troop_id")
         {
@@ -1195,7 +1193,7 @@ void RXDataParser::parseSystem(Settings *settings)
         }
         else if (current_symbol == "@equip_se")
         {
-            settings->equip_se = this->read_audiofile_object();
+            this->read_audiofile_object(&settings->equip_se);
         }
         else if (current_symbol == "@title_name")
         {
@@ -1203,11 +1201,11 @@ void RXDataParser::parseSystem(Settings *settings)
         }
         else if (current_symbol == "@enemy_collapse_se")
         {
-            settings->enemy_collapse_se = this->read_audiofile_object();
+            this->read_audiofile_object(&settings->enemy_collapse_se);
         }
         else if (current_symbol == "@cursor_se")
         {
-            settings->cursor_se = this->read_audiofile_object();
+            this->read_audiofile_object(&settings->cursor_se);
         }
         else if (current_symbol == "@elements")
         {
@@ -1232,15 +1230,15 @@ void RXDataParser::parseSystem(Settings *settings)
         }
         else if (current_symbol == "@load_se")
         {
-            settings->load_se = this->read_audiofile_object();
+            this->read_audiofile_object(&settings->load_se);
         }
         else if (current_symbol == "@title_bgm")
         {
-            settings->title_bgm = this->read_audiofile_object();
+            this->read_audiofile_object(&settings->title_bgm);
         }
         else if (current_symbol == "@buzzer_se")
         {
-            settings->buzzer_se = this->read_audiofile_object();
+            this->read_audiofile_object(&settings->buzzer_se);
         }
         else if (current_symbol == "@windowskin_name")
         {
@@ -1300,11 +1298,11 @@ void RXDataParser::parseSystem(Settings *settings)
         }
         else if (current_symbol == "@actor_collapse_se")
         {
-            settings->actor_collapse_se = this->read_audiofile_object();
+            this->read_audiofile_object(&settings->actor_collapse_se);
         }
         else if (current_symbol == "@gameover_me")
         {
-            settings->gameover_me = this->read_audiofile_object();
+            this->read_audiofile_object(&settings->gameover_me);
         }
         else if (current_symbol == "@battler_name")
         {
@@ -1312,7 +1310,7 @@ void RXDataParser::parseSystem(Settings *settings)
         }
         else if (current_symbol == "@save_se")
         {
-            settings->save_se = this->read_audiofile_object();
+            this->read_audiofile_object(&settings->save_se);
         }
         else if (current_symbol == "@battle_transition")
         {

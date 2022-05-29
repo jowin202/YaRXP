@@ -16,6 +16,8 @@ QString RPGEventCommand::getType()
         return "empty command";
     else if (code == 101)
         return "Show Text";
+    else if (code == 401)
+        return "Show Text Multiline";
     else if (code == 102)
         return "Show Choices";
     else if (code == 402)
