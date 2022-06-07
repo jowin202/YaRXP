@@ -6,6 +6,7 @@
 #include <QTreeWidget>
 #include <QDir>
 #include <QMessageBox>
+#include <QErrorMessage>
 #include "parser/rxdataparser.h"
 #include "parser/rpgmapinfo.h"
 #include "parser/rpgtileset.h"
@@ -25,6 +26,8 @@ public:
     MapTreeWidget(QWidget* parent = 0);
     void setSettings(Settings *settings)
     { this->settings = settings; }
+
+    void handleParserException(ParserException *ex);
 
 public slots:
     void list_maps();
@@ -47,8 +50,10 @@ private:
     QAction action5;
     QAction action6;
     QAction action7;
+    QAction action8;
 
     Settings *settings;
+
 
 };
 #endif // MAPTREEWIDGET_H

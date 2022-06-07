@@ -94,6 +94,9 @@ void MapWidget::mouseMoveEvent(QMouseEvent *ev)
         }
         else if (mouse_pressed_left) //draw brush content
         {
+            if (brush_vars.length() <= 0)
+                return; //no brush, cant edit map
+
             QPoint draw_pos = this->curr_pos + brush_rectangle_mouse_alignment;
             for (int x = 0; x < this->brush_rectangle.width(); x++ )
             {
@@ -668,6 +671,8 @@ QPoint MapWidget::bin_to_coordinate(int b)
 void MapWidget::set_mode(int mode)
 {
     this->mode = mode;
+    if (this->selection_rectangle.height() > 0 || this->selection_rectangle.width() > 0)
+        this->merge_selection(); //selection should stay if mode changed
     this->selection_rectangle = QRect(-1,-1,0,0);
     this->redraw();
 }

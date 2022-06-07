@@ -249,11 +249,30 @@
     </property>
     <addaction name="actionAbout"/>
    </widget>
+   <widget class="QMenu" name="menuTools">
+    <property name="title">
+     <string>Editors</string>
+    </property>
+    <addaction name="actionTileset_Editor"/>
+    <addaction name="actionAnimations"/>
+    <addaction name="actionCommon_Scripts"/>
+    <addaction name="actionSystem"/>
+    <addaction name="separator"/>
+    <addaction name="actionActors"/>
+    <addaction name="actionClasses"/>
+    <addaction name="actionSkills"/>
+    <addaction name="actionItem"/>
+    <addaction name="actionWeapons"/>
+    <addaction name="actionArmors"/>
+    <addaction name="actionEnemies"/>
+    <addaction name="actionTroops"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
    <addaction name="menuView"/>
    <addaction name="menuDraw"/>
    <addaction name="menuScale"/>
+   <addaction name="menuTools"/>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -559,6 +578,71 @@
    </property>
    <property name="text">
     <string>Redo</string>
+   </property>
+  </action>
+  <action name="actionTileset_Editor">
+   <property name="text">
+    <string>Tileset</string>
+   </property>
+  </action>
+  <action name="actionActors">
+   <property name="text">
+    <string>Actors</string>
+   </property>
+  </action>
+  <action name="actionClasses">
+   <property name="text">
+    <string>Classes</string>
+   </property>
+  </action>
+  <action name="actionSkills">
+   <property name="text">
+    <string>Skills</string>
+   </property>
+  </action>
+  <action name="actionItem">
+   <property name="text">
+    <string>Item</string>
+   </property>
+  </action>
+  <action name="actionWeapons">
+   <property name="text">
+    <string>Weapons</string>
+   </property>
+  </action>
+  <action name="actionArmors">
+   <property name="text">
+    <string>Armors</string>
+   </property>
+  </action>
+  <action name="actionEnemies">
+   <property name="text">
+    <string>Enemies</string>
+   </property>
+  </action>
+  <action name="actionTroops">
+   <property name="text">
+    <string>Troops</string>
+   </property>
+  </action>
+  <action name="actionStates">
+   <property name="text">
+    <string>States</string>
+   </property>
+  </action>
+  <action name="actionAnimations">
+   <property name="text">
+    <string>Animations</string>
+   </property>
+  </action>
+  <action name="actionCommon_Scripts">
+   <property name="text">
+    <string>Common Events</string>
+   </property>
+  </action>
+  <action name="actionSystem">
+   <property name="text">
+    <string>System</string>
    </property>
   </action>
  </widget>

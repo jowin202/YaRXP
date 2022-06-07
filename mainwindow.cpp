@@ -103,7 +103,13 @@ void MainWindow::on_actionOpen_triggered()
         this->ui->map_tree_widget->list_maps();
 
         RXDataParser parser;
-        parser.parseSystem(&this->settings);
+        try{
+            parser.parseSystem(&this->settings);
+        }
+        catch(ParserException *ex)
+        {
+            this->ui->map_tree_widget->handleParserException(ex);
+        }
     }
 }
 

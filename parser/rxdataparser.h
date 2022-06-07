@@ -13,7 +13,10 @@
 #include "rpgmap.h"
 #include "rpgtileset.h"
 
+#include "parserexception.h"
+
 #include "../settings.h"
+
 #include <QDebug>
 
 class RXDataParser : public QObject
@@ -22,6 +25,7 @@ class RXDataParser : public QObject
 public:
     explicit RXDataParser(QString file = "");
     void print_file_pos_as_hex();
+    ParserException *getException(QString message);
 
     void check_header();
     void close_file_if_open();
@@ -74,6 +78,7 @@ private:
     QFile file;
     QStringList symbol_cache;
 
+    QString last_visited_function;
 
 };
 

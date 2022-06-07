@@ -17,11 +17,7 @@ void EventList::fill_list()
     {
         command = list->at(i);
 
-        if (command->code == 101)
-        {
-            this->addItem(new ShowText(command->parameters.first().toString(), command->indent, command->code));
-        }
-        if (command->code == 401)
+        if (command->code == 101 || command->code == 401)
         {
             this->addItem(new ShowText(command->parameters.first().toString(), command->indent, command->code));
         }

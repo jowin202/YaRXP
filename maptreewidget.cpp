@@ -21,6 +21,7 @@ MapTreeWidget::MapTreeWidget(QWidget *parent)
     action6.setShortcut(QKeySequence(tr("Ctrl+T")));
     action7.setText("&Extend");
     action7.setShortcut(QKeySequence(tr("Ctrl+E")));
+    action8.setText("&Import");
 
 
     menu.addAction(&action1);
@@ -34,12 +35,21 @@ MapTreeWidget::MapTreeWidget(QWidget *parent)
     menu.addSeparator();
     menu.addAction(&action6);
     menu.addAction(&action7);
+    menu.addSeparator();
+    menu.addAction(&action8);
 }
 
 void MapTreeWidget::list_maps()
 {
     RXDataParser parser(settings->data_dir + "MapInfos.rxdata");
-    parser.parseMapInfo(&settings->map_info_list);
+    try {
+        parser.parseMapInfo(&settings->map_info_list);
+    } catch (ParserException *ex) {
+        this->handleParserException(ex);
+        settings->map_info_list.clear(); //revert
+        //TODO pointer
+        return;
+    }
 
     for (int i = 0; i < settings->map_info_list.length(); i++)
     {
@@ -84,7 +94,13 @@ void MapTreeWidget::list_maps()
 
 
     RXDataParser parser2(settings->data_dir + "Tilesets.rxdata");
-    parser2.parseTilesetList(&this->settings->tileset_hash, &this->settings->tileset_list);
+    try {
+        parser2.parseTilesetList(&this->settings->tileset_hash, &this->settings->tileset_list);
+    } catch (ParserException *ex) {
+        this->handleParserException(ex);
+        this->settings->tileset_hash.clear(); //TODO pointer
+        this->settings->tileset_list.clear(); //TODO pointer
+    }
 
 }
 
@@ -97,14 +113,22 @@ void MapTreeWidget::clicked_at_item(QTreeWidgetItem *current_item, QTreeWidgetIt
     {
         RXDataParser parser(settings->data_dir +  "Map" + file_id.rightJustified(3,'0') + ".rxdata");
 
-        RPGMap *map = parser.parseMap();
+        RPGMap *map = 0;
+        try {
+            map = parser.parseMap();
+        } catch (ParserException *ex) {
+            this->handleParserException(ex);
+            return;
+        }
+
+
         settings->map_info_list.at(list_id)->map = map;
         int tileset_id = map->tileset_id;
         if (!this->settings->tileset_hash.contains(tileset_id))
         {
             //error tileset
-            qDebug() << "error: tileset not found at predefined tilesets";
-            exit(1);
+            QMessageBox::critical(this,"Error", QString("Error: Tileset id %1 not found at predefined tilesets").arg(tileset_id));
+            return; //
         }
 
 
@@ -132,7 +156,7 @@ void MapTreeWidget::clicked_at_item(QTreeWidgetItem *current_item, QTreeWidgetIt
 
         //Load tileset image (only once)
         RPGTileset *current_tileset = this->settings->tileset_hash.value(tileset_id);
-        if (current_tileset->tileset.isNull())
+        if (current_tileset->tileset.isNull() && current_tileset->tileset_name != "") //if tileset_name == "", no tileset specified
         {
             if (QFile(settings->tileset_dir + current_tileset->tileset_name + ".png").exists())
             {
@@ -144,8 +168,8 @@ void MapTreeWidget::clicked_at_item(QTreeWidgetItem *current_item, QTreeWidgetIt
             }
             else
             {
-                qDebug() << "error: tileset does not exist: " << settings->tileset_dir + current_tileset->tileset_name + ".png";
-                exit(1);
+                QMessageBox::critical(this,"Error", QString("Error: Tileset not found:\n%1").arg(settings->tileset_dir + current_tileset->tileset_name + ".png"));
+                return;
             }
         }
 
@@ -192,4 +216,20 @@ void MapTreeWidget::show_map_properties_dialog()
     RPGMapInfo *mapinfo = settings->map_info_list.at(this->selectedItems().at(0)->text(2).toInt());
     MapPropertiesDialog *dialog = new MapPropertiesDialog(mapinfo, this->settings, 0);
     dialog->show();
+}
+
+void MapTreeWidget::handleParserException(ParserException *ex)
+{
+    if (ex->error_data.length() == 0)
+    {
+        QMessageBox::critical(this,"Error!", "Unkonwn error!");
+    }
+    else
+        QMessageBox::critical(this,"Error!", QString("Error parsing file: %1\nOffset: %2 (0x%3)\nIn Function: %4\n\n%5")
+                    .arg(ex->error_data.at(0).toString())
+                    .arg(ex->error_data.at(1).toInt())
+                    .arg(QString::number(ex->error_data.at(1).toInt(),16))
+                    .arg(ex->error_data.at(2).toString())
+                    .arg(ex->message)
+                );
 }

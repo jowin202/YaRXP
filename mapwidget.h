@@ -43,6 +43,9 @@ public:
 
     void set_event_mode()
     {
+        if (this->selection_rectangle.height() > 0 || this->selection_rectangle.width() > 0)
+            this->merge_selection(); //selection should stay if mode changed
+
         this->mode = EVENT;
         this->current_layer = 2; //show all layers
         this->redraw();

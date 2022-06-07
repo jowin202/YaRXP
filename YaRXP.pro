@@ -18,6 +18,10 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     audiowidget.cpp \
     autotileset.cpp \
+    editors/animationeditor.cpp \
+    editors/commoneventseditor.cpp \
+    editors/systemeditor.cpp \
+    editors/tileseteditor.cpp \
     event_dialogs/choicesdialog.cpp \
     event_dialogs/commands/showtext.cpp \
     event_dialogs/conditionalbranchdialog.cpp \
@@ -31,6 +35,7 @@ SOURCES += \
     mappropertiesdialog.cpp \
     maptreewidget.cpp \
     mapwidget.cpp \
+    parser/parserexception.cpp \
     parser/rpgaudiofile.cpp \
     parser/rpgevent.cpp \
     parser/rpgeventcommand.cpp \
@@ -51,6 +56,10 @@ SOURCES += \
 HEADERS += \
     audiowidget.h \
     autotileset.h \
+    editors/animationeditor.h \
+    editors/commoneventseditor.h \
+    editors/systemeditor.h \
+    editors/tileseteditor.h \
     event_dialogs/choicesdialog.h \
     event_dialogs/commands/showtext.h \
     event_dialogs/conditionalbranchdialog.h \
@@ -63,6 +72,7 @@ HEADERS += \
     mappropertiesdialog.h \
     maptreewidget.h \
     mapwidget.h \
+    parser/parserexception.h \
     parser/rpgaudiofile.h \
     parser/rpgevent.h \
     parser/rpgeventcommand.h \
@@ -82,6 +92,10 @@ HEADERS += \
 
 FORMS += \
     audiowidget.ui \
+    editors/animationeditor.ui \
+    editors/commoneventseditor.ui \
+    editors/systemeditor.ui \
+    editors/tileseteditor.ui \
     event_dialogs/choicesdialog.ui \
     event_dialogs/conditionalbranchdialog.ui \
     event_dialogs/eventcommanddialog.ui \
