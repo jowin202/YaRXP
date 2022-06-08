@@ -22,7 +22,9 @@ public:
     void setSettings(Settings *settings)
     { this->settings = settings; }
 
-    void updateView();
+    void setRange(int range)
+    { this->range = range; }
+
     void mouseMoveEvent(QMouseEvent *ev);
     void mousePressEvent(QMouseEvent *ev);
     void mouseReleaseEvent(QMouseEvent *ev);
@@ -30,12 +32,13 @@ public:
     int coordinate_to_bin(QPoint p);
     QPoint bin_to_coordinate(int b);
 
+
 signals:
-    //void selection_changed();
     void selection_changed(QList<int>);
 
 public slots:
     void change_tileset(int id);
+    void updateView();
 
 private:
     RPGTileset *current_tileset = 0;
@@ -46,6 +49,8 @@ private:
     QImage *img = 0;
 
     Settings *settings;
+
+    int range;
 };
 
 #endif // TILESETWIDGET_H

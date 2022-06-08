@@ -14,14 +14,35 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     this->ui->map_tree_widget->setSettings(&this->settings);
-    this->ui->tileset_label->setSettings(&this->settings);
     this->ui->map_label->setSettings(&this->settings);
 
+    //tilesets need 3 widgets
+    this->ui->autotiles_label->setSettings(&this->settings);
+    this->ui->tileset_label->setSettings(&this->settings);
+    this->ui->tileset_label_2->setSettings(&this->settings);
+    this->ui->autotiles_label->setRange(0); //autotiles
+    this->ui->tileset_label->setRange(1); //normal tiles
+    this->ui->tileset_label_2->setRange(2); //extension if tileset longer than 32768
+    connect(this->ui->autotiles_label, SIGNAL(selection_changed(QList<int>)), this->ui->map_label, SLOT(set_brush(QList<int>)));
+    connect(this->ui->autotiles_label, SIGNAL(selection_changed(QList<int>)), this, SLOT(on_actionPen_triggered())); //set pen when select tile
     connect(this->ui->tileset_label, SIGNAL(selection_changed(QList<int>)), this->ui->map_label, SLOT(set_brush(QList<int>)));
     connect(this->ui->tileset_label, SIGNAL(selection_changed(QList<int>)), this, SLOT(on_actionPen_triggered())); //set pen when select tile
-    connect(this->ui->map_tree_widget, SIGNAL(on_map_selected(RPGMap*)), this->ui->map_label, SLOT(set_map(RPGMap*)));
+    connect(this->ui->tileset_label_2, SIGNAL(selection_changed(QList<int>)), this->ui->map_label, SLOT(set_brush(QList<int>)));
+    connect(this->ui->tileset_label_2, SIGNAL(selection_changed(QList<int>)), this, SLOT(on_actionPen_triggered())); //set pen when select tile
 
+    //widget lose focus if clicked on other widget
+    connect(this->ui->autotiles_label, SIGNAL(selection_changed(QList<int>)), this->ui->tileset_label, SLOT(updateView()));
+    connect(this->ui->autotiles_label, SIGNAL(selection_changed(QList<int>)), this->ui->tileset_label_2, SLOT(updateView()));
+    connect(this->ui->tileset_label, SIGNAL(selection_changed(QList<int>)), this->ui->autotiles_label, SLOT(updateView()));
+    connect(this->ui->tileset_label, SIGNAL(selection_changed(QList<int>)), this->ui->tileset_label_2, SLOT(updateView()));
+    connect(this->ui->tileset_label_2, SIGNAL(selection_changed(QList<int>)), this->ui->autotiles_label, SLOT(updateView()));
+    connect(this->ui->tileset_label_2, SIGNAL(selection_changed(QList<int>)), this->ui->tileset_label, SLOT(updateView()));
+
+
+    connect(this->ui->map_tree_widget, SIGNAL(on_map_selected(RPGMap*)), this->ui->map_label, SLOT(set_map(RPGMap*)));
+    connect(this->ui->map_tree_widget, SIGNAL(on_tileset_changed(int)), this->ui->autotiles_label, SLOT(change_tileset(int)));
     connect(this->ui->map_tree_widget, SIGNAL(on_tileset_changed(int)), this->ui->tileset_label, SLOT(change_tileset(int)));
+    connect(this->ui->map_tree_widget, SIGNAL(on_tileset_changed(int)), this->ui->tileset_label_2, SLOT(change_tileset(int)));
 
 
     this->layergroup = new QActionGroup(this);

@@ -7,6 +7,7 @@ TilesetWidget::TilesetWidget(QWidget *parent)
 
     this->updateView();
 
+
 }
 
 void TilesetWidget::updateView()
@@ -14,25 +15,46 @@ void TilesetWidget::updateView()
     if (this->img == 0)
         return;
 
-    QImage background(img->width(),img->height()+32, QImage::Format_ARGB32);
-    QPainter painter(&background);
-    painter.fillRect(0,0,img->width(),img->height()+32, QColor(0xaa,0x16,0xa0));
-    painter.drawImage(QRect(0,32,img->width(),img->height()), *img, QRect(0,0,img->width(),img->height()));
-
-    if (this->current_tileset->autotiles.length() == 7)
+    if (range == 0) //autotiles only
     {
-        for (int i = 0; i < 7; i++)
-        painter.drawImage(QRect(32*(1+i),0,32,32), current_tileset->autotiles.at(i).thumb, QRect(0,0,32,32));
+        QImage background(256,32, QImage::Format_ARGB32);
+
+        QPainter painter(&background);
+        painter.fillRect(0,0,background.width(),background.height(), QColor(0xaa,0x16,0xa0));
+
+        if (this->current_tileset->autotiles.length() == 7)
+        {
+            for (int i = 0; i < 7; i++)
+            painter.drawImage(QRect(32*(1+i),0,32,32), current_tileset->autotiles.at(i).thumb, QRect(0,0,32,32));
+        }
+        painter.end();
+
+        this->current_image = background;
+        this->setPixmap(QPixmap::fromImage(background));
     }
-    painter.end();
-    this->current_image = background;
-    this->setPixmap(QPixmap::fromImage(background));
+    else if (range == 1) //normal view, except if exceeding 32768
+    {
+        this->current_image = img->copy(0,0,img->width(),qMin(img->height(),32768));
+        this->setPixmap(QPixmap::fromImage(current_image));
+    }
+    else if (range == 2) //only available if tileset > 32768
+    {
+        if (img->height() < 32768)
+            return;
+        this->current_image = img->copy(0,32768,img->width(),img->height()-32768);
+        this->setPixmap(QPixmap::fromImage(current_image));
+    }
+
+
 }
 
 void TilesetWidget::mouseMoveEvent(QMouseEvent *ev)
 {
-    if (ev->pos().x()/32 > 7)
+    if (range == 0) return; //no need for autotiles
+
+    if (ev->pos().x()/32 > 7 || ev->pos().x() < 0 || ev->pos().y() < 0)
         return; //out of range
+
 
     this->curr_pos = QPoint(ev->pos().x()/32,ev->pos().y()/32);
     if (this->click_pos.x() >= 0)
@@ -67,10 +89,16 @@ void TilesetWidget::mousePressEvent(QMouseEvent *ev)
     painter.end();
     this->setPixmap(QPixmap::fromImage(neu));
 
+    if (range == 0)
+    {
+        QList<int> tile_list = this->getCurrentTiles(); //only one click if autotiles
+        emit selection_changed(tile_list);
+    }
 }
 
 void TilesetWidget::mouseReleaseEvent(QMouseEvent *ev)
 {
+    if (range == 0) return; //no need for autotiles
     this->selection.setTop(qMin(click_pos.y(), curr_pos.y()));
     this->selection.setLeft(qMin(click_pos.x(), curr_pos.x()));
     this->selection.setBottom(qMax(click_pos.y(), curr_pos.y()));
@@ -84,16 +112,30 @@ void TilesetWidget::mouseReleaseEvent(QMouseEvent *ev)
 QList<int> TilesetWidget::getCurrentTiles()
 {
     QList<int> list;
-    list.append(selection.width());
-    list.append(selection.height());
 
-    for (int y = selection.top(); y <= selection.bottom(); y++)
+    if (range == 0)
     {
-        for (int x = selection.left(); x <= selection.right(); x++)
+        list.append(1);
+        list.append(1);
+        list.append(0x30 * click_pos.x());
+    }
+    else
+    {
+        list.append(selection.width());
+        list.append(selection.height());
+        int shift;
+        if (range == 1) shift = 0;
+        else if (range == 2) shift = 1024;
+
+        for (int y = selection.top(); y <= selection.bottom(); y++)
         {
-            list.append(coordinate_to_bin(QPoint(x,y)));
+            for (int x = selection.left(); x <= selection.right(); x++)
+            {
+                list.append(coordinate_to_bin(QPoint(x,y+shift)));
+            }
         }
     }
+
 
     return list;
 }
@@ -102,15 +144,10 @@ QList<int> TilesetWidget::getCurrentTiles()
 
 int TilesetWidget::coordinate_to_bin(QPoint p)
 {
-    if (p.y() >= 1) // non autotile
-    {
-        int val = 0x0180; //topleft value
-        val += p.x();
-        val += (p.y()-1) * 8;
-        return val;
-    }
-    else
-        return 0x30 * p.x();
+    int val = 0x0180; //topleft value
+    val += p.x();
+    val += p.y() * 8;
+    return val;
 }
 
 QPoint TilesetWidget::bin_to_coordinate(int b)
