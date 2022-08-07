@@ -108,7 +108,6 @@ void MainWindow::on_actionOpen_triggered()
         dir = QDir::homePath();
 
     QString name = QFileDialog::getOpenFileName(this, "Choose Project", dir, "RPG Maker Project Files (*.rxproj);;Data Files(*.rxdata)");
-    //QString name = "/home/johannes/RPG_maker/Pokemon Klagenfurt Vibes/Game.rxproj";
     settings.setValue("lastopened", name);
     QFileInfo fi(name);
 
