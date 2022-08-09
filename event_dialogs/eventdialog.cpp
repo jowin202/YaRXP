@@ -3,7 +3,7 @@
 
 #include "eventpage.h"
 
-EventDialog::EventDialog(RPGEvent *event, Settings *settings, QWidget *parent) :
+EventDialog::EventDialog(RPGEvent *event, RPGSettings *settings, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::EventDialog)
 {

@@ -5,11 +5,10 @@
 #include <QWidget>
 #include "eventpage.h"
 
-#include "settings.h"
+#include "RXIO/RXObjects/rpgsettings.h"
 
-#include "parser/rpgevent.h"
-#include "parser/rpgeventpage.h"
-#include "parser/rpgeventpagecondition.h"
+#include "RXIO/RXObjects/rpgevent.h"
+#include "RXIO/RXObjects/rpgeventpage.h"
 
 namespace Ui {
 class EventDialog;
@@ -20,7 +19,7 @@ class EventDialog : public QWidget
     Q_OBJECT
 
 public:
-    explicit EventDialog(RPGEvent *event, Settings *settings, QWidget *parent = nullptr);
+    explicit EventDialog(RPGEvent *event, RPGSettings *settings, QWidget *parent = nullptr);
     ~EventDialog();
     void closeEvent(QCloseEvent *event);
     void keyPressEvent(QKeyEvent *event)

@@ -10,8 +10,8 @@
 #include <QEvent>
 #include <QDir>
 
-#include "parser/rpgtileset.h"
-#include "settings.h"
+#include "RXIO/RXObjects/rpgtileset.h"
+#include "RXIO/RXObjects/rpgsettings.h"
 
 class TilesetWidget : public QLabel
 {
@@ -19,7 +19,7 @@ class TilesetWidget : public QLabel
 
 public:
     TilesetWidget(QWidget *parent);
-    void setSettings(Settings *settings)
+    void setSettings(RPGSettings *settings)
     { this->settings = settings; }
 
     void setRange(int range)
@@ -48,7 +48,7 @@ private:
     QRect selection;
     QImage *img = 0;
 
-    Settings *settings;
+    RPGSettings *settings;
 
     int range;
 };

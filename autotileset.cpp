@@ -120,7 +120,6 @@ Autotileset::Autotileset(QImage tileset)
         }
 
         painter.end();
-
     }
 }
 

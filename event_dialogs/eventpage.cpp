@@ -1,7 +1,7 @@
 #include "eventpage.h"
 #include "ui_eventpage.h"
 
-EventPage::EventPage(QWidget *parent, RPGEventPage *page, Settings *settings) :
+EventPage::EventPage(QWidget *parent, RPGEventPage *page, RPGSettings *settings) :
     QWidget(parent),
     ui(new Ui::EventPage)
 {
@@ -21,14 +21,14 @@ EventPage::EventPage(QWidget *parent, RPGEventPage *page, Settings *settings) :
             this->ui->combo_variable->addItem(QString::number(i+1).rightJustified(3,'0') + ": " + settings->variable_names.at(i),i+1);
         }
 
-        if (page->condition->switch1_valid)
-            this->ui->combo_switch1->setCurrentIndex(page->condition->switch1_id-1);
-        if (page->condition->switch2_valid)
-            this->ui->combo_switch2->setCurrentIndex(page->condition->switch2_id-1);
-        if (page->condition->variable_valid)
+        if (page->switch1_valid)
+            this->ui->combo_switch1->setCurrentIndex(page->switch1_id-1);
+        if (page->switch2_valid)
+            this->ui->combo_switch2->setCurrentIndex(page->switch2_id-1);
+        if (page->variable_valid)
         {
-            this->ui->combo_variable->setCurrentIndex(page->condition->variable_id-1);
-            this->ui->spin_variable->setValue(page->condition->variable_value);
+            this->ui->combo_variable->setCurrentIndex(page->variable_id-1);
+            this->ui->spin_variable->setValue(page->variable_value);
         }
 
         this->ui->eventList->set_data(settings, &page->list);
@@ -42,21 +42,21 @@ EventPage::EventPage(QWidget *parent, RPGEventPage *page, Settings *settings) :
     this->ui->combo_freq->setCurrentIndex(page->move_frequency-1);
 
 
-    this->ui->check_switch1->setChecked(page->condition->switch1_valid);
-    this->ui->combo_switch1->setEnabled(page->condition->switch1_valid);
+    this->ui->check_switch1->setChecked(page->switch1_valid);
+    this->ui->combo_switch1->setEnabled(page->switch1_valid);
 
-    this->ui->check_switch2->setChecked(page->condition->switch2_valid);
-    this->ui->combo_switch2->setEnabled(page->condition->switch2_valid);
+    this->ui->check_switch2->setChecked(page->switch2_valid);
+    this->ui->combo_switch2->setEnabled(page->switch2_valid);
 
-    this->ui->check_variable->setChecked(page->condition->variable_valid);
-    this->ui->combo_variable->setEnabled(page->condition->variable_valid);
-    this->ui->spin_variable->setEnabled(page->condition->variable_valid);
-    this->ui->spin_variable->setValue(page->condition->variable_value);
+    this->ui->check_variable->setChecked(page->variable_valid);
+    this->ui->combo_variable->setEnabled(page->variable_valid);
+    this->ui->spin_variable->setEnabled(page->variable_valid);
+    this->ui->spin_variable->setValue(page->variable_value);
 
-    this->ui->check_self_switch->setChecked(page->condition->self_switch_valid);
-    this->ui->combo_self_switch->setEnabled(page->condition->self_switch_valid);
+    this->ui->check_self_switch->setChecked(page->self_switch_valid);
+    this->ui->combo_self_switch->setEnabled(page->self_switch_valid);
 
-    this->ui->combo_self_switch->setCurrentIndex(page->condition->self_switch_ch-1);
+    this->ui->combo_self_switch->setCurrentIndex(page->self_switch_ch-1);
 
     this->ui->check_move_animation->setChecked(page->walk_anime);
     this->ui->check_stop_animation->setChecked(page->step_anime);

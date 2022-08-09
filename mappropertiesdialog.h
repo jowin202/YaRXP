@@ -5,9 +5,9 @@
 #include <QDebug>
 #include <QKeyEvent>
 
-#include "parser/rpgmap.h"
-#include "parser/rpgmapinfo.h"
-#include "settings.h"
+#include "RXIO/RXObjects/rpgmap.h"
+#include "RXIO/RXObjects/rpgmapinfo.h"
+#include "RXIO/RXObjects/rpgsettings.h"
 
 namespace Ui {
 class MapPropertiesDialog;
@@ -18,7 +18,7 @@ class MapPropertiesDialog : public QWidget
     Q_OBJECT
 
 public:
-    explicit MapPropertiesDialog(RPGMapInfo* info, Settings *settings, QWidget *parent = nullptr);
+    explicit MapPropertiesDialog(RPGMapInfo* info, RPGSettings *settings, QWidget *parent = nullptr);
     ~MapPropertiesDialog();
     void closeEvent(QCloseEvent *event);
 

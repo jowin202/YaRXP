@@ -16,6 +16,24 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    RXIO/RXObjects/parserexception.cpp \
+    RXIO/RXObjects/rpgaudiofile.cpp \
+    RXIO/RXObjects/rpgevent.cpp \
+    RXIO/RXObjects/rpgeventcommand.cpp \
+    RXIO/RXObjects/rpgeventpage.cpp \
+    RXIO/RXObjects/rpgmap.cpp \
+    RXIO/RXObjects/rpgmapinfo.cpp \
+    RXIO/RXObjects/rpgmovecommand.cpp \
+    RXIO/RXObjects/rpgmoveroute.cpp \
+    RXIO/RXObjects/rpgsettings.cpp \
+    RXIO/RXObjects/rpgstring.cpp \
+    RXIO/RXObjects/rpgtileset.cpp \
+    RXIO/RXObjects/rpgtone.cpp \
+    RXIO/fileparser.cpp \
+    RXIO/iomapfile.cpp \
+    RXIO/iomapinfofile.cpp \
+    RXIO/iosystemfile.cpp \
+    RXIO/iotilesetfile.cpp \
     audiowidget.cpp \
     autotileset.cpp \
     editors/animationeditor.cpp \
@@ -35,25 +53,27 @@ SOURCES += \
     mappropertiesdialog.cpp \
     maptreewidget.cpp \
     mapwidget.cpp \
-    parser/parserexception.cpp \
-    parser/rpgaudiofile.cpp \
-    parser/rpgevent.cpp \
-    parser/rpgeventcommand.cpp \
-    parser/rpgeventpage.cpp \
-    parser/rpgeventpagecondition.cpp \
-    parser/rpgeventpagegraphic.cpp \
-    parser/rpgmap.cpp \
-    parser/rpgmapinfo.cpp \
-    parser/rpgmovecommand.cpp \
-    parser/rpgmoveroute.cpp \
-    parser/rpgtileset.cpp \
-    parser/rpgtone.cpp \
-    parser/rxdataparser.cpp \
-    parser/rxdatawriter.cpp \
-    settings.cpp \
     tilesetwidget.cpp
 
 HEADERS += \
+    RXIO/RXObjects/parserexception.h \
+    RXIO/RXObjects/rpgaudiofile.h \
+    RXIO/RXObjects/rpgevent.h \
+    RXIO/RXObjects/rpgeventcommand.h \
+    RXIO/RXObjects/rpgeventpage.h \
+    RXIO/RXObjects/rpgmap.h \
+    RXIO/RXObjects/rpgmapinfo.h \
+    RXIO/RXObjects/rpgmovecommand.h \
+    RXIO/RXObjects/rpgmoveroute.h \
+    RXIO/RXObjects/rpgsettings.h \
+    RXIO/RXObjects/rpgstring.h \
+    RXIO/RXObjects/rpgtileset.h \
+    RXIO/RXObjects/rpgtone.h \
+    RXIO/fileparser.h \
+    RXIO/iomapfile.h \
+    RXIO/iomapinfofile.h \
+    RXIO/iosystemfile.h \
+    RXIO/iotilesetfile.h \
     audiowidget.h \
     autotileset.h \
     editors/animationeditor.h \
@@ -72,22 +92,6 @@ HEADERS += \
     mappropertiesdialog.h \
     maptreewidget.h \
     mapwidget.h \
-    parser/parserexception.h \
-    parser/rpgaudiofile.h \
-    parser/rpgevent.h \
-    parser/rpgeventcommand.h \
-    parser/rpgeventpage.h \
-    parser/rpgeventpagecondition.h \
-    parser/rpgeventpagegraphic.h \
-    parser/rpgmap.h \
-    parser/rpgmapinfo.h \
-    parser/rpgmovecommand.h \
-    parser/rpgmoveroute.h \
-    parser/rpgtileset.h \
-    parser/rpgtone.h \
-    parser/rxdataparser.h \
-    parser/rxdatawriter.h \
-    settings.h \
     tilesetwidget.h
 
 FORMS += \
@@ -112,3 +116,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 RESOURCES += \
     icons.qrc
+
+SUBDIRS += \
+    RXIO/RXIO.pro

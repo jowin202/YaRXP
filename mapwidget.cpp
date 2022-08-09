@@ -483,6 +483,7 @@ void MapWidget::redraw()
     {
         this->draw_events();
     }
+
 }
 
 void MapWidget::draw_events()
@@ -502,7 +503,7 @@ void MapWidget::draw_events()
         painter.setOpacity(1);
         if (event->pages.length() >= 1)
         {
-            if (!event->pages.at(0)->graphic->graphics.isNull())
+            if (!event->pages.at(0)->graphics.isNull())
             {
 
                 //direction:
@@ -510,12 +511,12 @@ void MapWidget::draw_events()
 
                 //pattern 0,1,2,3
 
-                int dir_offset = (event->pages.at(0)->graphic->direction / 2) - 1;
-                int pattern_offset = event->pages.at(0)->graphic->pattern;
+                int dir_offset = (event->pages.at(0)->direction / 2) - 1;
+                int pattern_offset = event->pages.at(0)->pattern;
 
-                int pic_height = event->pages.at(0)->graphic->graphics.size().height()/4; //persons have 48 pixels, pokeballs 32
+                int pic_height = event->pages.at(0)->graphics.size().height()/4; //persons have 48 pixels, pokeballs 32
 
-                painter.drawImage(QRect(32*event->x, 32*event->y, 31,31),event->pages.at(0)->graphic->graphics,QRect(32*pattern_offset,pic_height*dir_offset,32,32));
+                painter.drawImage(QRect(32*event->x, 32*event->y, 31,31),event->pages.at(0)->graphics,QRect(32*pattern_offset,pic_height*dir_offset,32,32));
             }
         }
 

@@ -7,8 +7,8 @@
 #include <QDirIterator>
 
 
-#include "settings.h"
-#include "parser/rpgaudiofile.h"
+#include "RXIO/RXObjects/rpgsettings.h"
+#include "RXIO/RXObjects/rpgaudiofile.h"
 
 namespace Ui {
 class AudioWidget;
@@ -21,7 +21,7 @@ class AudioWidget : public QWidget
 public:
     explicit AudioWidget(QWidget *parent = nullptr);
     ~AudioWidget();
-    void setSettings(Settings *settings)
+    void setSettings(RPGSettings *settings)
     { this->settings = settings; }
 
     void save_data_to_object();
@@ -34,7 +34,7 @@ public:
 private:
     Ui::AudioWidget *ui;
 
-    Settings *settings;
+    RPGSettings *settings;
     int mode = -1;
     RPGAudioFile *audiofile = 0;
 };

@@ -6,9 +6,12 @@
 #include <QToolButton>
 #include <QFileDialog>
 #include <QSettings>
+
 #include "tilesetwidget.h"
 #include "autotileset.h"
-#include "settings.h"
+#include "RXIO/RXObjects/rpgsettings.h"
+
+#include "RXIO/iosystemfile.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -51,7 +54,7 @@ private:
     QList<int> clipboard; //only for copy paste at map (no events
 
 
-    Settings settings;
+    RPGSettings settings;
 
 };
 #endif // MAINWINDOW_H

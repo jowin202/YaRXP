@@ -4,13 +4,11 @@
 #include <QWidget>
 
 
-#include "parser/rpgevent.h"
-#include "parser/rpgeventpage.h"
-#include "parser/rpgeventpagecondition.h"
-#include "parser/rpgeventcommand.h"
-#include "parser/rpgeventpagegraphic.h"
+#include "RXIO/RXObjects/rpgevent.h"
+#include "RXIO/RXObjects/rpgeventpage.h"
+#include "RXIO/RXObjects/rpgeventcommand.h"
 
-#include "settings.h"
+#include "RXIO/RXObjects/rpgsettings.h"
 #include "eventcommanddialog.h"
 
 
@@ -23,7 +21,7 @@ class EventPage : public QWidget
     Q_OBJECT
 
 public:
-    explicit EventPage(QWidget *parent = nullptr, RPGEventPage *page = 0, Settings *settings = 0);
+    explicit EventPage(QWidget *parent = nullptr, RPGEventPage *page = 0, RPGSettings *settings = 0);
     ~EventPage();
 
 private slots:

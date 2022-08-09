@@ -7,12 +7,16 @@
 #include <QDir>
 #include <QMessageBox>
 #include <QErrorMessage>
-#include "parser/rxdataparser.h"
-#include "parser/rpgmapinfo.h"
-#include "parser/rpgtileset.h"
+#include "RXIO/RXObjects/rpgmapinfo.h"
+#include "RXIO/RXObjects/rpgtileset.h"
+#include "RXIO/RXObjects/parserexception.h"
+
+#include "RXIO/iomapinfofile.h"
+#include "RXIO/iotilesetfile.h"
+#include "RXIO/iomapfile.h"
 
 #include "mappropertiesdialog.h"
-#include "settings.h"
+#include "RXIO/RXObjects/rpgsettings.h"
 
 #include <QDebug>
 #include <QMenu>
@@ -24,7 +28,7 @@ class MapTreeWidget : public QTreeWidget
     Q_OBJECT
 public:
     MapTreeWidget(QWidget* parent = 0);
-    void setSettings(Settings *settings)
+    void setSettings(RPGSettings *settings)
     { this->settings = settings; }
 
     void handleParserException(ParserException *ex);
@@ -52,7 +56,7 @@ private:
     QAction action7;
     QAction action8;
 
-    Settings *settings;
+    RPGSettings *settings;
 
 
 };

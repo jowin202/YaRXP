@@ -1,7 +1,7 @@
 #include "mappropertiesdialog.h"
 #include "ui_mappropertiesdialog.h"
 
-MapPropertiesDialog::MapPropertiesDialog(RPGMapInfo *info, Settings *settings, QWidget *parent) :
+MapPropertiesDialog::MapPropertiesDialog(RPGMapInfo *info, RPGSettings *settings, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::MapPropertiesDialog)
 {

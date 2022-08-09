@@ -4,9 +4,8 @@
 
 #include "event_dialogs/eventdialog.h"
 
-#include "parser/rxdataparser.h"
-#include "parser/rpgmapinfo.h"
-#include "parser/rpgtileset.h"
+#include "RXIO/RXObjects/rpgmapinfo.h"
+#include "RXIO/RXObjects/rpgtileset.h"
 #include "autotileset.h"
 
 
