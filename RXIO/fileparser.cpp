@@ -292,7 +292,7 @@ void FileParser::write_string(RPGString str)
 
 
 
-QVariant FileParser::read_variant() //string int or symbol
+QVariant FileParser::read_variant() //string int or symbol or bool
 {
     int read_byte = this->look_one_byte_ahead();
     if (read_byte == 'i')
@@ -300,8 +300,16 @@ QVariant FileParser::read_variant() //string int or symbol
     else if (read_byte == '"')
         return QVariant(this->read_string());
     else if (read_byte == 'I') // Instance Variable
-    {
         return QVariant(this->read_string());
+    else if (read_byte == 'T')
+    {
+        this->read_one_byte();
+        return QVariant(true);
+    }
+    else if (read_byte == 'F')
+    {
+        this->read_one_byte();
+        return QVariant(false);
     }
     return QVariant();
 }
@@ -455,7 +463,6 @@ void FileParser::read_table_for_map(QList<int> *list)
         z |= ((this->read_one_byte() & 0xFF) << (8*i)) ;
     for (int i = 0; i < 4; i++)
         this->read_one_byte() ; //withdraw result, size can be calculated
-
 
 
     for (int i = 0; i < x*y*z; i++)

@@ -46,8 +46,9 @@ IOMapFile::IOMapFile(QString path, RPGMap *map)
         else if (current_symbol == "@encounter_list")
         {
             int n = this->read_array();
-            if (n != 0)
-                throw getException("Encounter List should be zero for Pokemon purpose (TODO)");
+            //TODO: check this (as it is not relevant for pokemon, it is not well tested)
+            for (int i = 0; i < n; i++)
+                map->encounter_list.append(this->read_integer()); //assuming encounter list consists of integers only
         }
         else if (current_symbol == "@events")
         {
@@ -163,7 +164,6 @@ IOMapFile::IOMapFile(QString path, RPGMap *map)
                                                             this->file.read((char*)&current_event_command->green, 8);
                                                             this->file.read((char*)&current_event_command->blue, 8);
                                                             this->file.read((char*)&current_event_command->gray, 8);
-                                                            qDebug() << current_event_command->red << current_event_command->green << current_event_command->blue << current_event_command->gray;
                                                         }
                                                         else throw getException("Color tone expected");
 
@@ -175,7 +175,7 @@ IOMapFile::IOMapFile(QString path, RPGMap *map)
                                                         for (int choice = 0; choice < num_choices; choice++)
                                                             current_event_command->choices_list.append(this->read_string());
                                                     }
-                                                    else //string or int
+                                                    else //string or int or bool
                                                     {
                                                         current_event_command->parameters.append(this->read_variant()); //change this to a RPGString compatible variant list
                                                     }
@@ -184,7 +184,6 @@ IOMapFile::IOMapFile(QString path, RPGMap *map)
 
                                         }
                                         current_page->list.append(current_event_command);
-                                        qDebug() << current_event_command->getType() << current_event_command->parameters;
                                     }
                                 }
                                 else if (current_symbol == "@condition")

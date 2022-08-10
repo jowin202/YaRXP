@@ -36,6 +36,9 @@ public:
     RPGAudioFile bgm;
 
 
+    QList<int> encounter_list;
+
+
 signals:
 
 private:
