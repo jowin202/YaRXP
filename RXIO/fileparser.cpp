@@ -157,7 +157,7 @@ void FileParser::write_fixnum(int n)
 
     if (n > 0)
     {
-        if (0 < n && n < 124)
+        if (0 < n && n < 123)
             write_one_byte(n+5);
         else //32 bit
         {
@@ -199,8 +199,10 @@ void FileParser::write_fixnum(int n)
             }
         }
     }
-
-    //TODO negative
+    else { // negative
+        if (n < 0 && n > -124)
+            write_one_byte(n-5);
+    }
 
 }
 
@@ -288,6 +290,7 @@ void FileParser::write_string(RPGString str)
         write_symbol_or_link("E");
         write_one_byte((int)'T');
     }
+    this->increase_object_count("string: " + str);
 }
 
 
@@ -312,6 +315,16 @@ QVariant FileParser::read_variant() //string int or symbol or bool
         return QVariant(false);
     }
     return QVariant();
+}
+
+void FileParser::write_variant(QVariant var)
+{
+    if (var.type() == QVariant::String)
+        this->write_string(RPGString(var.toString()));
+    else if (var.type() == QVariant::Int)
+        this->write_integer(var.toInt());
+    else if (var.type() == QVariant::Bool)
+        this->write_bool(var.toBool());
 }
 
 int FileParser::read_integer()
@@ -367,6 +380,7 @@ void FileParser::write_list(int length)
 {
     write_one_byte(0x7b);
     write_fixnum(length);
+    this->increase_object_count("{}");
 }
 
 
@@ -383,6 +397,7 @@ void FileParser::write_array(int length)
 {
     write_one_byte(0x5b);
     write_fixnum(length);
+    this->increase_object_count("[]");
 }
 
 
@@ -407,7 +422,7 @@ void FileParser::write_object(QString symbol, int params)
     write_one_byte((int)'o');
     write_symbol_or_link(symbol);
     write_fixnum(params);
-
+    this->increase_object_count("object + " + symbol);
 }
 
 void FileParser::read_table(QList<int> *list)
@@ -503,6 +518,44 @@ void FileParser::write_table(QList<int> *list)
         this->write_one_byte(list->at(i));
 }
 
+void FileParser::write_table_for_map(QList<int> *list, int height, int width)
+{
+    write_one_byte((int)'u');
+    write_symbol_or_link("Table");
+
+    int x = width;
+    int y = height;
+    int z = 3;
+    int size = x*y*z;
+
+    this->write_fixnum(2*size + 20); //not sure why 20 but works, maybe because of zero at beginning
+
+    //dont know why doing this
+    this->write_one_byte(3); // 3 for maps (check if every map has 3 here)
+    this->write_one_byte(0);
+    this->write_one_byte(0);
+    this->write_one_byte(0);
+
+
+    for (int i = 0; i < 4; i++)
+        this->write_one_byte( (x >> (8*i)) & 0xFF );
+
+    for (int i = 0; i < 4; i++)
+        this->write_one_byte( (y >> (8*i)) & 0xFF );
+
+    for (int i = 0; i < 4; i++)
+        this->write_one_byte( (z >> (8*i)) & 0xFF );
+
+    for (int i = 0; i < 4; i++)
+        this->write_one_byte( (size >> (8*i)) & 0xFF ); // same again redundancy
+
+    for (int i = 0; i < list->size(); i++)
+    {
+        this->write_one_byte(list->at(i) & 0xFF);
+        this->write_one_byte((list->at(i) >> 8) & 0xFF);
+    }
+}
+
 void FileParser::read_audiofile_object(RPGAudioFile *audiofile)
 {
     this->last_visited_function = "read_audiofile_object()";
@@ -541,6 +594,40 @@ void FileParser::write_audiofile_object(RPGAudioFile *audiofile)
 
 }
 
+void FileParser::read_tone(double *r, double *g, double *b, double *gray)
+{
+    this->read_one_byte(); // withdraw the u
+    QString symbol = this->read_symbol_or_link();
+    if (symbol == "Tone" || symbol == "Color") //old version had color instead of tone (feuergruen)
+    {
+        this->read_fixnum(); //32 unused
+
+        this->file.read((char*)r, 8);
+        this->file.read((char*)g, 8);
+        this->file.read((char*)b, 8);
+        this->file.read((char*)gray, 8);
+    }
+    else throw getException("Color tone expected");
+}
+
+void FileParser::write_tone(double r, double g, double b, double gray, bool color_tone = true)
+{
+    this->write_one_byte((int)'u');
+    if (color_tone)
+        this->write_symbol_or_link("Tone");
+    else
+        this->write_symbol_or_link("Color");
+
+    this->write_fixnum(32);
+
+    this->file.write((const char*)&r,8);
+    this->file.write((const char*)&g,8);
+    this->file.write((const char*)&b,8);
+    this->file.write((const char*)&gray,8);
+
+    this->increase_object_count("Tone");
+}
+
 void FileParser::read_move_route_object(RPGMoveRoute *move_route_object)
 {
     this->last_visited_function = "read_move_route_object()";
@@ -548,6 +635,7 @@ void FileParser::read_move_route_object(RPGMoveRoute *move_route_object)
     if (params.at(0).toString() != "RPG::MoveRoute")
         throw getException("RPG::MoveRoute expected");
     int num_params = params.at(1).toInt();
+
 
     for (int i = 0; i < num_params; i++)
     {
@@ -596,6 +684,7 @@ void FileParser::read_move_route_object(RPGMoveRoute *move_route_object)
 
                      }
                  }
+                 move_route_object->list.append(mc);
 
              }
          }
@@ -604,11 +693,43 @@ void FileParser::read_move_route_object(RPGMoveRoute *move_route_object)
 
 }
 
+void FileParser::write_move_route_object(RPGMoveRoute *move_route_object)
+{
+    this->last_visited_function = "write_move_route_object()";
+
+    this->write_object("RPG::MoveRoute", 3);
+
+    this->write_symbol_or_link("@list");
+    this->write_array(move_route_object->list.length());
+    for (int i = 0; i < move_route_object->list.length(); i++)
+    {
+        this->write_object("RPG::MoveCommand", 2);
+
+        this->write_symbol_or_link("@parameters");
+        this->write_array(move_route_object->list.at(i)->parameters.length());
+        for (int j = 0; j < move_route_object->list.at(i)->parameters.length(); j++)
+        {
+            //TODO
+
+            //TODO Code 44 (audiofile)
+        }
+        this->write_symbol_or_link("@code");
+        this->write_integer(move_route_object->list.at(i)->code);
+    }
+
+    this->write_symbol_or_link("@skippable");
+    this->write_bool(move_route_object->skippable);
+
+    this->write_symbol_or_link("@repeat");
+    this->write_bool(move_route_object->repeat);
+}
+
 void FileParser::displayHash()
 {
     QCryptographicHash hash(QCryptographicHash::Sha256);
     this->file.open(QIODevice::ReadOnly);
     hash.addData(&this->file);
+    qint64 size = file.size();
     this->file.close();
-    qDebug() << hash.result().toHex();
+    qDebug() << hash.result().toHex() << size;
 }

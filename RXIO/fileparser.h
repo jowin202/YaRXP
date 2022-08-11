@@ -42,6 +42,7 @@ public:
 
 
     QVariant read_variant();
+    void write_variant(QVariant var);
 
     int read_integer();
     void write_integer(int n);
@@ -62,19 +63,26 @@ public:
     void read_table(QList<int> *list);
     void read_table_for_map(QList<int> *list);
     void write_table(QList<int> *list);
+    void write_table_for_map(QList<int> *list, int height, int width);
 
     void read_audiofile_object(RPGAudioFile *audiofile);
     void write_audiofile_object(RPGAudioFile *audiofile);
 
 
-
+    void read_tone(double *r, double *g, double *b, double *gray);
+    void write_tone(double r, double g, double b, double gray, bool color_tone);
 
     void read_move_route_object(RPGMoveRoute *move_route_object);
+    void write_move_route_object(RPGMoveRoute *move_route_object);
 
 
 
 
-
+    void increase_object_count(QString msg)
+    {
+        object_count++;
+        //qDebug() << object_count << msg;
+    }
 
     void displayHash();
 signals:
@@ -84,6 +92,7 @@ protected:
     QFile file;
     QString last_visited_function;
     QStringList symbol_cache;
+    int object_count;
 };
 
 #endif // FILEPARSER_H

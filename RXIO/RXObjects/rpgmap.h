@@ -25,9 +25,6 @@ public:
     RPGEvent *event_on_pos(QPoint pos);
     void fix_autotile_stuff(QPoint start, int layer);
 
-    //encounter_list (empty for pokemon)
-    //z=3
-    //size=x*y*z don't need that
     QList<int> data;
 
     QList<RPGEvent*> events;
@@ -38,7 +35,7 @@ public:
 
     QList<int> encounter_list;
 
-
+    QStringList param_order;
 signals:
 
 private:

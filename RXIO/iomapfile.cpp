@@ -24,6 +24,7 @@ IOMapFile::IOMapFile(QString path, RPGMap *map)
     for (int i = 0; i < num_params; i++)
     {
         QString current_symbol = this->read_symbol_or_link();
+        map->param_order.append(current_symbol);
 
         if (current_symbol == "@bgm")
             this->read_audiofile_object(&map->bgm);
@@ -67,6 +68,7 @@ IOMapFile::IOMapFile(QString path, RPGMap *map)
                 {
                     //iterate over current event parameters
                     QString current_symbol = this->read_symbol_or_link();
+                    current_event->param_order.append(current_symbol);
 
                     if (current_symbol == "@x")
                         current_event->x = this->read_integer();
@@ -93,6 +95,8 @@ IOMapFile::IOMapFile(QString path, RPGMap *map)
                             {
                                 //iterate over attributes of element page
                                 QString current_symbol = this->read_symbol_or_link();
+                                current_page->param_order.append(current_symbol);
+
                                 if (current_symbol == "@move_speed")
                                     current_page->move_speed = this->read_integer();
                                 else if (current_symbol == "@move_frequency")
@@ -154,19 +158,8 @@ IOMapFile::IOMapFile(QString path, RPGMap *map)
                                                     }
                                                     else if (this->look_one_byte_ahead() == 'u') //color tone
                                                     {
-                                                        this->read_one_byte(); // withdraw the u
-                                                        QString symbol = this->read_symbol_or_link();
-                                                        if (symbol == "Tone" || symbol == "Color") //old version had color instead of tone (feuergruen)
-                                                        {
-                                                            this->read_fixnum(); //32 unused
-
-                                                            this->file.read((char*)&current_event_command->red, 8);
-                                                            this->file.read((char*)&current_event_command->green, 8);
-                                                            this->file.read((char*)&current_event_command->blue, 8);
-                                                            this->file.read((char*)&current_event_command->gray, 8);
-                                                        }
-                                                        else throw getException("Color tone expected");
-
+                                                        this->read_tone(&current_event_command->red, &current_event_command->green,
+                                                                        &current_event_command->blue, &current_event_command->gray);
                                                     }
                                                     else if (this->look_one_byte_ahead() == '[') //another list in parameters. stringlist for choices
                                                     {
@@ -184,6 +177,7 @@ IOMapFile::IOMapFile(QString path, RPGMap *map)
 
                                         }
                                         current_page->list.append(current_event_command);
+                                        //current_event_command->debug();
                                     }
                                 }
                                 else if (current_symbol == "@condition")
@@ -196,6 +190,8 @@ IOMapFile::IOMapFile(QString path, RPGMap *map)
                                     for (int c = 0; c < condition_param_count; c++)
                                     {
                                         current_symbol = read_symbol_or_link();
+                                        current_page->condition_param_order.append(current_symbol);
+
                                         if (current_symbol == "@switch1_id")
                                             current_page->switch1_id = this->read_integer();
                                         if (current_symbol == "@switch2_id")
@@ -241,6 +237,8 @@ IOMapFile::IOMapFile(QString path, RPGMap *map)
                                     for (int g = 0; g < graphic_param_count; g++)
                                     {
                                         current_symbol = read_symbol_or_link();
+                                        current_page->graphic_param_order.append(current_symbol);
+
                                         if (current_symbol == "@direction")
                                             current_page->direction = this->read_integer();
                                         else if (current_symbol == "@blend_type")
@@ -277,7 +275,437 @@ IOMapFile::IOMapFile(QString path, RPGMap *map)
     this->file.close();
 }
 
-void IOMapFile::write_to_file(QString path)
+void IOMapFile::write_to_file(QString path, RPGMap *map)
 {
+    this->last_visited_function = "write_to_file";
+    this->symbol_cache.clear();
 
+    if (!path.isEmpty())
+        this->path = path;
+    this->file.setFileName(path);
+    this->file.open(QIODevice::WriteOnly);
+    this->write_header();
+
+    this->write_object("RPG::Map", 11);
+
+    this->write_symbol_or_link("@bgm");
+    this->write_audiofile_object(&map->bgm);
+
+    this->write_symbol_or_link("@events");
+    this->write_list(map->events.length());
+    for (int i = 0; i < map->events.length(); i++)
+    {
+        this->write_integer(map->events.at(i)->id); //key
+        this->write_object("RPG::Event", 5);
+
+        this->write_symbol_or_link("@pages");
+        this->write_array(map->events.at(i)->pages.length());
+        for (int j = 0; j < map->events.at(i)->pages.length(); j++)
+        {
+            this->write_object("RPG::Event::Page", 13);
+
+            this->write_symbol_or_link("@list");
+            this->write_array(map->events.at(i)->pages.at(j)->list.length());
+
+            for (int k = 0; k < map->events.at(i)->pages.at(j)->list.length(); k++)
+            {
+                this->write_object("RPG::EventCommand", 3);
+
+                this->write_symbol_or_link("@parameters");
+
+                if (map->events.at(i)->pages.at(j)->list.at(k)->code == 0) //Empty Event
+                {
+                    this->write_array(0);
+                }
+                if (map->events.at(i)->pages.at(j)->list.at(k)->code == 205) //Change Fog Color Tone
+                {
+                    this->write_array(2); // tone + time(int)
+                    this->write_tone(map->events.at(i)->pages.at(j)->list.at(k)->red,map->events.at(i)->pages.at(j)->list.at(k)->green,
+                                     map->events.at(i)->pages.at(j)->list.at(k)->blue,map->events.at(i)->pages.at(j)->list.at(k)->gray, true);
+                    this->write_integer(map->events.at(i)->pages.at(j)->list.at(k)->parameters.at(0).toInt());
+                }
+
+                this->write_symbol_or_link("@indent");
+                this->write_integer(map->events.at(i)->pages.at(j)->list.at(k)->indent);
+                this->write_symbol_or_link("@code");
+                this->write_integer(map->events.at(i)->pages.at(j)->list.at(k)->code);
+            }
+
+            this->write_symbol_or_link("@move_type");
+            this->write_integer(map->events.at(i)->pages.at(j)->move_type);
+
+            this->write_symbol_or_link("@direction_fix");
+            this->write_bool(map->events.at(i)->pages.at(j)->direction_fix);
+
+
+
+            this->write_symbol_or_link("@condition");
+            this->write_object("RPG::Event::Page::Condition", 9);
+            this->write_symbol_or_link("@switch2_valid");
+            this->write_bool(map->events.at(i)->pages.at(j)->switch2_valid);
+            this->write_symbol_or_link("@self_switch_ch");
+            this->write_string(map->events.at(i)->pages.at(j)->get_switch_ch());
+            this->write_symbol_or_link("@switch1_id");
+            this->write_integer(map->events.at(i)->pages.at(j)->switch1_id);
+            this->write_symbol_or_link("@switch1_valid");
+            this->write_bool(map->events.at(i)->pages.at(j)->switch1_valid);
+            this->write_symbol_or_link("@variable_value");
+            this->write_integer(map->events.at(i)->pages.at(j)->variable_value);
+            this->write_symbol_or_link("@self_switch_valid");
+            this->write_bool(map->events.at(i)->pages.at(j)->self_switch_valid);
+            this->write_symbol_or_link("@variable_id");
+            this->write_integer(map->events.at(i)->pages.at(j)->variable_id);
+            this->write_symbol_or_link("@variable_valid");
+            this->write_bool(map->events.at(i)->pages.at(j)->variable_valid);
+            this->write_symbol_or_link("@switch2_id");
+            this->write_integer(map->events.at(i)->pages.at(j)->switch2_id);
+
+
+
+            this->write_symbol_or_link("@move_route");
+            this->write_move_route_object(&map->events.at(i)->pages.at(j)->move_route);
+
+
+            this->write_symbol_or_link("@trigger");
+            this->write_integer(map->events.at(i)->pages.at(j)->trigger);
+
+            this->write_symbol_or_link("@step_anime");
+            this->write_bool(map->events.at(i)->pages.at(j)->step_anime);
+
+
+            this->write_symbol_or_link("@move_frequency");
+            this->write_integer(map->events.at(i)->pages.at(j)->move_frequency);
+
+            this->write_symbol_or_link("@always_on_top");
+            this->write_bool(map->events.at(i)->pages.at(j)->always_on_top);
+
+
+
+            this->write_symbol_or_link("@graphic");
+            this->write_object("RPG::Event::Page::Graphic", 7);
+            this->write_symbol_or_link("@opacity");
+            this->write_integer(map->events.at(i)->pages.at(j)->opacity);
+            this->write_symbol_or_link("@character_name");
+            this->write_string(map->events.at(i)->pages.at(j)->character_name);
+            this->write_symbol_or_link("@pattern");
+            this->write_integer(map->events.at(i)->pages.at(j)->pattern);
+            this->write_symbol_or_link("@tile_id");
+            this->write_integer(map->events.at(i)->pages.at(j)->tile_id);
+            this->write_symbol_or_link("@direction");
+            this->write_integer(map->events.at(i)->pages.at(j)->direction);
+            this->write_symbol_or_link("@blend_type");
+            this->write_integer(map->events.at(i)->pages.at(j)->blend_type);
+            this->write_symbol_or_link("@character_hue");
+            this->write_integer(map->events.at(i)->pages.at(j)->character_hue);
+
+
+            this->write_symbol_or_link("@walk_anime");
+            this->write_bool(map->events.at(i)->pages.at(j)->walk_anime);
+            this->write_symbol_or_link("@move_speed");
+            this->write_integer(map->events.at(i)->pages.at(j)->move_speed);
+            this->write_symbol_or_link("@through");
+            this->write_bool(map->events.at(i)->pages.at(j)->through);
+        }
+
+        this->write_symbol_or_link("@name");
+        this->write_string(map->events.at(i)->name);
+
+        this->write_symbol_or_link("@y");
+        this->write_integer(map->events.at(i)->y);
+
+        this->write_symbol_or_link("@x");
+        this->write_integer(map->events.at(i)->x);
+
+        this->write_symbol_or_link("@id");
+        this->write_integer(map->events.at(i)->id);
+    }
+
+    this->write_symbol_or_link("@tileset_id");
+    this->write_integer(map->tileset_id);
+
+    this->write_symbol_or_link("@bgs");
+    this->write_audiofile_object(&map->bgs);
+
+
+    this->write_symbol_or_link("@autoplay_bgm");
+    this->write_bool(map->autoplay_bgm);
+
+
+    this->write_symbol_or_link("@data");
+    this->write_table_for_map(&map->data, map->height, map->width);
+
+
+
+    this->write_symbol_or_link("@autoplay_bgs");
+    this->write_bool(map->autoplay_bgs);
+
+    this->write_symbol_or_link("@height");
+    this->write_integer(map->height);
+
+    this->write_symbol_or_link("@encounter_step");
+    this->write_integer(map->encounter_step);
+
+    this->write_symbol_or_link("@width");
+    this->write_integer(map->width);
+
+    this->write_symbol_or_link("@encounter_list");
+    this->write_array(map->encounter_list.length());
+    for (int i = 0; i < map->encounter_list.length(); i++)
+        this->write_integer(map->encounter_list.at(i));
+
+
+    this->file.close();
+}
+
+
+
+
+
+
+void IOMapFile::write_to_file_with_order(QString path, RPGMap *map)
+{
+    this->last_visited_function = "write_to_file_with_order";
+    this->symbol_cache.clear();
+    this->object_count = 0;
+
+    if (!path.isEmpty())
+        this->path = path;
+    this->file.setFileName(path);
+    this->file.open(QIODevice::WriteOnly);
+    this->write_header();
+
+
+    this->write_object("RPG::Map", 11);
+
+    for (int p = 0; p < map->param_order.length(); p++)
+    {
+        QString current_symbol = map->param_order.at(p);
+        this->write_symbol_or_link(current_symbol);
+
+        if (current_symbol == "@bgm")
+            this->write_audiofile_object(&map->bgm);
+        else if (current_symbol == "@bgs")
+            this->write_audiofile_object(&map->bgs);
+        else if (current_symbol == "@autoplay_bgm")
+            this->write_bool(map->autoplay_bgm);
+        else if (current_symbol == "@autoplay_bgs")
+            this->write_bool(map->autoplay_bgs);
+        else if (current_symbol == "@tileset_id")
+            this->write_integer(map->tileset_id);
+        else if (current_symbol == "@height")
+            this->write_integer(map->height);
+        else if (current_symbol == "@width")
+            this->write_integer(map->width);
+        else if (current_symbol == "@encounter_step")
+            this->write_integer(map->encounter_step);
+        else if (current_symbol == "@encounter_list")
+        {
+            this->write_array(map->encounter_list.length());
+            for (int i = 0; i < map->encounter_list.length(); i++)
+                this->write_integer(map->encounter_list.at(i));
+        }
+        else if (current_symbol == "@data")
+            this->write_table_for_map(&map->data, map->height, map->width);
+        else if (current_symbol == "@events")
+        {
+            this->write_list(map->events.length());
+            for (int i = 0; i < map->events.length(); i++)
+            {
+                this->write_integer(map->events.at(i)->id); //key
+                RPGEvent *current_event = map->events.at(i);
+                this->write_object("RPG::Event", 5);
+
+
+                for (int q = 0; q < current_event->param_order.length(); q++)
+                {
+                    QString current_symbol = current_event->param_order.at(q);
+                    this->write_symbol_or_link(current_symbol);
+
+                    if (current_symbol == "@x")
+                        this->write_integer(current_event->x);
+                    else if (current_symbol == "@y")
+                        this->write_integer(current_event->y);
+                    else if (current_symbol == "@id")
+                        this->write_integer(current_event->id);
+                    else if (current_symbol == "@name")
+                        this->write_string(current_event->name);
+                    else if (current_symbol == "@pages")
+                    {
+                        this->write_array(current_event->pages.length());
+                        for (int j = 0; j < current_event->pages.length(); j++)
+                        {
+                            this->write_object("RPG::Event::Page", 13);
+                            RPGEventPage *current_page = current_event->pages.at(j);
+
+                            for (int r = 0; r < current_page->param_order.length(); r++)
+                            {
+                                QString current_symbol = current_page->param_order.at(r);
+                                this->write_symbol_or_link(current_symbol);
+
+                                if (current_symbol == "@direction_fix")
+                                    this->write_bool(current_page->direction_fix);
+                                else if (current_symbol == "@step_anime")
+                                    this->write_bool(current_page->step_anime);
+                                else if (current_symbol == "@always_on_top")
+                                    this->write_bool(current_page->always_on_top);
+                                else if (current_symbol == "@walk_anime")
+                                    this->write_bool(current_page->walk_anime);
+                                else if (current_symbol == "@through")
+                                    this->write_bool(current_page->through);
+                                else if (current_symbol == "@move_type")
+                                    this->write_integer(current_page->move_type);
+                                else if (current_symbol == "@move_speed")
+                                    this->write_integer(current_page->move_speed);
+                                else if (current_symbol == "@trigger")
+                                    this->write_integer(current_page->trigger);
+                                else if (current_symbol == "@move_frequency")
+                                    this->write_integer(current_page->move_frequency);
+                                else if (current_symbol == "@move_route")
+                                    this->write_move_route_object(&current_page->move_route);
+                                else if (current_symbol == "@condition")
+                                {
+                                    this->write_object("RPG::Event::Page::Condition", 9);
+
+                                    for (int s = 0; s < current_page->condition_param_order.length(); s++)
+                                    {
+                                        QString current_symbol = current_page->condition_param_order.at(s);
+                                        this->write_symbol_or_link(current_symbol);
+
+                                        if (current_symbol == "@switch1_valid")
+                                            this->write_bool(current_page->switch1_valid);
+                                        else if (current_symbol == "@switch2_valid")
+                                            this->write_bool(current_page->switch2_valid);
+                                        else if (current_symbol == "@variable_valid")
+                                            this->write_bool(current_page->variable_valid);
+                                        else if (current_symbol == "@switch1_id")
+                                            this->write_integer(current_page->switch1_id);
+                                        else if (current_symbol == "@switch2_id")
+                                            this->write_integer(current_page->switch2_id);
+                                        else if (current_symbol == "@variable_id")
+                                            this->write_integer(current_page->variable_id);
+                                        else if (current_symbol == "@variable_value")
+                                            this->write_integer(current_page->variable_value);
+                                        else if (current_symbol == "@self_switch_valid")
+                                            this->write_bool(current_page->self_switch_valid);
+                                        else if (current_symbol == "@self_switch_ch")
+                                            this->write_string(current_page->get_switch_ch());
+
+                                    }
+                                }
+                                else if (current_symbol == "@graphic")
+                                {
+                                    this->write_object("RPG::Event::Page::Graphic", 7);
+
+                                    for (int t = 0; t < current_page->graphic_param_order.length(); t++)
+                                    {
+                                        QString current_symbol = current_page->graphic_param_order.at(t);
+                                        this->write_symbol_or_link(current_symbol);
+
+                                        if (current_symbol == "@opacity")
+                                            this->write_integer(current_page->opacity);
+                                        else if (current_symbol == "@pattern")
+                                            this->write_integer(current_page->pattern);
+                                        else if (current_symbol == "@tile_id")
+                                            this->write_integer(current_page->tile_id);
+                                        else if (current_symbol == "@direction")
+                                            this->write_integer(current_page->direction);
+                                        else if (current_symbol == "@blend_type")
+                                            this->write_integer(current_page->blend_type);
+                                        else if (current_symbol == "@character_hue")
+                                            this->write_integer(current_page->character_hue);
+                                        else if (current_symbol == "@character_name")
+                                            this->write_string(current_page->character_name);
+                                    }
+                                }
+                                else if (current_symbol == "@list")
+                                {
+                                    this->write_array(current_page->list.length());
+                                    for (int k = 0; k < current_page->list.length(); k++)
+                                    {
+                                        this->write_object("RPG::EventCommand", 3);
+                                        RPGEventCommand *current_command = current_page->list.at(k);
+
+                                        this->write_symbol_or_link("@parameters");
+
+                                        //Color Tone
+                                        if (current_command->code == 205 || current_command->code == 223)
+                                        {
+                                            this->write_array(2);
+                                            // tone + time(int)
+                                            this->write_tone(current_command->red,current_command->green,
+                                                             current_command->blue,current_command->gray, true);
+                                            this->write_integer(current_command->parameters.at(0).toInt());
+                                        }
+                                        //screen flash
+                                        else if (current_command->code == 224)
+                                        {
+                                            this->write_array(2);
+                                            // Color + time(int)
+                                            this->write_tone(current_command->red,current_command->green,
+                                                             current_command->blue,current_command->gray, false);
+                                            this->write_integer(current_command->parameters.at(0).toInt());
+                                        }
+                                        else if (current_command->code == 241 || current_command->code == 245
+                                                 || current_command->code == 249 || current_command->code ==250 )
+                                        {
+                                            this->write_array(1);
+                                            this->write_audiofile_object(&current_command->audiofile);
+                                        }
+                                        //show choices
+                                        else if (current_command->code == 102)
+                                        {
+                                            this->write_array(2);
+                                            this->write_array(current_command->choices_list.length());
+                                            this->choices_reference_stack.push(object_count);
+                                            for (int c = 0; c < current_command->choices_list.length(); c++)
+                                                this->write_string(current_command->choices_list.at(c));
+                                            this->write_integer(current_command->parameters.at(0).toInt());
+                                        }
+                                        else if(current_command->code == 402)
+                                        {
+                                            this->write_array(2);
+                                            this->write_integer(current_command->parameters.at(0).toInt());
+                                            int ref = this->choices_reference_stack.pop();
+                                            this->file.write("@");
+                                            this->write_fixnum(ref);
+                                            this->choices_reference_stack.push(++ref);
+                                        }
+                                        else if (current_command->code == 209)
+                                        {
+                                            //move route
+                                        }
+                                        else
+                                        {
+                                            this->write_array(current_command->parameters.length());
+                                            for (int z = 0; z < current_command->parameters.length(); z++)
+                                                this->write_variant(current_command->parameters.at(z));
+
+                                            if (current_command->code == 404) choices_reference_stack.pop(); //remove it for nested choices
+                                        }
+
+                                        this->write_symbol_or_link("@indent");
+                                        this->write_integer(current_command->indent);
+                                        this->write_symbol_or_link("@code");
+                                        this->write_integer(current_command->code);
+
+                                    }
+                                } //current_symbol == list ( event list)
+                            } //event page parameters
+                        } //iterate over event pages
+                    } // page
+                } //iterate over event parameters
+            } //iterate over events
+        } //event param
+    } //iterate over map params
+
+    /*
+    this->write_symbol_or_link("@ref_list");
+    this->write_array(195);
+    for (int i = 5; i <= 200; i++)
+    {
+        file.write("@");
+        this->write_fixnum(i);
+    }
+    */
+    this->file.close();
 }

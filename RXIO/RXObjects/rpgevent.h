@@ -17,6 +17,7 @@ public:
     QList<RPGEventPage*> pages;
 
 
+    QStringList param_order;
 signals:
 
 
