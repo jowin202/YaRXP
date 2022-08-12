@@ -20,6 +20,7 @@ public:
 
 
     QStack<int> choices_reference_stack;
+    QList<int> move_route_references;
 signals:
 
 };

@@ -363,7 +363,7 @@ void IOMapFile::write_to_file(QString path, RPGMap *map)
 
 
             this->write_symbol_or_link("@move_route");
-            this->write_move_route_object(&map->events.at(i)->pages.at(j)->move_route);
+            this->write_move_route_object(&map->events.at(i)->pages.at(j)->move_route,0);
 
 
             this->write_symbol_or_link("@trigger");
@@ -561,7 +561,7 @@ void IOMapFile::write_to_file_with_order(QString path, RPGMap *map)
                                 else if (current_symbol == "@move_frequency")
                                     this->write_integer(current_page->move_frequency);
                                 else if (current_symbol == "@move_route")
-                                    this->write_move_route_object(&current_page->move_route);
+                                    this->write_move_route_object(&current_page->move_route, 0);
                                 else if (current_symbol == "@condition")
                                 {
                                     this->write_object("RPG::Event::Page::Condition", 9);
@@ -661,6 +661,7 @@ void IOMapFile::write_to_file_with_order(QString path, RPGMap *map)
                                                 this->write_string(current_command->choices_list.at(c));
                                             this->write_integer(current_command->parameters.at(0).toInt());
                                         }
+                                        //show choices multiline
                                         else if(current_command->code == 402)
                                         {
                                             this->write_array(2);
@@ -670,9 +671,24 @@ void IOMapFile::write_to_file_with_order(QString path, RPGMap *map)
                                             this->write_fixnum(ref);
                                             this->choices_reference_stack.push(++ref);
                                         }
+                                        //move route
                                         else if (current_command->code == 209)
                                         {
-                                            //move route
+                                            this->write_array(2);
+                                            this->write_integer(current_command->parameters.at(0).toInt());
+                                            this->move_route_references.clear();
+                                            this->write_move_route_object(&current_command->move_route, &this->move_route_references);
+                                            //qDebug() << "len:" << move_route_references.length();
+                                        }
+                                        //move route multiline
+                                        else if (current_command->code == 509)
+                                        {
+                                            if (this->move_route_references.isEmpty())
+                                                throw getException("MoveRoute references() are broken");
+                                            this->write_array(1);
+                                            this->file.write("@");
+                                            this->write_fixnum(this->move_route_references.first());
+                                            this->move_route_references.pop_front();
                                         }
                                         else
                                         {
@@ -698,14 +714,20 @@ void IOMapFile::write_to_file_with_order(QString path, RPGMap *map)
         } //event param
     } //iterate over map params
 
+
+
     /*
     this->write_symbol_or_link("@ref_list");
-    this->write_array(195);
-    for (int i = 5; i <= 200; i++)
+    this->write_array(414);
+    this->write_integer(0);
+    for (int i = 1; i <= 413; i++)
     {
         file.write("@");
         this->write_fixnum(i);
     }
     */
+
+
     this->file.close();
+
 }

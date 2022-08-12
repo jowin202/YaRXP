@@ -73,7 +73,7 @@ public:
     void write_tone(double r, double g, double b, double gray, bool color_tone);
 
     void read_move_route_object(RPGMoveRoute *move_route_object);
-    void write_move_route_object(RPGMoveRoute *move_route_object);
+    void write_move_route_object(RPGMoveRoute *move_route_object, QList<int> *references);
 
 
 

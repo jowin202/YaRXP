@@ -693,7 +693,7 @@ void FileParser::read_move_route_object(RPGMoveRoute *move_route_object)
 
 }
 
-void FileParser::write_move_route_object(RPGMoveRoute *move_route_object)
+void FileParser::write_move_route_object(RPGMoveRoute *move_route_object, QList<int> *references = 0)
 {
     this->last_visited_function = "write_move_route_object()";
 
@@ -701,18 +701,47 @@ void FileParser::write_move_route_object(RPGMoveRoute *move_route_object)
 
     this->write_symbol_or_link("@list");
     this->write_array(move_route_object->list.length());
+
+    if (references != 0)
+        references->append(this->object_count); //add to references list
+
     for (int i = 0; i < move_route_object->list.length(); i++)
     {
         this->write_object("RPG::MoveCommand", 2);
 
         this->write_symbol_or_link("@parameters");
-        this->write_array(move_route_object->list.at(i)->parameters.length());
-        for (int j = 0; j < move_route_object->list.at(i)->parameters.length(); j++)
-        {
-            //TODO
 
-            //TODO Code 44 (audiofile)
+        if (move_route_object->list.at(i)->code == 44) //Play SE
+        {
+            this->write_array(1);
+            this->write_audiofile_object(&move_route_object->list.at(i)->audiofile);
+            if (references != 0)
+                references->append(this->object_count); //add to references list
         }
+        else if (move_route_object->list.at(i)->code == 41) //Change Graphic
+        {
+            //we only do this manually because of the reference
+            this->write_array(4);
+            this->write_string(move_route_object->list.at(i)->parameters.at(0).toString());
+            if (references != 0)
+                references->append(this->object_count); //add to references list
+            this->write_integer(move_route_object->list.at(i)->parameters.at(1).toInt());
+            this->write_integer(move_route_object->list.at(i)->parameters.at(2).toInt());
+            this->write_integer(move_route_object->list.at(i)->parameters.at(3).toInt());
+
+        }
+        else
+        {
+            this->write_array(move_route_object->list.at(i)->parameters.length());
+            if (references != 0)
+                references->append(this->object_count); //add to references list
+            for (int j = 0; j < move_route_object->list.at(i)->parameters.length(); j++)
+            {
+                this->write_variant(move_route_object->list.at(i)->parameters.at(j));
+            }
+        }
+
+
         this->write_symbol_or_link("@code");
         this->write_integer(move_route_object->list.at(i)->code);
     }
