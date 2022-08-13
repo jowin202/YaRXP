@@ -26,6 +26,7 @@ IORGSSAD::IORGSSAD(QString path, QString output_dir)
 
         QByteArray buffer = this->file.read(file_size);
 
+        qDebug() << name;
 
 
         int tempKey = key;

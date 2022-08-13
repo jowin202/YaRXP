@@ -8,6 +8,7 @@
 #include <QCryptographicHash>
 
 
+#include "RXObjects/rpgvariant.h"
 #include "RXObjects/rpgstring.h"
 #include "RXObjects/parserexception.h"
 #include "RXObjects/rpgaudiofile.h"
@@ -41,8 +42,8 @@ public:
     void write_string(RPGString str);
 
 
-    QVariant read_variant();
-    void write_variant(QVariant var);
+    RPGVariant read_variant();
+    void write_variant(RPGVariant var);
 
     int read_integer();
     void write_integer(int n);
@@ -84,7 +85,7 @@ public:
         //qDebug() << object_count << msg;
     }
 
-    void displayHash();
+    QByteArray getHash();
 signals:
 
 protected:

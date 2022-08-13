@@ -56,7 +56,14 @@ EventPage::EventPage(QWidget *parent, RPGEventPage *page, RPGSettings *settings)
     this->ui->check_self_switch->setChecked(page->self_switch_valid);
     this->ui->combo_self_switch->setEnabled(page->self_switch_valid);
 
-    this->ui->combo_self_switch->setCurrentIndex(page->self_switch_ch-1);
+    if (page->self_switch_ch == "A")
+        this->ui->combo_self_switch->setCurrentIndex(0);
+    else if (page->self_switch_ch == "B")
+        this->ui->combo_self_switch->setCurrentIndex(1);
+    else if (page->self_switch_ch == "C")
+        this->ui->combo_self_switch->setCurrentIndex(2);
+    else if (page->self_switch_ch == "D")
+        this->ui->combo_self_switch->setCurrentIndex(3);
 
     this->ui->check_move_animation->setChecked(page->walk_anime);
     this->ui->check_stop_animation->setChecked(page->step_anime);

@@ -42,16 +42,8 @@ public:
     bool switch2_valid;
 
     int variable_value;
-    int self_switch_ch; //A=1, B=2, C=3, D=4
-    RPGString get_switch_ch() {
-        if (self_switch_ch==1)
-            return RPGString("A");
-        else if (self_switch_ch==2)
-            return RPGString("B");
-        else if (self_switch_ch==3)
-            return RPGString("C");
-        else return RPGString("D");
-    }
+    RPGString self_switch_ch;
+
 
 
     //RPGEventPageGraphic *graphic;

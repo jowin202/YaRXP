@@ -295,32 +295,34 @@ void FileParser::write_string(RPGString str)
 
 
 
-QVariant FileParser::read_variant() //string int or symbol or bool
+RPGVariant FileParser::read_variant() //string int or symbol or bool
 {
     int read_byte = this->look_one_byte_ahead();
     if (read_byte == 'i')
-        return QVariant(this->read_integer());
+        return RPGVariant(this->read_integer());
     else if (read_byte == '"')
-        return QVariant(this->read_string());
+        return RPGVariant(this->read_string());
     else if (read_byte == 'I') // Instance Variable
-        return QVariant(this->read_string());
+        return RPGVariant(this->read_string());
     else if (read_byte == 'T')
     {
         this->read_one_byte();
-        return QVariant(true);
+        return RPGVariant(true);
     }
     else if (read_byte == 'F')
     {
         this->read_one_byte();
-        return QVariant(false);
+        return RPGVariant(false);
     }
-    return QVariant();
+    return RPGVariant();
 }
 
-void FileParser::write_variant(QVariant var)
+void FileParser::write_variant(RPGVariant var)
 {
-    if (var.type() == QVariant::String)
-        this->write_string(RPGString(var.toString()));
+    if (var.rpgstring_set)
+        this->write_string(var.str);
+    else if (var.type() == QVariant::String)
+        this->write_string(var.toString());
     else if (var.type() == QVariant::Int)
         this->write_integer(var.toInt());
     else if (var.type() == QVariant::Bool)
@@ -722,7 +724,7 @@ void FileParser::write_move_route_object(RPGMoveRoute *move_route_object, QList<
         {
             //we only do this manually because of the reference
             this->write_array(4);
-            this->write_string(move_route_object->list.at(i)->parameters.at(0).toString());
+            this->write_string(((RPGVariant)move_route_object->list.at(i)->parameters.at(0)).toString());
             if (references != 0)
                 references->append(this->object_count); //add to references list
             this->write_integer(move_route_object->list.at(i)->parameters.at(1).toInt());
@@ -753,12 +755,11 @@ void FileParser::write_move_route_object(RPGMoveRoute *move_route_object, QList<
     this->write_bool(move_route_object->repeat);
 }
 
-void FileParser::displayHash()
+QByteArray FileParser::getHash()
 {
     QCryptographicHash hash(QCryptographicHash::Sha256);
     this->file.open(QIODevice::ReadOnly);
     hash.addData(&this->file);
-    qint64 size = file.size();
     this->file.close();
-    qDebug() << hash.result().toHex() << size;
+    return hash.result().toHex();
 }

@@ -29,6 +29,7 @@ SOURCES += \
     RXIO/RXObjects/rpgstring.cpp \
     RXIO/RXObjects/rpgtileset.cpp \
     RXIO/RXObjects/rpgtone.cpp \
+    RXIO/RXObjects/rpgvariant.cpp \
     RXIO/fileparser.cpp \
     RXIO/iomapfile.cpp \
     RXIO/iomapinfofile.cpp \
@@ -70,6 +71,7 @@ HEADERS += \
     RXIO/RXObjects/rpgstring.h \
     RXIO/RXObjects/rpgtileset.h \
     RXIO/RXObjects/rpgtone.h \
+    RXIO/RXObjects/rpgvariant.h \
     RXIO/fileparser.h \
     RXIO/iomapfile.h \
     RXIO/iomapinfofile.h \

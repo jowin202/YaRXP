@@ -5,6 +5,7 @@
 #include <QObject>
 #include <QVariant>
 
+#include "rpgvariant.h"
 #include "rpgaudiofile.h"
 #include "rpgstring.h"
 #include "rpgmoveroute.h"
@@ -20,7 +21,7 @@ public:
 
     int code;
     int indent;
-    QList<QVariant> parameters;
+    QList<RPGVariant> parameters;
     RPGString type;
     RPGAudioFile audiofile;
     RPGMoveRoute move_route;

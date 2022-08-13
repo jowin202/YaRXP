@@ -209,17 +209,7 @@ IOMapFile::IOMapFile(QString path, RPGMap *map)
                                         else if (current_symbol == "@switch2_valid")
                                             current_page->switch2_valid = this->read_bool();
                                         else if(current_symbol == "@self_switch_ch")
-                                        {
-                                            QString self_switch = this->read_string();
-                                            if (self_switch == "A")
-                                                current_page->self_switch_ch = 1;
-                                            else if (self_switch == "B")
-                                                current_page->self_switch_ch = 2;
-                                            else if (self_switch == "C")
-                                                current_page->self_switch_ch = 3;
-                                            else if (self_switch == "D")
-                                                current_page->self_switch_ch = 4;
-                                        }
+                                            current_page->self_switch_ch = this->read_string();
                                     }
 
                                 }
@@ -344,7 +334,7 @@ void IOMapFile::write_to_file(QString path, RPGMap *map)
             this->write_symbol_or_link("@switch2_valid");
             this->write_bool(map->events.at(i)->pages.at(j)->switch2_valid);
             this->write_symbol_or_link("@self_switch_ch");
-            this->write_string(map->events.at(i)->pages.at(j)->get_switch_ch());
+            this->write_string(map->events.at(i)->pages.at(j)->self_switch_ch);
             this->write_symbol_or_link("@switch1_id");
             this->write_integer(map->events.at(i)->pages.at(j)->switch1_id);
             this->write_symbol_or_link("@switch1_valid");
@@ -588,7 +578,7 @@ void IOMapFile::write_to_file_with_order(QString path, RPGMap *map)
                                         else if (current_symbol == "@self_switch_valid")
                                             this->write_bool(current_page->self_switch_valid);
                                         else if (current_symbol == "@self_switch_ch")
-                                            this->write_string(current_page->get_switch_ch());
+                                            this->write_string(current_page->self_switch_ch);
 
                                     }
                                 }

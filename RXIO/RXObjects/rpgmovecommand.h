@@ -6,6 +6,7 @@
 #include <QVariant>
 
 #include "rpgaudiofile.h"
+#include "rpgvariant.h"
 
 class RPGMoveCommand : public QObject
 {
@@ -15,7 +16,7 @@ public:
     int code;
 
     void debug();
-    QList<QVariant> parameters;
+    QList<RPGVariant> parameters;
     RPGAudioFile audiofile;
 
 signals:
