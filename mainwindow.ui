@@ -47,7 +47,7 @@
             <x>0</x>
             <y>0</y>
             <width>296</width>
-            <height>83</height>
+            <height>128</height>
            </rect>
           </property>
           <layout class="QGridLayout" name="gridLayout_2">
@@ -207,6 +207,9 @@
     <addaction name="actionNew"/>
     <addaction name="actionOpen"/>
     <addaction name="actionSave"/>
+    <addaction name="separator"/>
+    <addaction name="actionImport_RGSSAD"/>
+    <addaction name="actionExport_RGSSAD"/>
     <addaction name="separator"/>
     <addaction name="actionChange_Title"/>
     <addaction name="actionOpen_Project_Folder"/>
@@ -657,6 +660,16 @@
   <action name="actionSystem">
    <property name="text">
     <string>System</string>
+   </property>
+  </action>
+  <action name="actionImport_RGSSAD">
+   <property name="text">
+    <string>Import RGSSAD</string>
+   </property>
+  </action>
+  <action name="actionExport_RGSSAD">
+   <property name="text">
+    <string>Export RGSSAD</string>
    </property>
   </action>
  </widget>

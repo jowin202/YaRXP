@@ -26,13 +26,17 @@ IORGSSAD::IORGSSAD(QString path, QString output_dir)
 
         QByteArray buffer = this->file.read(file_size);
 
+
+
         int tempKey = key;
         QByteArray key_array;
         key_array.resize(4);
-        key_array[0] = ((key >>  0) & 0xFF) <<  0;
-        key_array[1] = ((key >>  8) & 0xFF) <<  8;
-        key_array[2] = ((key >> 16) & 0xFF) << 16;
-        key_array[3] = ((key >> 24) & 0xFF) << 24;
+        key_array[0] = ((tempKey >>  0) & 0xFF);
+        key_array[1] = ((tempKey >>  8) & 0xFF);
+        key_array[2] = ((tempKey >> 16) & 0xFF);
+        key_array[3] = ((tempKey >> 24) & 0xFF);
+
+
 
 
         int j = 0;
@@ -44,10 +48,11 @@ IORGSSAD::IORGSSAD(QString path, QString output_dir)
                 tempKey *= 7;
                 tempKey += 3;
 
-                key_array[0] = ((key >>  0) & 0xFF) <<  0;
-                key_array[1] = ((key >>  8) & 0xFF) <<  8;
-                key_array[2] = ((key >> 16) & 0xFF) << 16;
-                key_array[3] = ((key >> 24) & 0xFF) << 24;
+                key_array[0] = ((tempKey >>  0) & 0xFF);
+                key_array[1] = ((tempKey >>  8) & 0xFF);
+                key_array[2] = ((tempKey >> 16) & 0xFF);
+                key_array[3] = ((tempKey >> 24) & 0xFF);
+
             }
 
             buffer[i] = 0xFF & (buffer[i] ^ key_array[j]);
@@ -62,7 +67,9 @@ IORGSSAD::IORGSSAD(QString path, QString output_dir)
 
 
 
-        break;
+
+        if (this->file.atEnd())
+            break;
     }
 
 

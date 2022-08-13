@@ -12,6 +12,7 @@
 #include "RXIO/RXObjects/rpgsettings.h"
 
 #include "RXIO/iosystemfile.h"
+#include "RXIO/iorgssad.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -24,6 +25,8 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
+    void open_project(QString project_path);
 
 signals:
     void test_signal();
@@ -44,6 +47,9 @@ public slots:
     void on_actionFlood_Fill_triggered();
     void on_actionAll_Layers_triggered();
     void on_actionCurrent_Layers_and_below_triggered();
+
+private slots:
+    void on_actionImport_RGSSAD_triggered();
 
 private:
     Ui::MainWindow *ui;

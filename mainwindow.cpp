@@ -75,6 +75,33 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::open_project(QString project_path)
+{
+
+    QFileInfo fi(project_path);
+
+    if (project_path != "" && fi.exists() && fi.isFile())
+    {
+        this->settings.current_project_dir = fi.absoluteDir().path();
+        this->settings.data_dir = this->settings.current_project_dir + QDir::separator() + "Data" + QDir::separator();
+        this->settings.grahpics_dir = this->settings.current_project_dir + QDir::separator() + "Graphics" + QDir::separator();
+        this->settings.tileset_dir = this->settings.current_project_dir + QDir::separator() + "Graphics" + QDir::separator() + "Tilesets" + QDir::separator();
+        this->settings.autotiles_dir = this->settings.current_project_dir + QDir::separator() + "Graphics" + QDir::separator() + "Autotiles" + QDir::separator();
+        this->settings.characters_dir = this->settings.current_project_dir + QDir::separator() + "Graphics" + QDir::separator() + "Characters" + QDir::separator();
+        this->settings.characters_dir = this->settings.current_project_dir + QDir::separator() + "Graphics" + QDir::separator() + "Characters" + QDir::separator();
+        this->ui->map_tree_widget->list_maps();
+
+
+        try{
+            IOSystemFile systemfile(this->settings.data_dir + "System.rxdata", &this->settings);
+        }
+        catch(ParserException *ex)
+        {
+            this->ui->map_tree_widget->handleParserException(ex);
+        }
+    }
+}
+
 void MainWindow::on_actionLayer1_triggered()
 {
     this->ui->map_label->set_layer(0);
@@ -109,28 +136,8 @@ void MainWindow::on_actionOpen_triggered()
 
     QString name = QFileDialog::getOpenFileName(this, "Choose Project", dir, "RPG Maker Project Files (*.rxproj);;Data Files(*.rxdata)");
     settings.setValue("lastopened", name);
-    QFileInfo fi(name);
 
-    if (name != "" && fi.exists() && fi.isFile())
-    {
-        this->settings.current_project_dir = fi.absoluteDir().path();
-        this->settings.data_dir = this->settings.current_project_dir + QDir::separator() + "Data" + QDir::separator();
-        this->settings.grahpics_dir = this->settings.current_project_dir + QDir::separator() + "Graphics" + QDir::separator();
-        this->settings.tileset_dir = this->settings.current_project_dir + QDir::separator() + "Graphics" + QDir::separator() + "Tilesets" + QDir::separator();
-        this->settings.autotiles_dir = this->settings.current_project_dir + QDir::separator() + "Graphics" + QDir::separator() + "Autotiles" + QDir::separator();
-        this->settings.characters_dir = this->settings.current_project_dir + QDir::separator() + "Graphics" + QDir::separator() + "Characters" + QDir::separator();
-        this->settings.characters_dir = this->settings.current_project_dir + QDir::separator() + "Graphics" + QDir::separator() + "Characters" + QDir::separator();
-        this->ui->map_tree_widget->list_maps();
-
-
-        try{
-            IOSystemFile systemfile(this->settings.data_dir + "System.rxdata", &this->settings);
-        }
-        catch(ParserException *ex)
-        {
-            this->ui->map_tree_widget->handleParserException(ex);
-        }
-    }
+    this->open_project(name);
 }
 
 void MainWindow::on_actionPen_triggered()
@@ -182,4 +189,31 @@ void MainWindow::on_actionAll_Layers_triggered()
 void MainWindow::on_actionCurrent_Layers_and_below_triggered()
 {
     this->ui->map_label->set_show_other_layers(false);
+}
+
+void MainWindow::on_actionImport_RGSSAD_triggered()
+{
+    QSettings settings;
+    QString dir = settings.value("lastopened").toString();
+    if (dir.isEmpty())
+        dir = QDir::homePath();
+
+    QString name = QFileDialog::getOpenFileName(this, "Choose Project", dir, "RGSSAD File (*.rgssad);;");
+    settings.setValue("lastopened", name);
+    QFileInfo fi(name);
+
+    if (name != "" && fi.exists() && fi.isFile())
+    {
+        QString export_dir = fi.dir().absolutePath() + QDir::separator();
+        QDir().mkdir(fi.dir().absolutePath() + QDir::separator() + "Data" + QDir::separator());
+        try{
+            IORGSSAD rgssad_file(name,export_dir);
+        }
+        catch(ParserException *ex)
+        {
+            this->ui->map_tree_widget->handleParserException(ex);
+        }
+    }
+
+    this->open_project(name);
 }

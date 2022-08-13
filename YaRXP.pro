@@ -32,6 +32,7 @@ SOURCES += \
     RXIO/fileparser.cpp \
     RXIO/iomapfile.cpp \
     RXIO/iomapinfofile.cpp \
+    RXIO/iorgssad.cpp \
     RXIO/iosystemfile.cpp \
     RXIO/iotilesetfile.cpp \
     audiowidget.cpp \
@@ -72,6 +73,7 @@ HEADERS += \
     RXIO/fileparser.h \
     RXIO/iomapfile.h \
     RXIO/iomapinfofile.h \
+    RXIO/iorgssad.h \
     RXIO/iosystemfile.h \
     RXIO/iotilesetfile.h \
     audiowidget.h \
