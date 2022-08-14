@@ -37,6 +37,7 @@ public:
     QList<Autotileset> autotiles;
 
 
+    QStringList param_order;
 signals:
 
 };

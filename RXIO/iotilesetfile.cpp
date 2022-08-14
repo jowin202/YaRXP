@@ -32,6 +32,7 @@ IOTilesetFile::IOTilesetFile(QString path, QHash<int,RPGTileset *> *tileset_hash
         for (int j = 0; j < list.at(1).toInt(); j++)
         {
             QString current_symbol = read_symbol_or_link();
+            tileset_object->param_order.append(current_symbol);
 
             if (current_symbol == "@id")
                 tileset_object->id = this->read_integer();
@@ -100,58 +101,54 @@ void IOTilesetFile::write_to_file(QString path, QList<RPGTileset*> *tileset_list
     {
         this->write_object("RPG::Tileset", 17);
 
-        this->write_symbol_or_link("@terrain_tags");
-        this->write_table(&tileset_list->at(i)->terrain_tag);
+        for (int j = 0; j < tileset_list->at(i)->param_order.length(); j++)
+        {
+            QString current_symbol = tileset_list->at(i)->param_order.at(j);
+            this->write_symbol_or_link(current_symbol);
 
-        this->write_symbol_or_link("@panorama_hue");
-        this->write_integer(tileset_list->at(i)->panorama_hue);
+            if (current_symbol == "@panorama_hue")
+                this->write_integer(tileset_list->at(i)->panorama_hue);
+            else if (current_symbol == "@fog_sx")
+                this->write_integer(tileset_list->at(i)->fog_sx);
+            else if (current_symbol == "@fog_sy")
+                this->write_integer(tileset_list->at(i)->fog_sy);
+            else if (current_symbol == "@fog_hue")
+                this->write_integer(tileset_list->at(i)->fog_hue);
+            else if (current_symbol == "@fog_opacity")
+                this->write_integer(tileset_list->at(i)->fog_opacity);
+            else if (current_symbol == "@fog_zoom")
+                this->write_integer(tileset_list->at(i)->fog_zoom);
+            else if (current_symbol == "@fog_blend_type")
+                this->write_integer(tileset_list->at(i)->fog_blend_type);
+            else if (current_symbol == "@id")
+                this->write_integer(tileset_list->at(i)->id);
+            //strings
+            else if (current_symbol == "@name")
+                this->write_string(tileset_list->at(i)->name);
+            else if (current_symbol == "@panorama_name")
+                this->write_string(tileset_list->at(i)->panorama_name);
+            else if (current_symbol == "@fog_name")
+                this->write_string(tileset_list->at(i)->fog_name);
+            else if (current_symbol == "@battleback_name")
+                this->write_string(tileset_list->at(i)->battleback_name);
+            else if (current_symbol == "@tileset_name")
+                this->write_string(tileset_list->at(i)->tileset_name);
+            //tables
+            else if (current_symbol == "@terrain_tags")
+                this->write_table(&tileset_list->at(i)->terrain_tag);
+            else if (current_symbol == "@priorities")
+                this->write_table(&tileset_list->at(i)->priorities);
+            else if (current_symbol == "@passages")
+                this->write_table(&tileset_list->at(i)->passages);
+            else if (current_symbol == "@autotile_names")
+            {
+                this->write_array(tileset_list->at(i)->autotile_names.length()); //7
+                for (int j = 0; j < tileset_list->at(i)->autotile_names.length(); j++)
+                    this->write_string(tileset_list->at(i)->autotile_names.at(j));
 
-        this->write_symbol_or_link("@fog_sy");
-        this->write_integer(tileset_list->at(i)->fog_sy);
+            }
+        }
 
-        this->write_symbol_or_link("@name");
-        this->write_string(tileset_list->at(i)->name);
-
-        this->write_symbol_or_link("@fog_opacity");
-        this->write_integer(tileset_list->at(i)->fog_opacity);
-
-        this->write_symbol_or_link("@priorities");
-        this->write_table(&tileset_list->at(i)->priorities);
-
-        this->write_symbol_or_link("@panorama_name");
-        this->write_string(tileset_list->at(i)->panorama_name);
-
-        this->write_symbol_or_link("@fog_sx");
-        this->write_integer(tileset_list->at(i)->fog_sx);
-
-        this->write_symbol_or_link("@fog_hue");
-        this->write_integer(tileset_list->at(i)->fog_hue);
-
-        this->write_symbol_or_link("@passages");
-        this->write_table(&tileset_list->at(i)->passages);
-
-        this->write_symbol_or_link("@autotile_names");
-        this->write_array(tileset_list->at(i)->autotile_names.length()); //7
-        for (int j = 0; j < tileset_list->at(i)->autotile_names.length(); j++)
-            this->write_string(tileset_list->at(i)->autotile_names.at(j));
-
-        this->write_symbol_or_link("@fog_zoom");
-        this->write_integer(tileset_list->at(i)->fog_zoom);
-
-        this->write_symbol_or_link("@fog_name");
-        this->write_string(tileset_list->at(i)->fog_name);
-
-        this->write_symbol_or_link("@battleback_name");
-        this->write_string(tileset_list->at(i)->battleback_name);
-
-        this->write_symbol_or_link("@tileset_name");
-        this->write_string(tileset_list->at(i)->tileset_name);
-
-        this->write_symbol_or_link("@id");
-        this->write_integer(tileset_list->at(i)->id);
-
-        this->write_symbol_or_link("@fog_blend_type");
-        this->write_integer(tileset_list->at(i)->fog_blend_type);
     }
 
 
