@@ -177,7 +177,7 @@ IOMapFile::IOMapFile(QString path, RPGMap *map)
 
                                         }
                                         current_page->list.append(current_event_command);
-                                        current_event_command->debug();
+                                        //current_event_command->debug();
                                     }
                                 }
                                 else if (current_symbol == "@condition")
@@ -635,8 +635,22 @@ void IOMapFile::write_to_file_with_order(QString path, RPGMap *map)
                                                              current_command->blue,current_command->gray, false);
                                             this->write_integer(current_command->parameters.at(0).toInt());
                                         }
+                                        //Change picture color tone (needs 2 integers)
+                                        else if (current_command->code == 234)
+                                        {
+                                            this->write_array(3);
+                                            //int tone int
+                                            this->write_integer(current_command->parameters.at(0).toInt());
+
+                                            this->write_tone(current_command->red,current_command->green,
+                                                             current_command->blue,current_command->gray, true);
+
+                                            this->write_integer(current_command->parameters.at(1).toInt());
+                                        }
+                                        //everything which only contains 1 audio object
                                         else if (current_command->code == 241 || current_command->code == 245
-                                                 || current_command->code == 249 || current_command->code ==250 )
+                                                 || current_command->code == 249 || current_command->code ==250
+                                                 || current_command->code == 132 || current_command->code == 133)
                                         {
                                             this->write_array(1);
                                             this->write_audiofile_object(&current_command->audiofile);
