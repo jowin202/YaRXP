@@ -19,6 +19,38 @@ Testcases::Testcases(RPGSettings *settings)
 {
     QByteArray hash1, hash2;
 
+    int num_maps = 0;
+    int passed = 0;
+
+    for (int i = 0; i <= 999; i++)
+    {
+        QString filler;
+        if (i >= 0 && i <= 9) filler = "00";
+        else if (i >= 10 && i <= 99) filler = "0";
+        else filler = "";
+
+        RPGMap *map = new RPGMap();
+        QString path = settings->data_dir + "Map" + filler + QString::number(i) + ".rxdata";
+        if (QFile(path).exists())
+        {
+            num_maps++;
+            IOMapFile mapfile(path, map);
+            hash1 = mapfile.getHash();
+
+            mapfile.write_to_file_with_order("/tmp/test_map.rxdata", map);
+            hash2 = mapfile.getHash();
+            qDebug() << "Map " << (filler + QString::number(i)) << (hash1==hash2 ? "passed":"failed");
+
+            if (hash1==hash2)
+                passed++;
+        }
+
+    }
+
+
+    qDebug() << "Testing Map parser" <<passed << "Maps of" << num_maps << "passed";
+
+
     QList<RPGMapInfo*> mapinfo_list;
     IOMapInfoFile info_file(settings->data_dir + "MapInfos.rxdata", &mapinfo_list);
     hash1 = info_file.getHash();
@@ -57,33 +89,6 @@ Testcases::Testcases(RPGSettings *settings)
 
 
     qDebug() << "System..." << (hash1==hash2 ? "passed":"failed");
-
-
-
-
-    for (int i = 11; i <= 999; i++)
-    {
-        QString filler;
-        if (i >= 0 && i <= 9) filler = "00";
-        else if (i >= 10 && i <= 99) filler = "0";
-        else filler = "";
-
-        RPGMap *map = new RPGMap();
-        QString path = settings->data_dir + "Map" + filler + QString::number(i) + ".rxdata";
-        if (QFile(path).exists())
-        {
-            IOMapFile mapfile(path, map);
-            hash1 = mapfile.getHash();
-
-            mapfile.write_to_file_with_order("/tmp/test_map.rxdata", map);
-            hash2 = mapfile.getHash();
-            qDebug() << "Map " << (filler + QString::number(i)) << (hash1==hash2 ? "passed":"failed");
-
-            if (hash1!=hash2)
-                break;
-        }
-
-    }
 
 
 
