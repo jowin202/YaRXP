@@ -20,7 +20,7 @@ RPGVariant::RPGVariant(QString str) : QVariant(str)
     this->rpgstring_set = false;
 }
 
-RPGVariant::RPGVariant(RPGString str) : QVariant()
+RPGVariant::RPGVariant(RPGString str) : QVariant(str)
 {
     this->str = str;
     this->rpgstring_set = true;

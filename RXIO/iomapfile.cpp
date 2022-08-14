@@ -177,7 +177,7 @@ IOMapFile::IOMapFile(QString path, RPGMap *map)
 
                                         }
                                         current_page->list.append(current_event_command);
-                                        //current_event_command->debug();
+                                        current_event_command->debug();
                                     }
                                 }
                                 else if (current_symbol == "@condition")

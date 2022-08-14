@@ -137,13 +137,23 @@ int FileParser::read_fixnum()
     }
     else{
         if (-129 < num && num < -4) return num + 5;
-        num = -num;
 
-        int x = -1;
-        const quint32 mask = ~(0xff << 24);
-        for (int i = 0; i < 4; i++)
-            x = (i < num ? this->read_one_byte() << 24 : 0xff) | ((x >> 8) & mask);
-        return x;
+        if (num == -1)
+        {
+            int tmp = this->read_one_byte();
+            if (tmp <= -124 && tmp >= -128) return tmp;
+            else //if (tmp >= 0 && tmp <= 127)
+                return -(129 + 127 - tmp);
+        }
+        else if (num == -2)
+        {
+            int tmp = this->read_one_byte() & 0xFF;
+            tmp |= ((this->read_one_byte()) & 0xFF) << 8;
+
+            return -257 - (0xfeff-tmp);
+        }
+
+        return num;
     }
 
     return num;
@@ -154,8 +164,7 @@ void FileParser::write_fixnum(int n)
 
     if (n == 0)
         write_one_byte(0x00);
-
-    if (n > 0)
+    else if (n > 0)
     {
         if (0 < n && n < 123)
             write_one_byte(n+5);
@@ -202,6 +211,25 @@ void FileParser::write_fixnum(int n)
     else { // negative
         if (n < 0 && n > -124)
             write_one_byte(n-5);
+        else
+        {
+            if (n <= -124 && n >= -256)
+            {
+                this->write_one_byte(0xFF); //negative and 1 byte number
+                this->write_one_byte(((-n-1) & 0xFF) ^ 0xFF);
+
+            }
+            else
+            {
+                this->write_one_byte(0xFE); //negative and 2 byte number
+                int offset = 0xFEFF -(-n-257);
+                this->write_one_byte( 0xFF & offset);
+                this->write_one_byte( 0xFF & (offset >> 8));
+
+                //assuming -65535 is min (TODO, maybe)
+
+            }
+        }
     }
 
 }
@@ -762,4 +790,24 @@ QByteArray FileParser::getHash()
     hash.addData(&this->file);
     this->file.close();
     return hash.result().toHex();
+}
+
+
+
+void FileParser::fixnum_test()
+{
+    this->file.setFileName("/tmp/test.dat");
+    this->file.open(QIODevice::ReadWrite);
+
+    for (int i = 0; i >= -513; i--)
+        this->write_integer(i);
+
+    this->file.seek(0);
+
+    for (int i = 0; i >= -513; i--)
+        qDebug() << this->read_integer();
+
+    this->file.close();
+
+
 }

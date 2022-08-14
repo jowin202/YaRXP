@@ -86,6 +86,7 @@ public:
     }
 
     QByteArray getHash();
+    void fixnum_test();
 signals:
 
 protected:
