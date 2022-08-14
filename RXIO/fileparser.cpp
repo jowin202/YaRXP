@@ -760,6 +760,15 @@ void FileParser::write_move_route_object(RPGMoveRoute *move_route_object, QList<
             this->write_integer(move_route_object->list.at(i)->parameters.at(3).toInt());
 
         }
+        else if (move_route_object->list.at(i)->code == 45) //move route script
+        {
+            //we only do this manually because of the reference
+            this->write_array(1);
+            this->write_variant(move_route_object->list.at(i)->parameters.at(0));
+
+            if (references != 0)
+                references->append(this->object_count); //reference after variant
+        }
         else
         {
             this->write_array(move_route_object->list.at(i)->parameters.length());

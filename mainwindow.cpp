@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 
 #include "tilesetwidget.h"
+#include "RXIO/testcases.h"
 
 #include <QDebug>
 #include <QToolButton>
@@ -216,4 +217,9 @@ void MainWindow::on_actionImport_RGSSAD_triggered()
     }
 
     this->open_project(name);
+}
+
+void MainWindow::on_actionRun_Testcases_triggered()
+{
+    Testcases(&this->settings);
 }

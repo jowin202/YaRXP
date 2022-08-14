@@ -51,6 +51,8 @@ public slots:
 private slots:
     void on_actionImport_RGSSAD_triggered();
 
+    void on_actionRun_Testcases_triggered();
+
 private:
     Ui::MainWindow *ui;
     QActionGroup *layergroup;

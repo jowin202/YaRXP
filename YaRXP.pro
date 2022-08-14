@@ -36,6 +36,7 @@ SOURCES += \
     RXIO/iorgssad.cpp \
     RXIO/iosystemfile.cpp \
     RXIO/iotilesetfile.cpp \
+    RXIO/testcases.cpp \
     audiowidget.cpp \
     autotileset.cpp \
     editors/animationeditor.cpp \
@@ -78,6 +79,7 @@ HEADERS += \
     RXIO/iorgssad.h \
     RXIO/iosystemfile.h \
     RXIO/iotilesetfile.h \
+    RXIO/testcases.h \
     audiowidget.h \
     autotileset.h \
     editors/animationeditor.h \
