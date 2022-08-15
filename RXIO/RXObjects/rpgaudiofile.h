@@ -18,6 +18,7 @@ public:
     RPGString name; //file name
 
 
+    QStringList param_order;
 signals:
 
 private:

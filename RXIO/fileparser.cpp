@@ -597,6 +597,7 @@ void FileParser::read_audiofile_object(RPGAudioFile *audiofile)
     for (int i = 0; i < num_params; i++)
     {
         QString current_symbol = this->read_symbol_or_link();
+        audiofile->param_order.append(current_symbol);
         if (current_symbol == "@pitch")
             audiofile->pitch = this->read_integer();
         else if (current_symbol == "@volume")
@@ -613,15 +614,19 @@ void FileParser::write_audiofile_object(RPGAudioFile *audiofile)
     this->last_visited_function = "write_audiofile_object()";
 
     this->write_object("RPG::AudioFile", 3);
-    this->write_symbol_or_link("@volume");
-    this->write_integer(audiofile->volume);
 
-    this->write_symbol_or_link("@name");
-    this->write_string(audiofile->name);
+    for (int i = 0; i < audiofile->param_order.length(); i++)
+    {
+        QString current_symbol = audiofile->param_order.at(i);
+        this->write_symbol_or_link(current_symbol);
 
-    this->write_symbol_or_link("@pitch");
-    this->write_integer(audiofile->pitch);
-
+        if (current_symbol == "@pitch")
+            this->write_integer(audiofile->pitch);
+        else if (current_symbol == "@volume")
+            this->write_integer(audiofile->volume);
+        else if (current_symbol == "@name")
+            this->write_string(audiofile->name);
+    }
 }
 
 void FileParser::read_tone(double *r, double *g, double *b, double *gray)
@@ -670,6 +675,7 @@ void FileParser::read_move_route_object(RPGMoveRoute *move_route_object)
     for (int i = 0; i < num_params; i++)
     {
          QString current_symbol = this->read_symbol_or_link();
+         move_route_object->param_order.append(current_symbol);
 
          if (current_symbol == "@skippable")
              move_route_object->skippable = this->read_bool();
@@ -689,6 +695,7 @@ void FileParser::read_move_route_object(RPGMoveRoute *move_route_object)
                  for (int k = 0; k < num_params_for_move_command; k++)
                  {
                      QString current_symbol = this->read_symbol_or_link();
+                     mc->param_order.append(current_symbol);
 
                      if (current_symbol == "@code")
                         mc->code = this->read_integer();
@@ -729,67 +736,81 @@ void FileParser::write_move_route_object(RPGMoveRoute *move_route_object, QList<
 
     this->write_object("RPG::MoveRoute", 3);
 
-    this->write_symbol_or_link("@list");
-    this->write_array(move_route_object->list.length());
-
-    if (references != 0)
-        references->append(this->object_count); //add to references list
-
-    for (int i = 0; i < move_route_object->list.length(); i++)
+    for (int mvrp = 0; mvrp < move_route_object->param_order.length(); mvrp++)
     {
-        this->write_object("RPG::MoveCommand", 2);
+        QString current_symbol = move_route_object->param_order.at(mvrp);
+        this->write_symbol_or_link(current_symbol);
 
-        this->write_symbol_or_link("@parameters");
-
-        if (move_route_object->list.at(i)->code == 44) //Play SE
+        if (current_symbol == "@skippable")
+            this->write_bool(move_route_object->skippable);
+        else if (current_symbol == "@repeat")
+            this->write_bool(move_route_object->repeat);
+        else if (current_symbol == "@list")
         {
-            this->write_array(1);
-            this->write_audiofile_object(&move_route_object->list.at(i)->audiofile);
+            this->write_array(move_route_object->list.length());
             if (references != 0)
                 references->append(this->object_count); //add to references list
-        }
-        else if (move_route_object->list.at(i)->code == 41) //Change Graphic
-        {
-            //we only do this manually because of the reference
-            this->write_array(4);
-            this->write_string(((RPGVariant)move_route_object->list.at(i)->parameters.at(0)).toString());
-            if (references != 0)
-                references->append(this->object_count); //add to references list
-            this->write_integer(move_route_object->list.at(i)->parameters.at(1).toInt());
-            this->write_integer(move_route_object->list.at(i)->parameters.at(2).toInt());
-            this->write_integer(move_route_object->list.at(i)->parameters.at(3).toInt());
 
-        }
-        else if (move_route_object->list.at(i)->code == 45) //move route script
-        {
-            //we only do this manually because of the reference
-            this->write_array(1);
-            this->write_variant(move_route_object->list.at(i)->parameters.at(0));
-
-            if (references != 0)
-                references->append(this->object_count); //reference after variant
-        }
-        else
-        {
-            this->write_array(move_route_object->list.at(i)->parameters.length());
-            if (references != 0)
-                references->append(this->object_count); //add to references list
-            for (int j = 0; j < move_route_object->list.at(i)->parameters.length(); j++)
+            for (int i = 0; i < move_route_object->list.length(); i++)
             {
-                this->write_variant(move_route_object->list.at(i)->parameters.at(j));
+                RPGMoveCommand *current_move_command = move_route_object->list.at(i);
+                this->write_object("RPG::MoveCommand", 2);
+
+                for (int cmcp = 0; cmcp < current_move_command->param_order.length(); cmcp++)
+                {
+                    QString current_symbol = current_move_command->param_order.at(cmcp);
+                    this->write_symbol_or_link(current_symbol);
+
+                    if (current_symbol == "@code")
+                        this->write_integer(current_move_command->code);
+                    else if (current_symbol == "@parameters")
+                    {
+
+
+                        if (current_move_command->code == 44) //Play SE
+                        {
+                            this->write_array(1);
+                            this->write_audiofile_object(&current_move_command->audiofile);
+                            if (references != 0)
+                                references->append(this->object_count); //add to references list
+                        }
+                        else if (current_move_command->code == 41) //Change Graphic
+                        {
+                            //we only do this manually because of the reference
+                            this->write_array(4);
+                            this->write_string(((RPGVariant)current_move_command->parameters.at(0)).toString());
+                            if (references != 0)
+                                references->append(this->object_count); //add to references list
+                            this->write_integer(current_move_command->parameters.at(1).toInt());
+                            this->write_integer(current_move_command->parameters.at(2).toInt());
+                            this->write_integer(current_move_command->parameters.at(3).toInt());
+
+                        }
+                        else if (current_move_command->code == 45) //move route script
+                        {
+                            //we only do this manually because of the reference
+                            this->write_array(1);
+                            this->write_variant(current_move_command->parameters.at(0));
+
+                            if (references != 0)
+                                references->append(this->object_count); //reference after variant
+                        }
+                        else
+                        {
+                            this->write_array(current_move_command->parameters.length());
+                            if (references != 0)
+                                references->append(this->object_count); //add to references list
+                            for (int j = 0; j < current_move_command->parameters.length(); j++)
+                            {
+                                this->write_variant(current_move_command->parameters.at(j));
+                            }
+                        }
+                    }
+
+                }
             }
         }
-
-
-        this->write_symbol_or_link("@code");
-        this->write_integer(move_route_object->list.at(i)->code);
     }
-
-    this->write_symbol_or_link("@skippable");
-    this->write_bool(move_route_object->skippable);
-
-    this->write_symbol_or_link("@repeat");
-    this->write_bool(move_route_object->repeat);
 }
 
 QByteArray FileParser::getHash()

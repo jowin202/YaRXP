@@ -30,7 +30,7 @@ public:
     //color tone
     double red, green, blue, gray;
 
-
+    QStringList param_order;
 signals:
 
 private:

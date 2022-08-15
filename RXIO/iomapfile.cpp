@@ -131,6 +131,8 @@ IOMapFile::IOMapFile(QString path, RPGMap *map)
                                         {
                                             //iterate over event command attributes
                                             QString current_symbol = this->read_symbol_or_link();
+                                            current_event_command->param_order.append(current_symbol);
+
                                             if (current_symbol == "@code")
                                                 current_event_command->code =  this->read_integer();
                                             else if (current_symbol == "@indent")
@@ -249,212 +251,21 @@ IOMapFile::IOMapFile(QString path, RPGMap *map)
                             }
                             current_event->pages.append(current_page);
                         }
-
                     }
                     else throw getException("current event parameters missing");
                 }
-
                 map->events.append(current_event);
             }
-
         }
-
     }
-
-
     this->file.close();
 }
+
+
 
 void IOMapFile::write_to_file(QString path, RPGMap *map)
 {
     this->last_visited_function = "write_to_file";
-    this->symbol_cache.clear();
-
-    if (!path.isEmpty())
-        this->path = path;
-    this->file.setFileName(path);
-    this->file.open(QIODevice::WriteOnly);
-    this->write_header();
-
-    this->write_object("RPG::Map", 11);
-
-    this->write_symbol_or_link("@bgm");
-    this->write_audiofile_object(&map->bgm);
-
-    this->write_symbol_or_link("@events");
-    this->write_list(map->events.length());
-    for (int i = 0; i < map->events.length(); i++)
-    {
-        this->write_integer(map->events.at(i)->id); //key
-        this->write_object("RPG::Event", 5);
-
-        this->write_symbol_or_link("@pages");
-        this->write_array(map->events.at(i)->pages.length());
-        for (int j = 0; j < map->events.at(i)->pages.length(); j++)
-        {
-            this->write_object("RPG::Event::Page", 13);
-
-            this->write_symbol_or_link("@list");
-            this->write_array(map->events.at(i)->pages.at(j)->list.length());
-
-            for (int k = 0; k < map->events.at(i)->pages.at(j)->list.length(); k++)
-            {
-                this->write_object("RPG::EventCommand", 3);
-
-                this->write_symbol_or_link("@parameters");
-
-                if (map->events.at(i)->pages.at(j)->list.at(k)->code == 0) //Empty Event
-                {
-                    this->write_array(0);
-                }
-                if (map->events.at(i)->pages.at(j)->list.at(k)->code == 205) //Change Fog Color Tone
-                {
-                    this->write_array(2); // tone + time(int)
-                    this->write_tone(map->events.at(i)->pages.at(j)->list.at(k)->red,map->events.at(i)->pages.at(j)->list.at(k)->green,
-                                     map->events.at(i)->pages.at(j)->list.at(k)->blue,map->events.at(i)->pages.at(j)->list.at(k)->gray, true);
-                    this->write_integer(map->events.at(i)->pages.at(j)->list.at(k)->parameters.at(0).toInt());
-                }
-
-                this->write_symbol_or_link("@indent");
-                this->write_integer(map->events.at(i)->pages.at(j)->list.at(k)->indent);
-                this->write_symbol_or_link("@code");
-                this->write_integer(map->events.at(i)->pages.at(j)->list.at(k)->code);
-            }
-
-            this->write_symbol_or_link("@move_type");
-            this->write_integer(map->events.at(i)->pages.at(j)->move_type);
-
-            this->write_symbol_or_link("@direction_fix");
-            this->write_bool(map->events.at(i)->pages.at(j)->direction_fix);
-
-
-
-            this->write_symbol_or_link("@condition");
-            this->write_object("RPG::Event::Page::Condition", 9);
-            this->write_symbol_or_link("@switch2_valid");
-            this->write_bool(map->events.at(i)->pages.at(j)->switch2_valid);
-            this->write_symbol_or_link("@self_switch_ch");
-            this->write_string(map->events.at(i)->pages.at(j)->self_switch_ch);
-            this->write_symbol_or_link("@switch1_id");
-            this->write_integer(map->events.at(i)->pages.at(j)->switch1_id);
-            this->write_symbol_or_link("@switch1_valid");
-            this->write_bool(map->events.at(i)->pages.at(j)->switch1_valid);
-            this->write_symbol_or_link("@variable_value");
-            this->write_integer(map->events.at(i)->pages.at(j)->variable_value);
-            this->write_symbol_or_link("@self_switch_valid");
-            this->write_bool(map->events.at(i)->pages.at(j)->self_switch_valid);
-            this->write_symbol_or_link("@variable_id");
-            this->write_integer(map->events.at(i)->pages.at(j)->variable_id);
-            this->write_symbol_or_link("@variable_valid");
-            this->write_bool(map->events.at(i)->pages.at(j)->variable_valid);
-            this->write_symbol_or_link("@switch2_id");
-            this->write_integer(map->events.at(i)->pages.at(j)->switch2_id);
-
-
-
-            this->write_symbol_or_link("@move_route");
-            this->write_move_route_object(&map->events.at(i)->pages.at(j)->move_route,0);
-
-
-            this->write_symbol_or_link("@trigger");
-            this->write_integer(map->events.at(i)->pages.at(j)->trigger);
-
-            this->write_symbol_or_link("@step_anime");
-            this->write_bool(map->events.at(i)->pages.at(j)->step_anime);
-
-
-            this->write_symbol_or_link("@move_frequency");
-            this->write_integer(map->events.at(i)->pages.at(j)->move_frequency);
-
-            this->write_symbol_or_link("@always_on_top");
-            this->write_bool(map->events.at(i)->pages.at(j)->always_on_top);
-
-
-
-            this->write_symbol_or_link("@graphic");
-            this->write_object("RPG::Event::Page::Graphic", 7);
-            this->write_symbol_or_link("@opacity");
-            this->write_integer(map->events.at(i)->pages.at(j)->opacity);
-            this->write_symbol_or_link("@character_name");
-            this->write_string(map->events.at(i)->pages.at(j)->character_name);
-            this->write_symbol_or_link("@pattern");
-            this->write_integer(map->events.at(i)->pages.at(j)->pattern);
-            this->write_symbol_or_link("@tile_id");
-            this->write_integer(map->events.at(i)->pages.at(j)->tile_id);
-            this->write_symbol_or_link("@direction");
-            this->write_integer(map->events.at(i)->pages.at(j)->direction);
-            this->write_symbol_or_link("@blend_type");
-            this->write_integer(map->events.at(i)->pages.at(j)->blend_type);
-            this->write_symbol_or_link("@character_hue");
-            this->write_integer(map->events.at(i)->pages.at(j)->character_hue);
-
-
-            this->write_symbol_or_link("@walk_anime");
-            this->write_bool(map->events.at(i)->pages.at(j)->walk_anime);
-            this->write_symbol_or_link("@move_speed");
-            this->write_integer(map->events.at(i)->pages.at(j)->move_speed);
-            this->write_symbol_or_link("@through");
-            this->write_bool(map->events.at(i)->pages.at(j)->through);
-        }
-
-        this->write_symbol_or_link("@name");
-        this->write_string(map->events.at(i)->name);
-
-        this->write_symbol_or_link("@y");
-        this->write_integer(map->events.at(i)->y);
-
-        this->write_symbol_or_link("@x");
-        this->write_integer(map->events.at(i)->x);
-
-        this->write_symbol_or_link("@id");
-        this->write_integer(map->events.at(i)->id);
-    }
-
-    this->write_symbol_or_link("@tileset_id");
-    this->write_integer(map->tileset_id);
-
-    this->write_symbol_or_link("@bgs");
-    this->write_audiofile_object(&map->bgs);
-
-
-    this->write_symbol_or_link("@autoplay_bgm");
-    this->write_bool(map->autoplay_bgm);
-
-
-    this->write_symbol_or_link("@data");
-    this->write_table_for_map(&map->data, map->height, map->width);
-
-
-
-    this->write_symbol_or_link("@autoplay_bgs");
-    this->write_bool(map->autoplay_bgs);
-
-    this->write_symbol_or_link("@height");
-    this->write_integer(map->height);
-
-    this->write_symbol_or_link("@encounter_step");
-    this->write_integer(map->encounter_step);
-
-    this->write_symbol_or_link("@width");
-    this->write_integer(map->width);
-
-    this->write_symbol_or_link("@encounter_list");
-    this->write_array(map->encounter_list.length());
-    for (int i = 0; i < map->encounter_list.length(); i++)
-        this->write_integer(map->encounter_list.at(i));
-
-
-    this->file.close();
-}
-
-
-
-
-
-
-void IOMapFile::write_to_file_with_order(QString path, RPGMap *map)
-{
-    this->last_visited_function = "write_to_file_with_order";
     this->symbol_cache.clear();
     this->object_count = 0;
 
@@ -615,99 +426,104 @@ void IOMapFile::write_to_file_with_order(QString path, RPGMap *map)
                                         this->write_object("RPG::EventCommand", 3);
                                         RPGEventCommand *current_command = current_page->list.at(k);
 
-                                        this->write_symbol_or_link("@parameters");
+                                        for (int ecp = 0; ecp < current_command->param_order.length(); ecp++)
+                                        {
+                                            QString current_symbol = current_command->param_order.at(ecp);
+                                            this->write_symbol_or_link(current_symbol);
 
-                                        //Color Tone
-                                        if (current_command->code == 205 || current_command->code == 223)
-                                        {
-                                            this->write_array(2);
-                                            // tone + time(int)
-                                            this->write_tone(current_command->red,current_command->green,
-                                                             current_command->blue,current_command->gray, true);
-                                            this->write_integer(current_command->parameters.at(0).toInt());
-                                        }
-                                        //screen flash
-                                        else if (current_command->code == 224)
-                                        {
-                                            this->write_array(2);
-                                            // Color + time(int)
-                                            this->write_tone(current_command->red,current_command->green,
-                                                             current_command->blue,current_command->gray, false);
-                                            this->write_integer(current_command->parameters.at(0).toInt());
-                                        }
-                                        //Change picture color tone (needs 2 integers)
-                                        else if (current_command->code == 234)
-                                        {
-                                            this->write_array(3);
-                                            //int tone int
-                                            this->write_integer(current_command->parameters.at(0).toInt());
+                                            if (current_symbol == "@code")
+                                                this->write_integer(current_command->code);
+                                            else if (current_symbol == "@indent")
+                                                this->write_integer(current_command->indent);
+                                            else if (current_symbol == "@parameters")
+                                            {
+                                                //Color Tone
+                                                if (current_command->code == 205 || current_command->code == 223)
+                                                {
+                                                    this->write_array(2);
+                                                    // tone + time(int)
+                                                    this->write_tone(current_command->red,current_command->green,
+                                                                     current_command->blue,current_command->gray, true);
+                                                    this->write_integer(current_command->parameters.at(0).toInt());
+                                                }
+                                                //screen flash
+                                                else if (current_command->code == 224)
+                                                {
+                                                    this->write_array(2);
+                                                    // Color + time(int)
+                                                    this->write_tone(current_command->red,current_command->green,
+                                                                     current_command->blue,current_command->gray, false);
+                                                    this->write_integer(current_command->parameters.at(0).toInt());
+                                                }
+                                                //Change picture color tone (needs 2 integers)
+                                                else if (current_command->code == 234)
+                                                {
+                                                    this->write_array(3);
+                                                    //int tone int
+                                                    this->write_integer(current_command->parameters.at(0).toInt());
 
-                                            this->write_tone(current_command->red,current_command->green,
-                                                             current_command->blue,current_command->gray, true);
+                                                    this->write_tone(current_command->red,current_command->green,
+                                                                     current_command->blue,current_command->gray, true);
 
-                                            this->write_integer(current_command->parameters.at(1).toInt());
-                                        }
-                                        //everything which only contains 1 audio object
-                                        else if (current_command->code == 241 || current_command->code == 245
-                                                 || current_command->code == 249 || current_command->code ==250
-                                                 || current_command->code == 132 || current_command->code == 133)
-                                        {
-                                            this->write_array(1);
-                                            this->write_audiofile_object(&current_command->audiofile);
-                                        }
-                                        //show choices
-                                        else if (current_command->code == 102)
-                                        {
-                                            this->write_array(2);
-                                            this->write_array(current_command->choices_list.length());
-                                            this->choices_reference_stack.push(object_count);
-                                            for (int c = 0; c < current_command->choices_list.length(); c++)
-                                                this->write_string(current_command->choices_list.at(c));
-                                            this->write_integer(current_command->parameters.at(0).toInt());
-                                        }
-                                        //show choices multiline
-                                        else if(current_command->code == 402)
-                                        {
-                                            this->write_array(2);
-                                            this->write_integer(current_command->parameters.at(0).toInt());
-                                            int ref = this->choices_reference_stack.pop();
-                                            this->file.write("@");
-                                            this->write_fixnum(ref);
-                                            this->choices_reference_stack.push(++ref);
-                                        }
-                                        //move route
-                                        else if (current_command->code == 209)
-                                        {
-                                            this->write_array(2);
-                                            this->write_integer(current_command->parameters.at(0).toInt());
-                                            this->move_route_references.clear();
-                                            this->write_move_route_object(&current_command->move_route, &this->move_route_references);
-                                            //qDebug() << "len:" << move_route_references.length();
-                                        }
-                                        //move route multiline
-                                        else if (current_command->code == 509)
-                                        {
-                                            if (this->move_route_references.isEmpty())
-                                                throw getException("MoveRoute references() are broken");
-                                            this->write_array(1);
-                                            this->file.write("@");
-                                            this->write_fixnum(this->move_route_references.first());
-                                            this->move_route_references.pop_front();
-                                        }
-                                        else
-                                        {
-                                            this->write_array(current_command->parameters.length());
-                                            for (int z = 0; z < current_command->parameters.length(); z++)
-                                                this->write_variant(current_command->parameters.at(z));
+                                                    this->write_integer(current_command->parameters.at(1).toInt());
+                                                }
+                                                //everything which only contains 1 audio object
+                                                else if (current_command->code == 241 || current_command->code == 245
+                                                         || current_command->code == 249 || current_command->code ==250
+                                                         || current_command->code == 132 || current_command->code == 133)
+                                                {
+                                                    this->write_array(1);
+                                                    this->write_audiofile_object(&current_command->audiofile);
+                                                }
+                                                //show choices
+                                                else if (current_command->code == 102)
+                                                {
+                                                    this->write_array(2);
+                                                    this->write_array(current_command->choices_list.length());
+                                                    this->choices_reference_stack.push(object_count);
+                                                    for (int c = 0; c < current_command->choices_list.length(); c++)
+                                                        this->write_string(current_command->choices_list.at(c));
+                                                    this->write_integer(current_command->parameters.at(0).toInt());
+                                                }
+                                                //show choices multiline
+                                                else if(current_command->code == 402)
+                                                {
+                                                    this->write_array(2);
+                                                    this->write_integer(current_command->parameters.at(0).toInt());
+                                                    int ref = this->choices_reference_stack.pop();
+                                                    this->file.write("@");
+                                                    this->write_fixnum(ref);
+                                                    this->choices_reference_stack.push(++ref);
+                                                }
+                                                //move route
+                                                else if (current_command->code == 209)
+                                                {
+                                                    this->write_array(2);
+                                                    this->write_integer(current_command->parameters.at(0).toInt());
+                                                    this->move_route_references.clear();
+                                                    this->write_move_route_object(&current_command->move_route, &this->move_route_references);
+                                                    //qDebug() << "len:" << move_route_references.length();
+                                                }
+                                                //move route multiline
+                                                else if (current_command->code == 509)
+                                                {
+                                                    if (this->move_route_references.isEmpty())
+                                                        throw getException("MoveRoute references() are broken");
+                                                    this->write_array(1);
+                                                    this->file.write("@");
+                                                    this->write_fixnum(this->move_route_references.first());
+                                                    this->move_route_references.pop_front();
+                                                }
+                                                else
+                                                {
+                                                    this->write_array(current_command->parameters.length());
+                                                    for (int z = 0; z < current_command->parameters.length(); z++)
+                                                        this->write_variant(current_command->parameters.at(z));
 
-                                            if (current_command->code == 404) choices_reference_stack.pop(); //remove it for nested choices
-                                        }
-
-                                        this->write_symbol_or_link("@indent");
-                                        this->write_integer(current_command->indent);
-                                        this->write_symbol_or_link("@code");
-                                        this->write_integer(current_command->code);
-
+                                                    if (current_command->code == 404) choices_reference_stack.pop(); //remove it for nested choices
+                                                }
+                                            } //event command parameter list
+                                        } //event command attributes
                                     }
                                 } //current_symbol == list ( event list)
                             } //event page parameters
@@ -730,8 +546,6 @@ void IOMapFile::write_to_file_with_order(QString path, RPGMap *map)
         this->write_fixnum(i);
     }
     */
-
-
     this->file.close();
 
 }

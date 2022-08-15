@@ -37,7 +37,7 @@ Testcases::Testcases(RPGSettings *settings)
             IOMapFile mapfile(path, map);
             hash1 = mapfile.getHash();
 
-            mapfile.write_to_file_with_order("/tmp/test_map.rxdata", map);
+            mapfile.write_to_file("/tmp/test_map.rxdata", map);
             hash2 = mapfile.getHash();
             qDebug() << "Map " << (filler + QString::number(i)) << (hash1==hash2 ? "passed":"failed");
 

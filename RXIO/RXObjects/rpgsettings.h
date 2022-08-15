@@ -74,7 +74,7 @@ public:
     RPGString battle_transition;
     int start_x = 0;
 
-
+    QStringList param_order;
 signals:
 
 };

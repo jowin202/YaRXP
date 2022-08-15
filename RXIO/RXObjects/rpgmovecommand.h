@@ -19,6 +19,7 @@ public:
     QList<RPGVariant> parameters;
     RPGAudioFile audiofile;
 
+    QStringList param_order;
 signals:
 private:
     //parameters

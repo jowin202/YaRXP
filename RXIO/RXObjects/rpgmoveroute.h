@@ -17,7 +17,7 @@ public:
     QList<RPGMoveCommand*> list;
 
 
-
+    QStringList param_order;
 signals:
 private:
 };
