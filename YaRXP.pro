@@ -19,6 +19,7 @@ SOURCES += \
     RXIO/RXObjects/parserexception.cpp \
     RXIO/RXObjects/rpgactor.cpp \
     RXIO/RXObjects/rpgaudiofile.cpp \
+    RXIO/RXObjects/rpgclass.cpp \
     RXIO/RXObjects/rpgevent.cpp \
     RXIO/RXObjects/rpgeventcommand.cpp \
     RXIO/RXObjects/rpgeventpage.cpp \
@@ -33,6 +34,7 @@ SOURCES += \
     RXIO/RXObjects/rpgvariant.cpp \
     RXIO/fileparser.cpp \
     RXIO/ioactorfile.cpp \
+    RXIO/ioclassfile.cpp \
     RXIO/iomapfile.cpp \
     RXIO/iomapinfofile.cpp \
     RXIO/iorgssad.cpp \
@@ -64,6 +66,7 @@ HEADERS += \
     RXIO/RXObjects/parserexception.h \
     RXIO/RXObjects/rpgactor.h \
     RXIO/RXObjects/rpgaudiofile.h \
+    RXIO/RXObjects/rpgclass.h \
     RXIO/RXObjects/rpgevent.h \
     RXIO/RXObjects/rpgeventcommand.h \
     RXIO/RXObjects/rpgeventpage.h \
@@ -78,6 +81,7 @@ HEADERS += \
     RXIO/RXObjects/rpgvariant.h \
     RXIO/fileparser.h \
     RXIO/ioactorfile.h \
+    RXIO/ioclassfile.h \
     RXIO/iomapfile.h \
     RXIO/iomapinfofile.h \
     RXIO/iorgssad.h \

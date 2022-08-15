@@ -4,7 +4,7 @@
 #include <QImage>
 #include <QObject>
 
-#include "../../autotileset.h"
+//#include "../../autotileset.h"
 
 #include "rpgstring.h"
 
@@ -34,7 +34,7 @@ public:
     RPGString battleback_name;
 
     QImage tileset;
-    QList<Autotileset> autotiles;
+    //QList<Autotileset> autotiles;
 
 
     QStringList param_order;

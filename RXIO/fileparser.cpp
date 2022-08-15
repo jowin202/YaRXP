@@ -465,10 +465,11 @@ void FileParser::read_table(QList<int> *list)
     read_fixnum(); //ignore, size can be calculated, redundant
 
 
-    //skip 4 bytes don't know why -.-
+    int shitty_num = 0; // 1 for tilesets, 2 for actors, 3 for maps ... not sure what this do
     for (int i = 0; i < 4; i++)
-        this->read_one_byte();
-
+    {
+        shitty_num |= (this->read_one_byte() << (i*8));
+    }
     int x=0, y=0, z=0;
 
     for (int i = 0; i < 4; i++)
@@ -484,6 +485,7 @@ void FileParser::read_table(QList<int> *list)
     list->append(x);
     list->append(y);
     list->append(z);
+    list->append(shitty_num);
 
     int size = x*y*z;
 
@@ -530,14 +532,12 @@ void FileParser::write_table(QList<int> *list)
     int x = list->first(); list->pop_front();
     int y = list->first(); list->pop_front();
     int z = list->first(); list->pop_front();
+    int shitty_num = list->first(); list->pop_front();
 
-    this->write_fixnum(list->size() + 20); //not sure why 20 but works, maybe because of zero at beginning
+    this->write_fixnum(list->size() + 20); //20 bytes header + size of list
 
-    //dont know why doing this
-    this->write_one_byte(1);
-    this->write_one_byte(0);
-    this->write_one_byte(0);
-    this->write_one_byte(0);
+    for (int i = 0; i < 4; i++)
+        this->write_one_byte( (shitty_num >> (i*8)) & 0xFF );
 
     int xyz = x*y*z;
 
@@ -551,7 +551,7 @@ void FileParser::write_table(QList<int> *list)
         this->write_one_byte( (z >> (8*i)) & 0xFF );
 
     for (int i = 0; i < 4; i++)
-        this->write_one_byte( (xyz >> (8*i)) & 0xFF ); // same again redundancy
+        this->write_one_byte( (xyz >> (8*i)) & 0xFF ); // size
 
     for (int i = 0; i < list->size(); i++)
         this->write_one_byte(list->at(i));
@@ -567,7 +567,7 @@ void FileParser::write_table_for_map(QList<int> *list, int height, int width)
     int z = 3;
     int size = x*y*z;
 
-    this->write_fixnum(2*size + 20); //not sure why 20 but works, maybe because of zero at beginning
+    this->write_fixnum(2*size + 20); // 20 bytes for header. map integers are 16 bit = 2 bytes per number
 
     //dont know why doing this
     this->write_one_byte(3); // 3 for maps (TODO check if every map has 3 here)

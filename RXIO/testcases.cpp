@@ -2,6 +2,7 @@
 #include "iotilesetfile.h"
 #include "iosystemfile.h"
 #include "ioactorfile.h"
+#include "ioclassfile.h"
 #include "iomapfile.h"
 
 #include "iorgssad.h"
@@ -103,16 +104,38 @@ Testcases::Testcases(RPGSettings *settings)
         ok = false;
 
 
+
     //Check Actors
     QList<RPGActor*> actor_list;
     IOActorFile actor_file(settings->data_dir + "Actors.rxdata", &actor_list);
-    hash1 = system_file.getHash();
+    hash1 = actor_file.getHash();
+
 
     actor_file.write_to_file(tmpfile.fileName(), &actor_list);
-    hash2 = system_file.getHash();
+    hash2 = actor_file.getHash();
+
 
     qDebug() << "Actors..." << (hash1==hash2 ? "passed":"failed");
     if (hash1!=hash2)
         ok = false;
+
+
+
+
+
+    //Check Classes
+    QList<RPGClass*> class_list;
+    IOClassFile class_file(settings->data_dir + "Classes.rxdata", &class_list);
+    hash1 = class_file.getHash();
+
+
+    class_file.write_to_file(tmpfile.fileName(), &class_list);
+    hash2 = class_file.getHash();
+
+
+    qDebug() << "Classes..." << (hash1==hash2 ? "passed":"failed");
+    if (hash1!=hash2)
+        ok = false;
+
 
 }
