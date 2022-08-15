@@ -16,11 +16,15 @@ void EventList::fill_list()
     for (int i = 0; i < list->length(); i++)
     {
         command = list->at(i);
-
+        /*
         if (command->code == 101 || command->code == 401)
         {
             this->addItem(new ShowText(command->parameters.first().toString(), command->indent, command->code));
         }
+        */
+
+        this->addItem(new QListWidgetItem(command->getType()));
+
 
         prev_command = command;
     }

@@ -272,9 +272,7 @@
     <property name="title">
      <string>Editors</string>
     </property>
-    <addaction name="actionTileset_Editor"/>
-    <addaction name="actionAnimations"/>
-    <addaction name="actionCommon_Scripts"/>
+    <addaction name="actionScripting_Editor"/>
     <addaction name="actionSystem"/>
     <addaction name="separator"/>
     <addaction name="actionActors"/>
@@ -285,6 +283,10 @@
     <addaction name="actionArmors"/>
     <addaction name="actionEnemies"/>
     <addaction name="actionTroops"/>
+    <addaction name="actionStates_2"/>
+    <addaction name="actionAnimations"/>
+    <addaction name="actionTileset_Editor"/>
+    <addaction name="actionCommon_Scripts"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -601,7 +603,7 @@
   </action>
   <action name="actionTileset_Editor">
    <property name="text">
-    <string>Tileset</string>
+    <string>Tilesets</string>
    </property>
   </action>
   <action name="actionActors">
@@ -677,6 +679,21 @@
   <action name="actionRun_Testcases">
    <property name="text">
     <string>Run Testcases</string>
+   </property>
+  </action>
+  <action name="actionStates_2">
+   <property name="text">
+    <string>States</string>
+   </property>
+  </action>
+  <action name="actionChange_Scripts">
+   <property name="text">
+    <string>Change Scripts</string>
+   </property>
+  </action>
+  <action name="actionScripting_Editor">
+   <property name="text">
+    <string>Scripting Editor</string>
    </property>
   </action>
  </widget>
