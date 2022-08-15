@@ -1,6 +1,7 @@
 #include "iomapinfofile.h"
 #include "iotilesetfile.h"
 #include "iosystemfile.h"
+#include "ioactorfile.h"
 #include "iomapfile.h"
 
 #include "iorgssad.h"
@@ -17,6 +18,7 @@ Testcases::Testcases(QObject *parent) : QObject(parent)
 
 Testcases::Testcases(RPGSettings *settings)
 {
+    this->ok = true;
     QByteArray hash1, hash2;
 
     int num_maps = 0;
@@ -49,6 +51,8 @@ Testcases::Testcases(RPGSettings *settings)
 
 
     qDebug() << "Testing Map parser" <<passed << "Maps of" << num_maps << "passed";
+    if (passed != num_maps)
+        ok = false;
 
 
     QList<RPGMapInfo*> mapinfo_list;
@@ -63,6 +67,9 @@ Testcases::Testcases(RPGSettings *settings)
     hash2 = info_file.getHash();
 
     qDebug() << "MapInfos..." << (hash1==hash2 ? "passed":"failed");
+    if (hash1!=hash2)
+        ok = false;
+
 
 
 
@@ -77,9 +84,13 @@ Testcases::Testcases(RPGSettings *settings)
     hash2 = tileset_file.getHash();
 
     qDebug() << "Tilesets..." << (hash1==hash2 ? "passed":"failed");
+    if (hash1!=hash2)
+        ok = false;
 
 
 
+
+    //Check system
     RPGSettings system;
     IOSystemFile system_file(settings->data_dir + "System.rxdata", &system);
     hash1 = system_file.getHash();
@@ -87,11 +98,21 @@ Testcases::Testcases(RPGSettings *settings)
     system_file.write_to_file(tmpfile.fileName(), &system);
     hash2 = system_file.getHash();
 
-
     qDebug() << "System..." << (hash1==hash2 ? "passed":"failed");
+    if (hash1!=hash2)
+        ok = false;
 
 
+    //Check Actors
+    QList<RPGActor*> actor_list;
+    IOActorFile actor_file(settings->data_dir + "Actors.rxdata", &actor_list);
+    hash1 = system_file.getHash();
 
+    actor_file.write_to_file(tmpfile.fileName(), &actor_list);
+    hash2 = system_file.getHash();
 
+    qDebug() << "Actors..." << (hash1==hash2 ? "passed":"failed");
+    if (hash1!=hash2)
+        ok = false;
 
 }

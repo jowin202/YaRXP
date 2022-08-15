@@ -16,7 +16,6 @@ public:
     IOMapFile(QString path, RPGMap *map);
 
     void write_to_file(QString path, RPGMap *map);
-    void write_to_file_with_order(QString path, RPGMap *map);
 
 
     QStack<int> choices_reference_stack;

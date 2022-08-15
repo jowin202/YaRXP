@@ -25,6 +25,7 @@ IOTilesetFile::IOTilesetFile(QString path, QHash<int,RPGTileset *> *tileset_hash
     {
         RPGTileset *tileset_object = new RPGTileset();
 
+        this->object_count++;
         QVariantList list = read_object();
         if (list.at(0).toString() != "RPG::Tileset")
             throw getException("RPG::Tileset expected");

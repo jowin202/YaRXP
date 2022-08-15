@@ -17,6 +17,10 @@ public:
     void write_to_file(QString path, QList<RPGTileset*> *tileset_list);
 
 
+    //autotile name list can have references
+    int object_count;
+    QHash<int,RPGString> object_with_references;
+
 signals:
 
 };

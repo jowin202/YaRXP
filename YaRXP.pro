@@ -17,6 +17,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     RXIO/RXObjects/parserexception.cpp \
+    RXIO/RXObjects/rpgactor.cpp \
     RXIO/RXObjects/rpgaudiofile.cpp \
     RXIO/RXObjects/rpgevent.cpp \
     RXIO/RXObjects/rpgeventcommand.cpp \
@@ -31,6 +32,7 @@ SOURCES += \
     RXIO/RXObjects/rpgtone.cpp \
     RXIO/RXObjects/rpgvariant.cpp \
     RXIO/fileparser.cpp \
+    RXIO/ioactorfile.cpp \
     RXIO/iomapfile.cpp \
     RXIO/iomapinfofile.cpp \
     RXIO/iorgssad.cpp \
@@ -60,6 +62,7 @@ SOURCES += \
 
 HEADERS += \
     RXIO/RXObjects/parserexception.h \
+    RXIO/RXObjects/rpgactor.h \
     RXIO/RXObjects/rpgaudiofile.h \
     RXIO/RXObjects/rpgevent.h \
     RXIO/RXObjects/rpgeventcommand.h \
@@ -74,6 +77,7 @@ HEADERS += \
     RXIO/RXObjects/rpgtone.h \
     RXIO/RXObjects/rpgvariant.h \
     RXIO/fileparser.h \
+    RXIO/ioactorfile.h \
     RXIO/iomapfile.h \
     RXIO/iomapinfofile.h \
     RXIO/iorgssad.h \

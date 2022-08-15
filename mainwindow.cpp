@@ -221,5 +221,9 @@ void MainWindow::on_actionImport_RGSSAD_triggered()
 
 void MainWindow::on_actionRun_Testcases_triggered()
 {
-    Testcases(&this->settings);
+    Testcases testcases(&this->settings);
+    if (testcases.ok)
+        QMessageBox::information(this, "Run Testcases","Testcases successfull");
+    else
+        QMessageBox::critical(this, "Run Testcases","Testcases failed! Please contact developer!");
 }

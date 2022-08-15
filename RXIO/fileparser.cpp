@@ -464,6 +464,7 @@ void FileParser::read_table(QList<int> *list)
 
     read_fixnum(); //ignore, size can be calculated, redundant
 
+
     //skip 4 bytes don't know why -.-
     for (int i = 0; i < 4; i++)
         this->read_one_byte();
@@ -479,10 +480,16 @@ void FileParser::read_table(QList<int> *list)
     for (int i = 0; i < 4; i++)
         this->read_one_byte() ; //withdraw result, size can be calculated
 
+
+    list->append(x);
+    list->append(y);
+    list->append(z);
+
     int size = x*y*z;
 
     for (int i = 0; i < size*2; i++)
         list->append(this->read_one_byte());
+
 }
 
 void FileParser::read_table_for_map(QList<int> *list)
@@ -519,6 +526,11 @@ void FileParser::write_table(QList<int> *list)
     write_one_byte((int)'u');
     write_symbol_or_link("Table");
 
+
+    int x = list->first(); list->pop_front();
+    int y = list->first(); list->pop_front();
+    int z = list->first(); list->pop_front();
+
     this->write_fixnum(list->size() + 20); //not sure why 20 but works, maybe because of zero at beginning
 
     //dont know why doing this
@@ -527,9 +539,6 @@ void FileParser::write_table(QList<int> *list)
     this->write_one_byte(0);
     this->write_one_byte(0);
 
-    int x = list->size()/2;
-    int y = 1;
-    int z = 1;
     int xyz = x*y*z;
 
     for (int i = 0; i < 4; i++)
@@ -561,7 +570,7 @@ void FileParser::write_table_for_map(QList<int> *list, int height, int width)
     this->write_fixnum(2*size + 20); //not sure why 20 but works, maybe because of zero at beginning
 
     //dont know why doing this
-    this->write_one_byte(3); // 3 for maps (check if every map has 3 here)
+    this->write_one_byte(3); // 3 for maps (TODO check if every map has 3 here)
     this->write_one_byte(0);
     this->write_one_byte(0);
     this->write_one_byte(0);

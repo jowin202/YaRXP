@@ -6,6 +6,7 @@
 #include <QToolButton>
 #include <QFileDialog>
 #include <QSettings>
+#include <QMessageBox>
 
 #include "tilesetwidget.h"
 #include "autotileset.h"

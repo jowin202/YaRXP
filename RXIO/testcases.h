@@ -11,6 +11,7 @@ public:
     explicit Testcases(QObject *parent = nullptr);
     Testcases(RPGSettings *settings);
 
+    bool ok;
 signals:
 
 };
