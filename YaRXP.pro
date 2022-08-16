@@ -18,6 +18,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     RXIO/RXObjects/parserexception.cpp \
     RXIO/RXObjects/rpgactor.cpp \
+    RXIO/RXObjects/rpgarmor.cpp \
     RXIO/RXObjects/rpgaudiofile.cpp \
     RXIO/RXObjects/rpgclass.cpp \
     RXIO/RXObjects/rpgevent.cpp \
@@ -34,8 +35,10 @@ SOURCES += \
     RXIO/RXObjects/rpgtileset.cpp \
     RXIO/RXObjects/rpgtone.cpp \
     RXIO/RXObjects/rpgvariant.cpp \
+    RXIO/RXObjects/rpgweapon.cpp \
     RXIO/fileparser.cpp \
     RXIO/ioactorfile.cpp \
+    RXIO/ioarmorfile.cpp \
     RXIO/ioclassfile.cpp \
     RXIO/ioitemfile.cpp \
     RXIO/iomapfile.cpp \
@@ -44,6 +47,7 @@ SOURCES += \
     RXIO/ioskillfile.cpp \
     RXIO/iosystemfile.cpp \
     RXIO/iotilesetfile.cpp \
+    RXIO/ioweaponfile.cpp \
     RXIO/testcases.cpp \
     audiowidget.cpp \
     autotileset.cpp \
@@ -69,6 +73,7 @@ SOURCES += \
 HEADERS += \
     RXIO/RXObjects/parserexception.h \
     RXIO/RXObjects/rpgactor.h \
+    RXIO/RXObjects/rpgarmor.h \
     RXIO/RXObjects/rpgaudiofile.h \
     RXIO/RXObjects/rpgclass.h \
     RXIO/RXObjects/rpgevent.h \
@@ -85,8 +90,10 @@ HEADERS += \
     RXIO/RXObjects/rpgtileset.h \
     RXIO/RXObjects/rpgtone.h \
     RXIO/RXObjects/rpgvariant.h \
+    RXIO/RXObjects/rpgweapon.h \
     RXIO/fileparser.h \
     RXIO/ioactorfile.h \
+    RXIO/ioarmorfile.h \
     RXIO/ioclassfile.h \
     RXIO/ioitemfile.h \
     RXIO/iomapfile.h \
@@ -95,6 +102,7 @@ HEADERS += \
     RXIO/ioskillfile.h \
     RXIO/iosystemfile.h \
     RXIO/iotilesetfile.h \
+    RXIO/ioweaponfile.h \
     RXIO/testcases.h \
     audiowidget.h \
     autotileset.h \

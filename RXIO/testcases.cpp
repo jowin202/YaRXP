@@ -5,6 +5,8 @@
 #include "ioclassfile.h"
 #include "ioskillfile.h"
 #include "ioitemfile.h"
+#include "ioarmorfile.h"
+#include "ioweaponfile.h"
 #include "iomapfile.h"
 
 #include "iorgssad.h"
@@ -72,8 +74,6 @@ Testcases::Testcases(RPGSettings *settings)
     qDebug() << "MapInfos..." << (hash1==hash2 ? "passed":"failed");
     if (hash1!=hash2)
         ok = false;
-
-
 
 
 
@@ -174,6 +174,39 @@ Testcases::Testcases(RPGSettings *settings)
 
 
     qDebug() << "Items..." << (hash1==hash2 ? "passed":"failed");
+    if (hash1!=hash2)
+        ok = false;
+
+
+
+
+    //Check Armor
+    QList<RPGArmor*> armor_list;
+    IOArmorFile armor_file(settings->data_dir + "Armors.rxdata", &armor_list);
+    hash1 = armor_file.getHash();
+
+
+    armor_file.write_to_file(tmpfile.fileName(), &armor_list);
+    hash2 = armor_file.getHash();
+
+
+    qDebug() << "Armors..." << (hash1==hash2 ? "passed":"failed");
+    if (hash1!=hash2)
+        ok = false;
+
+
+
+    //Check Weapons
+    QList<RPGWeapon*> weapon_list;
+    IOWeaponFile weapon_file(settings->data_dir + "Weapons.rxdata", &weapon_list);
+    hash1 = weapon_file.getHash();
+
+
+    weapon_file.write_to_file(tmpfile.fileName(), &weapon_list);
+    hash2 = weapon_file.getHash();
+
+
+    qDebug() << "Weapons..." << (hash1==hash2 ? "passed":"failed");
     if (hash1!=hash2)
         ok = false;
 

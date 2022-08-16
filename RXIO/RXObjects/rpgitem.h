@@ -36,9 +36,9 @@ public:
     RPGAudioFile menu_se; // in gui as "menu use"
     int common_event_id;
 
-    QString name;
-    QString icon_name;
-    QString description;
+    RPGString name;
+    RPGString icon_name;
+    RPGString description;
 
     QList<int> element_set;
     QList<int> plus_state_set;
