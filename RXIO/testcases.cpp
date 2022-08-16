@@ -3,6 +3,8 @@
 #include "iosystemfile.h"
 #include "ioactorfile.h"
 #include "ioclassfile.h"
+#include "ioskillfile.h"
+#include "ioitemfile.h"
 #include "iomapfile.h"
 
 #include "iorgssad.h"
@@ -136,6 +138,47 @@ Testcases::Testcases(RPGSettings *settings)
     qDebug() << "Classes..." << (hash1==hash2 ? "passed":"failed");
     if (hash1!=hash2)
         ok = false;
+
+
+
+
+
+    //Check Skills
+    QList<RPGSkill*> skill_list;
+    IOSKillFile skill_file(settings->data_dir + "Skills.rxdata", &skill_list);
+    hash1 = skill_file.getHash();
+
+
+
+    skill_file.write_to_file(tmpfile.fileName(), &skill_list);
+    hash2 = skill_file.getHash();
+
+
+
+    qDebug() << "Skills..." << (hash1==hash2 ? "passed":"failed");
+    if (hash1!=hash2)
+        ok = false;
+
+
+
+
+
+    //Check Items
+    QList<RPGItem*> item_list;
+    IOItemFile item_file(settings->data_dir + "Items.rxdata", &item_list);
+    hash1 = item_file.getHash();
+
+
+    item_file.write_to_file(tmpfile.fileName(), &item_list);
+    hash2 = item_file.getHash();
+
+
+    qDebug() << "Items..." << (hash1==hash2 ? "passed":"failed");
+    if (hash1!=hash2)
+        ok = false;
+
+
+
 
 
 }

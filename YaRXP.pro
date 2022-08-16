@@ -23,11 +23,13 @@ SOURCES += \
     RXIO/RXObjects/rpgevent.cpp \
     RXIO/RXObjects/rpgeventcommand.cpp \
     RXIO/RXObjects/rpgeventpage.cpp \
+    RXIO/RXObjects/rpgitem.cpp \
     RXIO/RXObjects/rpgmap.cpp \
     RXIO/RXObjects/rpgmapinfo.cpp \
     RXIO/RXObjects/rpgmovecommand.cpp \
     RXIO/RXObjects/rpgmoveroute.cpp \
     RXIO/RXObjects/rpgsettings.cpp \
+    RXIO/RXObjects/rpgskill.cpp \
     RXIO/RXObjects/rpgstring.cpp \
     RXIO/RXObjects/rpgtileset.cpp \
     RXIO/RXObjects/rpgtone.cpp \
@@ -35,9 +37,11 @@ SOURCES += \
     RXIO/fileparser.cpp \
     RXIO/ioactorfile.cpp \
     RXIO/ioclassfile.cpp \
+    RXIO/ioitemfile.cpp \
     RXIO/iomapfile.cpp \
     RXIO/iomapinfofile.cpp \
     RXIO/iorgssad.cpp \
+    RXIO/ioskillfile.cpp \
     RXIO/iosystemfile.cpp \
     RXIO/iotilesetfile.cpp \
     RXIO/testcases.cpp \
@@ -70,11 +74,13 @@ HEADERS += \
     RXIO/RXObjects/rpgevent.h \
     RXIO/RXObjects/rpgeventcommand.h \
     RXIO/RXObjects/rpgeventpage.h \
+    RXIO/RXObjects/rpgitem.h \
     RXIO/RXObjects/rpgmap.h \
     RXIO/RXObjects/rpgmapinfo.h \
     RXIO/RXObjects/rpgmovecommand.h \
     RXIO/RXObjects/rpgmoveroute.h \
     RXIO/RXObjects/rpgsettings.h \
+    RXIO/RXObjects/rpgskill.h \
     RXIO/RXObjects/rpgstring.h \
     RXIO/RXObjects/rpgtileset.h \
     RXIO/RXObjects/rpgtone.h \
@@ -82,9 +88,11 @@ HEADERS += \
     RXIO/fileparser.h \
     RXIO/ioactorfile.h \
     RXIO/ioclassfile.h \
+    RXIO/ioitemfile.h \
     RXIO/iomapfile.h \
     RXIO/iomapinfofile.h \
     RXIO/iorgssad.h \
+    RXIO/ioskillfile.h \
     RXIO/iosystemfile.h \
     RXIO/iotilesetfile.h \
     RXIO/testcases.h \
