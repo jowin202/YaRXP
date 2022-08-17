@@ -7,6 +7,7 @@
 #include "ioitemfile.h"
 #include "ioarmorfile.h"
 #include "ioweaponfile.h"
+#include "ioenemyfile.h"
 #include "iomapfile.h"
 
 #include "iorgssad.h"
@@ -207,6 +208,23 @@ Testcases::Testcases(RPGSettings *settings)
 
 
     qDebug() << "Weapons..." << (hash1==hash2 ? "passed":"failed");
+    if (hash1!=hash2)
+        ok = false;
+
+
+
+
+    //Check Enemies
+    QList<RPGEnemy*> enemy_list;
+    IOEnemyFile enemy_file(settings->data_dir + "Enemies.rxdata", &enemy_list);
+    hash1 = enemy_file.getHash();
+
+
+    enemy_file.write_to_file(tmpfile.fileName(), &enemy_list);
+    hash2 = enemy_file.getHash();
+
+
+    qDebug() << "Enemies..." << (hash1==hash2 ? "passed":"failed");
     if (hash1!=hash2)
         ok = false;
 

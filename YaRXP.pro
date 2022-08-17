@@ -21,6 +21,8 @@ SOURCES += \
     RXIO/RXObjects/rpgarmor.cpp \
     RXIO/RXObjects/rpgaudiofile.cpp \
     RXIO/RXObjects/rpgclass.cpp \
+    RXIO/RXObjects/rpgenemy.cpp \
+    RXIO/RXObjects/rpgenemyaction.cpp \
     RXIO/RXObjects/rpgevent.cpp \
     RXIO/RXObjects/rpgeventcommand.cpp \
     RXIO/RXObjects/rpgeventpage.cpp \
@@ -40,6 +42,7 @@ SOURCES += \
     RXIO/ioactorfile.cpp \
     RXIO/ioarmorfile.cpp \
     RXIO/ioclassfile.cpp \
+    RXIO/ioenemyfile.cpp \
     RXIO/ioitemfile.cpp \
     RXIO/iomapfile.cpp \
     RXIO/iomapinfofile.cpp \
@@ -76,6 +79,8 @@ HEADERS += \
     RXIO/RXObjects/rpgarmor.h \
     RXIO/RXObjects/rpgaudiofile.h \
     RXIO/RXObjects/rpgclass.h \
+    RXIO/RXObjects/rpgenemy.h \
+    RXIO/RXObjects/rpgenemyaction.h \
     RXIO/RXObjects/rpgevent.h \
     RXIO/RXObjects/rpgeventcommand.h \
     RXIO/RXObjects/rpgeventpage.h \
@@ -95,6 +100,7 @@ HEADERS += \
     RXIO/ioactorfile.h \
     RXIO/ioarmorfile.h \
     RXIO/ioclassfile.h \
+    RXIO/ioenemyfile.h \
     RXIO/ioitemfile.h \
     RXIO/iomapfile.h \
     RXIO/iomapinfofile.h \
