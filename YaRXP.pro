@@ -62,10 +62,7 @@ SOURCES += \
     RXIO/testcases.cpp \
     audiowidget.cpp \
     autotileset.cpp \
-    editors/animationeditor.cpp \
-    editors/commoneventseditor.cpp \
-    editors/systemeditor.cpp \
-    editors/tileseteditor.cpp \
+    editors/dataeditor.cpp \
     event_dialogs/choicesdialog.cpp \
     event_dialogs/commands/showtext.cpp \
     event_dialogs/conditionalbranchdialog.cpp \
@@ -128,10 +125,7 @@ HEADERS += \
     RXIO/testcases.h \
     audiowidget.h \
     autotileset.h \
-    editors/animationeditor.h \
-    editors/commoneventseditor.h \
-    editors/systemeditor.h \
-    editors/tileseteditor.h \
+    editors/dataeditor.h \
     event_dialogs/choicesdialog.h \
     event_dialogs/commands/showtext.h \
     event_dialogs/conditionalbranchdialog.h \
@@ -148,10 +142,7 @@ HEADERS += \
 
 FORMS += \
     audiowidget.ui \
-    editors/animationeditor.ui \
-    editors/commoneventseditor.ui \
-    editors/systemeditor.ui \
-    editors/tileseteditor.ui \
+    editors/dataeditor.ui \
     event_dialogs/choicesdialog.ui \
     event_dialogs/conditionalbranchdialog.ui \
     event_dialogs/eventcommanddialog.ui \

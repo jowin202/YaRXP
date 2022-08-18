@@ -2,12 +2,7 @@
 #include <QDebug>
 #include <QApplication>
 
-#include "event_dialogs/eventdialog.h"
-
-#include "RXIO/RXObjects/rpgmapinfo.h"
-#include "RXIO/RXObjects/rpgtileset.h"
-#include "autotileset.h"
-
+#include "editors/dataeditor.h"
 
 
 #include <QList>
@@ -21,6 +16,10 @@ int main(int argc, char *argv[])
 
 
 
+    /*
+    DataEditor da;
+    da.show();
+    */
 
     MainWindow w;
     w.show();
