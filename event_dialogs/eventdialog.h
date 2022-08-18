@@ -5,7 +5,7 @@
 #include <QWidget>
 #include "eventpage.h"
 
-#include "RXIO/RXObjects/rpgsettings.h"
+#include "RXIO/RXObjects/rpgsystem.h"
 
 #include "RXIO/RXObjects/rpgevent.h"
 #include "RXIO/RXObjects/rpgeventpage.h"
@@ -19,7 +19,7 @@ class EventDialog : public QWidget
     Q_OBJECT
 
 public:
-    explicit EventDialog(RPGEvent *event, RPGSettings *settings, QWidget *parent = nullptr);
+    explicit EventDialog(RPGEvent *event, RPGSystem *system, QWidget *parent = nullptr);
     ~EventDialog();
     void closeEvent(QCloseEvent *event);
     void keyPressEvent(QKeyEvent *event)

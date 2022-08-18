@@ -16,7 +16,7 @@
 #include "RXIO/iomapfile.h"
 
 #include "mappropertiesdialog.h"
-#include "RXIO/RXObjects/rpgsettings.h"
+#include "RXIO/RXObjects/rpgsystem.h"
 
 #include <QDebug>
 #include <QMenu>
@@ -28,8 +28,8 @@ class MapTreeWidget : public QTreeWidget
     Q_OBJECT
 public:
     MapTreeWidget(QWidget* parent = 0);
-    void setSettings(RPGSettings *settings)
-    { this->settings = settings; }
+    void setSystem(RPGSystem *system)
+    { this->system = system; }
 
     void handleParserException(ParserException *ex);
 
@@ -56,7 +56,7 @@ private:
     QAction action7;
     QAction action8;
 
-    RPGSettings *settings;
+    RPGSystem *system;
 
 
 };

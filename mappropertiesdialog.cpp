@@ -1,14 +1,14 @@
 #include "mappropertiesdialog.h"
 #include "ui_mappropertiesdialog.h"
 
-MapPropertiesDialog::MapPropertiesDialog(RPGMapInfo *info, RPGSettings *settings, QWidget *parent) :
+MapPropertiesDialog::MapPropertiesDialog(RPGMapInfo *info, RPGSystem *system, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::MapPropertiesDialog)
 {
     ui->setupUi(this);
     this->mapinfo = info;
-    this->ui->widget_bgm->setSettings(settings);
-    this->ui->widget_bgs->setSettings(settings);
+    this->ui->widget_bgm->setSystem(system);
+    this->ui->widget_bgs->setSystem(system);
 
 
     this->ui->widget_bgm->setData(AudioWidget::BGM, &info->map->bgm);
@@ -23,10 +23,10 @@ MapPropertiesDialog::MapPropertiesDialog(RPGMapInfo *info, RPGSettings *settings
 
 
 
-    for (int i = 0; i < settings->tileset_list.length(); i++)
+    for (int i = 0; i < system->tileset_list.length(); i++)
     {
-        this->ui->combo_tileset->addItem(QString::number(settings->tileset_list.at(i)->id).rightJustified(3,'0') + ": " + settings->tileset_list.at(i)->name, settings->tileset_list.at(i)->id);
-        if (settings->tileset_list.at(i)->id == mapinfo->map->tileset_id)
+        this->ui->combo_tileset->addItem(QString::number(system->tileset_list.at(i)->id).rightJustified(3,'0') + ": " + system->tileset_list.at(i)->name, system->tileset_list.at(i)->id);
+        if (system->tileset_list.at(i)->id == mapinfo->map->tileset_id)
             this->ui->combo_tileset->setCurrentIndex(i);
     }
 

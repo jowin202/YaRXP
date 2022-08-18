@@ -32,10 +32,10 @@ SOURCES += \
     RXIO/RXObjects/rpgmapinfo.cpp \
     RXIO/RXObjects/rpgmovecommand.cpp \
     RXIO/RXObjects/rpgmoveroute.cpp \
-    RXIO/RXObjects/rpgsettings.cpp \
     RXIO/RXObjects/rpgskill.cpp \
     RXIO/RXObjects/rpgstate.cpp \
     RXIO/RXObjects/rpgstring.cpp \
+    RXIO/RXObjects/rpgsystem.cpp \
     RXIO/RXObjects/rpgtileset.cpp \
     RXIO/RXObjects/rpgtone.cpp \
     RXIO/RXObjects/rpgtroop.cpp \
@@ -98,10 +98,10 @@ HEADERS += \
     RXIO/RXObjects/rpgmapinfo.h \
     RXIO/RXObjects/rpgmovecommand.h \
     RXIO/RXObjects/rpgmoveroute.h \
-    RXIO/RXObjects/rpgsettings.h \
     RXIO/RXObjects/rpgskill.h \
     RXIO/RXObjects/rpgstate.h \
     RXIO/RXObjects/rpgstring.h \
+    RXIO/RXObjects/rpgsystem.h \
     RXIO/RXObjects/rpgtileset.h \
     RXIO/RXObjects/rpgtone.h \
     RXIO/RXObjects/rpgtroop.h \

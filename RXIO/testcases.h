@@ -2,14 +2,14 @@
 #define TESTCASES_H
 
 #include <QObject>
-#include "RXObjects/rpgsettings.h"
+#include "RXObjects/rpgsystem.h"
 
 class Testcases : public QObject
 {
     Q_OBJECT
 public:
     explicit Testcases(QObject *parent = nullptr);
-    Testcases(RPGSettings *settings);
+    Testcases(RPGSystem *settings);
 
     bool ok;
 signals:

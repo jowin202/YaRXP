@@ -10,7 +10,7 @@
 
 #include "tilesetwidget.h"
 #include "autotileset.h"
-#include "RXIO/RXObjects/rpgsettings.h"
+#include "RXIO/RXObjects/rpgsystem.h"
 
 #include "RXIO/iosystemfile.h"
 #include "RXIO/iorgssad.h"
@@ -63,7 +63,7 @@ private:
     QList<int> clipboard; //only for copy paste at map (no events
 
 
-    RPGSettings settings;
+    RPGSystem system;
 
 };
 #endif // MAINWINDOW_H

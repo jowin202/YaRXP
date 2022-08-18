@@ -42,63 +42,63 @@ MapTreeWidget::MapTreeWidget(QWidget *parent)
 void MapTreeWidget::list_maps()
 {
     try {
-        IOMapInfoFile mapinfo_file(settings->data_dir + "MapInfos.rxdata", &settings->map_info_list);
+        IOMapInfoFile mapinfo_file(system->data_dir + "MapInfos.rxdata", &system->map_info_list);
     } catch (ParserException *ex) {
         this->handleParserException(ex);
-        settings->map_info_list.clear(); //revert
+        system->map_info_list.clear(); //revert
         //TODO pointer
         return;
     }
 
-    for (int i = 0; i < settings->map_info_list.length(); i++)
+    for (int i = 0; i < system->map_info_list.length(); i++)
     {
-        if (settings->map_info_list.at(i)->parent_id == 0)
+        if (system->map_info_list.at(i)->parent_id == 0)
         {
             QStringList columns;
-            columns << settings->map_info_list.at(i)->name;
-            columns << QString::number(settings->map_info_list.at(i)->order).rightJustified(3,'0');
+            columns << system->map_info_list.at(i)->name;
+            columns << QString::number(system->map_info_list.at(i)->order).rightJustified(3,'0');
             columns << QString::number(i);
-            columns << QString::number(settings->map_info_list.at(i)->id);
+            columns << QString::number(system->map_info_list.at(i)->id);
 
             QTreeWidgetItem *item = new QTreeWidgetItem(columns);
-            this->id_map.insert(settings->map_info_list.at(i)->id, item);
+            this->id_map.insert(system->map_info_list.at(i)->id, item);
             this->addTopLevelItem(item);
         }
     }
 
     do
     {
-        for (int i = 0; i < settings->map_info_list.length(); i++)
+        for (int i = 0; i < system->map_info_list.length(); i++)
         {
-            if (settings->map_info_list.at(i)->parent_id != 0)
+            if (system->map_info_list.at(i)->parent_id != 0)
             {
                 QStringList columns;
-                columns << settings->map_info_list.at(i)->name;
-                columns << QString::number(settings->map_info_list.at(i)->order).rightJustified(3,'0');
+                columns << system->map_info_list.at(i)->name;
+                columns << QString::number(system->map_info_list.at(i)->order).rightJustified(3,'0');
                 columns << QString::number(i);
-                columns << QString::number(settings->map_info_list.at(i)->id);
+                columns << QString::number(system->map_info_list.at(i)->id);
 
                 QTreeWidgetItem *item = new QTreeWidgetItem(columns);
                 //parent ID exists, id doesnt exist yet
-                if (this->id_map.value(settings->map_info_list.at(i)->parent_id, 0) != 0 && this->id_map.value(settings->map_info_list.at(i)->id, 0) == 0)
+                if (this->id_map.value(system->map_info_list.at(i)->parent_id, 0) != 0 && this->id_map.value(system->map_info_list.at(i)->id, 0) == 0)
                 {
-                    this->id_map.insert(settings->map_info_list.at(i)->id, item);
-                    this->id_map.value(settings->map_info_list.at(i)->parent_id, 0)->addChild(item);
+                    this->id_map.insert(system->map_info_list.at(i)->id, item);
+                    this->id_map.value(system->map_info_list.at(i)->parent_id, 0)->addChild(item);
                 }
             }
         }
     }
-    while(settings->map_info_list.size() != id_map.size());
+    while(system->map_info_list.size() != id_map.size());
     this->sortItems(1,Qt::SortOrder::AscendingOrder);
 
 
     try {
-        IOTilesetFile tileset_file(settings->data_dir + "Tilesets.rxdata", &this->settings->tileset_hash, &this->settings->tileset_list);
+        IOTilesetFile tileset_file(system->data_dir + "Tilesets.rxdata", &this->system->tileset_hash, &this->system->tileset_list);
 
     } catch (ParserException *ex) {
         this->handleParserException(ex);
-        this->settings->tileset_hash.clear(); //TODO pointer
-        this->settings->tileset_list.clear(); //TODO pointer
+        this->system->tileset_hash.clear(); //TODO pointer
+        this->system->tileset_list.clear(); //TODO pointer
     }
 
 }
@@ -108,19 +108,19 @@ void MapTreeWidget::clicked_at_item(QTreeWidgetItem *current_item, QTreeWidgetIt
     int list_id = current_item->text(2).toInt(); //id (2nd column) which it has in the list
     QString file_id = current_item->text(3); //id of the file, used as string
 
-    if (settings->map_info_list.at(list_id)->map == 0) // do not reload the map (changes should be saved)
+    if (system->map_info_list.at(list_id)->map == 0) // do not reload the map (changes should be saved)
     {
         RPGMap *map = new RPGMap();
         try {
-            IOMapFile iomap_file(settings->data_dir +  "Map" + file_id.rightJustified(3,'0') + ".rxdata", map);
+            IOMapFile iomap_file(system->data_dir +  "Map" + file_id.rightJustified(3,'0') + ".rxdata", map);
         } catch (ParserException *ex) {
             this->handleParserException(ex);
             return;
         }
 
-        settings->map_info_list.at(list_id)->map = map;
+        system->map_info_list.at(list_id)->map = map;
         int tileset_id = map->tileset_id;
-        if (!this->settings->tileset_hash.contains(tileset_id))
+        if (!this->system->tileset_hash.contains(tileset_id))
         {
             //error tileset
             QMessageBox::critical(this,"Error", QString("Error: Tileset id %1 not found at predefined tilesets").arg(tileset_id));
@@ -136,13 +136,13 @@ void MapTreeWidget::clicked_at_item(QTreeWidgetItem *current_item, QTreeWidgetIt
                 if (map->events.at(i)->pages.at(j)->graphics.isNull())
                 {
                     QString character_name = map->events.at(i)->pages.at(j)->character_name;
-                    if (QFile(settings->characters_dir + character_name + ".png").exists())
+                    if (QFile(system->characters_dir + character_name + ".png").exists())
                     {
-                        map->events.at(i)->pages.at(j)->graphics = QImage(settings->characters_dir + character_name + ".png");
+                        map->events.at(i)->pages.at(j)->graphics = QImage(system->characters_dir + character_name + ".png");
                     }
-                    else if (QFile(settings->characters_dir + character_name + ".PNG").exists())
+                    else if (QFile(system->characters_dir + character_name + ".PNG").exists())
                     {
-                        map->events.at(i)->pages.at(j)->graphics = QImage(settings->characters_dir + character_name + ".PNG");
+                        map->events.at(i)->pages.at(j)->graphics = QImage(system->characters_dir + character_name + ".PNG");
 
                     }
                 }
@@ -152,20 +152,20 @@ void MapTreeWidget::clicked_at_item(QTreeWidgetItem *current_item, QTreeWidgetIt
 
 
         //Load tileset image (only once)
-        RPGTileset *current_tileset = this->settings->tileset_hash.value(tileset_id);
+        RPGTileset *current_tileset = this->system->tileset_hash.value(tileset_id);
         if (current_tileset->tileset.isNull() && current_tileset->tileset_name != "") //if tileset_name == "", no tileset specified
         {
-            if (QFile(settings->tileset_dir + current_tileset->tileset_name + ".png").exists())
+            if (QFile(system->tileset_dir + current_tileset->tileset_name + ".png").exists())
             {
-                current_tileset->tileset = QImage(settings->tileset_dir + current_tileset->tileset_name + ".png");
+                current_tileset->tileset = QImage(system->tileset_dir + current_tileset->tileset_name + ".png");
             }
-            else if (QFile(settings->tileset_dir + current_tileset->tileset_name + ".PNG").exists())
+            else if (QFile(system->tileset_dir + current_tileset->tileset_name + ".PNG").exists())
             {
-                current_tileset->tileset = QImage(settings->tileset_dir + current_tileset->tileset_name + ".PNG");
+                current_tileset->tileset = QImage(system->tileset_dir + current_tileset->tileset_name + ".PNG");
             }
             else
             {
-                QMessageBox::critical(this,"Error", QString("Error: Tileset not found:\n%1").arg(settings->tileset_dir + current_tileset->tileset_name + ".png"));
+                QMessageBox::critical(this,"Error", QString("Error: Tileset not found:\n%1").arg(system->tileset_dir + current_tileset->tileset_name + ".png"));
                 return;
             }
         }
@@ -177,14 +177,14 @@ void MapTreeWidget::clicked_at_item(QTreeWidgetItem *current_item, QTreeWidgetIt
             for (int i = 0; i < current_tileset->autotile_names.length(); i++)
             {
                 QImage autotiles;
-                if (QFile(settings->autotiles_dir + current_tileset->autotile_names.at(i) + ".png").exists())
+                if (QFile(system->autotiles_dir + current_tileset->autotile_names.at(i) + ".png").exists())
                 {
-                     autotiles = QImage(settings->autotiles_dir + current_tileset->autotile_names.at(i) + ".png");
+                     autotiles = QImage(system->autotiles_dir + current_tileset->autotile_names.at(i) + ".png");
                      current_tileset->autotiles.append(Autotileset(autotiles));
                 }
-                else if (QFile(settings->autotiles_dir + current_tileset->autotile_names.at(i) + ".PNG").exists())
+                else if (QFile(system->autotiles_dir + current_tileset->autotile_names.at(i) + ".PNG").exists())
                 {
-                     autotiles = QImage(settings->autotiles_dir + current_tileset->autotile_names.at(i) + ".PNG");
+                     autotiles = QImage(system->autotiles_dir + current_tileset->autotile_names.at(i) + ".PNG");
                      current_tileset->autotiles.append(Autotileset(autotiles));
                 }
                 else
@@ -196,8 +196,8 @@ void MapTreeWidget::clicked_at_item(QTreeWidgetItem *current_item, QTreeWidgetIt
 
 
     }
-    emit on_map_selected(settings->map_info_list.at(list_id)->map);
-    emit on_tileset_changed(settings->map_info_list.at(list_id)->map->tileset_id);
+    emit on_map_selected(system->map_info_list.at(list_id)->map);
+    emit on_tileset_changed(system->map_info_list.at(list_id)->map->tileset_id);
 }
 
 void MapTreeWidget::prepare_context_menu( const QPoint & pos )
@@ -209,8 +209,8 @@ void MapTreeWidget::show_map_properties_dialog()
 {
     if (this->selectedItems().size() <= 0)
         return;
-    RPGMapInfo *mapinfo = settings->map_info_list.at(this->selectedItems().at(0)->text(2).toInt());
-    MapPropertiesDialog *dialog = new MapPropertiesDialog(mapinfo, this->settings, 0);
+    RPGMapInfo *mapinfo = system->map_info_list.at(this->selectedItems().at(0)->text(2).toInt());
+    MapPropertiesDialog *dialog = new MapPropertiesDialog(mapinfo, this->system, 0);
     dialog->show();
 }
 

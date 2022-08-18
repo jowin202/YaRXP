@@ -8,7 +8,7 @@
 #include "RXIO/RXObjects/rpgeventpage.h"
 #include "RXIO/RXObjects/rpgeventcommand.h"
 
-#include "RXIO/RXObjects/rpgsettings.h"
+#include "RXIO/RXObjects/rpgsystem.h"
 #include "eventcommanddialog.h"
 
 
@@ -21,7 +21,7 @@ class EventPage : public QWidget
     Q_OBJECT
 
 public:
-    explicit EventPage(QWidget *parent = nullptr, RPGEventPage *page = 0, RPGSettings *settings = 0);
+    explicit EventPage(QWidget *parent = nullptr, RPGEventPage *page = 0, RPGSystem *system = 0);
     ~EventPage();
 
 private slots:

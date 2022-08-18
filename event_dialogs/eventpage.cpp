@@ -1,7 +1,7 @@
 #include "eventpage.h"
 #include "ui_eventpage.h"
 
-EventPage::EventPage(QWidget *parent, RPGEventPage *page, RPGSettings *settings) :
+EventPage::EventPage(QWidget *parent, RPGEventPage *page, RPGSystem *system) :
     QWidget(parent),
     ui(new Ui::EventPage)
 {
@@ -9,16 +9,16 @@ EventPage::EventPage(QWidget *parent, RPGEventPage *page, RPGSettings *settings)
     this->page = page;
 
 
-    if (settings != 0)
+    if (system != 0)
     {
-        for (int i = 0; i < settings->switches_names.length(); i++)
+        for (int i = 0; i < system->switches_names.length(); i++)
         {
-            this->ui->combo_switch1->addItem(QString::number(i+1).rightJustified(3,'0') + ": " + settings->switches_names.at(i),i+1);
-            this->ui->combo_switch2->addItem(QString::number(i+1).rightJustified(3,'0') + ": " + settings->switches_names.at(i),i+1);
+            this->ui->combo_switch1->addItem(QString::number(i+1).rightJustified(3,'0') + ": " + system->switches_names.at(i),i+1);
+            this->ui->combo_switch2->addItem(QString::number(i+1).rightJustified(3,'0') + ": " + system->switches_names.at(i),i+1);
         }
-        for (int i = 0; i < settings->variable_names.length(); i++)
+        for (int i = 0; i < system->variable_names.length(); i++)
         {
-            this->ui->combo_variable->addItem(QString::number(i+1).rightJustified(3,'0') + ": " + settings->variable_names.at(i),i+1);
+            this->ui->combo_variable->addItem(QString::number(i+1).rightJustified(3,'0') + ": " + system->variable_names.at(i),i+1);
         }
 
         if (page->switch1_valid)
@@ -31,7 +31,7 @@ EventPage::EventPage(QWidget *parent, RPGEventPage *page, RPGSettings *settings)
             this->ui->spin_variable->setValue(page->variable_value);
         }
 
-        this->ui->eventList->set_data(settings, &page->list);
+        this->ui->eventList->set_data(system, &page->list);
         this->ui->eventList->fill_list(); // happens only if settings are valid ... TODO: check
     }
 

@@ -4,7 +4,7 @@
 #include <QObject>
 
 #include "fileparser.h"
-#include "RXObjects/rpgsettings.h"
+#include "RXObjects/rpgsystem.h"
 
 
 class IOSystemFile : public FileParser
@@ -13,9 +13,9 @@ class IOSystemFile : public FileParser
 public:
     explicit IOSystemFile(QObject *parent = nullptr);
 
-    IOSystemFile(QString path, RPGSettings *settings);
+    IOSystemFile(QString path, RPGSystem *settings);
 
-    void write_to_file(QString path, RPGSettings *settings);
+    void write_to_file(QString path, RPGSystem *settings);
 
 
 

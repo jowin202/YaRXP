@@ -408,7 +408,7 @@ void MapWidget::redraw()
                 QPoint map_coord = 32*QPoint(i % this->width, i/this->width);
                 QRect target_rect(map_coord, map_coord + QPoint(31,31));
 
-                RPGTileset *tileset = settings->tileset_hash.value(map->tileset_id);
+                RPGTileset *tileset = system->tileset_hash.value(map->tileset_id);
                 painter.drawImage(target_rect,tileset->autotiles[tileset_num].tileset_full,QRect((tile_num%8)*32,(tile_num/8)*32,32,32));
             }
             else{
@@ -552,7 +552,7 @@ void MapWidget::prepare_context_menu(const QPoint &pos)
 
 void MapWidget::show_event_dialog()
 {
-    EventDialog *dialog = new EventDialog(event_for_editing, this->settings, 0);
+    EventDialog *dialog = new EventDialog(event_for_editing, this->system, 0);
     dialog->show();
 }
 
@@ -683,7 +683,7 @@ void MapWidget::set_map(RPGMap *map)
     this->map = map;
     this->height = map->height;
     this->width = map->width;
-    this->img = &settings->tileset_hash.value(map->tileset_id)->tileset;
+    this->img = &system->tileset_hash.value(map->tileset_id)->tileset;
 
     this->redraw();
 }

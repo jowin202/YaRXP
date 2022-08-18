@@ -25,7 +25,7 @@ Testcases::Testcases(QObject *parent) : QObject(parent)
 
 }
 
-Testcases::Testcases(RPGSettings *settings)
+Testcases::Testcases(RPGSystem *settings)
 {
     this->ok = true;
     QByteArray hash1, hash2;
@@ -98,7 +98,7 @@ Testcases::Testcases(RPGSettings *settings)
 
 
     //Check system
-    RPGSettings system;
+    RPGSystem system;
     IOSystemFile system_file(settings->data_dir + "System.rxdata", &system);
     hash1 = system_file.getHash();
 

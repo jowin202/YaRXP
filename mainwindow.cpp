@@ -14,13 +14,13 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    this->ui->map_tree_widget->setSettings(&this->settings);
-    this->ui->map_label->setSettings(&this->settings);
+    this->ui->map_tree_widget->setSystem(&this->system);
+    this->ui->map_label->setSystem(&this->system);
 
     //tilesets need 3 widgets
-    this->ui->autotiles_label->setSettings(&this->settings);
-    this->ui->tileset_label->setSettings(&this->settings);
-    this->ui->tileset_label_2->setSettings(&this->settings);
+    this->ui->autotiles_label->setSystem(&this->system);
+    this->ui->tileset_label->setSystem(&this->system);
+    this->ui->tileset_label_2->setSystem(&this->system);
     this->ui->autotiles_label->setRange(0); //autotiles
     this->ui->tileset_label->setRange(1); //normal tiles
     this->ui->tileset_label_2->setRange(2); //extension if tileset longer than 32768
@@ -83,18 +83,18 @@ void MainWindow::open_project(QString project_path)
 
     if (project_path != "" && fi.exists() && fi.isFile())
     {
-        this->settings.current_project_dir = fi.absoluteDir().path();
-        this->settings.data_dir = this->settings.current_project_dir + QDir::separator() + "Data" + QDir::separator();
-        this->settings.grahpics_dir = this->settings.current_project_dir + QDir::separator() + "Graphics" + QDir::separator();
-        this->settings.tileset_dir = this->settings.current_project_dir + QDir::separator() + "Graphics" + QDir::separator() + "Tilesets" + QDir::separator();
-        this->settings.autotiles_dir = this->settings.current_project_dir + QDir::separator() + "Graphics" + QDir::separator() + "Autotiles" + QDir::separator();
-        this->settings.characters_dir = this->settings.current_project_dir + QDir::separator() + "Graphics" + QDir::separator() + "Characters" + QDir::separator();
-        this->settings.characters_dir = this->settings.current_project_dir + QDir::separator() + "Graphics" + QDir::separator() + "Characters" + QDir::separator();
+        this->system.current_project_dir = fi.absoluteDir().path();
+        this->system.data_dir = this->system.current_project_dir + QDir::separator() + "Data" + QDir::separator();
+        this->system.grahpics_dir = this->system.current_project_dir + QDir::separator() + "Graphics" + QDir::separator();
+        this->system.tileset_dir = this->system.current_project_dir + QDir::separator() + "Graphics" + QDir::separator() + "Tilesets" + QDir::separator();
+        this->system.autotiles_dir = this->system.current_project_dir + QDir::separator() + "Graphics" + QDir::separator() + "Autotiles" + QDir::separator();
+        this->system.characters_dir = this->system.current_project_dir + QDir::separator() + "Graphics" + QDir::separator() + "Characters" + QDir::separator();
+        this->system.characters_dir = this->system.current_project_dir + QDir::separator() + "Graphics" + QDir::separator() + "Characters" + QDir::separator();
         this->ui->map_tree_widget->list_maps();
 
 
         try{
-            IOSystemFile systemfile(this->settings.data_dir + "System.rxdata", &this->settings);
+            IOSystemFile systemfile(this->system.data_dir + "System.rxdata", &this->system);
         }
         catch(ParserException *ex)
         {
@@ -221,7 +221,7 @@ void MainWindow::on_actionImport_RGSSAD_triggered()
 
 void MainWindow::on_actionRun_Testcases_triggered()
 {
-    Testcases testcases(&this->settings);
+    Testcases testcases(&this->system);
     if (testcases.ok)
         QMessageBox::information(this, "Run Testcases","Testcases successfull");
     else

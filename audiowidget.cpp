@@ -45,7 +45,7 @@ void AudioWidget::setData(int mode, RPGAudioFile *audiofile)
     case SE: music_type = "SE"; break;
     }
 
-    QDir music_dir(this->settings->current_project_dir + QDir::separator() + "Audio" + QDir::separator() + music_type);
+    QDir music_dir(this->system->current_project_dir + QDir::separator() + "Audio" + QDir::separator() + music_type);
 
     QString name = audiofile->name;
 

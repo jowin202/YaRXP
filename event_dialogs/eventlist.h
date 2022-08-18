@@ -8,7 +8,7 @@
 #include <QListWidget>
 
 #include "../RXIO/RXObjects/rpgeventcommand.h"
-#include "../RXIO/RXObjects/rpgsettings.h"
+#include "../RXIO/RXObjects/rpgsystem.h"
 
 
 #include "commands/showtext.h"
@@ -20,10 +20,10 @@ public:
     EventList(QWidget *parent = 0);
 
 
-    void set_data(RPGSettings *settings, QList<RPGEventCommand*> *list)
-    { this->settings = settings; this->list = list; }
+    void set_data(RPGSystem *system, QList<RPGEventCommand*> *list)
+    { this->system = system; this->list = list; }
 
-    RPGSettings *settings;
+    RPGSystem *system;
     QList<RPGEventCommand*> *list;
 
 

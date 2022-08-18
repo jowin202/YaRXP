@@ -1,5 +1,5 @@
-#ifndef RPGSETTINGS_H
-#define RPGSETTINGS_H
+#ifndef RPGSYSTEM_H
+#define RPGSYSTEM_H
 
 #include <QObject>
 #include "rpgaudiofile.h"
@@ -8,11 +8,11 @@
 #include "rpgmapinfo.h"
 
 
-class RPGSettings : public QObject
+class RPGSystem: public QObject
 {
     Q_OBJECT
 public:
-    explicit RPGSettings(QObject *parent = nullptr);
+    explicit RPGSystem(QObject *parent = nullptr);
 
 
 
@@ -79,4 +79,4 @@ signals:
 
 };
 
-#endif // RPGSETTINGS_H
+#endif // RPGSYSTEM_H

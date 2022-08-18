@@ -17,7 +17,7 @@
 #include <QMenu>
 
 #include "event_dialogs/eventdialog.h"
-#include "RXIO/RXObjects/rpgsettings.h"
+#include "RXIO/RXObjects/rpgsystem.h"
 #include "RXIO/RXObjects/rpgmap.h"
 
 class MapWidget : public QLabel
@@ -38,8 +38,8 @@ public:
         return p.x() + p.y() * this->width + this->height * this->width * layer;
     }
 
-    void setSettings(RPGSettings* settings)
-    { this->settings = settings; }
+    void setSystem(RPGSystem* system)
+    { this->system = system; }
 
     void set_event_mode()
     {
@@ -148,7 +148,7 @@ private:
     QAction action_player_starting_pos;
 
 
-    RPGSettings *settings;
+    RPGSystem *system;
 };
 
 #endif // MAPWIDGET_H

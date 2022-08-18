@@ -5,7 +5,7 @@ IOSystemFile::IOSystemFile(QObject *parent) : FileParser(parent)
 
 }
 
-IOSystemFile::IOSystemFile(QString path, RPGSettings *settings)
+IOSystemFile::IOSystemFile(QString path, RPGSystem *settings)
 {
     this->last_visited_function = "IOSystemFile";
     this->symbol_cache.clear();
@@ -159,7 +159,7 @@ IOSystemFile::IOSystemFile(QString path, RPGSettings *settings)
 
 }
 
-void IOSystemFile::write_to_file(QString path, RPGSettings *settings)
+void IOSystemFile::write_to_file(QString path, RPGSystem *settings)
 {
     this->last_visited_function = "write_to_file";
     this->symbol_cache.clear();
