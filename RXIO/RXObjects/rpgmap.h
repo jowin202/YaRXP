@@ -13,7 +13,14 @@ class RPGMap : public QObject
 public:
     explicit RPGMap(QObject *parent = nullptr);
 
+    RPGEvent *event_on_pos(QPoint pos);
+    QImage create_map_image(int zoom, bool dim_other, bool show_current_and_below, int current_layer, RPGTileset *tileset);
 
+
+    enum {ZOOM_25, ZOOM_50, ZOOM_100};
+
+
+    //params
     int width;
     int height;
     int tileset_id;
@@ -22,16 +29,10 @@ public:
     bool autoplay_bgs;
     bool autoplay_bgm;
 
-    RPGEvent *event_on_pos(QPoint pos);
-    void fix_autotile_stuff(QPoint start, int layer);
-
     QList<int> data;
-
     QList<RPGEvent*> events;
-
     RPGAudioFile bgs;
     RPGAudioFile bgm;
-
 
     QList<int> encounter_list;
 

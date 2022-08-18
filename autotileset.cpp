@@ -137,3 +137,14 @@ QImage Autotileset::create_tile(int n1, int n2, int n3, int n4)
     return tile;
 
 }
+
+QImage Autotileset::getTile(int tile)
+{
+    int x = (tile % 8) * 32;
+    int y = (tile/8) *32;
+
+    if (this->tileset_full.isNull())
+        return QImage();
+
+    return this->tileset_full.copy(x,y,32,32);
+}

@@ -193,9 +193,10 @@ void MapTreeWidget::clicked_at_item(QTreeWidgetItem *current_item, QTreeWidgetIt
                 }
             }
         }
-
-
     }
+
+
+
     emit on_map_selected(system->map_info_list.at(list_id)->map);
     emit on_tileset_changed(system->map_info_list.at(list_id)->map->tileset_id);
 }

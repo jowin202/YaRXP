@@ -227,3 +227,104 @@ void MainWindow::on_actionRun_Testcases_triggered()
     else
         QMessageBox::critical(this, "Run Testcases","Testcases failed! Please contact developer!");
 }
+
+void MainWindow::on_actionActors_triggered()
+{
+    DataEditor *da = new DataEditor;
+    da->setSystem(&this->system);
+    da->set_widget(DataEditor::ACTORS);
+    da->show();
+}
+
+void MainWindow::on_actionClasses_triggered()
+{
+    DataEditor *da = new DataEditor;
+    da->setSystem(&this->system);
+    da->set_widget(DataEditor::CLASSES);
+    da->show();
+}
+
+void MainWindow::on_actionSkills_triggered()
+{
+    DataEditor *da = new DataEditor;
+    da->setSystem(&this->system);
+    da->set_widget(DataEditor::SKILLS);
+    da->show();
+}
+
+void MainWindow::on_actionItem_triggered()
+{
+    DataEditor *da = new DataEditor;
+    da->setSystem(&this->system);
+    da->set_widget(DataEditor::ITEMS);
+    da->show();
+}
+
+void MainWindow::on_actionWeapons_triggered()
+{
+    DataEditor *da = new DataEditor;
+    da->setSystem(&this->system);
+    da->set_widget(DataEditor::WEAPONS);
+    da->show();
+}
+
+void MainWindow::on_actionArmors_triggered()
+{
+    DataEditor *da = new DataEditor;
+    da->setSystem(&this->system);
+    da->set_widget(DataEditor::ARMORS);
+    da->show();
+}
+
+void MainWindow::on_actionEnemies_triggered()
+{
+    DataEditor *da = new DataEditor;
+    da->setSystem(&this->system);
+    da->set_widget(DataEditor::ENEMIES);
+    da->show();
+}
+
+void MainWindow::on_actionTroops_triggered()
+{
+    DataEditor *da = new DataEditor;
+    da->setSystem(&this->system);
+    da->set_widget(DataEditor::TROOPS);
+    da->show();
+}
+
+void MainWindow::on_actionStates_triggered()
+{
+    DataEditor *da = new DataEditor;
+    da->setSystem(&this->system);
+    da->set_widget(DataEditor::STATES);
+    da->show();
+}
+
+void MainWindow::on_actionAnimations_triggered()
+{
+    DataEditor *da = new DataEditor;
+    da->setSystem(&this->system);
+    da->set_widget(DataEditor::ANIMATIONS);
+    da->show();
+}
+
+void MainWindow::on_actionCommon_Scripts_triggered()
+{
+    DataEditor *da = new DataEditor;
+    da->setSystem(&this->system);
+    da->set_widget(DataEditor::COMMONEVENTS);
+    da->show();
+}
+
+void MainWindow::on_actionSystem_triggered()
+{
+    DataEditor *da = new DataEditor;
+    da->setSystem(&this->system);
+    da->set_widget(DataEditor::SYSTEM);
+    da->show();
+}
+
+void MainWindow::on_actionScripting_Editor_triggered()
+{
+
+}

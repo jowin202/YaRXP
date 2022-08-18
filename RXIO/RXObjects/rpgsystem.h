@@ -6,6 +6,19 @@
 #include "rpgtileset.h"
 #include "rpgstring.h"
 #include "rpgmapinfo.h"
+#include "rpgactor.h"
+#include "rpgclass.h"
+#include "rpgskill.h"
+#include "rpgitem.h"
+#include "rpgweapon.h"
+#include "rpgarmor.h"
+#include "rpgenemy.h"
+#include "rpgtroop.h"
+#include "rpgstate.h"
+#include "rpganimation.h"
+#include "rpgtileset.h"
+#include "rpgcommonevent.h"
+
 
 
 class RPGSystem: public QObject
@@ -15,7 +28,7 @@ public:
     explicit RPGSystem(QObject *parent = nullptr);
 
 
-
+    //Projekt stuff, not included in system file
     RPGString current_project_dir;
     RPGString grahpics_dir;
     RPGString tileset_dir;
@@ -24,10 +37,27 @@ public:
     RPGString autotiles_dir;
 
     QHash<int,RPGTileset*> tileset_hash;
-    QList<RPGTileset*> tileset_list;  //TODO Remove one of these
+    QList<RPGTileset*> tileset_list;
 
-    //QHash<QString,Autotileset*> autotilesets;
     QList<RPGMapInfo*> map_info_list; //map infos same order as in MapInfo.rxdata
+
+
+    QList<RPGActor*> actor_list;
+    QList<RPGClass*> classes_list;
+    QList<RPGSkill*> skills_list;
+    QList<RPGItem*> items_list;
+    QList<RPGWeapon*> weapons_list;
+    QList<RPGArmor*> armors_list;
+    QList<RPGEnemy*> enemies_list;
+    QList<RPGTroop*> troops_list;
+    QList<RPGState*> states_list;
+    QList<RPGAnimation*> animation_list;
+    //tilesets see above
+    QList<RPGCommonEvent*> common_events_list;
+
+
+    enum {ACTORS, CLASSES, SKILLS, ITEMS, WEAPONS, ARMORS, ENEMIES, TROOPS, STATES, ANIMATIONS, TILESETS, COMMONEVENTS, SYSTEM};
+
 
 
     //System file
@@ -73,6 +103,8 @@ public:
     RPGAudioFile save_se;
     RPGString battle_transition;
     int start_x = 0;
+
+
 
     QStringList param_order;
 signals:

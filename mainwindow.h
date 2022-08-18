@@ -8,6 +8,8 @@
 #include <QSettings>
 #include <QMessageBox>
 
+#include "editors/dataeditor.h"
+
 #include "tilesetwidget.h"
 #include "autotileset.h"
 #include "RXIO/RXObjects/rpgsystem.h"
@@ -53,6 +55,32 @@ private slots:
     void on_actionImport_RGSSAD_triggered();
 
     void on_actionRun_Testcases_triggered();
+
+    void on_actionActors_triggered();
+
+    void on_actionClasses_triggered();
+
+    void on_actionSkills_triggered();
+
+    void on_actionItem_triggered();
+
+    void on_actionWeapons_triggered();
+
+    void on_actionArmors_triggered();
+
+    void on_actionEnemies_triggered();
+
+    void on_actionTroops_triggered();
+
+    void on_actionStates_triggered();
+
+    void on_actionAnimations_triggered();
+
+    void on_actionCommon_Scripts_triggered();
+
+    void on_actionSystem_triggered();
+
+    void on_actionScripting_Editor_triggered();
 
 private:
     Ui::MainWindow *ui;

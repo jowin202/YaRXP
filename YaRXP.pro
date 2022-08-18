@@ -18,6 +18,9 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     RXIO/RXObjects/parserexception.cpp \
     RXIO/RXObjects/rpgactor.cpp \
+    RXIO/RXObjects/rpganimation.cpp \
+    RXIO/RXObjects/rpganimationframe.cpp \
+    RXIO/RXObjects/rpganimationtiming.cpp \
     RXIO/RXObjects/rpgarmor.cpp \
     RXIO/RXObjects/rpgaudiofile.cpp \
     RXIO/RXObjects/rpgclass.cpp \
@@ -81,6 +84,9 @@ SOURCES += \
 HEADERS += \
     RXIO/RXObjects/parserexception.h \
     RXIO/RXObjects/rpgactor.h \
+    RXIO/RXObjects/rpganimation.h \
+    RXIO/RXObjects/rpganimationframe.h \
+    RXIO/RXObjects/rpganimationtiming.h \
     RXIO/RXObjects/rpgarmor.h \
     RXIO/RXObjects/rpgaudiofile.h \
     RXIO/RXObjects/rpgclass.h \

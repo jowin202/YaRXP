@@ -14,6 +14,11 @@ class RPGTileset : public QObject
 public:
     explicit RPGTileset(QObject *parent = nullptr);
 
+    QImage getTile(int tile);
+
+
+
+
     int id;
     int panorama_hue;
     QList<int> terrain_tag;

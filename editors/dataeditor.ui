@@ -63,6 +63,12 @@
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
+         <property name="maximumSize">
+          <size>
+           <width>200</width>
+           <height>16777215</height>
+          </size>
+         </property>
          <property name="horizontalScrollBarPolicy">
           <enum>Qt::ScrollBarAlwaysOff</enum>
          </property>
@@ -74,7 +80,7 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>268</width>
+            <width>196</width>
             <height>492</height>
            </rect>
           </property>
@@ -82,15 +88,15 @@
            <item row="0" column="0">
             <widget class="QListWidget" name="central_menu">
              <property name="sizePolicy">
-              <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
-             <property name="minimumSize">
+             <property name="maximumSize">
               <size>
-               <width>20</width>
-               <height>0</height>
+               <width>180</width>
+               <height>16777215</height>
               </size>
              </property>
              <item>
@@ -279,6 +285,18 @@
          </item>
          <item>
           <widget class="QScrollArea" name="scrollArea_2">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>255</width>
+             <height>16777215</height>
+            </size>
+           </property>
            <property name="horizontalScrollBarPolicy">
             <enum>Qt::ScrollBarAlwaysOff</enum>
            </property>
@@ -290,13 +308,13 @@
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>386</width>
-              <height>399</height>
+              <width>251</width>
+              <height>400</height>
              </rect>
             </property>
             <layout class="QGridLayout" name="gridLayout_4">
              <item row="0" column="0">
-              <widget class="QListView" name="element_list"/>
+              <widget class="QListView" name="object_list"/>
              </item>
             </layout>
            </widget>
