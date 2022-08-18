@@ -9,6 +9,8 @@
 #include "ioweaponfile.h"
 #include "ioenemyfile.h"
 #include "iotroopfile.h"
+#include "iostatefile.h"
+#include "iocommoneventfile.h"
 #include "iomapfile.h"
 
 #include "iorgssad.h"
@@ -244,6 +246,38 @@ Testcases::Testcases(RPGSettings *settings)
 
 
     qDebug() << "Troops..." << (hash1==hash2 ? "passed":"failed");
+    if (hash1!=hash2)
+        ok = false;
+
+
+
+    //Check States
+    QList<RPGState*> state_list;
+    IOStateFile state_file(settings->data_dir + "States.rxdata", &state_list);
+    hash1 = state_file.getHash();
+
+
+    state_file.write_to_file(tmpfile.fileName(), &state_list);
+    hash2 = state_file.getHash();
+
+
+    qDebug() << "States..." << (hash1==hash2 ? "passed":"failed");
+    if (hash1!=hash2)
+        ok = false;
+
+
+
+    //Check CommonEvents
+    QList<RPGCommonEvent*> common_event_list;
+    IOCommonEventFile common_event_file(settings->data_dir + "CommonEvents.rxdata", &common_event_list);
+    hash1 = common_event_file.getHash();
+
+
+    common_event_file.write_to_file(tmpfile.fileName(), &common_event_list);
+    hash2 = common_event_file.getHash();
+
+
+    qDebug() << "Common Events..." << (hash1==hash2 ? "passed":"failed");
     if (hash1!=hash2)
         ok = false;
 

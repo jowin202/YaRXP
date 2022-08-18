@@ -133,6 +133,7 @@ void IOTroopFile::write_to_file(QString path, QList<RPGTroop *> *troop_list)
 {
     this->last_visited_function = "write_to_file";
     this->symbol_cache.clear();
+    this->object_count = 0;
 
     if (!path.isEmpty())
         this->path = path;

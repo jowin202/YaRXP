@@ -24,7 +24,7 @@ IOArmorFile::IOArmorFile(QString path, QList<RPGArmor *> *armor_list)
 
         QVariantList list = read_object();
         if (list.at(0).toString() != "RPG::Armor")
-            throw getException("RPG::Skill expected");
+            throw getException("RPG::Armor expected");
 
         for (int j = 0; j < list.at(1).toInt(); j++)
         {

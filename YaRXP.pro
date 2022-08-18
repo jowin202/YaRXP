@@ -21,6 +21,7 @@ SOURCES += \
     RXIO/RXObjects/rpgarmor.cpp \
     RXIO/RXObjects/rpgaudiofile.cpp \
     RXIO/RXObjects/rpgclass.cpp \
+    RXIO/RXObjects/rpgcommonevent.cpp \
     RXIO/RXObjects/rpgenemy.cpp \
     RXIO/RXObjects/rpgenemyaction.cpp \
     RXIO/RXObjects/rpgevent.cpp \
@@ -33,6 +34,7 @@ SOURCES += \
     RXIO/RXObjects/rpgmoveroute.cpp \
     RXIO/RXObjects/rpgsettings.cpp \
     RXIO/RXObjects/rpgskill.cpp \
+    RXIO/RXObjects/rpgstate.cpp \
     RXIO/RXObjects/rpgstring.cpp \
     RXIO/RXObjects/rpgtileset.cpp \
     RXIO/RXObjects/rpgtone.cpp \
@@ -45,12 +47,14 @@ SOURCES += \
     RXIO/ioactorfile.cpp \
     RXIO/ioarmorfile.cpp \
     RXIO/ioclassfile.cpp \
+    RXIO/iocommoneventfile.cpp \
     RXIO/ioenemyfile.cpp \
     RXIO/ioitemfile.cpp \
     RXIO/iomapfile.cpp \
     RXIO/iomapinfofile.cpp \
     RXIO/iorgssad.cpp \
     RXIO/ioskillfile.cpp \
+    RXIO/iostatefile.cpp \
     RXIO/iosystemfile.cpp \
     RXIO/iotilesetfile.cpp \
     RXIO/iotroopfile.cpp \
@@ -83,6 +87,7 @@ HEADERS += \
     RXIO/RXObjects/rpgarmor.h \
     RXIO/RXObjects/rpgaudiofile.h \
     RXIO/RXObjects/rpgclass.h \
+    RXIO/RXObjects/rpgcommonevent.h \
     RXIO/RXObjects/rpgenemy.h \
     RXIO/RXObjects/rpgenemyaction.h \
     RXIO/RXObjects/rpgevent.h \
@@ -95,6 +100,7 @@ HEADERS += \
     RXIO/RXObjects/rpgmoveroute.h \
     RXIO/RXObjects/rpgsettings.h \
     RXIO/RXObjects/rpgskill.h \
+    RXIO/RXObjects/rpgstate.h \
     RXIO/RXObjects/rpgstring.h \
     RXIO/RXObjects/rpgtileset.h \
     RXIO/RXObjects/rpgtone.h \
@@ -107,12 +113,14 @@ HEADERS += \
     RXIO/ioactorfile.h \
     RXIO/ioarmorfile.h \
     RXIO/ioclassfile.h \
+    RXIO/iocommoneventfile.h \
     RXIO/ioenemyfile.h \
     RXIO/ioitemfile.h \
     RXIO/iomapfile.h \
     RXIO/iomapinfofile.h \
     RXIO/iorgssad.h \
     RXIO/ioskillfile.h \
+    RXIO/iostatefile.h \
     RXIO/iosystemfile.h \
     RXIO/iotilesetfile.h \
     RXIO/iotroopfile.h \

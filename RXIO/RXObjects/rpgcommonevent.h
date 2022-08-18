@@ -2,6 +2,8 @@
 #define RPGCOMMONEVENT_H
 
 #include <QObject>
+#include "rpgstring.h"
+#include "rpgeventcommand.h"
 
 class RPGCommonEvent : public QObject
 {
@@ -9,6 +11,16 @@ class RPGCommonEvent : public QObject
 public:
     explicit RPGCommonEvent(QObject *parent = nullptr);
 
+    int id;
+    int switch_id;
+    int trigger;
+
+    QList<RPGEventCommand*> list;
+
+    RPGString name;
+
+
+    QStringList param_order;
 signals:
 
 };
