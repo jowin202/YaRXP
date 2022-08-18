@@ -8,6 +8,7 @@
 #include "ioarmorfile.h"
 #include "ioweaponfile.h"
 #include "ioenemyfile.h"
+#include "iotroopfile.h"
 #include "iomapfile.h"
 
 #include "iorgssad.h"
@@ -225,6 +226,24 @@ Testcases::Testcases(RPGSettings *settings)
 
 
     qDebug() << "Enemies..." << (hash1==hash2 ? "passed":"failed");
+    if (hash1!=hash2)
+        ok = false;
+
+
+
+
+
+    //Check Troops
+    QList<RPGTroop*> troop_list;
+    IOTroopFile troop_file(settings->data_dir + "Troops.rxdata", &troop_list);
+    hash1 = troop_file.getHash();
+
+
+    troop_file.write_to_file(tmpfile.fileName(), &troop_list);
+    hash2 = troop_file.getHash();
+
+
+    qDebug() << "Troops..." << (hash1==hash2 ? "passed":"failed");
     if (hash1!=hash2)
         ok = false;
 

@@ -2,7 +2,6 @@
 #define IOMAPFILE_H
 
 #include <QObject>
-#include <QStack>
 
 #include "RXObjects/rpgmap.h"
 #include "fileparser.h"
@@ -18,8 +17,6 @@ public:
     void write_to_file(QString path, RPGMap *map);
 
 
-    QStack<int> choices_reference_stack;
-    QList<int> move_route_references;
 
 
 

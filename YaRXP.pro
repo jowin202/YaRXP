@@ -36,6 +36,9 @@ SOURCES += \
     RXIO/RXObjects/rpgstring.cpp \
     RXIO/RXObjects/rpgtileset.cpp \
     RXIO/RXObjects/rpgtone.cpp \
+    RXIO/RXObjects/rpgtroop.cpp \
+    RXIO/RXObjects/rpgtroopmember.cpp \
+    RXIO/RXObjects/rpgtrooppage.cpp \
     RXIO/RXObjects/rpgvariant.cpp \
     RXIO/RXObjects/rpgweapon.cpp \
     RXIO/fileparser.cpp \
@@ -50,6 +53,7 @@ SOURCES += \
     RXIO/ioskillfile.cpp \
     RXIO/iosystemfile.cpp \
     RXIO/iotilesetfile.cpp \
+    RXIO/iotroopfile.cpp \
     RXIO/ioweaponfile.cpp \
     RXIO/testcases.cpp \
     audiowidget.cpp \
@@ -94,6 +98,9 @@ HEADERS += \
     RXIO/RXObjects/rpgstring.h \
     RXIO/RXObjects/rpgtileset.h \
     RXIO/RXObjects/rpgtone.h \
+    RXIO/RXObjects/rpgtroop.h \
+    RXIO/RXObjects/rpgtroopmember.h \
+    RXIO/RXObjects/rpgtrooppage.h \
     RXIO/RXObjects/rpgvariant.h \
     RXIO/RXObjects/rpgweapon.h \
     RXIO/fileparser.h \
@@ -108,6 +115,7 @@ HEADERS += \
     RXIO/ioskillfile.h \
     RXIO/iosystemfile.h \
     RXIO/iotilesetfile.h \
+    RXIO/iotroopfile.h \
     RXIO/ioweaponfile.h \
     RXIO/testcases.h \
     audiowidget.h \

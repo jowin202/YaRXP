@@ -6,6 +6,7 @@
 #include <QWidget>
 #include <QVariantList>
 #include <QCryptographicHash>
+#include <QStack>
 
 
 #include "RXObjects/rpgvariant.h"
@@ -13,6 +14,8 @@
 #include "RXObjects/parserexception.h"
 #include "RXObjects/rpgaudiofile.h"
 #include "RXObjects/rpgmoveroute.h"
+#include "RXObjects/rpgeventcommand.h"
+
 
 class FileParser : public QObject
 {
@@ -78,6 +81,9 @@ public:
 
 
 
+    void read_event_list(QList<RPGEventCommand *> *event_command_list);
+    void write_event_list(QList<RPGEventCommand *> *event_command_list);
+
 
     void increase_object_count(QString msg)
     {
@@ -95,6 +101,10 @@ protected:
     QString last_visited_function;
     QStringList symbol_cache;
     int object_count;
+
+    // for parsing event list
+    QStack<int> choices_reference_stack;
+    QList<int> move_route_references;
 };
 
 #endif // FILEPARSER_H
