@@ -2,10 +2,13 @@
 #define RPGMAP_H
 
 #include <QObject>
+#include <QFile>
 #include "rpgevent.h"
 #include "rpgaudiofile.h"
 #include "rpgtileset.h"
 #include "rpgstring.h"
+
+class RPGSystem;
 
 class RPGMap : public QObject
 {
@@ -13,11 +16,28 @@ class RPGMap : public QObject
 public:
     explicit RPGMap(QObject *parent = nullptr);
 
+
+    int array_position(QPoint p, int layer)
+    {return p.x() + p.y() * this->width + this->height * this->width * layer;}
+
+    QPoint pos_from_array_index(int index)
+    { int x = index%this->width; int y = ((index-x)/this->width)%this->height; return QPoint(x,y); }
+
+    int layer_from_array_index(int index)
+    { return index / (this->height * this->width); }
+
+
     RPGEvent *event_on_pos(QPoint pos);
     QImage create_map_image(int zoom, bool dim_other, bool show_current_and_below, int current_layer, RPGTileset *tileset);
-
-
+    QList<int> get_elements_in_rectangle(QRect rect, int fromlayer, int tolayer);
+    void delete_elements_in_rectangle(QRect rect, int fromlayer, int tolayer);
+    void put_elements_from_list(QPoint pos, QPoint rel_pos, QList<int> list, int fromlayer, int tolayer);
+    void move_map_part(QRect rect, QPoint pos);
     enum {ZOOM_25, ZOOM_50, ZOOM_100};
+
+
+
+    void load_event_graphics(RPGSystem *system);
 
 
     //params

@@ -3,10 +3,15 @@
 
 #include <QImage>
 #include <QObject>
+#include <QFile>
+#include <QMessageBox>
 
 #include "../../autotileset.h"
 
 #include "rpgstring.h"
+
+
+class RPGSystem;
 
 class RPGTileset : public QObject
 {
@@ -15,6 +20,9 @@ public:
     explicit RPGTileset(QObject *parent = nullptr);
 
     QImage getTile(int tile);
+    QImage getAutoTile(int autotileset, int tile);
+
+   void load_tileset_graphic(RPGSystem *system);
 
 
 

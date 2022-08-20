@@ -24,12 +24,12 @@ MainWindow::MainWindow(QWidget *parent)
     this->ui->autotiles_label->setRange(0); //autotiles
     this->ui->tileset_label->setRange(1); //normal tiles
     this->ui->tileset_label_2->setRange(2); //extension if tileset longer than 32768
-    connect(this->ui->autotiles_label, SIGNAL(selection_changed(QList<int>)), this->ui->map_label, SLOT(set_brush(QList<int>)));
     connect(this->ui->autotiles_label, SIGNAL(selection_changed(QList<int>)), this, SLOT(on_actionPen_triggered())); //set pen when select tile
-    connect(this->ui->tileset_label, SIGNAL(selection_changed(QList<int>)), this->ui->map_label, SLOT(set_brush(QList<int>)));
+    connect(this->ui->autotiles_label, SIGNAL(selection_changed(QList<int>)), this->ui->map_label, SLOT(set_brush(QList<int>)));
     connect(this->ui->tileset_label, SIGNAL(selection_changed(QList<int>)), this, SLOT(on_actionPen_triggered())); //set pen when select tile
-    connect(this->ui->tileset_label_2, SIGNAL(selection_changed(QList<int>)), this->ui->map_label, SLOT(set_brush(QList<int>)));
+    connect(this->ui->tileset_label, SIGNAL(selection_changed(QList<int>)), this->ui->map_label, SLOT(set_brush(QList<int>)));
     connect(this->ui->tileset_label_2, SIGNAL(selection_changed(QList<int>)), this, SLOT(on_actionPen_triggered())); //set pen when select tile
+    connect(this->ui->tileset_label_2, SIGNAL(selection_changed(QList<int>)), this->ui->map_label, SLOT(set_brush(QList<int>)));
 
     //widget lose focus if clicked on other widget
     connect(this->ui->autotiles_label, SIGNAL(selection_changed(QList<int>)), this->ui->tileset_label, SLOT(updateView()));
@@ -62,6 +62,7 @@ MainWindow::MainWindow(QWidget *parent)
     this->modegroup->addAction(this->ui->actionAll_Layers);
 
 
+
     this->ui->actionLayer1->setChecked(true);
     this->ui->actionPen->setChecked(true);
     this->ui->actionAll_Layers->setChecked(true);
@@ -78,7 +79,6 @@ MainWindow::~MainWindow()
 
 void MainWindow::open_project(QString project_path)
 {
-
     QFileInfo fi(project_path);
 
     if (project_path != "" && fi.exists() && fi.isFile())
@@ -90,17 +90,22 @@ void MainWindow::open_project(QString project_path)
         this->system.autotiles_dir = this->system.current_project_dir + QDir::separator() + "Graphics" + QDir::separator() + "Autotiles" + QDir::separator();
         this->system.characters_dir = this->system.current_project_dir + QDir::separator() + "Graphics" + QDir::separator() + "Characters" + QDir::separator();
         this->system.characters_dir = this->system.current_project_dir + QDir::separator() + "Graphics" + QDir::separator() + "Characters" + QDir::separator();
-        this->ui->map_tree_widget->list_maps();
 
 
         try{
             IOSystemFile systemfile(this->system.data_dir + "System.rxdata", &this->system);
+            IOMapInfoFile mapinfo_file(this->system.data_dir + "MapInfos.rxdata", &system.map_info_list);
+            IOTilesetFile tileset_file(this->system.data_dir + "Tilesets.rxdata", &this->system.tileset_hash, &this->system.tileset_list);
+            for (int i = 0; i < this->system.tileset_list.length(); i++)
+                this->system.tileset_list.at(i)->load_tileset_graphic(&this->system);
         }
         catch(ParserException *ex)
         {
             this->ui->map_tree_widget->handleParserException(ex);
         }
     }
+
+    this->ui->map_tree_widget->list_maps();
 }
 
 void MainWindow::on_actionLayer1_triggered()
@@ -120,7 +125,9 @@ void MainWindow::on_actionLayer3_triggered()
 
 void MainWindow::on_actionEvents_triggered()
 {
-    this->ui->map_label->set_event_mode();
+    this->ui->actionPen->setChecked(false);
+    this->ui->actionSelect->setChecked(false);
+    this->ui->map_label->set_mode(MapWidget::EVENT);
 }
 
 void MainWindow::on_actionDim_other_Layers_toggled(bool arg1)
@@ -327,4 +334,19 @@ void MainWindow::on_actionSystem_triggered()
 void MainWindow::on_actionScripting_Editor_triggered()
 {
 
+}
+
+void MainWindow::on_action_zoom_100_triggered()
+{
+    this->ui->map_label->set_zoom(MapWidget::ZOOM_100);
+}
+
+void MainWindow::on_action_zoom_50_triggered()
+{
+    this->ui->map_label->set_zoom(MapWidget::ZOOM_50);
+}
+
+void MainWindow::on_action_zoom_25_triggered()
+{
+    this->ui->map_label->set_zoom(MapWidget::ZOOM_25);
 }

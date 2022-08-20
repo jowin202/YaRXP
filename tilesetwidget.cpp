@@ -1,6 +1,6 @@
 #include "tilesetwidget.h"
 
-TilesetWidget::TilesetWidget(QWidget *parent)
+TilesetWidget::TilesetWidget(QWidget *parent) : QLabel(parent)
 {
     this->setMouseTracking(true);
     this->click_pos = QPoint(-1,-1);
@@ -123,7 +123,7 @@ QList<int> TilesetWidget::getCurrentTiles()
     {
         list.append(selection.width());
         list.append(selection.height());
-        int shift;
+        int shift = 0;
         if (range == 1) shift = 0;
         else if (range == 2) shift = 1024;
 

@@ -82,6 +82,12 @@ private slots:
 
     void on_actionScripting_Editor_triggered();
 
+    void on_action_zoom_100_triggered();
+
+    void on_action_zoom_50_triggered();
+
+    void on_action_zoom_25_triggered();
+
 private:
     Ui::MainWindow *ui;
     QActionGroup *layergroup;

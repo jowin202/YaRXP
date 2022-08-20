@@ -20,7 +20,11 @@ Autotileset::Autotileset(QImage tileset)
     this->tileset = tileset;
     this->thumb = tileset.copy(QRect(0,0,32,32));
 
-    if (tileset.size().height() == 32)
+    if (tileset.isNull())
+    {
+        //do nothing
+    }
+    else if (tileset.size().height() == 32)
     {
         this->tileset_full = QImage(256,192, QImage::Format_ARGB32);
         QPainter painter(&tileset_full);
@@ -32,7 +36,7 @@ Autotileset::Autotileset(QImage tileset)
         }
         painter.end();
     }
-    if (tileset.size().height() > 32)
+    else if (tileset.size().height() > 32)
     {
         this->subimage_list.append(tileset.copy(QRect(64,0,16,16)));
         this->subimage_list.append(tileset.copy(QRect(80,0,16,16)));

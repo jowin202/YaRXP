@@ -1,4 +1,5 @@
 #include "rpgmap.h"
+#include "rpgsystem.h"
 
 RPGMap::RPGMap(QObject *parent) : QObject(parent)
 {
@@ -63,7 +64,8 @@ QImage RPGMap::create_map_image(int zoom, bool dim_other, bool show_current_and_
                 //autotiles
                 int autotileset_num = this->data[index] / 48 - 1;
                 int autotile_num = this->data[index] % 48;
-                QImage tile = tileset->autotiles[autotileset_num].getTile(autotile_num);
+                QImage tile = tileset->getAutoTile(autotileset_num, autotile_num);
+
 
                 if (!tile.isNull())
                     painter.drawImage(target_rect,tile);
@@ -126,4 +128,132 @@ QImage RPGMap::create_map_image(int zoom, bool dim_other, bool show_current_and_
         return result.scaled(result.width()/4, result.height()/4,Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
     else
         return result;
+}
+
+QList<int> RPGMap::get_elements_in_rectangle(QRect rect, int fromlayer, int tolayer)
+{
+    QList<int> result;
+    result.append(rect.width());
+    result.append(rect.height());
+
+
+    for (int l = fromlayer; l <= tolayer; l++)
+    {
+        for (int y = rect.topLeft().y(); y <= rect.bottomRight().y(); y++)
+        {
+            for (int x = rect.topLeft().x(); x <= rect.bottomRight().x(); x++)
+            {
+                int pos = array_position(QPoint(x,y),l);
+                if (pos < this->data.length())
+                    result.append(this->data[pos]);
+            }
+        }
+    }
+
+    return result;
+}
+
+void RPGMap::delete_elements_in_rectangle(QRect rect, int fromlayer, int tolayer)
+{
+    for (int l = fromlayer; l <= tolayer; l++)
+    {
+        for (int y = rect.topLeft().y(); y <= rect.bottomRight().y(); y++)
+        {
+            for (int x = rect.topLeft().x(); x <= rect.bottomRight().x(); x++)
+            {
+                int pos = array_position(QPoint(x,y),l);
+                if (pos < this->data.length())
+                    this->data[pos] = 0;
+            }
+        }
+    }
+}
+
+void RPGMap::put_elements_from_list(QPoint pos, QPoint rel_pos, QList<int> list, int fromlayer, int tolayer)
+{
+    if (list.length() <= 2) return;
+
+    int width = list.first(); list.pop_front();
+    int height = list.first(); list.pop_front();
+    int xr = rel_pos.x();
+    int yr = rel_pos.y();
+
+    for (int i = 0; i < list.length(); i++)
+    {
+        for (int l = fromlayer; l <= tolayer; l++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    QPoint pos_on_map = pos + QPoint(x,y);
+                    if (pos_on_map.x() >= this->width || pos_on_map.x() < 0) continue;
+                    if (pos_on_map.y() >= this->height || pos_on_map.y() < 0) continue;
+                    int pos_in_array = array_position(pos_on_map,l);
+
+                    //thx to MW
+                    int xe = (x+xr)%width;
+                    int ye = (y+yr)%height;
+                    if (xe < 0) xe += width;
+                    if (ye < 0) ye += height;
+
+                    this->data[pos_in_array] = list[ xe + width*ye + width*height*(l-fromlayer)];
+                }
+            }
+        }
+    }
+
+}
+
+void RPGMap::move_map_part(QRect rect, QPoint pos)
+{
+    if (rect.topLeft() == pos) return;
+
+    QPoint move_vector = pos - rect.topLeft();
+
+    for (int l = 0; l <= 2; l++)
+    {
+        for (int y = rect.topLeft().y(); y <= rect.bottomRight().y(); y++)
+        {
+            for (int x = rect.topLeft().x(); x <= rect.bottomRight().x(); x++)
+            {
+                QPoint source_pos(x,y);
+                QPoint target_pos = source_pos + move_vector;
+
+                if (target_pos.x() < 0 || target_pos.x() >= width) continue;
+                if (target_pos.y() < 0 || target_pos.y() >= height) continue;
+
+
+                int source_index = array_position(source_pos,l);
+                int target_index = array_position(target_pos,l);
+
+                this->data[target_index] = data[source_index];
+                this->data[source_index] = 0;
+            }
+        }
+    }
+    //move events
+    for (int i = 0; i < this->events.length(); i++)
+    {
+        if (rect.contains(QPoint(events.at(i)->x, events.at(i)->y)))
+        {
+            events.at(i)->x += move_vector.x();
+            events.at(i)->y += move_vector.y();
+        }
+    }
+}
+
+void RPGMap::load_event_graphics(RPGSystem *system)
+{
+    for (int i = 0; i < this->events.length(); i++)
+    {
+        for (int j = 0; j < this->events.at(i)->pages.length(); j++)
+        {
+            if (this->events.at(i)->pages.at(j)->graphics.isNull())
+            {
+                QString character_name = this->events.at(i)->pages.at(j)->character_name;
+                this->events.at(i)->pages.at(j)->graphics = QImage(system->characters_dir + character_name);
+            }
+        }
+    }
 }

@@ -256,11 +256,10 @@
     <property name="title">
      <string>Scale</string>
     </property>
-    <addaction name="action1x_Normal"/>
+    <addaction name="action_zoom_100"/>
     <addaction name="separator"/>
-    <addaction name="action200"/>
-    <addaction name="action1_2"/>
-    <addaction name="action1_4"/>
+    <addaction name="action_zoom_50"/>
+    <addaction name="action_zoom_25"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -556,24 +555,19 @@
     <string>Select</string>
    </property>
   </action>
-  <action name="action1x_Normal">
+  <action name="action_zoom_100">
    <property name="text">
     <string>1x (Normal)</string>
    </property>
   </action>
-  <action name="action1_2">
+  <action name="action_zoom_50">
    <property name="text">
     <string>50%</string>
    </property>
   </action>
-  <action name="action1_4">
+  <action name="action_zoom_25">
    <property name="text">
     <string>25%</string>
-   </property>
-  </action>
-  <action name="action200">
-   <property name="text">
-    <string>200%</string>
    </property>
   </action>
   <action name="actionChange_Title">
