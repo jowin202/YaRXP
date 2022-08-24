@@ -7,6 +7,8 @@
 #include "rpgmap.h"
 #include "rpgstring.h"
 
+class RPGSystem;
+
 class RPGMapInfo : public QObject
 {
     Q_OBJECT
@@ -14,6 +16,8 @@ public:
     explicit RPGMapInfo(QObject *parent = nullptr);
 
     void set_id(int id);
+    void load_map(RPGSystem *system);
+    void save_map(RPGSystem *system);
 
     void debug();
 

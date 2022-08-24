@@ -16,6 +16,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    RXIO/RXObjects/autotileset.cpp \
     RXIO/RXObjects/parserexception.cpp \
     RXIO/RXObjects/rpgactor.cpp \
     RXIO/RXObjects/rpganimation.cpp \
@@ -64,7 +65,12 @@ SOURCES += \
     RXIO/ioweaponfile.cpp \
     RXIO/testcases.cpp \
     audiowidget.cpp \
-    autotileset.cpp \
+    editors/actors/editactors.cpp \
+    editors/actors/editexpcurve.cpp \
+    editors/actors/editoractorparameterlabel.cpp \
+    editors/actors/editoractorparameterpage.cpp \
+    editors/actors/editoractorparameters.cpp \
+    editors/classes/editclasses.cpp \
     editors/dataeditor.cpp \
     event_dialogs/choicesdialog.cpp \
     event_dialogs/commands/showtext.cpp \
@@ -82,6 +88,7 @@ SOURCES += \
     tilesetwidget.cpp
 
 HEADERS += \
+    RXIO/RXObjects/autotileset.h \
     RXIO/RXObjects/parserexception.h \
     RXIO/RXObjects/rpgactor.h \
     RXIO/RXObjects/rpganimation.h \
@@ -130,7 +137,12 @@ HEADERS += \
     RXIO/ioweaponfile.h \
     RXIO/testcases.h \
     audiowidget.h \
-    autotileset.h \
+    editors/actors/editactors.h \
+    editors/actors/editexpcurve.h \
+    editors/actors/editoractorparameterlabel.h \
+    editors/actors/editoractorparameterpage.h \
+    editors/actors/editoractorparameters.h \
+    editors/classes/editclasses.h \
     editors/dataeditor.h \
     event_dialogs/choicesdialog.h \
     event_dialogs/commands/showtext.h \
@@ -148,6 +160,11 @@ HEADERS += \
 
 FORMS += \
     audiowidget.ui \
+    editors/actors/editactors.ui \
+    editors/actors/editexpcurve.ui \
+    editors/actors/editoractorparameterpage.ui \
+    editors/actors/editoractorparameters.ui \
+    editors/classes/editclasses.ui \
     editors/dataeditor.ui \
     event_dialogs/choicesdialog.ui \
     event_dialogs/conditionalbranchdialog.ui \

@@ -11,6 +11,8 @@ class RPGAudioFile : public QObject
     Q_OBJECT
 public:
     explicit RPGAudioFile(QObject *parent = nullptr);
+    ~RPGAudioFile();
+
     void debug();
 
     int pitch;

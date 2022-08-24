@@ -33,6 +33,7 @@ public:
     void mouseDoubleClickEvent(QMouseEvent *ev); //event dialog
 
 
+    bool map_changed() {return this->changes_made;}
 
     void setSystem(RPGSystem* system)
     { this->system = system; }
@@ -81,7 +82,7 @@ public:
     void destroy_selection_rectangle();
 
 public slots:
-    void set_map(RPGMap *map);
+    void set_map(int map_id);
     void set_brush(QList<int> brush);
     void redraw();
     void draw_rectangle();
@@ -96,10 +97,12 @@ public slots:
     void do_delete();
     void do_paste(QList<int> data);
 
-
+    void do_save();
+    void do_withdraw();
 
 private:
     RPGMap *map = 0;
+    int current_map_id = -1;
     int mode;
     int height;
     int width;
@@ -140,6 +143,7 @@ private:
 
 
     RPGSystem *system;
+    bool changes_made = false;
 };
 
 #endif // MAPWIDGET_H

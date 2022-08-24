@@ -6,7 +6,7 @@
 #include <QFile>
 #include <QMessageBox>
 
-#include "../../autotileset.h"
+#include "autotileset.h"
 
 #include "rpgstring.h"
 

@@ -124,11 +124,6 @@
            <string>list_id</string>
           </property>
          </column>
-         <column>
-          <property name="text">
-           <string>file_id</string>
-          </property>
-         </column>
         </widget>
        </widget>
       </item>
@@ -350,7 +345,7 @@
     </iconset>
    </property>
    <property name="text">
-    <string>Save</string>
+    <string>Save Current Map</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+S</string>

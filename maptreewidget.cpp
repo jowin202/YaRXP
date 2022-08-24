@@ -49,7 +49,6 @@ void MapTreeWidget::list_maps()
             columns << system->map_info_list.at(i)->name;
             columns << QString::number(system->map_info_list.at(i)->order).rightJustified(3,'0');
             columns << QString::number(i);
-            columns << QString::number(system->map_info_list.at(i)->id);
 
             QTreeWidgetItem *item = new QTreeWidgetItem(columns);
             this->id_map.insert(system->map_info_list.at(i)->id, item);
@@ -67,7 +66,6 @@ void MapTreeWidget::list_maps()
                 columns << system->map_info_list.at(i)->name;
                 columns << QString::number(system->map_info_list.at(i)->order).rightJustified(3,'0');
                 columns << QString::number(i);
-                columns << QString::number(system->map_info_list.at(i)->id);
 
                 QTreeWidgetItem *item = new QTreeWidgetItem(columns);
                 //parent ID exists, id doesnt exist yet
@@ -82,45 +80,13 @@ void MapTreeWidget::list_maps()
     while(system->map_info_list.size() != id_map.size());
     this->sortItems(1,Qt::SortOrder::AscendingOrder);
 
-
 }
 
 void MapTreeWidget::clicked_at_item(QTreeWidgetItem *current_item, QTreeWidgetItem* previous)
 {
     int list_id = current_item->text(2).toInt(); //id (2nd column) which it has in the list
-    QString file_id = current_item->text(3); //id of the file, used as string
 
-    if (system->map_info_list.at(list_id)->map == 0) // do not reload the map (changes should be saved)
-    {
-        RPGMap *map = new RPGMap();
-        try {
-            IOMapFile iomap_file(system->data_dir +  "Map" + file_id.rightJustified(3,'0') + ".rxdata", map);
-            system->map_info_list.at(list_id)->map = map;
-            map->load_event_graphics(this->system);
-
-        } catch (ParserException *ex) {
-            this->handleParserException(ex);
-            return;
-        }
-
-
-
-
-        int tileset_id = map->tileset_id;
-        if (!this->system->tileset_hash.contains(tileset_id))
-        {
-            //error tileset
-            QMessageBox::critical(this,"Error", QString("Error: Tileset id %1 not found at predefined tilesets").arg(tileset_id));
-            return; //
-        }
-
-
-    }
-
-
-
-    emit on_map_selected(system->map_info_list.at(list_id)->map);
-    emit on_tileset_changed(system->map_info_list.at(list_id)->map->tileset_id);
+    emit on_map_selected(list_id);
 }
 
 void MapTreeWidget::prepare_context_menu( const QPoint & pos )

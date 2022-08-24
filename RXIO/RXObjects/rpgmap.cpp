@@ -6,6 +6,11 @@ RPGMap::RPGMap(QObject *parent) : QObject(parent)
 
 }
 
+RPGMap::~RPGMap()
+{
+    qDebug() << "Map deleted";
+}
+
 RPGEvent* RPGMap::event_on_pos(QPoint pos)
 {
     for (int i = 0; i < events.size(); i++)

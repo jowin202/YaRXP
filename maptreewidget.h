@@ -40,8 +40,7 @@ public slots:
     void show_map_properties_dialog();
 
 signals:
-    void on_map_selected(RPGMap*);
-    void on_tileset_changed(int);
+    void on_map_selected(int);
 
 private:
     QHash<int,QTreeWidgetItem*> id_map;

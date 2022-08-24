@@ -16,6 +16,7 @@ class RPGMap : public QObject
 public:
     explicit RPGMap(QObject *parent = nullptr);
 
+    ~RPGMap();
 
     int array_position(QPoint p, int layer)
     {return p.x() + p.y() * this->width + this->height * this->width * layer;}

@@ -30,6 +30,8 @@ void RPGTileset::load_tileset_graphic(RPGSystem *system)
     if (this->tileset.isNull() && this->tileset_name != "") //if tileset_name == "", no tileset specified
     {
         this->tileset = QImage(system->tileset_dir + this->tileset_name); //extension automatically recognized
+        if (this->tileset.isNull())
+            this->tileset = QImage(system->tileset_dir + this->tileset_name + ".PNG");
     }
 
 

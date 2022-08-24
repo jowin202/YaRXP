@@ -11,7 +11,6 @@
 #include "editors/dataeditor.h"
 
 #include "tilesetwidget.h"
-#include "autotileset.h"
 #include "RXIO/RXObjects/rpgsystem.h"
 
 #include "RXIO/iosystemfile.h"
@@ -31,10 +30,12 @@ public:
 
     void open_project(QString project_path);
 
+
 signals:
     void test_signal();
 
 public slots:
+    void change_map(int id);
     void on_actionLayer1_triggered();
     void on_actionLayer2_triggered();
     void on_actionLayer3_triggered();
@@ -87,6 +88,8 @@ private slots:
     void on_action_zoom_50_triggered();
 
     void on_action_zoom_25_triggered();
+
+    void on_actionSave_triggered();
 
 private:
     Ui::MainWindow *ui;

@@ -74,7 +74,10 @@ IOActorFile::IOActorFile(QString path, QList<RPGActor *> *actor_list)
             else if (current_symbol == "@name")
                 current_actor->name = this->read_string();
             else if (current_symbol == "@parameters")
-                this->read_table(&current_actor->parameters);
+                this->read_table_for_actor_parameters(&current_actor->maxhp,&current_actor->maxsp,
+                                                      &current_actor->str,&current_actor->dex,
+                                                      &current_actor->agi,&current_actor->int_var);
+                //this->read_table(&current_actor->parameters);
         }
         actor_list->append(current_actor);
     }
@@ -148,8 +151,9 @@ void IOActorFile::write_to_file(QString path, QList<RPGActor *> *actor_list)
             else if (current_symbol == "@name")
                 this->write_string(current_actor->name);
             else if (current_symbol == "@parameters")
-                this->write_table(&current_actor->parameters);
-        }
+                this->write_table_for_actor_parameters(&current_actor->maxhp,&current_actor->maxsp,
+                                                      &current_actor->str,&current_actor->dex,
+                                                      &current_actor->agi,&current_actor->int_var);        }
     }
     this->file.close();
 }

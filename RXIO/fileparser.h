@@ -68,6 +68,8 @@ public:
     void read_table_for_map(QList<int> *list);
     void write_table(QList<int> *list);
     void write_table_for_map(QList<int> *list, int height, int width);
+    void read_table_for_actor_parameters(QList<int> *maxhp, QList<int> *maxsp, QList<int> *str, QList<int> *dex, QList<int> *agi, QList<int> *int_var);
+    void write_table_for_actor_parameters(QList<int> *maxhp, QList<int> *maxsp, QList<int> *str, QList<int> *dex, QList<int> *agi, QList<int> *int_var);
 
     void read_audiofile_object(RPGAudioFile *audiofile);
     void write_audiofile_object(RPGAudioFile *audiofile);

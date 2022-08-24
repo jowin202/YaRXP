@@ -20,21 +20,21 @@
    <item row="0" column="0">
     <layout class="QGridLayout" name="gridLayout_2">
      <item row="1" column="3">
-      <widget class="QPushButton" name="pushButton_3">
+      <widget class="QPushButton" name="button_apply">
        <property name="text">
         <string>Apply</string>
        </property>
       </widget>
      </item>
      <item row="1" column="1">
-      <widget class="QPushButton" name="pushButton">
+      <widget class="QPushButton" name="button_ok">
        <property name="text">
         <string>Ok</string>
        </property>
       </widget>
      </item>
      <item row="1" column="2">
-      <widget class="QPushButton" name="pushButton_2">
+      <widget class="QPushButton" name="button_cancel">
        <property name="text">
         <string>Cancel</string>
        </property>
@@ -80,7 +80,7 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>196</width>
+            <width>192</width>
             <height>492</height>
            </rect>
           </property>
@@ -314,7 +314,7 @@
             </property>
             <layout class="QGridLayout" name="gridLayout_4">
              <item row="0" column="0">
-              <widget class="QListView" name="object_list"/>
+              <widget class="QListWidget" name="object_list"/>
              </item>
             </layout>
            </widget>
@@ -332,10 +332,10 @@
        <item>
         <widget class="QStackedWidget" name="stackedWidget">
          <property name="currentIndex">
-          <number>13</number>
+          <number>1</number>
          </property>
-         <widget class="QWidget" name="page_actors"/>
-         <widget class="QWidget" name="page_classes"/>
+         <widget class="EditActors" name="page_actors"/>
+         <widget class="EditClasses" name="page_classes"/>
          <widget class="QWidget" name="page_skills"/>
          <widget class="QWidget" name="page_items"/>
          <widget class="QWidget" name="page_weapons"/>
@@ -356,6 +356,20 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>EditActors</class>
+   <extends>QWidget</extends>
+   <header>editors/actors/editactors.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>EditClasses</class>
+   <extends>QWidget</extends>
+   <header>editors/classes/editclasses.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

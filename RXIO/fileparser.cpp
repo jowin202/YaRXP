@@ -488,6 +488,63 @@ void FileParser::read_table(QList<int> *list)
 
     for (int i = 0; i < size*2; i++)
         list->append(this->read_one_byte());
+}
+
+void FileParser::read_table_for_actor_parameters(QList<int> *maxhp, QList<int> *maxsp,QList<int> *str, QList<int> *dex, QList<int> *agi, QList<int> *int_var)
+{
+    if (read_one_byte() != 'u')
+        throw getException("Table expected");
+    if (read_symbol_or_link() != "Table")
+        throw getException("Table expected");
+
+    read_fixnum(); //ignore, size can be calculated, redundant
+
+
+    for (int i = 0; i < 4; i++)
+        this->read_one_byte(); //ignore number 2
+
+    int x=0, y=0, z=0;
+
+    for (int i = 0; i < 4; i++)
+        x |= ((this->read_one_byte() & 0xFF) << (8*i)) ;
+    for (int i = 0; i < 4; i++)
+        y |= ((this->read_one_byte() & 0xFF) << (8*i)) ;
+    for (int i = 0; i < 4; i++)
+        z |= ((this->read_one_byte() & 0xFF) << (8*i)) ;
+    for (int i = 0; i < 4; i++)
+        this->read_one_byte() ; //withdraw result, size can be calculated
+
+
+
+    int size = x*y*z;
+    int val = 0;
+    for (int i = 0; i < size*2; i+=12)
+    {
+        val = 0;
+        val |= (0xFF & this->read_one_byte());
+        val |= (0xFF & this->read_one_byte()) << 8;
+        maxhp->append(val);
+        val = 0;
+        val |= (0xFF & this->read_one_byte());
+        val |= (0xFF & this->read_one_byte()) << 8;
+        maxsp->append(val);
+        val = 0;
+        val |= (0xFF & this->read_one_byte());
+        val |= (0xFF & this->read_one_byte()) << 8;
+        str->append(val);
+        val = 0;
+        val |= (0xFF & this->read_one_byte());
+        val |= (0xFF & this->read_one_byte()) << 8;
+        dex->append(val);
+        val = 0;
+        val |= (0xFF & this->read_one_byte());
+        val |= (0xFF & this->read_one_byte()) << 8;
+        agi->append(val);
+        val = 0;
+        val |= (0xFF & this->read_one_byte());
+        val |= (0xFF & this->read_one_byte()) << 8;
+        int_var->append(val);
+    }
 
 }
 
@@ -591,6 +648,64 @@ void FileParser::write_table_for_map(QList<int> *list, int height, int width)
         this->write_one_byte((list->at(i) >> 8) & 0xFF);
     }
 }
+
+void FileParser::write_table_for_actor_parameters(QList<int> *maxhp, QList<int> *maxsp,QList<int> *str, QList<int> *dex, QList<int> *agi, QList<int> *int_var)
+{
+    write_one_byte((int)'u');
+    write_symbol_or_link("Table");
+
+
+    this->write_fixnum(1220); //20 bytes header + 6 lists with 100 entries, 2 byte integers
+
+    //hardcoded parameters for dimension
+    this->write_one_byte(2);
+    this->write_one_byte(0);
+    this->write_one_byte(0);
+    this->write_one_byte(0);
+
+    this->write_one_byte(6);
+    this->write_one_byte(0);
+    this->write_one_byte(0);
+    this->write_one_byte(0);
+
+    this->write_one_byte(100);
+    this->write_one_byte(0);
+    this->write_one_byte(0);
+    this->write_one_byte(0);
+
+    this->write_one_byte(1);
+    this->write_one_byte(0);
+    this->write_one_byte(0);
+    this->write_one_byte(0);
+
+    this->write_one_byte(88);
+    this->write_one_byte(2);
+    this->write_one_byte(0);
+    this->write_one_byte(0);
+
+
+    for (int i = 0; i < 100; i++)
+    {
+        this->write_one_byte(maxhp->at(i) & 0xFF);
+        this->write_one_byte((maxhp->at(i) >> 8) & 0xFF);
+
+        this->write_one_byte(maxsp->at(i) & 0xFF);
+        this->write_one_byte((maxsp->at(i) >> 8) & 0xFF);
+
+        this->write_one_byte(str->at(i) & 0xFF);
+        this->write_one_byte((str->at(i) >> 8) & 0xFF);
+
+        this->write_one_byte(dex->at(i) & 0xFF);
+        this->write_one_byte((dex->at(i) >> 8) & 0xFF);
+
+        this->write_one_byte(agi->at(i) & 0xFF);
+        this->write_one_byte((agi->at(i) >> 8) & 0xFF);
+
+        this->write_one_byte(int_var->at(i) & 0xFF);
+        this->write_one_byte((int_var->at(i) >> 8) & 0xFF);
+    }
+}
+
 
 void FileParser::read_audiofile_object(RPGAudioFile *audiofile)
 {

@@ -96,6 +96,7 @@ void MapWidget::mouseMoveEvent(QMouseEvent *ev)
         {
             QPoint rel_pos = this->curr_pos - this->draw_from_position;
             map->put_elements_from_list(get_rectangle().topLeft(),rel_pos,brush,current_layer,current_layer);
+            this->changes_made = true;
             this->redraw();
         }
 
@@ -110,6 +111,7 @@ void MapWidget::mouseMoveEvent(QMouseEvent *ev)
             this->rectangle_point1 = this->select_rectangle_move_diff + this->curr_pos;
             this->rectangle_point2 = this->rectangle_point1 + diff;
             this->select_rectangle_tmp2 = get_rectangle();
+            this->changes_made = true;
         }
         else
             this->rectangle_point1 = this->curr_pos;
@@ -148,6 +150,7 @@ void MapWidget::mousePressEvent(QMouseEvent *ev)
     {
         this->draw_from_position = curr_pos;
         map->put_elements_from_list(get_rectangle().topLeft(),QPoint(0,0),brush,current_layer,current_layer);
+        this->changes_made = true;
         this->redraw();
     }
     else if (this->mode == SELECT && this->mouse_pressed_left)
@@ -196,6 +199,7 @@ void MapWidget::mouseReleaseEvent(QMouseEvent *ev)
         {
             event->x = curr_pos.x();
             event->y = curr_pos.y();
+            this->changes_made = true;
             this->redraw();
         }
     }
@@ -331,7 +335,10 @@ QList<int> MapWidget::do_cut()
 {
     QList<int> copied_data = do_copy();
     if (this->mode == SELECT && select_rectangle_visible)
+    {
         map->delete_elements_in_rectangle(this->get_rectangle(),0,2);
+        this->changes_made = true;
+    }
     this->redraw();
     return copied_data;
 }
@@ -339,13 +346,27 @@ QList<int> MapWidget::do_cut()
 void MapWidget::do_delete()
 {
     if (this->mode == SELECT && select_rectangle_visible)
+    {
         map->delete_elements_in_rectangle(this->get_rectangle(),0,2);
+        this->changes_made = true;
+    }
     this->redraw();
 }
 
 void MapWidget::do_paste(QList<int> data)
 {
+    this->changes_made = true;
+}
 
+void MapWidget::do_save()
+{
+    this->system->map_info_list.at(current_map_id)->save_map(this->system);
+}
+
+void MapWidget::do_withdraw()
+{
+    delete this->system->map_info_list.at(current_map_id)->map;
+    this->system->map_info_list.at(current_map_id)->map = 0;
 }
 
 
@@ -360,18 +381,33 @@ void MapWidget::set_mode(int mode)
 void MapWidget::destroy_selection_rectangle()
 {
     if (!selection_tmp.isNull())
+    {
         map->move_map_part(this->select_rectangle_tmp1, this->select_rectangle_tmp2.topLeft());
+        this->changes_made = true;
+    }
     this->selection_tmp = QImage();
     this->rectangle_point1 = this->curr_pos;
     this->rectangle_point2 = this->curr_pos;
     this->select_rectangle_visible = false;
 }
 
-void MapWidget::set_map(RPGMap *map)
+void MapWidget::set_map(int map_id)
 {
-    this->map = map;
+    this->current_map_id = map_id;
+    this->destroy_selection_rectangle();
+    this->system->map_info_list.at(map_id)->load_map(this->system);
+    this->map = this->system->map_info_list.at(map_id)->map;
+
+    if (!this->system->tileset_hash.contains(this->map->tileset_id))
+    {
+        //error tileset
+        QMessageBox::critical(this,"Error", QString("Error: Tileset id  not found at predefined tilesets"));
+        return; //
+    }
+
     this->height = map->height;
     this->width = map->width;
+    this->changes_made = false;
 
     this->redraw();
 }

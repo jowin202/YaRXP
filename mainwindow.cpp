@@ -3,6 +3,12 @@
 
 #include "tilesetwidget.h"
 #include "RXIO/testcases.h"
+#include "RXIO/ioactorfile.h"
+#include "RXIO/ioclassfile.h"
+#include "RXIO/ioskillfile.h"
+#include "RXIO/ioitemfile.h"
+#include "RXIO/RXObjects/rpgmap.h"
+#include "RXIO/RXObjects/rpgmapinfo.h"
 
 #include <QDebug>
 #include <QToolButton>
@@ -40,10 +46,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(this->ui->tileset_label_2, SIGNAL(selection_changed(QList<int>)), this->ui->tileset_label, SLOT(updateView()));
 
 
-    connect(this->ui->map_tree_widget, SIGNAL(on_map_selected(RPGMap*)), this->ui->map_label, SLOT(set_map(RPGMap*)));
-    connect(this->ui->map_tree_widget, SIGNAL(on_tileset_changed(int)), this->ui->autotiles_label, SLOT(change_tileset(int)));
-    connect(this->ui->map_tree_widget, SIGNAL(on_tileset_changed(int)), this->ui->tileset_label, SLOT(change_tileset(int)));
-    connect(this->ui->map_tree_widget, SIGNAL(on_tileset_changed(int)), this->ui->tileset_label_2, SLOT(change_tileset(int)));
+    connect(this->ui->map_tree_widget, SIGNAL(on_map_selected(int)), this, SLOT(change_map(int)));
 
 
     this->layergroup = new QActionGroup(this);
@@ -89,7 +92,7 @@ void MainWindow::open_project(QString project_path)
         this->system.tileset_dir = this->system.current_project_dir + QDir::separator() + "Graphics" + QDir::separator() + "Tilesets" + QDir::separator();
         this->system.autotiles_dir = this->system.current_project_dir + QDir::separator() + "Graphics" + QDir::separator() + "Autotiles" + QDir::separator();
         this->system.characters_dir = this->system.current_project_dir + QDir::separator() + "Graphics" + QDir::separator() + "Characters" + QDir::separator();
-        this->system.characters_dir = this->system.current_project_dir + QDir::separator() + "Graphics" + QDir::separator() + "Characters" + QDir::separator();
+        this->system.battlers_dir = this->system.current_project_dir + QDir::separator() + "Graphics" + QDir::separator() + "Battlers" + QDir::separator();
 
 
         try{
@@ -98,6 +101,12 @@ void MainWindow::open_project(QString project_path)
             IOTilesetFile tileset_file(this->system.data_dir + "Tilesets.rxdata", &this->system.tileset_hash, &this->system.tileset_list);
             for (int i = 0; i < this->system.tileset_list.length(); i++)
                 this->system.tileset_list.at(i)->load_tileset_graphic(&this->system);
+
+            //maybe do all following files in a new try catch ... as they are not neccessary for map editing
+            IOActorFile actor_file(this->system.data_dir + "Actors.rxdata", &this->system.actor_list);
+            IOClassFile class_file(this->system.data_dir + "Classes.rxdata", &this->system.classes_list);
+            IOSKillFile skill_file(this->system.data_dir + "Skills.rxdata", &this->system.skills_list);
+            IOItemFile item_file(this->system.data_dir + "Items.rxdata", &this->system.items_list);
         }
         catch(ParserException *ex)
         {
@@ -106,6 +115,39 @@ void MainWindow::open_project(QString project_path)
     }
 
     this->ui->map_tree_widget->list_maps();
+}
+
+void MainWindow::change_map(int id)
+{
+    if (this->ui->map_label->map_changed())
+    {
+        QMessageBox msgbox;
+        msgbox.setText("There are unsaved changes in this map! Save to file?");
+        QPushButton *save = msgbox.addButton("Save to File", QMessageBox::YesRole);
+        QPushButton *withdraw = msgbox.addButton("Withdraw Changes", QMessageBox::NoRole);
+        QPushButton *cancel = msgbox.addButton("Cancel", QMessageBox::AcceptRole);
+
+        msgbox.exec(); //ignore return
+
+        if (msgbox.clickedButton() == (QAbstractButton*)save)
+        {
+            this->ui->map_label->do_save();
+        }
+        else if (msgbox.clickedButton() == (QAbstractButton*)withdraw)
+        {
+            //withdraw chances
+            this->ui->map_label->do_withdraw();
+        }
+        else if (msgbox.clickedButton() == (QAbstractButton*)cancel)
+        {
+            //cancel
+            return; // dont change anything
+        }
+    }
+    this->ui->map_label->set_map(id);
+    this->ui->autotiles_label->change_tileset(this->system.map_info_list.at(id)->map->tileset_id);
+    this->ui->tileset_label->change_tileset(this->system.map_info_list.at(id)->map->tileset_id);
+    this->ui->tileset_label_2->change_tileset(this->system.map_info_list.at(id)->map->tileset_id);
 }
 
 void MainWindow::on_actionLayer1_triggered()
@@ -349,4 +391,9 @@ void MainWindow::on_action_zoom_50_triggered()
 void MainWindow::on_action_zoom_25_triggered()
 {
     this->ui->map_label->set_zoom(MapWidget::ZOOM_25);
+}
+
+void MainWindow::on_actionSave_triggered()
+{
+
 }

@@ -10,6 +10,7 @@ class RPGActor : public QObject
 public:
     explicit RPGActor(QObject *parent = nullptr);
 
+
     RPGString battler_name;
     RPGString name;
     RPGString character_name;
@@ -34,10 +35,16 @@ public:
     bool weapon_fix;
 
 
-    QList<int> parameters;
 
+    QList<int> maxhp;
+    QList<int> maxsp;
+    QList<int> str;
+    QList<int> dex;
+    QList<int> agi;
+    QList<int> int_var;
 
     QStringList param_order;
+
 signals:
 
 };

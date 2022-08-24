@@ -33,6 +33,7 @@ public:
     RPGString grahpics_dir;
     RPGString tileset_dir;
     RPGString characters_dir;
+    RPGString battlers_dir;
     RPGString data_dir;
     RPGString autotiles_dir;
 
