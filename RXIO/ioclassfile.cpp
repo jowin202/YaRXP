@@ -24,7 +24,7 @@ IOClassFile::IOClassFile(QString path, QList<RPGClass *> *class_list)
 
         QVariantList list = read_object();
         if (list.at(0).toString() != "RPG::Class")
-            throw getException("RPG::Actor expected");
+            throw getException("RPG::Class expected");
 
         for (int j = 0; j < list.at(1).toInt(); j++)
         {

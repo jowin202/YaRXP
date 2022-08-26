@@ -17,7 +17,7 @@ public:
 
     RPGAudioFile se;
 
-    int r,g,b, alpha;
+    double r,g,b, alpha;
 
 
     QStringList param_order;

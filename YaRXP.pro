@@ -49,6 +49,7 @@ SOURCES += \
     RXIO/RXObjects/rpgweapon.cpp \
     RXIO/fileparser.cpp \
     RXIO/ioactorfile.cpp \
+    RXIO/ioanimationfile.cpp \
     RXIO/ioarmorfile.cpp \
     RXIO/ioclassfile.cpp \
     RXIO/iocommoneventfile.cpp \
@@ -123,6 +124,7 @@ HEADERS += \
     RXIO/RXObjects/rpgweapon.h \
     RXIO/fileparser.h \
     RXIO/ioactorfile.h \
+    RXIO/ioanimationfile.h \
     RXIO/ioarmorfile.h \
     RXIO/ioclassfile.h \
     RXIO/iocommoneventfile.h \

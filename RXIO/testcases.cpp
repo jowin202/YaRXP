@@ -11,6 +11,8 @@
 #include "iotroopfile.h"
 #include "iostatefile.h"
 #include "iocommoneventfile.h"
+#include "ioanimationfile.h"
+
 #include "iomapfile.h"
 
 #include "iorgssad.h"
@@ -278,6 +280,22 @@ Testcases::Testcases(RPGSystem *settings)
 
 
     qDebug() << "Common Events..." << (hash1==hash2 ? "passed":"failed");
+    if (hash1!=hash2)
+        ok = false;
+
+
+
+    //Check Animations
+    QList<RPGAnimation*> animations_list;
+    IOAnimationFile animations_file(settings->data_dir + "Animations.rxdata", &animations_list);
+    hash1 = animations_file.getHash();
+
+
+    animations_file.write_to_file(tmpfile.fileName(), &animations_list);
+    hash2 = animations_file.getHash();
+
+
+    qDebug() << "Animations..." << (hash1==hash2 ? "passed":"failed");
     if (hash1!=hash2)
         ok = false;
 

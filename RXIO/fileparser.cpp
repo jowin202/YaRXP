@@ -754,7 +754,7 @@ void FileParser::read_tone(double *r, double *g, double *b, double *gray)
 {
     this->read_one_byte(); // withdraw the u
     QString symbol = this->read_symbol_or_link();
-    if (symbol == "Tone" || symbol == "Color") //old version had color instead of tone (feuergruen)
+    if (symbol == "Tone" || symbol == "Color")
     {
         this->read_fixnum(); //32 unused
 
