@@ -282,10 +282,30 @@
     <addaction name="actionTileset_Editor"/>
     <addaction name="actionCommon_Scripts"/>
    </widget>
+   <widget class="QMenu" name="menuMap">
+    <property name="title">
+     <string>Map</string>
+    </property>
+    <addaction name="actionShift_left"/>
+    <addaction name="actionShift_right"/>
+    <addaction name="actionshift_up"/>
+    <addaction name="actionShift_Down"/>
+    <addaction name="separator"/>
+    <addaction name="actionExtend_Left"/>
+    <addaction name="actionExtend_Right"/>
+    <addaction name="actionExtend_Up"/>
+    <addaction name="actionExtend_Down"/>
+    <addaction name="separator"/>
+    <addaction name="actionCrop_Left"/>
+    <addaction name="actionCrop_Right"/>
+    <addaction name="actionCrop_Up"/>
+    <addaction name="actionCrop_Down"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
    <addaction name="menuView"/>
    <addaction name="menuDraw"/>
+   <addaction name="menuMap"/>
    <addaction name="menuScale"/>
    <addaction name="menuTools"/>
    <addaction name="menuHelp"/>
@@ -345,7 +365,7 @@
     </iconset>
    </property>
    <property name="text">
-    <string>Save Current Map</string>
+    <string>Save</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+S</string>
@@ -683,6 +703,102 @@
   <action name="actionScripting_Editor">
    <property name="text">
     <string>Scripting Editor</string>
+   </property>
+  </action>
+  <action name="actionShift_left">
+   <property name="text">
+    <string>Shift Left</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+Left</string>
+   </property>
+  </action>
+  <action name="actionShift_right">
+   <property name="text">
+    <string>Shift Right</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+Right</string>
+   </property>
+  </action>
+  <action name="actionshift_up">
+   <property name="text">
+    <string>Shift Up</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+Up</string>
+   </property>
+  </action>
+  <action name="actionShift_Down">
+   <property name="text">
+    <string>Shift Down</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+Down</string>
+   </property>
+  </action>
+  <action name="actionExtend_Left">
+   <property name="text">
+    <string>Extend Left</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+Left</string>
+   </property>
+  </action>
+  <action name="actionExtend_Right">
+   <property name="text">
+    <string>Extend Right</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+Right</string>
+   </property>
+  </action>
+  <action name="actionExtend_Up">
+   <property name="text">
+    <string>Extend Up</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+Up</string>
+   </property>
+  </action>
+  <action name="actionExtend_Down">
+   <property name="text">
+    <string>Extend Down</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+Down</string>
+   </property>
+  </action>
+  <action name="actionCrop_Left">
+   <property name="text">
+    <string>Crop Left</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+Shift+Right</string>
+   </property>
+  </action>
+  <action name="actionCrop_Right">
+   <property name="text">
+    <string>Crop Right</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+Shift+Left</string>
+   </property>
+  </action>
+  <action name="actionCrop_Up">
+   <property name="text">
+    <string>Crop Up</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+Shift+Down</string>
+   </property>
+  </action>
+  <action name="actionCrop_Down">
+   <property name="text">
+    <string>Crop Down</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+Shift+Up</string>
    </property>
   </action>
  </widget>

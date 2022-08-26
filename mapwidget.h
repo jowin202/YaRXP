@@ -33,10 +33,40 @@ public:
     void mouseDoubleClickEvent(QMouseEvent *ev); //event dialog
 
 
-    bool map_changed() {return this->changes_made;}
+    bool has_map_changed() {return this->changes_made;}
+    void set_map_changed(bool v) { this->changes_made = v;}
 
     void setSystem(RPGSystem* system)
     { this->system = system; }
+
+    enum {LEFT, RIGHT, UP, DOWN};
+    void shift(int dir, int n)
+    {
+        this->changes_made = true;
+        if (dir == LEFT || dir == RIGHT) this->map->shift_map_x(dir==LEFT ? -n : n);
+        else if (dir == UP || dir == DOWN) this->map->shift_map_y(dir==UP ? -n : n);
+        this->redraw();
+    }
+    void extend(int dir,int n)
+    {
+        this->changes_made = true;
+        if (dir == RIGHT) this->map->extend_or_crop_x(n);
+        else if (dir == DOWN) this->map->extend_or_crop_y(n);
+        else if (dir == LEFT) {this->map->extend_or_crop_x(n); this->map->shift_map_x(n);}
+        else if (dir == UP) {this->map->extend_or_crop_y(n);this-> map->shift_map_y(n);}
+        this->redraw();
+    }
+    void crop(int dir, int n)
+    {
+        this->changes_made = true;
+        if (dir == RIGHT) this->map->extend_or_crop_x(-n);
+        else if (dir == DOWN) this->map->extend_or_crop_y(-n);
+        else if (dir == LEFT) {this->map->shift_map_x(-n); this->map->extend_or_crop_x(-n);}
+        else if (dir == UP) {this->map->shift_map_y(-n); this->map->extend_or_crop_y(-n);}
+        this->redraw();
+    }
+
+
 
 
     enum {ZOOM_25, ZOOM_50, ZOOM_100};
@@ -102,10 +132,7 @@ public slots:
 
 private:
     RPGMap *map = 0;
-    int current_map_id = -1;
     int mode;
-    int height;
-    int width;
     int current_layer;
     QImage current_pic;
     int tile = 32;

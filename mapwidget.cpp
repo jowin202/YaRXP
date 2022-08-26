@@ -9,10 +9,7 @@ MapWidget::MapWidget(QWidget *parent)
     this->mode = PEN;
 
 
-
     this->event_move_from_pos = QPoint(-1,-1);
-
-
 
     this->action_new.setText("&New Event");
     this->action_new.setShortcut(QKeySequence(Qt::Key_Enter));
@@ -75,7 +72,7 @@ void MapWidget::mouseMoveEvent(QMouseEvent *ev)
         return; //only do this function when tile changed //cpu save
     if (ev->x() < 0 || ev->y() < 0)
         return; //out of range
-    if (ev->x()/tile >= this->width || ev->y()/tile >= this->height)
+    if (ev->x()/tile >= map->width || ev->y()/tile >= map->height)
         return; //out of range
 
     this->curr_pos = QPoint(ev->pos().x()/tile,ev->pos().y()/tile);
@@ -125,7 +122,7 @@ void MapWidget::mousePressEvent(QMouseEvent *ev)
 {
     if (ev->x() < 0 || ev->y() < 0)
         return; //out of range
-    if (ev->x()/tile >= this->width || ev->y()/tile >= this->height)
+    if (ev->x()/tile >= map->width || ev->y()/tile >= map->height)
         return; //out of range
 
     this->curr_pos = QPoint(ev->pos().x()/tile,ev->pos().y()/tile);
@@ -263,7 +260,6 @@ void MapWidget::redraw()
                                               (this->mode==EVENT ? 3 : this->current_layer),
                                               this->system->tileset_hash.value(map->tileset_id)
                                               );
-
     this->draw_rectangle();
 }
 
@@ -356,17 +352,23 @@ void MapWidget::do_delete()
 void MapWidget::do_paste(QList<int> data)
 {
     this->changes_made = true;
+    this->set_mode(SELECT);
+
+    this->rectangle_point1 = this->curr_pos;
+    this->rectangle_point2 = this->curr_pos + QPoint(data.at(0), data.at(1));
+    this->select_rectangle_visible = true;
+    this->draw_rectangle();
 }
 
 void MapWidget::do_save()
 {
-    this->system->map_info_list.at(current_map_id)->save_map(this->system);
+    this->system->get_current_map_info()->save_map(this->system);
 }
 
 void MapWidget::do_withdraw()
 {
-    delete this->system->map_info_list.at(current_map_id)->map;
-    this->system->map_info_list.at(current_map_id)->map = 0;
+    delete this->system->get_current_map_info()->map;
+    this->system->get_current_map_info()->map = 0;
 }
 
 
@@ -393,7 +395,6 @@ void MapWidget::destroy_selection_rectangle()
 
 void MapWidget::set_map(int map_id)
 {
-    this->current_map_id = map_id;
     this->destroy_selection_rectangle();
     this->system->map_info_list.at(map_id)->load_map(this->system);
     this->map = this->system->map_info_list.at(map_id)->map;
@@ -405,8 +406,6 @@ void MapWidget::set_map(int map_id)
         return; //
     }
 
-    this->height = map->height;
-    this->width = map->width;
     this->changes_made = false;
 
     this->redraw();

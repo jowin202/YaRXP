@@ -39,6 +39,8 @@ public slots:
     void prepare_context_menu(const QPoint & pos );
     void show_map_properties_dialog();
 
+    void do_save();
+
 signals:
     void on_map_selected(int);
 
@@ -56,7 +58,7 @@ private:
     QAction action8;
 
     RPGSystem *system;
-
+    QTreeWidgetItem *root = 0;
 
 };
 #endif // MAPTREEWIDGET_H

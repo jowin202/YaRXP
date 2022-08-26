@@ -15,6 +15,7 @@ class RPGMap : public QObject
     Q_OBJECT
 public:
     explicit RPGMap(QObject *parent = nullptr);
+    enum {ZOOM_25, ZOOM_50, ZOOM_100};
 
     ~RPGMap();
 
@@ -34,7 +35,12 @@ public:
     void delete_elements_in_rectangle(QRect rect, int fromlayer, int tolayer);
     void put_elements_from_list(QPoint pos, QPoint rel_pos, QList<int> list, int fromlayer, int tolayer);
     void move_map_part(QRect rect, QPoint pos);
-    enum {ZOOM_25, ZOOM_50, ZOOM_100};
+
+
+    void shift_map_x(int tiles);
+    void shift_map_y(int tiles);
+    void extend_or_crop_x(int tiles);
+    void extend_or_crop_y(int tiles);
 
 
 

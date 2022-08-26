@@ -73,7 +73,9 @@ SOURCES += \
     editors/classes/editclasses.cpp \
     editors/dataeditor.cpp \
     event_dialogs/choicesdialog.cpp \
+    event_dialogs/commands/multilineeventcell.cpp \
     event_dialogs/commands/showtext.cpp \
+    event_dialogs/commands/simpleeventcell.cpp \
     event_dialogs/conditionalbranchdialog.cpp \
     event_dialogs/eventcommanddialog.cpp \
     event_dialogs/eventdialog.cpp \
@@ -145,7 +147,9 @@ HEADERS += \
     editors/classes/editclasses.h \
     editors/dataeditor.h \
     event_dialogs/choicesdialog.h \
+    event_dialogs/commands/multilineeventcell.h \
     event_dialogs/commands/showtext.h \
+    event_dialogs/commands/simpleeventcell.h \
     event_dialogs/conditionalbranchdialog.h \
     event_dialogs/eventcommanddialog.h \
     event_dialogs/eventdialog.h \

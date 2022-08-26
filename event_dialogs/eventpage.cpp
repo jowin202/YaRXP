@@ -8,12 +8,6 @@ EventPage::EventPage(QWidget *parent, RPGEventPage *page, RPGSystem *system) :
     ui->setupUi(this);
     this->page = page;
 
-    this->ui->combo_switch1->setMaximumWidth(130);
-    this->ui->combo_switch2->setMaximumWidth(130);
-    this->ui->combo_variable->setMaximumWidth(130);
-    this->ui->combo_self_switch->setMaximumWidth(130);
-    this->ui->spin_variable->setMaximumWidth(130);
-
     if (system != 0)
     {
         for (int i = 0; i < system->switches_names.length(); i++)

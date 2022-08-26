@@ -49,6 +49,7 @@ void EventDialog::on_button_new_clicked()
 
 void EventDialog::on_button_delete_clicked()
 {
+    //TODO event page
     this->ui->tab_widget->removeTab(this->ui->tab_widget->currentIndex());
     this->do_numbers_of_tabs_right();
 }

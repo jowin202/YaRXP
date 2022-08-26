@@ -215,7 +215,25 @@ void RPGMap::move_map_part(QRect rect, QPoint pos)
     if (rect.topLeft() == pos) return;
 
     QPoint move_vector = pos - rect.topLeft();
+    QList<int > temp;
 
+    for (int l = 0; l <= 2; l++)
+    {
+        for (int y = rect.topLeft().y(); y <= rect.bottomRight().y(); y++)
+        {
+            for (int x = rect.topLeft().x(); x <= rect.bottomRight().x(); x++)
+            {
+                QPoint source_pos(x,y);
+                QPoint target_pos = source_pos + move_vector;
+
+                if (target_pos.x() < 0 || target_pos.x() >= width) continue;
+                if (target_pos.y() < 0 || target_pos.y() >= height) continue;
+                int source_index = array_position(source_pos,l);
+                temp.append(this->data[source_index]);
+                this->data[source_index] = 0;
+            }
+        }
+    }
     for (int l = 0; l <= 2; l++)
     {
         for (int y = rect.topLeft().y(); y <= rect.bottomRight().y(); y++)
@@ -229,14 +247,13 @@ void RPGMap::move_map_part(QRect rect, QPoint pos)
                 if (target_pos.y() < 0 || target_pos.y() >= height) continue;
 
 
-                int source_index = array_position(source_pos,l);
                 int target_index = array_position(target_pos,l);
 
-                this->data[target_index] = data[source_index];
-                this->data[source_index] = 0;
+                this->data[target_index] = temp.first(); temp.pop_front();
             }
         }
     }
+
     //move events
     for (int i = 0; i < this->events.length(); i++)
     {
@@ -245,6 +262,123 @@ void RPGMap::move_map_part(QRect rect, QPoint pos)
             events.at(i)->x += move_vector.x();
             events.at(i)->y += move_vector.y();
         }
+    }
+}
+
+void RPGMap::shift_map_x(int tiles)
+{
+    tiles = tiles % width;
+
+    for (int i = 0; i < events.size(); i++)
+    {
+        events.at(i)->x += tiles;
+        if (events.at(i)->x < 0) this->events.at(i)->x += width;
+        else if (events.at(i)->x >= width) this->events.at(i)->x -= width;
+    }
+
+    QList<int> tmp = QList<int>(this->data); //copy
+    int newpos;
+
+    for (int layer = 0; layer <= 2; layer++)
+    {
+        for (int y = 0; y < height; y++)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                newpos = (x+tiles) % width;
+                if (newpos < 0) newpos += width;
+
+                this->data[array_position(QPoint(newpos,y),layer)] = tmp[array_position(QPoint(x,y),layer)];
+            }
+        }
+    }
+}
+
+void RPGMap::shift_map_y(int tiles)
+{
+    tiles = tiles % height;
+
+    for (int i = 0; i < events.size(); i++)
+    {
+        events.at(i)->y += tiles;
+        if (events.at(i)->y < 0) this->events.at(i)->y += height;
+        else if (events.at(i)->y >= height) this->events.at(i)->y -= height;
+    }
+
+    QList<int> tmp = QList<int>(this->data); //copy
+    int newpos;
+
+    for (int layer = 0; layer <= 2; layer++)
+    {
+        for (int y = 0; y < height; y++)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                newpos = (y+tiles) % height;
+                if (newpos < 0) newpos += height;
+
+                this->data[array_position(QPoint(x,newpos),layer)] = tmp[array_position(QPoint(x,y),layer)];
+            }
+        }
+    }
+
+}
+
+void RPGMap::extend_or_crop_x(int tiles)
+{
+    if (tiles < 0) // remove some events
+    {
+        for (int i = events.size()-1; i >= 0; i--)
+        {
+            if (events.at(i)->x >= width+tiles)
+            {
+                delete events.at(i);
+                events.removeAt(i);
+            }
+        }
+
+        for (int layer = 2; layer >= 0; layer--)
+            for (int y = height-1; y >= 0; y--)
+                for (int x = 0; x < -tiles; x++)
+                    this->data.removeAt(array_position(QPoint(width-1-x,y),layer));
+        this->width += tiles;
+    }
+    else //extend
+    {
+        this->width += tiles;
+        for (int layer = 0; layer <= 2; layer++)
+            for (int y = 0; y < height; y++)
+                for (int x = 0; x < tiles; x++)
+                    this->data.insert(array_position(QPoint(width-1,y),layer), 0);
+    }
+
+}
+
+void RPGMap::extend_or_crop_y(int tiles)
+{
+    if (tiles < 0) // remove some events
+    {
+        for (int i = events.size()-1; i >= 0; i--)
+        {
+            if (events.at(i)->y >= height+tiles)
+            {
+                delete events.at(i);
+                events.removeAt(i);
+            }
+        }
+        for (int layer = 2; layer >= 0; layer--)
+            for (int y = 0; y < -tiles; y++)
+                for (int x = width-1; x >= 0; x--)
+                    this->data.removeAt(array_position(QPoint(x,height-1-y),layer));
+        this->height += tiles;
+    }
+    else //extend
+    {
+        this->height += tiles;
+        for (int layer = 0; layer <= 2; layer++)
+            for (int y = 0; y < tiles; y++)
+                for (int x = 0; x < width; x++)
+                    this->data.insert(array_position(QPoint(x,height-1),layer), 0);
     }
 }
 

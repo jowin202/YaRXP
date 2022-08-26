@@ -5,10 +5,13 @@
 #include <QObject>
 #include <QVariant>
 
+
 #include "rpgvariant.h"
 #include "rpgaudiofile.h"
 #include "rpgstring.h"
 #include "rpgmoveroute.h"
+
+class RPGSystem;
 
 class RPGEventCommand : public QObject
 {
@@ -18,6 +21,9 @@ public:
 
     void debug();
     QString getType();
+
+
+    QString get_command_text(RPGSystem *system);
 
     int code;
     int indent;

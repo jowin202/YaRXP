@@ -221,7 +221,14 @@
          </widget>
         </item>
         <item row="1" column="1">
-         <widget class="QComboBox" name="combo_switch2"/>
+         <widget class="QComboBox" name="combo_switch2">
+          <property name="maximumSize">
+           <size>
+            <width>140</width>
+            <height>16777215</height>
+           </size>
+          </property>
+         </widget>
         </item>
         <item row="0" column="0">
          <widget class="QCheckBox" name="check_switch1">
@@ -238,10 +245,23 @@
          </widget>
         </item>
         <item row="2" column="1">
-         <widget class="QComboBox" name="combo_variable"/>
+         <widget class="QComboBox" name="combo_variable">
+          <property name="maximumSize">
+           <size>
+            <width>140</width>
+            <height>16777215</height>
+           </size>
+          </property>
+         </widget>
         </item>
         <item row="3" column="1">
          <widget class="QSpinBox" name="spin_variable">
+          <property name="maximumSize">
+           <size>
+            <width>140</width>
+            <height>16777215</height>
+           </size>
+          </property>
           <property name="minimum">
            <number>-9999999</number>
           </property>
@@ -258,7 +278,14 @@
          </widget>
         </item>
         <item row="0" column="1">
-         <widget class="QComboBox" name="combo_switch1"/>
+         <widget class="QComboBox" name="combo_switch1">
+          <property name="maximumSize">
+           <size>
+            <width>140</width>
+            <height>16777215</height>
+           </size>
+          </property>
+         </widget>
         </item>
         <item row="3" column="2">
          <widget class="QLabel" name="label">
@@ -295,6 +322,12 @@
             <horstretch>50</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>140</width>
+            <height>16777215</height>
+           </size>
           </property>
           <item>
            <property name="text">

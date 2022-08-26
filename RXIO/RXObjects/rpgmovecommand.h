@@ -16,6 +16,10 @@ public:
     int code;
 
     void debug();
+
+    QString get_command_text();
+
+
     QList<RPGVariant> parameters;
     RPGAudioFile audiofile;
 

@@ -5,6 +5,7 @@
 #include <QActionGroup>
 #include <QToolButton>
 #include <QFileDialog>
+#include <QInputDialog>
 #include <QSettings>
 #include <QMessageBox>
 
@@ -90,6 +91,30 @@ private slots:
     void on_action_zoom_25_triggered();
 
     void on_actionSave_triggered();
+
+    void on_actionshift_up_triggered();
+
+    void on_actionShift_Down_triggered();
+
+    void on_actionShift_right_triggered();
+
+    void on_actionShift_left_triggered();
+
+    void on_actionExtend_Left_triggered();
+
+    void on_actionExtend_Right_triggered();
+
+    void on_actionExtend_Up_triggered();
+
+    void on_actionExtend_Down_triggered();
+
+    void on_actionCrop_Left_triggered();
+
+    void on_actionCrop_Right_triggered();
+
+    void on_actionCrop_Up_triggered();
+
+    void on_actionCrop_Down_triggered();
 
 private:
     Ui::MainWindow *ui;

@@ -60,6 +60,17 @@ public:
     enum {ACTORS, CLASSES, SKILLS, ITEMS, WEAPONS, ARMORS, ENEMIES, TROOPS, STATES, ANIMATIONS, TILESETS, COMMONEVENTS, SYSTEM};
 
 
+    int current_map_id = -1;
+    RPGMapInfo* get_current_map_info() {
+        if(current_map_id == -1) return 0;
+        else return this->map_info_list.at(current_map_id);}
+
+
+
+
+
+
+
 
     //System file
     QList<RPGString> variable_names;

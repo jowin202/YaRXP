@@ -4,3 +4,7 @@ RPGEvent::RPGEvent(QObject *parent) : QObject(parent)
 {
 
 }
+
+RPGEvent::~RPGEvent()
+{
+}

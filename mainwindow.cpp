@@ -7,6 +7,10 @@
 #include "RXIO/ioclassfile.h"
 #include "RXIO/ioskillfile.h"
 #include "RXIO/ioitemfile.h"
+#include "RXIO/ioweaponfile.h"
+#include "RXIO/ioarmorfile.h"
+
+#include "RXIO/iocommoneventfile.h"
 #include "RXIO/RXObjects/rpgmap.h"
 #include "RXIO/RXObjects/rpgmapinfo.h"
 
@@ -107,6 +111,10 @@ void MainWindow::open_project(QString project_path)
             IOClassFile class_file(this->system.data_dir + "Classes.rxdata", &this->system.classes_list);
             IOSKillFile skill_file(this->system.data_dir + "Skills.rxdata", &this->system.skills_list);
             IOItemFile item_file(this->system.data_dir + "Items.rxdata", &this->system.items_list);
+            IOWeaponFile weapon_file(this->system.data_dir + "Weapons.rxdata", &this->system.weapons_list);
+            IOArmorFile armor_file(this->system.data_dir + "Armors.rxdata", &this->system.armors_list);
+            //...
+            IOCommonEventFile commonevents_file(this->system.data_dir + "CommonEvents.rxdata", &this->system.common_events_list);
         }
         catch(ParserException *ex)
         {
@@ -119,7 +127,7 @@ void MainWindow::open_project(QString project_path)
 
 void MainWindow::change_map(int id)
 {
-    if (this->ui->map_label->map_changed())
+    if (this->ui->map_label->has_map_changed())
     {
         QMessageBox msgbox;
         msgbox.setText("There are unsaved changes in this map! Save to file?");
@@ -145,6 +153,7 @@ void MainWindow::change_map(int id)
         }
     }
     this->ui->map_label->set_map(id);
+    this->system.current_map_id = id;
     this->ui->autotiles_label->change_tileset(this->system.map_info_list.at(id)->map->tileset_id);
     this->ui->tileset_label->change_tileset(this->system.map_info_list.at(id)->map->tileset_id);
     this->ui->tileset_label_2->change_tileset(this->system.map_info_list.at(id)->map->tileset_id);
@@ -395,5 +404,80 @@ void MainWindow::on_action_zoom_25_triggered()
 
 void MainWindow::on_actionSave_triggered()
 {
+    this->ui->map_label->do_save();
+    this->ui->map_label->set_map_changed(false);
 
+    this->ui->map_tree_widget->do_save();
+}
+
+void MainWindow::on_actionshift_up_triggered()
+{
+    this->ui->map_label->shift(MapWidget::UP, 1);
+}
+
+void MainWindow::on_actionShift_Down_triggered()
+{
+    this->ui->map_label->shift(MapWidget::DOWN, 1);
+}
+
+void MainWindow::on_actionShift_right_triggered()
+{
+    this->ui->map_label->shift(MapWidget::RIGHT, 1);
+}
+
+void MainWindow::on_actionShift_left_triggered()
+{
+    this->ui->map_label->shift(MapWidget::LEFT, 1);
+}
+
+void MainWindow::on_actionExtend_Left_triggered()
+{
+    this->ui->map_label->extend(MapWidget::LEFT, 1);
+}
+
+void MainWindow::on_actionExtend_Right_triggered()
+{
+    this->ui->map_label->extend(MapWidget::RIGHT, 1);
+}
+
+void MainWindow::on_actionExtend_Up_triggered()
+{
+    this->ui->map_label->extend(MapWidget::UP, 1);
+}
+
+void MainWindow::on_actionExtend_Down_triggered()
+{
+    this->ui->map_label->extend(MapWidget::DOWN, 1);
+}
+
+void MainWindow::on_actionCrop_Left_triggered()
+{
+    bool ok;
+    int val = QInputDialog::getInt(this, "Crop Left", "How many tiles should be cropped?", 1, 1, 20, 1, &ok);
+    if (ok)
+        this->ui->map_label->crop(MapWidget::LEFT, val);
+}
+
+void MainWindow::on_actionCrop_Right_triggered()
+{
+    bool ok;
+    int val = QInputDialog::getInt(this, "Crop Right", "How many tiles should be cropped?", 1, 1, 20, 1, &ok);
+    if (ok)
+        this->ui->map_label->crop(MapWidget::RIGHT, val);
+}
+
+void MainWindow::on_actionCrop_Up_triggered()
+{
+    bool ok;
+    int val = QInputDialog::getInt(this, "Crop Up", "How many tiles should be cropped?", 1, 1, 20, 1, &ok);
+    if (ok)
+        this->ui->map_label->crop(MapWidget::UP, val);
+}
+
+void MainWindow::on_actionCrop_Down_triggered()
+{
+    bool ok;
+    int val = QInputDialog::getInt(this, "Crop Down", "How many tiles should be cropped?", 1, 1, 20, 1, &ok);
+    if (ok)
+        this->ui->map_label->crop(MapWidget::DOWN, val);
 }

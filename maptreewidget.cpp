@@ -1,5 +1,7 @@
 #include "maptreewidget.h"
 
+#include "RXIO/iomapinfofile.h"
+
 MapTreeWidget::MapTreeWidget(QWidget *parent) : QTreeWidget(parent)
 {
     connect(this, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)), this, SLOT(clicked_at_item(QTreeWidgetItem*,QTreeWidgetItem*)));
@@ -41,6 +43,24 @@ MapTreeWidget::MapTreeWidget(QWidget *parent) : QTreeWidget(parent)
 
 void MapTreeWidget::list_maps()
 {
+    if (root != 0)
+    {
+        this->takeTopLevelItem(this->indexOfTopLevelItem(root));
+        this->id_map.clear();
+    }
+
+    QStringList cols;
+    cols << "Project";
+    cols << "000";
+    cols << "-1";
+    root = new QTreeWidgetItem(cols);
+    this->addTopLevelItem(root);
+    this->id_map.insert(0, root);
+
+
+
+
+    /*
     for (int i = 0; i < system->map_info_list.length(); i++)
     {
         if (system->map_info_list.at(i)->parent_id == 0)
@@ -54,38 +74,36 @@ void MapTreeWidget::list_maps()
             this->id_map.insert(system->map_info_list.at(i)->id, item);
             this->addTopLevelItem(item);
         }
-    }
+    }*/
 
     do
     {
         for (int i = 0; i < system->map_info_list.length(); i++)
         {
-            if (system->map_info_list.at(i)->parent_id != 0)
-            {
-                QStringList columns;
-                columns << system->map_info_list.at(i)->name;
-                columns << QString::number(system->map_info_list.at(i)->order).rightJustified(3,'0');
-                columns << QString::number(i);
+            QStringList columns;
+            columns << system->map_info_list.at(i)->name;
+            columns << QString::number(system->map_info_list.at(i)->order).rightJustified(3,'0');
+            columns << QString::number(i);
 
-                QTreeWidgetItem *item = new QTreeWidgetItem(columns);
-                //parent ID exists, id doesnt exist yet
-                if (this->id_map.value(system->map_info_list.at(i)->parent_id, 0) != 0 && this->id_map.value(system->map_info_list.at(i)->id, 0) == 0)
-                {
-                    this->id_map.insert(system->map_info_list.at(i)->id, item);
-                    this->id_map.value(system->map_info_list.at(i)->parent_id, 0)->addChild(item);
-                }
+            QTreeWidgetItem *item = new QTreeWidgetItem(columns);
+            //parent ID exists, id doesnt exist yet
+            if (this->id_map.value(system->map_info_list.at(i)->parent_id, 0) != 0 && this->id_map.value(system->map_info_list.at(i)->id, 0) == 0)
+            {
+                this->id_map.insert(system->map_info_list.at(i)->id, item);
+                this->id_map.value(system->map_info_list.at(i)->parent_id, 0)->addChild(item);
             }
         }
     }
-    while(system->map_info_list.size() != id_map.size());
+    while(system->map_info_list.size()+1 != id_map.size()); //+1 for root
+    this->expandItem(root);
     this->sortItems(1,Qt::SortOrder::AscendingOrder);
 
 }
 
 void MapTreeWidget::clicked_at_item(QTreeWidgetItem *current_item, QTreeWidgetItem* previous)
 {
+    if (current_item->text(2).toInt() < 0) return;
     int list_id = current_item->text(2).toInt(); //id (2nd column) which it has in the list
-
     emit on_map_selected(list_id);
 }
 
@@ -100,7 +118,15 @@ void MapTreeWidget::show_map_properties_dialog()
         return;
     RPGMapInfo *mapinfo = system->map_info_list.at(this->selectedItems().at(0)->text(2).toInt());
     MapPropertiesDialog *dialog = new MapPropertiesDialog(mapinfo, this->system, 0);
+    connect(dialog, SIGNAL(ok_clicked()), this, SLOT(list_maps()));
     dialog->show();
+}
+
+void MapTreeWidget::do_save()
+{
+    qDebug() << this->system->data_dir + "MapInfos.rxdata";
+    IOMapInfoFile mapinfo_file;
+    mapinfo_file.write_to_file(this->system->data_dir + "MapInfos.rxdata", &this->system->map_info_list);
 }
 
 void MapTreeWidget::handleParserException(ParserException *ex)

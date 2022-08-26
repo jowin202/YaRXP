@@ -20,7 +20,6 @@ class MapPropertiesDialog : public QWidget
 public:
     explicit MapPropertiesDialog(RPGMapInfo* info, RPGSystem *system, QWidget *parent = nullptr);
     ~MapPropertiesDialog();
-    void closeEvent(QCloseEvent *event);
 
     void keyPressEvent(QKeyEvent *event)
     {
@@ -37,6 +36,10 @@ private slots:
     void on_button_ok_clicked();
 
     void on_button_cancel_clicked();
+
+
+signals:
+    void ok_clicked();
 
 private:
     Ui::MapPropertiesDialog *ui;
