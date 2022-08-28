@@ -507,37 +507,139 @@ QString RPGEventCommand::get_command_text(RPGSystem *system)
       Starting Page 2
       **/
     else if (code == 201)
-        return "Transfer Player";
+    {
+        QString data;
+        if (parameters.at(0).toInt() == 0)
+        {
+            int map_num = parameters.at(1).toInt();
+            for (int i = 0; i < system->map_info_list.length(); i++)
+            {
+                if (system->map_info_list.at(i)->id == map_num)
+                        data = "[" + QString::number(map_num).rightJustified(3,'0') + ": " + system->map_info_list.at(i)->name + "],(" + QString::number(parameters.at(2).toInt()).rightJustified(3,'0') + "," +  QString::number(parameters.at(3).toInt()).rightJustified(3,'0') + ")";
+            }
+        }
+        else
+        {
+            data = "Variable [" + QString::number(parameters.at(1).toInt()).rightJustified(3,'0') + "]["+ QString::number(parameters.at(2).toInt()).rightJustified(3,'0') + "]["+ QString::number(parameters.at(3).toInt()).rightJustified(3,'0') + "]";
+        }
+
+
+        switch (parameters.at(4).toInt())
+        {
+        case 2: data.append(", Down"); break;
+        case 4: data.append(", Left"); break;
+        case 6: data.append(", Right"); break;
+        case 8: data.append(", Up"); break;
+        }
+        if (parameters.at(5).toInt() == 1)
+            data.append(", No Fade");
+        return "@>Transfer Player: " + data;
+    }
     else if (code == 202)
-        return "Set Event Location";
+    {
+        QString data;
+        if (parameters.at(0).toInt() == 0) data = "This event";
+        else
+            data = "[" + system->get_current_map_info()->map->event_by_id(parameters.at(0).toInt())->name + "]";
+
+        if (parameters.at(1).toInt() == 0) //direct appointment
+            data += ", (" + QString::number(parameters.at(2).toInt()).rightJustified(3,'0') + "," + QString::number(parameters.at(3).toInt()).rightJustified(3,'0') + ")";
+        else if (parameters.at(1).toInt() == 1) //variable
+            data += ", Variable [" + QString::number(parameters.at(2).toInt()).rightJustified(4,'0') + "][" + QString::number(parameters.at(3).toInt()).rightJustified(4,'0') + "]";
+        else if (parameters.at(1).toInt() == 2) //switch with
+            data += ", Switch with [" + system->get_current_map_info()->map->event_by_id(parameters.at(2).toInt())->name + "]";
+
+        switch (parameters.at(4).toInt())
+        {
+        case 2: data.append(", Down"); break;
+        case 4: data.append(", Left"); break;
+        case 6: data.append(", Right"); break;
+        case 8: data.append(", Up"); break;
+        }
+
+        return "@>Set Event Location: " + data;
+    }
     else if (code == 203)
-        return "Scroll Map";
+    {
+        QString data;
+        switch (parameters.at(0).toInt())
+        {
+        case 2: data.append("Down"); break;
+        case 4: data.append("Left"); break;
+        case 6: data.append("Right"); break;
+        case 8: data.append("Up"); break;
+        }
+
+        data += ", " + QString::number(parameters.at(1).toInt()) + ", " + QString::number(parameters.at(2).toInt());
+
+        return "@>Scroll Map: " + data;
+    }
     else if (code == 204)
-        return "Change Map Settings";
+    {
+        QString data;
+        if (parameters.at(0).toInt() == 0)
+        {
+            data = "Panorama = ";
+            data += "'" + parameters.at(1).str + "', " + QString::number(parameters.at(2).toInt());
+        }
+        else if (parameters.at(0).toInt() == 1)
+        {
+                data = "Fog = ";
+                data += "'" + parameters.at(1).str + "', " + QString::number(parameters.at(2).toInt()) + ", " + QString::number(parameters.at(3).toInt());
+                switch (parameters.at(4).toInt())
+                {
+                case 0: data.append(", Normal"); break;
+                case 1: data.append(", Add"); break;
+                case 2: data.append(", Sub"); break;
+                }
+                data += ", " + QString::number(parameters.at(5).toInt());
+                data += ", " + QString::number(parameters.at(6).toInt());
+                data += ", " + QString::number(parameters.at(7).toInt());
+        }
+        else if (parameters.at(0).toInt() == 2)
+        {
+                data = "Battleback = ";
+                data += "'" + parameters.at(1).str + "'";
+        }
+
+        return "@>Change Map Settings: " + data;
+    }
     else if (code == 205)
-        return "Fog Color Tone"; //BUGGY TODO
+        return "@>Fog Color Tone: (" + QString::number(this->red) + ","+ QString::number(this->green) + ","+ QString::number(this->blue) + ","+ QString::number(this->gray) + "), @" + QString::number(parameters.at(0).toInt());
     else if (code == 206)
-        return "Change Fog Opacity";
+        return "@>Change Fog Opacity: " + QString::number(parameters.at(0).toInt()) + ", @" + QString::number(parameters.at(1).toInt());
     else if (code == 207)
-        return "Show Animation";
+    {
+        QString data;
+        if (parameters.at(0).toInt() == -1)
+            data = "Player";
+        else if (parameters.at(0).toInt() == 0)
+            data = "This event";
+        else
+            data = "[" + system->get_current_map_info()->map->event_by_id(parameters.at(0).toInt())->name + "]";
+
+        data += ", ";
+        data += "[" + system->animation_list.at(parameters.at(1).toInt()-1)->name + "]";
+        return "@>Show Animation: " + data;
+    }
     else if (code == 208)
-        return "Change Transparent Flag";
+        return "@>Change Transparent Flag: " + QString(parameters.at(0).toInt() == 0 ? "Transparent" : "Normal");
     else if (code == 209)
-        return "Set Move Route"; //BUGGY TODO
+        return "Set Move Route";
     else if (code == 509)
-        return "Set Move Route multiline";
+        return "NOT USED HERE";
     else if (code == 210)
-        return "Wait for Move's Completition";
+        return "@>Wait for Move's Completition";
     else if (code == 221)
-        return "Prepare for Transition"; //Irrelevant for Pokemon
+        return "@>Prepare for Transition";
     else if (code == 222)
-        return "Execute Transition"; //Irrelevant for Pokemon
+        return "@>Execute Transition: '" + parameters.at(0).str + "'";
     else if (code == 223)
-        return "Change Screen Color Tone"; // BUGGY TODO
+        return "@>Change Screen Color Tone: (" + QString::number(this->red) + ","+ QString::number(this->green) + ","+ QString::number(this->blue) + ","+ QString::number(this->gray) + "), @" + QString::number(parameters.at(0).toInt());
     else if (code == 224) //number maybe not right
-        return "Screen Flash"; // BUGGY TODO
+        return "@>Screen Flash: (" + QString::number(this->red) + ","+ QString::number(this->green) + ","+ QString::number(this->blue) + ","+ QString::number(this->gray) + "), @" + QString::number(parameters.at(0).toInt());
     else if (code == 225)
-        return "Screen Shake";
+        return "@>Screen Shake: " + QString::number(parameters.at(0).toInt()) + ", " + QString::number(parameters.at(1).toInt()) + ", @" + QString::number(parameters.at(2).toInt());
     else if (code == 231)
         return "Show Picture";
     else if (code == 232)

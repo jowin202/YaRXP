@@ -58,6 +58,7 @@ SOURCES += \
     RXIO/iomapfile.cpp \
     RXIO/iomapinfofile.cpp \
     RXIO/iorgssad.cpp \
+    RXIO/ioscriptfile.cpp \
     RXIO/ioskillfile.cpp \
     RXIO/iostatefile.cpp \
     RXIO/iosystemfile.cpp \
@@ -133,6 +134,7 @@ HEADERS += \
     RXIO/iomapfile.h \
     RXIO/iomapinfofile.h \
     RXIO/iorgssad.h \
+    RXIO/ioscriptfile.h \
     RXIO/ioskillfile.h \
     RXIO/iostatefile.h \
     RXIO/iosystemfile.h \

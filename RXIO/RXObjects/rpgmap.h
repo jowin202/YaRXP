@@ -30,6 +30,7 @@ public:
 
 
     RPGEvent *event_on_pos(QPoint pos);
+    RPGEvent *event_by_id(int id);
     QImage create_map_image(int zoom, bool dim_other, bool show_current_and_below, int current_layer, RPGTileset *tileset);
     QList<int> get_elements_in_rectangle(QRect rect, int fromlayer, int tolayer);
     void delete_elements_in_rectangle(QRect rect, int fromlayer, int tolayer);

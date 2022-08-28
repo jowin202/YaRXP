@@ -9,6 +9,8 @@
 #include <QSettings>
 #include <QMessageBox>
 
+#include <QDesktopServices>
+
 #include "editors/dataeditor.h"
 
 #include "tilesetwidget.h"
@@ -115,6 +117,8 @@ private slots:
     void on_actionCrop_Up_triggered();
 
     void on_actionCrop_Down_triggered();
+
+    void on_actionOpen_Project_Folder_triggered();
 
 private:
     Ui::MainWindow *ui;

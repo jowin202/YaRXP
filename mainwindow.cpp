@@ -10,9 +10,13 @@
 #include "RXIO/ioweaponfile.h"
 #include "RXIO/ioarmorfile.h"
 
+#include "RXIO/ioanimationfile.h"
+
 #include "RXIO/iocommoneventfile.h"
 #include "RXIO/RXObjects/rpgmap.h"
 #include "RXIO/RXObjects/rpgmapinfo.h"
+
+#include "RXIO/ioscriptfile.h"
 
 #include <QDebug>
 #include <QToolButton>
@@ -77,6 +81,7 @@ MainWindow::MainWindow(QWidget *parent)
     this->ui->map_tree_widget->hideColumn(1);
     this->ui->map_tree_widget->hideColumn(2);
     this->ui->map_tree_widget->hideColumn(3);
+
 }
 
 MainWindow::~MainWindow()
@@ -115,9 +120,12 @@ void MainWindow::open_project(QString project_path)
             IOArmorFile armor_file(this->system.data_dir + "Armors.rxdata", &this->system.armors_list);
             //...
             IOCommonEventFile commonevents_file(this->system.data_dir + "CommonEvents.rxdata", &this->system.common_events_list);
+            IOAnimationFile animation_file(this->system.data_dir + "Animations.rxdata", &this->system.animation_list);
+
         }
         catch(ParserException *ex)
         {
+            qDebug() << "exception when reading files";
             this->ui->map_tree_widget->handleParserException(ex);
         }
     }
@@ -480,4 +488,9 @@ void MainWindow::on_actionCrop_Down_triggered()
     int val = QInputDialog::getInt(this, "Crop Down", "How many tiles should be cropped?", 1, 1, 20, 1, &ok);
     if (ok)
         this->ui->map_label->crop(MapWidget::DOWN, val);
+}
+
+void MainWindow::on_actionOpen_Project_Folder_triggered()
+{
+    QDesktopServices::openUrl( QUrl::fromLocalFile( system.current_project_dir ) );
 }

@@ -21,6 +21,16 @@ RPGEvent* RPGMap::event_on_pos(QPoint pos)
     return 0;
 }
 
+RPGEvent *RPGMap::event_by_id(int id)
+{
+    for (int i = 0; i < events.size(); i++)
+    {
+        if (events.at(i)->id == id)
+            return events.at(i);
+    }
+    return 0;
+}
+
 
 QImage RPGMap::create_map_image(int zoom, bool dim_other, bool show_current_and_below, int current_layer, RPGTileset *tileset)
 {

@@ -1,10 +1,10 @@
 #include "mainwindow.h"
 #include <QDebug>
 #include <QApplication>
-#include "RXIO/RXObjects/rpganimation.h"
-#include "RXIO/ioanimationfile.h"
 
 #include "editors/dataeditor.h"
+
+#include "RXIO/ioscriptfile.h"
 
 
 #include <QList>

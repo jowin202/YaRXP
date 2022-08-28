@@ -13,11 +13,10 @@ void EventList::fill_list()
 {
     RPGEventCommand *command;
 
-
     //Multiline Commands
     RPGMoveRoute *current_move_route = 0;
     RPGMoveCommand *current_move_command = 0;
-    int current_mv_index;
+    int current_mv_index = 0;
 
 
 
@@ -25,6 +24,7 @@ void EventList::fill_list()
     for (int i = 0; i < list->length(); i++)
     {
         command = list->at(i);
+        //qDebug() << command->code;
 
         //Multiline Commands
         if (command->code == 101 || command->code == 401 ||
@@ -48,16 +48,10 @@ void EventList::fill_list()
                 current_move_command = 0;
             }
             this->addItem(new MultilineEventCell(command, system, current_move_command));
-
-
         }
         //Single Line Commands
-        //103
-        //104
-        //105
         else
             this->addItem(new SimpleEventCell(command,system));
-
 
 
     }

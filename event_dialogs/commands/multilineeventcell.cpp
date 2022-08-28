@@ -7,8 +7,6 @@ MultilineEventCell::MultilineEventCell(RPGEventCommand *command, RPGSystem *syst
 {
     this->is_simple = false;
 
-
-
     if (code == 209)
     {
         QString actor;
@@ -30,6 +28,7 @@ MultilineEventCell::MultilineEventCell(RPGEventCommand *command, RPGSystem *syst
     }
     else
         this->setText(indent_as_string + command->get_command_text(system));
+
 
 
 }
