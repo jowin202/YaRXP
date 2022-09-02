@@ -118,15 +118,19 @@ void EditActors::set_actor(int n)
     this->ui->spin_initial->setValue(current_actor->initial_level);
     this->ui->spin_final->setValue(current_actor->final_level);
 
-    this->ui->combo_class->clear();
-    for (int i = 0; i < this->system->classes_list.length(); i++)
-        this->ui->combo_class->addItem(QString::number(i+1).rightJustified(3,'0') + ": " + this->system->classes_list.at(i)->name);
-    if (this->ui->combo_class->count() >= current_actor->class_id)
-        this->ui->combo_class->setCurrentIndex(current_actor->class_id-1);
+    system->datasource.fill_combo(this->ui->combo_class,RPGSystem::CLASSES,true, 3, current_actor->class_id);
+
+    system->datasource.fill_combo_weapon_by_class(this->ui->combo_weapon, current_actor->class_id, true, 3, current_actor->weapon_id);
+    system->datasource.fill_combo_shield_by_class(this->ui->combo_shield, current_actor->class_id, true, 3, current_actor->armor1_id);
+    system->datasource.fill_combo_helmet_by_class(this->ui->combo_helmet, current_actor->class_id, true, 3, current_actor->armor2_id);
+    system->datasource.fill_combo_body_by_class(this->ui->combo_body, current_actor->class_id, true, 3, current_actor->armor3_id);
+    system->datasource.fill_combo_accessory_by_class(this->ui->combo_accessory, current_actor->class_id, true, 3, current_actor->armor4_id);
+
     this->set_exp_curve(current_actor->exp_basis, current_actor->exp_inflation);
 
-    QImage character_graphic = QImage(this->system->characters_dir + current_actor->character_name);
-    QImage battler_graphic = QImage(this->system->battlers_dir + current_actor->battler_name);
+    QImage character_graphic = current_actor->get_character_graphic(system);
+    QImage battler_graphic = current_actor->get_battler_graphic(system);
+
 
     if (!character_graphic.isNull())
         this->ui->label_character_graphic->setPixmap(QPixmap::fromImage(character_graphic));

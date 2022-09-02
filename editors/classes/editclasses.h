@@ -3,6 +3,8 @@
 
 #include <QWidget>
 
+class RPGSystem;
+
 namespace Ui {
 class EditClasses;
 }
@@ -15,8 +17,14 @@ public:
     explicit EditClasses(QWidget *parent = nullptr);
     ~EditClasses();
 
+    void setSystem(RPGSystem *system) {this->system = system;}
+
+public slots:
+    void set_class(int n);
+
 private:
     Ui::EditClasses *ui;
+    RPGSystem *system = 0;
 };
 
 #endif // EDITCLASSES_H

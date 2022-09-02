@@ -6,152 +6,155 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1231</width>
-    <height>628</height>
+    <width>595</width>
+    <height>537</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QWidget" name="gridLayoutWidget">
-   <property name="geometry">
-    <rect>
-     <x>80</x>
-     <y>40</y>
-     <width>321</width>
-     <height>421</height>
-    </rect>
-   </property>
-   <layout class="QGridLayout" name="gridLayout">
-    <item row="2" column="0">
-     <widget class="QLabel" name="label_3">
-      <property name="text">
-       <string>Equippable Weapons:</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="1">
-     <widget class="QComboBox" name="comboBox">
-      <item>
-       <property name="text">
-        <string>Front</string>
+  <layout class="QGridLayout" name="gridLayout_5">
+   <item row="0" column="0">
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="2" column="1" rowspan="2">
+      <widget class="QGroupBox" name="groupBox_2">
+       <property name="title">
+        <string>Equippable Armors</string>
        </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Middle</string>
+       <layout class="QGridLayout" name="gridLayout_3">
+        <item row="0" column="0">
+         <widget class="QScrollArea" name="scrollArea_2">
+          <property name="widgetResizable">
+           <bool>true</bool>
+          </property>
+          <widget class="QWidget" name="scrollAreaWidgetContents_2">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>188</width>
+             <height>415</height>
+            </rect>
+           </property>
+           <layout class="QGridLayout" name="gridLayout_7">
+            <item row="0" column="0">
+             <layout class="QVBoxLayout" name="armor_layout"/>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item row="0" column="3" rowspan="4">
+      <layout class="QGridLayout" name="gridLayout_4">
+       <item row="0" column="0">
+        <widget class="QGroupBox" name="groupBox_3">
+         <property name="title">
+          <string>Element</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QGroupBox" name="groupBox_4">
+         <property name="title">
+          <string>State</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0" colspan="2">
+        <widget class="QGroupBox" name="groupBox_5">
+         <property name="title">
+          <string>Skills to</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="2" column="0" rowspan="2">
+      <widget class="QGroupBox" name="groupBox">
+       <property name="title">
+        <string>Equippable Weapons</string>
        </property>
-      </item>
-      <item>
+       <layout class="QGridLayout" name="gridLayout_2">
+        <item row="0" column="0">
+         <widget class="QScrollArea" name="scrollArea">
+          <property name="widgetResizable">
+           <bool>true</bool>
+          </property>
+          <widget class="QWidget" name="scrollAreaWidgetContents">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>188</width>
+             <height>415</height>
+            </rect>
+           </property>
+           <layout class="QGridLayout" name="gridLayout_6">
+            <item row="0" column="0">
+             <layout class="QVBoxLayout" name="weapon_layout"/>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QLabel" name="label_2">
        <property name="text">
-        <string>Rear</string>
+        <string>Position:</string>
        </property>
-      </item>
-     </widget>
-    </item>
-    <item row="0" column="1">
-     <widget class="QLabel" name="label_2">
-      <property name="text">
-       <string>Position:</string>
-      </property>
-     </widget>
-    </item>
-    <item row="2" column="1">
-     <widget class="QLabel" name="label_4">
-      <property name="text">
-       <string>Equippable Armors:</string>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="0">
-     <widget class="QLabel" name="label">
-      <property name="text">
-       <string>Name:</string>
-      </property>
-     </widget>
-    </item>
-    <item row="3" column="0">
-     <layout class="QVBoxLayout" name="verticalLayout">
-      <item>
-       <widget class="QCheckBox" name="checkBox_2">
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Name:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLineEdit" name="line_name"/>
+     </item>
+     <item row="1" column="1">
+      <widget class="QComboBox" name="combo_pos">
+       <item>
         <property name="text">
-         <string>CheckBox</string>
+         <string>Front</string>
         </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="checkBox_4">
+       </item>
+       <item>
         <property name="text">
-         <string>CheckBox</string>
+         <string>Middle</string>
         </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="checkBox_3">
+       </item>
+       <item>
         <property name="text">
-         <string>CheckBox</string>
+         <string>Rear</string>
         </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="checkBox_5">
-        <property name="text">
-         <string>CheckBox</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="checkBox_6">
-        <property name="text">
-         <string>CheckBox</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="checkBox">
-        <property name="text">
-         <string>CheckBox</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </item>
-    <item row="3" column="1">
-     <layout class="QVBoxLayout" name="verticalLayout_2">
-      <item>
-       <widget class="QCheckBox" name="checkBox_8">
-        <property name="text">
-         <string>CheckBox</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="checkBox_7">
-        <property name="text">
-         <string>CheckBox</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </item>
-    <item row="1" column="0">
-     <widget class="QLineEdit" name="lineEdit"/>
-    </item>
-    <item row="3" column="2">
-     <spacer name="verticalSpacer">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>20</width>
-        <height>40</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
-   </layout>
-  </widget>
+       </item>
+      </widget>
+     </item>
+     <item row="2" column="2">
+      <spacer name="verticalSpacer">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>40</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+  </layout>
  </widget>
  <resources/>
  <connections/>

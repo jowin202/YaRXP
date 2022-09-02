@@ -17,7 +17,7 @@ public:
     explicit EditActors(QWidget *parent = nullptr);
     ~EditActors();
 
-    void set_system(RPGSystem *system)
+    void setSystem(RPGSystem *system)
     {this->system = system;}
 
     enum {MAXHP, MAXSP, STR, DEX, AGI, INTVAR};

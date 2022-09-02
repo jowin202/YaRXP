@@ -67,11 +67,13 @@ SOURCES += \
     RXIO/ioweaponfile.cpp \
     RXIO/testcases.cpp \
     audiowidget.cpp \
+    datasource.cpp \
     editors/actors/editactors.cpp \
     editors/actors/editexpcurve.cpp \
     editors/actors/editoractorparameterlabel.cpp \
     editors/actors/editoractorparameterpage.cpp \
     editors/actors/editoractorparameters.cpp \
+    editors/classes/classcheckbox.cpp \
     editors/classes/editclasses.cpp \
     editors/dataeditor.cpp \
     event_dialogs/choicesdialog.cpp \
@@ -143,11 +145,13 @@ HEADERS += \
     RXIO/ioweaponfile.h \
     RXIO/testcases.h \
     audiowidget.h \
+    datasource.h \
     editors/actors/editactors.h \
     editors/actors/editexpcurve.h \
     editors/actors/editoractorparameterlabel.h \
     editors/actors/editoractorparameterpage.h \
     editors/actors/editoractorparameters.h \
+    editors/classes/classcheckbox.h \
     editors/classes/editclasses.h \
     editors/dataeditor.h \
     event_dialogs/choicesdialog.h \

@@ -641,67 +641,154 @@ QString RPGEventCommand::get_command_text(RPGSystem *system)
     else if (code == 225)
         return "@>Screen Shake: " + QString::number(parameters.at(0).toInt()) + ", " + QString::number(parameters.at(1).toInt()) + ", @" + QString::number(parameters.at(2).toInt());
     else if (code == 231)
-        return "Show Picture";
+    {
+        QString data;
+        data.append(QString::number(parameters.at(0).toInt()));
+        data.append(", '" + parameters.at(1).str + "', ");
+        data.append(parameters.at(2).toInt() == 0 ? "Upper Left " : "Center ");
+        if (parameters.at(3).toInt() == 0) //constant coordinates
+            data.append("(" + QString::number(parameters.at(4).toInt()) + "," + QString::number(parameters.at(5).toInt()) + "), ");
+        else //variables
+            data.append("(Variable [" + QString::number(parameters.at(4).toInt()).rightJustified(4,'0') + "],[" + QString::number(parameters.at(5).toInt()).rightJustified(4,'0') + "]), ");
+
+        //Zoom
+        data.append("(" + QString::number(parameters.at(6).toInt()) + "\%," + QString::number(parameters.at(7).toInt()) + "\%)");
+
+        data.append(", " + QString::number(parameters.at(8).toInt()) + ", "); //opacity
+
+        //Blending
+        if (parameters.at(9).toInt() == 0)
+            data.append("Normal");
+        else if (parameters.at(9).toInt() == 1)
+            data.append("Add");
+        else //if (parameters.at(9).toInt() == 2)
+            data.append("Sub");
+
+        return "@>Show Picture: " + data;
+    }
     else if (code == 232)
-        return "Move Picture";
+    {
+        QString data;
+        data.append(QString::number(parameters.at(0).toInt()));
+        data.append(", @" + QString::number(parameters.at(1).toInt()) + ", ");
+        data.append(parameters.at(2).toInt() == 0 ? "Upper Left " : "Center ");
+
+        if (parameters.at(3).toInt() == 0) //constant coordinates
+            data.append("(" + QString::number(parameters.at(4).toInt()) + "," + QString::number(parameters.at(5).toInt()) + "), ");
+        else //variables
+            data.append("(Variable [" + QString::number(parameters.at(4).toInt()).rightJustified(4,'0') + "],[" + QString::number(parameters.at(5).toInt()).rightJustified(4,'0') + "]), ");
+
+        data.append("(" + QString::number(parameters.at(6).toInt()) + "\%," + QString::number(parameters.at(7).toInt()) + "\%)");
+        data.append(", " + QString::number(parameters.at(8).toInt()) + ", "); //opacity
+
+        //Blending
+        if (parameters.at(9).toInt() == 0)
+            data.append("Normal");
+        else if (parameters.at(9).toInt() == 1)
+            data.append("Add");
+        else //if (parameters.at(9).toInt() == 2)
+            data.append("Sub");
+
+        return "@>Move Picture: " + data;
+    }
     else if (code == 233)
-        return "Rotate Picture";
+    {
+        QString data;
+        QString plus = (parameters.at(1).toInt() > 0 ? "+" : "");
+        data.append(QString::number(parameters.at(0).toInt()));
+        data.append(", " + plus + QString::number(parameters.at(1).toInt()));
+        return "@>Rotate Picture: " + data;
+    }
     else if (code == 234)
-        return "Change Picture Color Tone"; //BUGGY TODO
+    {
+        QString data;
+        data.append(QString::number(parameters.at(0).toInt()) + ", (");
+        data.append(QString::number(this->red) + ",");
+        data.append(QString::number(this->green) + ",");
+        data.append(QString::number(this->blue) + ",");
+        data.append(QString::number(this->gray) + "), @");
+        data.append(QString::number(parameters.at(1).toInt()));
+
+        return "@>Change Picture Color Tone: " + data;
+    }
     else if (code == 235)
-        return "Erase Picture";
+        return "@>Erase Picture: " + QString::number(parameters.at(0).toInt());
     else if (code == 236)
-        return "Set Weather Effects";
+    {
+        QString data;
+        if (parameters.at(0).toInt() == 0)
+            data.append("None");
+        else if (parameters.at(0).toInt() == 1)
+            data.append("Rain");
+        else if (parameters.at(0).toInt() == 2)
+            data.append("Storm");
+        else //if (parameters.at(0).toInt() == 3)
+            data.append("Snow");
+
+        data.append(", " + QString::number(parameters.at(1).toInt()) + ", @");
+        data.append(QString::number(parameters.at(2).toInt()));
+
+        return "@>Set Weather Effects: " + data;
+    }
     else if (code == 241)
-        return "Play BGM";
+        return "@>Play BGM: '" + this->audiofile.name + "', " + QString::number(this->audiofile.volume) + ", " + QString::number(this->audiofile.pitch);
     else if (code == 242)
-        return "Fade out BGM";
+        return "@>Fade out BGM: " + QString::number(parameters.at(0).toInt()) + " sec.";
     else if (code == 245)
-        return "Play BGS";
+        return "@>Play BGS: '" + this->audiofile.name + "', " + QString::number(this->audiofile.volume) + ", " + QString::number(this->audiofile.pitch);
     else if (code == 246)
-        return "Fade out BGS";
+        return "@>Fade out BGS: " + QString::number(parameters.at(0).toInt()) + " sec.";
     else if (code == 247)
-        return "Memorize BGM/BGS";
+        return "@>Memorize BGM/BGS";
     else if (code == 248)
-        return "Restore BGM/BGS";
+        return "@>Restore BGM/BGS";
     else if (code == 249)
-        return "Play ME";
+        return "@>Play ME: '" + this->audiofile.name + "', " + QString::number(this->audiofile.volume) + ", " + QString::number(this->audiofile.pitch);
     else if (code == 250)
-        return "Play SE"; //Buggy TODO
+        return "@>Play SE: '" + this->audiofile.name + "', " + QString::number(this->audiofile.volume) + ", " + QString::number(this->audiofile.pitch);
     else if (code == 251)
-        return "Stop SE";
+        return "@>Stop SE";
     /**
       Starting Page 3
       **/
-    else if (code == 314)
-        return "Recover All";
-    else if (code == 351)
-        return "Call Menu Screen";
-    else if (code == 352)
-        return "Call Save Screen";
-    else if (code == 353)
-        return "Game Over";
-    else if (code == 354)
-        return "Return to Title Screen";
-    else if (code == 355)
-        return "@>Script : " + parameters.at(0).str;
-    else if (code == 655)
-        return "         : " + parameters.at(0).str;
-    /**
-      Following block is irrelevant
-      **/
+
+
     else if (code == 301 || code == 601 || code == 603 || code == 604)
         return "Battle Processing";
     else if (code == 302)
-        return "Shop Processing";
+    {
+        QString data;
+        if (parameters.at(0).toInt() == 0) // item
+            data.append(system->items_list.at(parameters.at(1).toInt()-1)->name);
+        else if (parameters.at(0).toInt() == 1) // weapon
+            data.append(system->weapons_list.at(parameters.at(1).toInt()-1)->name);
+        else if (parameters.at(0).toInt() == 2) // armor
+            data.append(system->armors_list.at(parameters.at(1).toInt()-1)->name);
+        data.append("]");
+        return "@>Shop Processing : [" + data;
+    }
+    else if (code == 605)
+    {
+        QString data;
+        if (parameters.at(0).toInt() == 0) // item
+            data.append(system->items_list.at(parameters.at(1).toInt()-1)->name);
+        else if (parameters.at(0).toInt() == 1) // weapon
+            data.append(system->weapons_list.at(parameters.at(1).toInt()-1)->name);
+        else if (parameters.at(0).toInt() == 2) // armor
+            data.append(system->armors_list.at(parameters.at(1).toInt()-1)->name);
+        data.append("]");
+        return "                  : [" + data;
+    }
     else if (code == 303)
-        return "Name Input Processing";
+        return "@>Name Input Processing: " + system->actor_list.at(parameters.at(0).toInt()-1)->name + ", " + QString::number(parameters.at(1).toInt()) + " characters";
     else if (code == 311)
         return "Change HP";
     else if (code == 312)
         return "Change SP";
     else if (code == 313)
         return "Change State";
+    else if (code == 314)
+        return "Recover All";
     else if (code == 315)
         return "Change Exp";
     else if (code == 316)
@@ -738,6 +825,20 @@ QString RPGEventCommand::get_command_text(RPGSystem *system)
         return "Force Action";
     else if (code == 340)
         return "Abort Battle";
+
+    else if (code == 351)
+        return "Call Menu Screen";
+    else if (code == 352)
+        return "Call Save Screen";
+    else if (code == 353)
+        return "Game Over";
+    else if (code == 354)
+        return "Return to Title Screen";
+    else if (code == 355)
+        return "@>Script : " + parameters.at(0).str;
+    else if (code == 655)
+        return "         : " + parameters.at(0).str;
+
     else if (code == 403)
         return "When Cancel";
     else if (code == 404)

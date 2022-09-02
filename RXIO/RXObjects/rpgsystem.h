@@ -18,7 +18,9 @@
 #include "rpganimation.h"
 #include "rpgtileset.h"
 #include "rpgcommonevent.h"
+#include "../../datasource.h"
 
+class DataSource;
 
 
 class RPGSystem: public QObject
@@ -27,6 +29,8 @@ class RPGSystem: public QObject
 public:
     explicit RPGSystem(QObject *parent = nullptr);
 
+
+    DataSource datasource;
 
     //Projekt stuff, not included in system file
     RPGString current_project_dir;

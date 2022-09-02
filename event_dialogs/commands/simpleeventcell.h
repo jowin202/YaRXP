@@ -21,7 +21,10 @@ public:
     QColor grey = QColor(0x9a, 0x9a, 0x9a);
     QColor blue = QColor(0, 0, 0xFF);
     QColor pink = QColor(0xFF, 0, 0xFF);
+    QColor dark_pink = QColor(150, 0, 150);
     QColor light_green = QColor(150,150,0);
+    QColor light_blue = QColor(0,150,150);
+    QColor orange = QColor(255,150,0);
 
 
     int code;

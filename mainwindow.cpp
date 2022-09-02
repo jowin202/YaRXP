@@ -9,7 +9,9 @@
 #include "RXIO/ioitemfile.h"
 #include "RXIO/ioweaponfile.h"
 #include "RXIO/ioarmorfile.h"
-
+#include "RXIO/ioenemyfile.h"
+#include "RXIO/iotroopfile.h"
+#include "RXIO/iostatefile.h"
 #include "RXIO/ioanimationfile.h"
 
 #include "RXIO/iocommoneventfile.h"
@@ -107,7 +109,6 @@ void MainWindow::open_project(QString project_path)
         try{
             IOSystemFile systemfile(this->system.data_dir + "System.rxdata", &this->system);
             IOMapInfoFile mapinfo_file(this->system.data_dir + "MapInfos.rxdata", &system.map_info_list);
-            IOTilesetFile tileset_file(this->system.data_dir + "Tilesets.rxdata", &this->system.tileset_hash, &this->system.tileset_list);
             for (int i = 0; i < this->system.tileset_list.length(); i++)
                 this->system.tileset_list.at(i)->load_tileset_graphic(&this->system);
 
@@ -118,9 +119,14 @@ void MainWindow::open_project(QString project_path)
             IOItemFile item_file(this->system.data_dir + "Items.rxdata", &this->system.items_list);
             IOWeaponFile weapon_file(this->system.data_dir + "Weapons.rxdata", &this->system.weapons_list);
             IOArmorFile armor_file(this->system.data_dir + "Armors.rxdata", &this->system.armors_list);
-            //...
-            IOCommonEventFile commonevents_file(this->system.data_dir + "CommonEvents.rxdata", &this->system.common_events_list);
+            IOEnemyFile enemies_file(this->system.data_dir + "Enemies.rxdata", &this->system.enemies_list);
+            IOTroopFile troops_file(this->system.data_dir + "Troops.rxdata", &this->system.troops_list);
+            IOStateFile states_file(this->system.data_dir + "States.rxdata", &this->system.states_list);
+
             IOAnimationFile animation_file(this->system.data_dir + "Animations.rxdata", &this->system.animation_list);
+            IOCommonEventFile commonevents_file(this->system.data_dir + "CommonEvents.rxdata", &this->system.common_events_list);
+
+            IOTilesetFile tileset_file(this->system.data_dir + "Tilesets.rxdata", &this->system.tileset_hash, &this->system.tileset_list);
 
         }
         catch(ParserException *ex)

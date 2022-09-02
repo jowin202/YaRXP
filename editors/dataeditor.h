@@ -24,16 +24,17 @@ public:
 
 
 private slots:
-    void on_central_menu_itemSelectionChanged();
-
     void on_object_list_currentRowChanged(int currentRow);
+    void on_central_menu_currentRowChanged(int currentRow);
 
 
     void on_button_cancel_clicked();
 
+
 private:
     Ui::DataEditor *ui;
     RPGSystem *system;
+
 };
 
 #endif // DATAEDITOR_H

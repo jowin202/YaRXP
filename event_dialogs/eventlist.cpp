@@ -27,10 +27,11 @@ void EventList::fill_list()
         //qDebug() << command->code;
 
         //Multiline Commands
-        if (command->code == 101 || command->code == 401 ||
-                command->code == 209 || command->code == 509 ||
-                command->code == 108 || command->code == 408 ||
-                command->code == 355 || command->code == 655)
+        if (command->code == 101 || command->code == 401 || //text
+                command->code == 209 || command->code == 509 || //move route
+                command->code == 108 || command->code == 408 || //comment
+                command->code == 355 || command->code == 655 || //script
+                command->code == 302 || command->code == 605 ) //shop processing
         {
 
             if (command->code == 209)
