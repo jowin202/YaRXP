@@ -1,7 +1,6 @@
 #include "editclasses.h"
 #include "ui_editclasses.h"
 
-#include "classcheckbox.h"
 
 #include "RXIO/RXObjects/rpgsystem.h"
 
@@ -37,16 +36,31 @@ void EditClasses::set_class(int n)
 
     for (int i = 0; i < system->weapons_list.length(); i++)
     {
-        ClassCheckbox *check = new ClassCheckbox;
+        QCheckBox *check = new QCheckBox;
         check->setText(system->weapons_list.at(i)->name);
         check->setChecked(current_class->weapon_set.contains(system->weapons_list.at(i)->id));
         this->ui->weapon_layout->addWidget(check);
     }
     for (int i = 0; i < system->armors_list.length(); i++)
     {
-        ClassCheckbox *check = new ClassCheckbox;
+        QCheckBox *check = new QCheckBox;
         check->setText(system->armors_list.at(i)->name);
         check->setChecked(current_class->armor_set.contains(system->armors_list.at(i)->id));
         this->ui->armor_layout->addWidget(check);
     }
+
+    this->ui->table_skills->clearContents();
+    this->ui->table_skills->setRowCount(0);
+    for (int i = 0; i < current_class->learnings_level.length(); i++)
+    {
+        int level = current_class->learnings_level.at(i);
+        int skill_id = current_class->learnings_skill_id.at(i);
+        QString skill_name = system->datasource.get_obj_name_by_id(skill_id, RPGSystem::SKILLS, true, 3);
+
+        this->ui->table_skills->setRowCount(this->ui->table_skills->rowCount()+1);
+        this->ui->table_skills->setItem(i,0, new QTableWidgetItem(QString::number(level)));
+        this->ui->table_skills->setItem(i,1, new QTableWidgetItem(skill_name));
+
+    }
+
 }

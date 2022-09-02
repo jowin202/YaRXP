@@ -2,6 +2,7 @@
 #define EDITCLASSES_H
 
 #include <QWidget>
+#include <QCheckBox>
 
 class RPGSystem;
 

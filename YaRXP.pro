@@ -73,7 +73,6 @@ SOURCES += \
     editors/actors/editoractorparameterlabel.cpp \
     editors/actors/editoractorparameterpage.cpp \
     editors/actors/editoractorparameters.cpp \
-    editors/classes/classcheckbox.cpp \
     editors/classes/editclasses.cpp \
     editors/dataeditor.cpp \
     event_dialogs/choicesdialog.cpp \
@@ -151,7 +150,6 @@ HEADERS += \
     editors/actors/editoractorparameterlabel.h \
     editors/actors/editoractorparameterpage.h \
     editors/actors/editoractorparameters.h \
-    editors/classes/classcheckbox.h \
     editors/classes/editclasses.h \
     editors/dataeditor.h \
     event_dialogs/choicesdialog.h \

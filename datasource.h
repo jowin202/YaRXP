@@ -5,6 +5,7 @@
 #include <QListWidget>
 #include <QComboBox>
 
+class RPGSkill;
 class RPGSystem;
 
 class DataSource : public QObject
@@ -26,6 +27,9 @@ public:
     void fill_combo_helmet_by_class(QComboBox *combo, int class_id, bool shownum, int chars, int current);
     void fill_combo_body_by_class(QComboBox *combo, int class_id, bool shownum, int chars, int current);
     void fill_combo_accessory_by_class(QComboBox *combo, int class_id, bool shownum, int chars, int current);
+
+
+    QString get_obj_name_by_id(int id, int type, bool shownum, int chars);
 
 signals:
 

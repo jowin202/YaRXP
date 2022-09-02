@@ -108,6 +108,7 @@ void MainWindow::open_project(QString project_path)
 
         try{
             IOSystemFile systemfile(this->system.data_dir + "System.rxdata", &this->system);
+            IOTilesetFile tileset_file(this->system.data_dir + "Tilesets.rxdata", &this->system.tileset_hash, &this->system.tileset_list);
             IOMapInfoFile mapinfo_file(this->system.data_dir + "MapInfos.rxdata", &system.map_info_list);
             for (int i = 0; i < this->system.tileset_list.length(); i++)
                 this->system.tileset_list.at(i)->load_tileset_graphic(&this->system);
@@ -126,7 +127,6 @@ void MainWindow::open_project(QString project_path)
             IOAnimationFile animation_file(this->system.data_dir + "Animations.rxdata", &this->system.animation_list);
             IOCommonEventFile commonevents_file(this->system.data_dir + "CommonEvents.rxdata", &this->system.common_events_list);
 
-            IOTilesetFile tileset_file(this->system.data_dir + "Tilesets.rxdata", &this->system.tileset_hash, &this->system.tileset_list);
 
         }
         catch(ParserException *ex)

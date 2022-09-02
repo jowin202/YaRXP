@@ -183,3 +183,27 @@ void DataSource::fill_combo_accessory_by_class(QComboBox *combo, int class_id, b
     this->fill_combo_armor_by_class(combo,class_id, shownum, chars, current, 3);
 }
 
+QString DataSource::get_obj_name_by_id(int id, int type, bool shownum, int chars)
+{
+    if (type == ACTORS && system->actor_list.length() >= id)
+    {
+        if (shownum)
+            return QString("%1: %2").arg(id,chars,10,QChar('0')).arg(system->actor_list.at(id-1)->name);
+        else return system->actor_list.at(id-1)->name;
+    }
+    else if (type == CLASSES && system->classes_list.length() >= id)
+    {
+        if (shownum)
+            return QString("%1: %2").arg(id,chars,10,QChar('0')).arg(system->classes_list.at(id-1)->name);
+        else return system->classes_list.at(id-1)->name;
+    }
+    else if (type == SKILLS && system->skills_list.length() >= id)
+    {
+        if (shownum)
+            return QString("%1: %2").arg(id,chars,10,QChar('0')).arg(system->skills_list.at(id-1)->name);
+        else return system->skills_list.at(id-1)->name;
+    }
+
+    return "";
+}
+
