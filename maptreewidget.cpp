@@ -4,9 +4,8 @@
 
 MapTreeWidget::MapTreeWidget(QWidget *parent) : QTreeWidget(parent)
 {
-    connect(this, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)), this, SLOT(clicked_at_item(QTreeWidgetItem*,QTreeWidgetItem*)));
+    connect(this, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)), this, SLOT(clicked_at_item(QTreeWidgetItem*)));
     connect(this, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(prepare_context_menu(QPoint)));
-
 
     action1.setText("&Map properties");
     action1.setShortcut(QKeySequence(Qt::Key_Space));
@@ -39,14 +38,19 @@ MapTreeWidget::MapTreeWidget(QWidget *parent) : QTreeWidget(parent)
     menu.addAction(&action7);
     menu.addSeparator();
     menu.addAction(&action8);
+
+
+    connect(this, SIGNAL(itemExpanded(QTreeWidgetItem*)), this, SLOT(itemExpanded(QTreeWidgetItem*)));
+    connect(this, SIGNAL(itemCollapsed(QTreeWidgetItem*)), this, SLOT(itemCollapsed(QTreeWidgetItem*)));
 }
 
 void MapTreeWidget::list_maps()
 {
-    if (root != 0)
+    id_map.clear();
+    QList<QTreeWidgetItem*> items = this->findItems("", Qt::MatchContains, 0);
+    for (int i = 0; i < items.count(); i++)
     {
-        this->takeTopLevelItem(this->indexOfTopLevelItem(root));
-        this->id_map.clear();
+        delete items.at(i);
     }
 
     QStringList cols;
@@ -54,27 +58,11 @@ void MapTreeWidget::list_maps()
     cols << "000";
     cols << "-1";
     root = new QTreeWidgetItem(cols);
+    root->setFlags(root->flags() & ~Qt::ItemIsDragEnabled);
     this->addTopLevelItem(root);
     this->id_map.insert(0, root);
 
 
-
-
-    /*
-    for (int i = 0; i < system->map_info_list.length(); i++)
-    {
-        if (system->map_info_list.at(i)->parent_id == 0)
-        {
-            QStringList columns;
-            columns << system->map_info_list.at(i)->name;
-            columns << QString::number(system->map_info_list.at(i)->order).rightJustified(3,'0');
-            columns << QString::number(i);
-
-            QTreeWidgetItem *item = new QTreeWidgetItem(columns);
-            this->id_map.insert(system->map_info_list.at(i)->id, item);
-            this->addTopLevelItem(item);
-        }
-    }*/
 
     do
     {
@@ -91,16 +79,18 @@ void MapTreeWidget::list_maps()
             {
                 this->id_map.insert(system->map_info_list.at(i)->id, item);
                 this->id_map.value(system->map_info_list.at(i)->parent_id, 0)->addChild(item);
+
+                if (system->map_info_list.at(i)->expanded)
+                    this->expandItem(item);
             }
         }
     }
     while(system->map_info_list.size()+1 != id_map.size()); //+1 for root
     this->expandItem(root);
     this->sortItems(1,Qt::SortOrder::AscendingOrder);
-
 }
 
-void MapTreeWidget::clicked_at_item(QTreeWidgetItem *current_item, QTreeWidgetItem* previous)
+void MapTreeWidget::clicked_at_item(QTreeWidgetItem *current_item)
 {
     if (current_item->text(2).toInt() < 0) return;
     int list_id = current_item->text(2).toInt(); //id (2nd column) which it has in the list
@@ -129,6 +119,23 @@ void MapTreeWidget::do_save()
     mapinfo_file.write_to_file(this->system->data_dir + "MapInfos.rxdata", &this->system->map_info_list);
 }
 
+void MapTreeWidget::dropEvent(QDropEvent *event)
+{
+    //allow reordering
+    QTreeWidget::dropEvent(event); //do the drag and drop in super class
+
+    if (this->topLevelItemCount() > 1)
+    {
+        qDebug() << "dropped outside of project";
+        this->list_maps(); //restore as you cant have more top level items
+        return;
+    }
+
+    //if here, moving item was accepted
+    int order = 0;
+    this->restore_order_and_parent(root, &order);
+}
+
 void MapTreeWidget::handleParserException(ParserException *ex)
 {
     if (ex->error_data.length() == 0)
@@ -142,5 +149,6 @@ void MapTreeWidget::handleParserException(ParserException *ex)
                     .arg(QString::number(ex->error_data.at(1).toInt(),16))
                     .arg(ex->error_data.at(2).toString())
                     .arg(ex->message)
-                );
+                              );
 }
+

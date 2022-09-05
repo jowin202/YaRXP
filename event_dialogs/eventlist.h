@@ -11,7 +11,6 @@
 #include "../RXIO/RXObjects/rpgsystem.h"
 
 
-#include "commands/showtext.h"
 
 class EventList : public QListWidget
 {
@@ -30,6 +29,9 @@ public:
 
 
     void fill_list();
+
+public slots:
+    void fix_selections();
 
 
 };

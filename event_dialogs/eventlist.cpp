@@ -6,7 +6,8 @@
 
 EventList::EventList(QWidget *parent) : QListWidget(parent)
 {
-
+    this->setSelectionMode(QAbstractItemView::ContiguousSelection);
+    connect(this, SIGNAL(itemSelectionChanged()), this, SLOT(fix_selections()));
 }
 
 void EventList::fill_list()
@@ -14,6 +15,7 @@ void EventList::fill_list()
     RPGEventCommand *command;
 
     //Multiline Commands
+    MultilineEventCell *last_head = 0;
     RPGMoveRoute *current_move_route = 0;
     RPGMoveCommand *current_move_command = 0;
     int current_mv_index = 0;
@@ -48,12 +50,44 @@ void EventList::fill_list()
                 current_move_route = 0;
                 current_move_command = 0;
             }
-            this->addItem(new MultilineEventCell(command, system, current_move_command));
+
+            MultilineEventCell *cell = new MultilineEventCell(command, system, current_move_command);
+            if (cell->is_head)
+                last_head = cell;
+            else
+            {
+                last_head->tail.append(cell);
+                cell->head = last_head;
+            }
+            this->addItem(cell);
         }
         //Single Line Commands
         else
             this->addItem(new SimpleEventCell(command,system));
 
 
+    }
+}
+
+void EventList::fix_selections()
+{
+    for (int i = 0; i < this->selectedItems().length(); i++)
+    {
+        if ( ((SimpleEventCell*)this->selectedItems().at(i))->multiline )
+        {
+            if ( ((MultilineEventCell*)this->selectedItems().at(i))->is_head )
+            {
+                    //select everything
+                    QList<MultilineEventCell*> *tail = &((MultilineEventCell*)this->selectedItems().at(i))->tail;
+                    for (int j = 0; j < tail->length(); j++)
+                    {
+                        tail->at(j)->setSelected(true);
+                    }
+            }
+            else // not head, but multiline
+            {
+                ((MultilineEventCell*)this->selectedItems().at(i))->head->setSelected(true);
+            }
+        }
     }
 }

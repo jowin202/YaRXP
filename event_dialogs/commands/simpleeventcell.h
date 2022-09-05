@@ -25,13 +25,14 @@ public:
     QColor light_green = QColor(150,150,0);
     QColor light_blue = QColor(0,150,150);
     QColor orange = QColor(255,150,0);
+    QColor cyan = QColor(0x1e,0x90,0xff);
 
 
     int code;
     int indent;
     QList<RPGVariant> parameters;
 
-    bool is_simple = true;
+    bool multiline = false;
     QString indent_as_string = "";
 };
 

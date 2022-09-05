@@ -31,5 +31,6 @@ void SimpleEventCell::set_color()
     else if (code >= 231 && code <= 236) this->setForeground(dark_pink);
     else if (code >= 241 && code <= 251) this->setForeground(light_blue);
     else if ((code >= 301 && code <= 303) || (code >= 601 && code <= 605)) this->setForeground(orange);
+    else if (code >= 311 && code <= 322) this->setForeground(cyan);
     else this->setForeground(black);
 }

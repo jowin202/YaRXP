@@ -33,13 +33,47 @@ public:
 
     void handleParserException(ParserException *ex);
 
+
+    void restore_order_and_parent(QTreeWidgetItem *item, int *current)
+    {
+        int list_id = item->text(2).toInt();
+        int id = 0;
+        if (list_id >= 0)
+        {
+            system->map_info_list.at(list_id)->order = (*current);
+            id = system->map_info_list.at(list_id)->id;
+        }
+
+
+        item->setText(1,QString("%1").arg((*current)++,3,10,QChar('0')));
+        for (int i = 0; i < item->childCount(); i++)
+        {
+            int child_list_id = item->child(i)->text(2).toInt();
+            system->map_info_list.at(child_list_id)->parent_id = id;
+            this->restore_order_and_parent(item->child(i), current);
+        }
+    }
+
+
 public slots:
     void list_maps();
-    void clicked_at_item(QTreeWidgetItem *current_item, QTreeWidgetItem *previous);
+    void clicked_at_item(QTreeWidgetItem *current_item);
     void prepare_context_menu(const QPoint & pos );
     void show_map_properties_dialog();
-
     void do_save();
+
+    void itemExpanded(QTreeWidgetItem *item)
+    {
+        if (item->text(2).toInt() >= 0 && item->text(2).toInt() < system->map_info_list.length())
+            system->map_info_list.at(item->text(2).toInt())->expanded = true;
+    }
+    void itemCollapsed(QTreeWidgetItem *item)
+    {
+        if (item->text(2).toInt() >= 0 && item->text(2).toInt() < system->map_info_list.length())
+            system->map_info_list.at(item->text(2).toInt())->expanded = false;
+    }
+
+    void dropEvent(QDropEvent *event);
 
 signals:
     void on_map_selected(int);

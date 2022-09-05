@@ -25,10 +25,13 @@ public:
 
 
 
+    bool is_head = false;
+    QList<MultilineEventCell*> tail;
+    MultilineEventCell *head = 0;
+
+
 private:
-    MultilineEventCell *ref_cell = 0;
-
-
+    MultilineEventCell *ref_cell;
 
 };
 

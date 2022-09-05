@@ -782,21 +782,130 @@ QString RPGEventCommand::get_command_text(RPGSystem *system)
     else if (code == 303)
         return "@>Name Input Processing: " + system->actor_list.at(parameters.at(0).toInt()-1)->name + ", " + QString::number(parameters.at(1).toInt()) + " characters";
     else if (code == 311)
-        return "Change HP";
+    {
+        QString data;
+        if (parameters.at(0).toInt() == 0) data.append("Entire Party");
+        else data.append(QString("[%1]").arg(system->actor_list.at(parameters.at(0).toInt()-1)->name));
+        data.append(", ");
+
+        data.append( parameters.at(1).toInt() == 0 ? "+ " : "- ");
+
+        if (parameters.at(2).toInt() == 0) //constant
+            data.append(QString::number(parameters.at(3).toInt()));
+        else //variable
+            data.append(QString("Variable [%1: %2]").arg(parameters.at(3).toInt(),4,10,QChar('0')).arg(system->variable_names.at(parameters.at(3).toInt()-1)));
+
+
+        //last parameter is ignored here
+        return "@>Change HP: " + data;
+    }
     else if (code == 312)
-        return "Change SP";
+    {
+        QString data;
+        if (parameters.at(0).toInt() == 0) data.append("Entire Party");
+        else data.append(QString("[%1]").arg(system->actor_list.at(parameters.at(0).toInt()-1)->name));
+        data.append(", ");
+
+        data.append( parameters.at(1).toInt() == 0 ? "+ " : "- ");
+
+        if (parameters.at(2).toInt() == 0) //constant
+            data.append(QString::number(parameters.at(3).toInt()));
+        else //variable
+            data.append(QString("Variable [%1: %2]").arg(parameters.at(3).toInt(),4,10,QChar('0')).arg(system->variable_names.at(parameters.at(3).toInt()-1)));
+
+
+        return "@>Change SP: " + data;
+    }
     else if (code == 313)
-        return "Change State";
+    {
+        QString data;
+        if (parameters.at(0).toInt() == 0) data.append("Entire Party");
+        else data.append(QString("[%1]").arg(system->actor_list.at(parameters.at(0).toInt()-1)->name));
+        data.append(", ");
+
+        data.append( parameters.at(1).toInt() == 0 ? "+ " : "- ");
+
+        data.append(QString("[%1]").arg(system->states_list.at(parameters.at(2).toInt()-1)->name));
+
+        return "@>Change State: " + data;
+    }
     else if (code == 314)
-        return "Recover All";
+    {
+        QString data;
+        if (parameters.at(0).toInt() == 0) data.append("Entire Party");
+        else data.append(QString("[%1]").arg(system->actor_list.at(parameters.at(0).toInt()-1)->name));
+
+        return "@>Recover All: " + data;
+    }
     else if (code == 315)
-        return "Change Exp";
+    {
+        QString data;
+        if (parameters.at(0).toInt() == 0) data.append("Entire Party");
+        else data.append(QString("[%1]").arg(system->actor_list.at(parameters.at(0).toInt()-1)->name));
+        data.append(", ");
+
+        data.append( parameters.at(1).toInt() == 0 ? "+ " : "- ");
+
+        if (parameters.at(2).toInt() == 0) //constant
+            data.append(QString::number(parameters.at(3).toInt()));
+        else //variable
+            data.append(QString("Variable [%1: %2]").arg(parameters.at(3).toInt(),4,10,QChar('0')).arg(system->variable_names.at(parameters.at(3).toInt()-1)));
+
+
+        return "@>Change EXP: " + data;
+    }
     else if (code == 316)
-        return "Change Level";
+    {
+        QString data;
+        if (parameters.at(0).toInt() == 0) data.append("Entire Party");
+        else data.append(QString("[%1]").arg(system->actor_list.at(parameters.at(0).toInt()-1)->name));
+        data.append(", ");
+
+        data.append( parameters.at(1).toInt() == 0 ? "+ " : "- ");
+
+        if (parameters.at(2).toInt() == 0) //constant
+            data.append(QString::number(parameters.at(3).toInt()));
+        else //variable
+            data.append(QString("Variable [%1: %2]").arg(parameters.at(3).toInt(),4,10,QChar('0')).arg(system->variable_names.at(parameters.at(3).toInt()-1)));
+
+
+        return "@>Change Level: " + data;
+    }
     else if (code == 317)
-        return "Change Parameters";
+    {
+        QString data;
+        if (parameters.at(0).toInt() == 0) data.append(""); //this should not happen
+        else data.append(QString("[%1]").arg(system->actor_list.at(parameters.at(0).toInt()-1)->name));
+        data.append(", ");
+
+        QStringList params;
+        params << "MaxHP" << "MaxSP" << "STR" << "DEX" << "AGI" << "INT";
+        data.append(params.at(parameters.at(1).toInt()));
+
+        data.append( parameters.at(2).toInt() == 0 ? " + " : " - ");
+
+
+        if (parameters.at(3).toInt() == 0) //constant
+            data.append(QString::number(parameters.at(4).toInt()));
+        else //variable
+            data.append(QString("Variable [%1: %2]").arg(parameters.at(4).toInt(),4,10,QChar('0')).arg(system->variable_names.at(parameters.at(4).toInt()-1)));
+
+
+        return "@>Change Parameters: " + data;
+    }
     else if (code == 318)
-        return "Change Skills";
+    {
+        QString data;
+        if (parameters.at(0).toInt() == 0) data.append(""); //this should not happen
+        else data.append(QString("[%1]").arg(system->actor_list.at(parameters.at(0).toInt()-1)->name));
+        data.append(", ");
+
+        data.append( parameters.at(1).toInt() == 0 ? "+ " : "- ");
+
+        data.append(QString("[%1]").arg(system->skills_list.at(parameters.at(2).toInt()-1)->name));
+
+        return "@>Change Skills: " + data;
+    }
     else if (code == 319)
         return "Change Equipment";
     else if (code == 320)

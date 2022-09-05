@@ -362,7 +362,8 @@ void MapWidget::do_paste(QList<int> data)
 
 void MapWidget::do_save()
 {
-    this->system->get_current_map_info()->save_map(this->system);
+    if (this->system->get_current_map_info() != 0)
+        this->system->get_current_map_info()->save_map(this->system);
 }
 
 void MapWidget::do_withdraw()

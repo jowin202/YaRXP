@@ -80,10 +80,10 @@ MainWindow::MainWindow(QWidget *parent)
     this->ui->actionPen->setChecked(true);
     this->ui->actionAll_Layers->setChecked(true);
 
-    this->ui->map_tree_widget->hideColumn(1);
-    this->ui->map_tree_widget->hideColumn(2);
-    this->ui->map_tree_widget->hideColumn(3);
 
+    //Must be here as columns are set in QtCreator->MainWindow file.
+    //this->ui->map_tree_widget->hideColumn(1);
+    //this->ui->map_tree_widget->hideColumn(2);
 }
 
 MainWindow::~MainWindow()

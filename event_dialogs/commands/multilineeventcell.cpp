@@ -5,7 +5,10 @@
 
 MultilineEventCell::MultilineEventCell(RPGEventCommand *command, RPGSystem *system, RPGMoveCommand *mvcmd) : SimpleEventCell(command, system)
 {
-    this->is_simple = false;
+    this->multiline = true;
+
+    if (code == 101 || code == 108 || code == 209 || code == 302 || code == 355)
+        this->is_head = true;
 
     if (code == 209)
     {
