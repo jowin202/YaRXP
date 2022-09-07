@@ -20,7 +20,7 @@ SimpleEventCell::SimpleEventCell(RPGEventCommand *command, RPGSystem *system)
 
 void SimpleEventCell::set_color()
 {
-    if (code == 355 || code == 655) this->setForeground(grey);
+    if ((code >= 351 && code <= 355) || code == 655) this->setForeground(grey);
     else if (code == 209 || code == 509) this->setForeground(dark_red);
     else if (code == 108 || code == 408) this->setForeground(green);
     else if ((code >= 112 && code <= 119) || code == 413) this->setForeground(blue);
@@ -32,5 +32,6 @@ void SimpleEventCell::set_color()
     else if (code >= 241 && code <= 251) this->setForeground(light_blue);
     else if ((code >= 301 && code <= 303) || (code >= 601 && code <= 605)) this->setForeground(orange);
     else if (code >= 311 && code <= 322) this->setForeground(cyan);
+    else if (code >= 331 && code <= 340) this->setForeground(dark_pink); //TODO: should be slightly different to 231-236
     else this->setForeground(black);
 }

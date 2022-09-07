@@ -385,8 +385,7 @@ QString RPGEventCommand::get_command_text(RPGSystem *system)
             else if (s == 11) status_var = "EVA";
             op2 = "[" + QString::number(parameters.at(4).toInt()+1) + "]'s " + status_var;
             /**
-              TODO: Original RPGMaker XP might be bugged here.
-              Let's make it better
+              Note: Original RPGMaker XP only uses enemie's number here, not the name
               **/
         }
         else if (operand_type == 6) // Characters
@@ -907,42 +906,195 @@ QString RPGEventCommand::get_command_text(RPGSystem *system)
         return "@>Change Skills: " + data;
     }
     else if (code == 319)
-        return "Change Equipment";
+    {
+        QString data;
+        data.append(QString("[%1], ").arg(system->actor_list.at(parameters.at(0).toInt()-1)->name));
+
+        QStringList tool;
+        tool << "Weapon" << "Shield" << "Helmet" << "Body Armor" << "Accessory";
+        data.append(tool[parameters.at(1).toInt()]);
+        data.append(" = ");
+
+        if (parameters.at(2).toInt() == 0)
+            data.append("(None)");
+        else
+        {
+            if (parameters.at(1).toInt() == 0) //Weapon
+                data.append(QString("[%1]").arg(system->weapons_list.at(parameters.at(2).toInt()-1)->name));
+            else //Armor
+                data.append(QString("[%1]").arg(system->armors_list.at(parameters.at(2).toInt()-1)->name));
+        }
+
+        return "@>Change Equipment: " + data;
+    }
     else if (code == 320)
-        return "Change Actor Name";
+        return "@>Change Actor Name: " + QString("[%1], '%2'").arg(system->actor_list.at(parameters.at(0).toInt()-1)->name)
+                .arg(parameters.at(1).str);
     else if (code == 321)
-        return "Change Actor Class";
+        return "@>Change Actor Class: " + QString("[%1], [%2]").arg(system->actor_list.at(parameters.at(0).toInt()-1)->name)
+                .arg(system->classes_list.at(parameters.at(1).toInt()-1)->name);
     else if (code == 322)
-        return "Change Actor Graphic";
+        return "@>Change Actor Graphic: " + QString("[%1], %2, %3, %4, %5")
+                .arg(system->actor_list.at(parameters.at(0).toInt()-1)->name)
+                .arg(parameters.at(1).str)
+                .arg(parameters.at(2).toInt())
+                .arg(parameters.at(3).str)
+                .arg(parameters.at(4).toInt());
     else if (code == 331)
-        return "Change Enemy HP";
+    {
+        QString data;
+        if (parameters.at(0).toInt() == -1) data.append("Entire Troop");
+        else data.append(QString("[%1.]").arg(parameters.at(0).toInt()+1));
+        data.append(", ");
+
+        data.append( parameters.at(1).toInt() == 0 ? "+ " : "- ");
+
+        if (parameters.at(2).toInt() == 0) //constant
+            data.append(QString::number(parameters.at(3).toInt()));
+        else //variable
+            data.append(QString("Variable [%1: %2]").arg(parameters.at(3).toInt(),4,10,QChar('0')).arg(system->variable_names.at(parameters.at(3).toInt()-1)));
+
+
+        //last parameter is ignored here
+        return "@>Change Enemy HP: " + data;
+    }
     else if (code == 332)
-        return "Change Enemy SP";
+    {
+        QString data;
+        if (parameters.at(0).toInt() == -1) data.append("Entire Troop");
+        else data.append(QString("[%1.]").arg(parameters.at(0).toInt()+1));
+        data.append(", ");
+
+        data.append( parameters.at(1).toInt() == 0 ? "+ " : "- ");
+
+        if (parameters.at(2).toInt() == 0) //constant
+            data.append(QString::number(parameters.at(3).toInt()));
+        else //variable
+            data.append(QString("Variable [%1: %2]").arg(parameters.at(3).toInt(),4,10,QChar('0')).arg(system->variable_names.at(parameters.at(3).toInt()-1)));
+
+
+        return "@>Change Enemy SP: " + data;
+    }
     else if (code == 333)
-        return "Change Enemy State";
+    {
+        QString data;
+        if (parameters.at(0).toInt() == -1) data.append("Entire Troop");
+        else data.append(QString("[%1.]").arg(parameters.at(0).toInt()+1));
+        data.append(", ");
+
+        data.append( parameters.at(1).toInt() == 0 ? "+ " : "- ");
+        data.append(QString("[%1]").arg(system->states_list.at(parameters.at(2).toInt()-1)->name));
+
+
+        return "@>Change Enemy State: " + data;
+    }
     else if (code == 334)
-        return "Enemy Recover all";
+        return "@>Enemy Recover All: " + (parameters.at(0).toInt() == -1 ? "Entire Troop" : QString("[%1.]").arg(parameters.at(0).toInt()+1));
     else if (code == 335)
-        return "Enemy Appearance";
+        return "@>Enemy Appearance: " + QString("[%1.]").arg(parameters.at(0).toInt()+1);
     else if (code == 336)
-        return "Enemy Transform";
+        return "@>Enemy Transform: " + QString("[%1.], [%2]")
+                .arg(parameters.at(0).toInt()+1)
+                .arg(system->enemies_list.at(parameters.at(1).toInt()-1)->name);
     else if (code == 337)
-        return "Show battle animation";
+    {
+        QString data;
+        if (parameters.at(0).toInt() == 0)
+        {
+            //Enemy
+            if (parameters.at(1).toInt() == -1) data.append("Entire Troop, ");
+            else
+                data.append(QString("[%1.], ").arg(parameters.at(1).toInt()+1));
+        }
+        else
+        {
+            //Actor
+            if (parameters.at(1).toInt() == -1) data.append("Entire Party, ");
+            else
+                data.append(QString("Actor No. %1, ").arg(parameters.at(1).toInt()+1));
+        }
+
+        data.append("[");
+        data.append(system->animation_list.at(parameters.at(2).toInt()-1)->name);
+        data.append("]");
+
+        return "@>Show battle Animation: " + data;
+    }
     else if (code == 338)
-        return "Deal Damage";
+    {
+        QString data;
+        if (parameters.at(0).toInt() == 0)
+        {
+            //Enemy
+            if (parameters.at(1).toInt() == -1) data.append("Entire Troop, ");
+            else
+                data.append(QString("[%1.], ").arg(parameters.at(1).toInt()+1));
+        }
+        else
+        {
+            //Actor
+            if (parameters.at(1).toInt() == -1) data.append("Entire Party, ");
+            else
+                data.append(QString("Actor No. %1, ").arg(parameters.at(1).toInt()+1));
+        }
+
+
+        if (parameters.at(2).toInt() == 0)
+        {
+            //Constant
+            data.append(QString::number(parameters.at(3).toInt()));
+        }
+        else
+        {
+            //Variable
+            data.append("[");
+            data.append(QString::number(parameters.at(3).toInt()).rightJustified(4,'0'));
+            data.append(": " + system->variable_names.at(parameters.at(3).toInt()-1));
+            data.append("]");
+        }
+
+        return "@>Deal Damage: " + data;
+    }
     else if (code == 339)
-        return "Force Action";
+    {
+        QString data;
+
+        //Battler
+        if (parameters.at(0).toInt() == 0) //Enemy
+            data.append(QString("[%1.], ").arg(parameters.at(1).toInt()+1));
+        else //Actor
+            data.append(QString("Actor No. %1, ").arg(parameters.at(1).toInt()+1));
+
+        //Action
+        QStringList actions;
+        actions << "Attack" << "Defend" << "Escape" << "Do Nothing";
+        if (parameters.at(2).toInt() == 0) //Basic
+            data.append(actions.at(parameters.at(3).toInt()));
+        else //Skill
+            data.append(QString("[%1]").arg(system->skills_list.at(parameters.at(3).toInt()-1)->name));
+
+        data.append(", ");
+
+        if (parameters.at(4).toInt() == -2) data.append("Last Target");
+        else if (parameters.at(4).toInt() == -1) data.append("Random");
+        else data.append(QString("Index %1").arg(parameters.at(4).toInt()+1));
+
+        if (parameters.at(5).toInt() == 1)
+            data.append(", Execute Now");
+
+        return "@>Force Action: " + data;
+    }
     else if (code == 340)
-        return "Abort Battle";
+        return "@>Abort Battle";
 
     else if (code == 351)
-        return "Call Menu Screen";
+        return "@>Call Menu Screen";
     else if (code == 352)
-        return "Call Save Screen";
+        return "@>Call Save Screen";
     else if (code == 353)
-        return "Game Over";
+        return "@>Game Over";
     else if (code == 354)
-        return "Return to Title Screen";
+        return "@>Return to Title Screen";
     else if (code == 355)
         return "@>Script : " + parameters.at(0).str;
     else if (code == 655)
