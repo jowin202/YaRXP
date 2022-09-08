@@ -511,3 +511,18 @@ void MainWindow::on_actionOpen_Project_Folder_triggered()
 {
     QDesktopServices::openUrl( QUrl::fromLocalFile( system.current_project_dir ) );
 }
+
+void MainWindow::on_actionExport_Map_Images_triggered()
+{
+    QString dir = QFileDialog::getExistingDirectory(this, "Export Map Images", QDir::homePath());
+    if (dir != "")
+    {
+        for (int i = 0; i < system.map_info_list.length(); i++)
+        {
+            system.map_info_list.at(i)->load_map(&this->system);
+            QImage img = system.map_info_list.at(i)->map->create_map_image(RPGMap::ZOOM_100,false,true,2,
+                                                              system.tileset_list.at(system.map_info_list.at(i)->map->tileset_id-1));
+            img.save(dir + QDir::separator() + system.map_info_list.at(i)->name + ".png");
+        }
+    }
+}

@@ -120,6 +120,8 @@ private slots:
 
     void on_actionOpen_Project_Folder_triggered();
 
+    void on_actionExport_Map_Images_triggered();
+
 private:
     Ui::MainWindow *ui;
     QActionGroup *layergroup;

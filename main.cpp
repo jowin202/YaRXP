@@ -4,7 +4,7 @@
 
 #include "editors/dataeditor.h"
 
-#include "RXIO/ioscriptfile.h"
+#include "RXIO/iotilesetfile.h"
 
 
 #include <QList>
@@ -16,9 +16,9 @@ int main(int argc, char *argv[])
     QCoreApplication::setOrganizationDomain("github.com/jowin202");
     QCoreApplication::setApplicationName("YaRXP");
 
-
     MainWindow w;
     w.show();
+
 
 
     return a.exec();

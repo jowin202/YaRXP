@@ -213,6 +213,7 @@
     <addaction name="actionOpen_Project_Folder"/>
     <addaction name="separator"/>
     <addaction name="actionRun_Testcases"/>
+    <addaction name="actionExport_Map_Images"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
@@ -802,6 +803,11 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Alt+Shift+Up</string>
+   </property>
+  </action>
+  <action name="actionExport_Map_Images">
+   <property name="text">
+    <string>Export Map Images</string>
    </property>
   </action>
  </widget>

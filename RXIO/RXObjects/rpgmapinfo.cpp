@@ -16,9 +16,13 @@ void RPGMapInfo::set_id(int id)
 
 void RPGMapInfo::load_map(RPGSystem *system)
 {
-    this->map = new RPGMap();
-    IOMapFile iomap_file(system->data_dir +  "Map" + QString::number(this->id).rightJustified(3,'0') + ".rxdata", map);
-    map->load_event_graphics(system);
+    //do not overwrite
+    if (this->map == 0)
+    {
+        this->map = new RPGMap();
+        IOMapFile iomap_file(system->data_dir +  "Map" + QString::number(this->id).rightJustified(3,'0') + ".rxdata", map);
+        map->load_event_graphics(system);
+    }
 }
 
 void RPGMapInfo::save_map(RPGSystem *system)
