@@ -73,8 +73,12 @@ SOURCES += \
     editors/actors/editoractorparameterlabel.cpp \
     editors/actors/editoractorparameterpage.cpp \
     editors/actors/editoractorparameters.cpp \
+    editors/classes/comboelement.cpp \
     editors/classes/editclasses.cpp \
+    editors/classes/skilllearning.cpp \
     editors/dataeditor.cpp \
+    editors/plusminusbox.cpp \
+    editors/skills/editskills.cpp \
     event_dialogs/choicesdialog.cpp \
     event_dialogs/commands/multilineeventcell.cpp \
     event_dialogs/commands/simpleeventcell.cpp \
@@ -149,8 +153,12 @@ HEADERS += \
     editors/actors/editoractorparameterlabel.h \
     editors/actors/editoractorparameterpage.h \
     editors/actors/editoractorparameters.h \
+    editors/classes/comboelement.h \
     editors/classes/editclasses.h \
+    editors/classes/skilllearning.h \
     editors/dataeditor.h \
+    editors/plusminusbox.h \
+    editors/skills/editskills.h \
     event_dialogs/choicesdialog.h \
     event_dialogs/commands/multilineeventcell.h \
     event_dialogs/commands/simpleeventcell.h \
@@ -172,8 +180,12 @@ FORMS += \
     editors/actors/editexpcurve.ui \
     editors/actors/editoractorparameterpage.ui \
     editors/actors/editoractorparameters.ui \
+    editors/classes/comboelement.ui \
     editors/classes/editclasses.ui \
+    editors/classes/skilllearning.ui \
     editors/dataeditor.ui \
+    editors/plusminusbox.ui \
+    editors/skills/editskills.ui \
     event_dialogs/choicesdialog.ui \
     event_dialogs/conditionalbranchdialog.ui \
     event_dialogs/eventcommanddialog.ui \

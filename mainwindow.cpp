@@ -82,8 +82,8 @@ MainWindow::MainWindow(QWidget *parent)
 
 
     //Must be here as columns are set in QtCreator->MainWindow file.
-    //this->ui->map_tree_widget->hideColumn(1);
-    //this->ui->map_tree_widget->hideColumn(2);
+    this->ui->map_tree_widget->hideColumn(1);
+    this->ui->map_tree_widget->hideColumn(2);
 }
 
 MainWindow::~MainWindow()
@@ -108,25 +108,36 @@ void MainWindow::open_project(QString project_path)
 
         try{
             IOSystemFile systemfile(this->system.data_dir + "System.rxdata", &this->system);
+            system.tileset_list.clear();
+            system.tileset_hash.clear();
             IOTilesetFile tileset_file(this->system.data_dir + "Tilesets.rxdata", &this->system.tileset_hash, &this->system.tileset_list);
+            system.map_info_list.clear();
             IOMapInfoFile mapinfo_file(this->system.data_dir + "MapInfos.rxdata", &system.map_info_list);
             for (int i = 0; i < this->system.tileset_list.length(); i++)
                 this->system.tileset_list.at(i)->load_tileset_graphic(&this->system);
 
             //maybe do all following files in a new try catch ... as they are not neccessary for map editing
+            system.actor_list.clear();
             IOActorFile actor_file(this->system.data_dir + "Actors.rxdata", &this->system.actor_list);
+            system.classes_list.clear();
             IOClassFile class_file(this->system.data_dir + "Classes.rxdata", &this->system.classes_list);
+            system.skills_list.clear();
             IOSKillFile skill_file(this->system.data_dir + "Skills.rxdata", &this->system.skills_list);
+            system.items_list.clear();
             IOItemFile item_file(this->system.data_dir + "Items.rxdata", &this->system.items_list);
+            system.weapons_list.clear();
             IOWeaponFile weapon_file(this->system.data_dir + "Weapons.rxdata", &this->system.weapons_list);
+            system.armors_list.clear();
             IOArmorFile armor_file(this->system.data_dir + "Armors.rxdata", &this->system.armors_list);
+            system.enemies_list.clear();
             IOEnemyFile enemies_file(this->system.data_dir + "Enemies.rxdata", &this->system.enemies_list);
+            system.troops_list.clear();
             IOTroopFile troops_file(this->system.data_dir + "Troops.rxdata", &this->system.troops_list);
+            system.states_list.clear();
             IOStateFile states_file(this->system.data_dir + "States.rxdata", &this->system.states_list);
 
             IOAnimationFile animation_file(this->system.data_dir + "Animations.rxdata", &this->system.animation_list);
             IOCommonEventFile commonevents_file(this->system.data_dir + "CommonEvents.rxdata", &this->system.common_events_list);
-
 
         }
         catch(ParserException *ex)

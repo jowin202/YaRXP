@@ -34,15 +34,24 @@ public:
     void handleParserException(ParserException *ex);
 
 
+    void restore_after_move()
+    {
+        int order = 1;
+        for (int i = 0; i < this->topLevelItemCount(); i++)
+        {
+            this->restore_order_and_parent(this->topLevelItem(i), &order);
+            int toplevel_item_list_id = this->topLevelItem(i)->text(2).toInt();
+
+            system->map_info_list.at(toplevel_item_list_id)->parent_id = 0; //toplevel item has parent 0
+        }
+    }
+
     void restore_order_and_parent(QTreeWidgetItem *item, int *current)
     {
         int list_id = item->text(2).toInt();
-        int id = 0;
-        if (list_id >= 0)
-        {
-            system->map_info_list.at(list_id)->order = (*current);
-            id = system->map_info_list.at(list_id)->id;
-        }
+        int id = system->map_info_list.at(list_id)->id;
+
+        system->map_info_list.at(list_id)->order = (*current);
 
 
         item->setText(1,QString("%1").arg((*current)++,3,10,QChar('0')));
@@ -92,7 +101,6 @@ private:
     QAction action8;
 
     RPGSystem *system;
-    QTreeWidgetItem *root = 0;
 
 };
 #endif // MAPTREEWIDGET_H

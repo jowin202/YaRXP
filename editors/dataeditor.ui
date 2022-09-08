@@ -332,11 +332,11 @@
        <item>
         <widget class="QStackedWidget" name="stackedWidget">
          <property name="currentIndex">
-          <number>1</number>
+          <number>2</number>
          </property>
          <widget class="EditActors" name="page_actors"/>
          <widget class="EditClasses" name="page_classes"/>
-         <widget class="QWidget" name="page_skills"/>
+         <widget class="EditSkills" name="page_skills"/>
          <widget class="QWidget" name="page_items"/>
          <widget class="QWidget" name="page_weapons"/>
          <widget class="QWidget" name="page_armors"/>
@@ -367,6 +367,12 @@
    <class>EditClasses</class>
    <extends>QWidget</extends>
    <header>editors/classes/editclasses.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>EditSkills</class>
+   <extends>QWidget</extends>
+   <header>editors/skills/editskills.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

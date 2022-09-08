@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QCheckBox>
+#include <QTableWidgetItem>
 
 class RPGSystem;
 
@@ -22,6 +23,10 @@ public:
 
 public slots:
     void set_class(int n);
+    void set_skill_from_dialog(int row, int level, int skill);
+
+private slots:
+    void on_table_skills_itemDoubleClicked(QTableWidgetItem *item);
 
 private:
     Ui::EditClasses *ui;

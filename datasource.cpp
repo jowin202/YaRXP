@@ -72,51 +72,51 @@ void DataSource::fill_combo(QComboBox *combo, int type, bool shownum, int chars,
     if (type == ACTORS)
         for (int i = 0; i < system->actor_list.length(); i++)
             combo->addItem(shownum ? QString("%1: " + system->actor_list.at(i)->name).arg(i+1,chars,10,QChar('0')) :
-                                    system->actor_list.at(i)->name);
+                                    system->actor_list.at(i)->name, QVariant(i+1));
     else if (type == CLASSES)
         for (int i = 0; i < system->classes_list.length(); i++)
             combo->addItem(shownum ? QString("%1: " + system->classes_list.at(i)->name).arg(i+1,chars,10,QChar('0')) :
-                                    system->classes_list.at(i)->name);
+                                    system->classes_list.at(i)->name, QVariant(i+1));
     else if (type == SKILLS)
         for (int i = 0; i < system->skills_list.length(); i++)
             combo->addItem(shownum ? QString("%1: " + system->skills_list.at(i)->name).arg(i+1,chars,10,QChar('0')) :
-                                    system->skills_list.at(i)->name);
+                                    system->skills_list.at(i)->name, QVariant(i+1));
     else if (type == ITEMS)
         for (int i = 0; i < system->items_list.length(); i++)
             combo->addItem(shownum ? QString("%1: " + system->items_list.at(i)->name).arg(i+1,chars,10,QChar('0')) :
-                                    system->items_list.at(i)->name);
+                                    system->items_list.at(i)->name, QVariant(i+1));
     else if (type == WEAPONS)
         for (int i = 0; i < system->weapons_list.length(); i++)
             combo->addItem(shownum ? QString("%1: " + system->weapons_list.at(i)->name).arg(i+1,chars,10,QChar('0')) :
-                                    system->weapons_list.at(i)->name);
+                                    system->weapons_list.at(i)->name, QVariant(i+1));
     else if (type == ARMORS)
         for (int i = 0; i < system->armors_list.length(); i++)
             combo->addItem(shownum ? QString("%1: " + system->armors_list.at(i)->name).arg(i+1,chars,10,QChar('0')) :
-                                    system->armors_list.at(i)->name);
+                                    system->armors_list.at(i)->name, QVariant(i+1));
     else if (type == ENEMIES)
         for (int i = 0; i < system->enemies_list.length(); i++)
             combo->addItem(shownum ? QString("%1: " + system->enemies_list.at(i)->name).arg(i+1,chars,10,QChar('0')) :
-                                    system->enemies_list.at(i)->name);
+                                    system->enemies_list.at(i)->name, QVariant(i+1));
     else if (type == TROOPS)
         for (int i = 0; i < system->troops_list.length(); i++)
             combo->addItem(shownum ? QString("%1: " + system->troops_list.at(i)->name).arg(i+1,chars,10,QChar('0')) :
-                                    system->troops_list.at(i)->name);
+                                    system->troops_list.at(i)->name, QVariant(i+1));
     else if (type == STATES)
         for (int i = 0; i < system->states_list.length(); i++)
             combo->addItem(shownum ? QString("%1: " + system->states_list.at(i)->name).arg(i+1,chars,10,QChar('0')) :
-                                    system->states_list.at(i)->name);
+                                    system->states_list.at(i)->name, QVariant(i+1));
     else if (type == ANIMATIONS)
         for (int i = 0; i < system->animation_list.length(); i++)
             combo->addItem(shownum ? QString("%1: " + system->animation_list.at(i)->name).arg(i+1,chars,10,QChar('0')) :
-                                    system->animation_list.at(i)->name);
+                                    system->animation_list.at(i)->name, QVariant(i+1));
     else if (type == TILESETS)
         for (int i = 0; i < system->tileset_list.length(); i++)
             combo->addItem(shownum ? QString("%1: " + system->tileset_list.at(i)->name).arg(i+1,chars,10,QChar('0')) :
-                                    system->tileset_list.at(i)->name);
+                                    system->tileset_list.at(i)->name, QVariant(i+1));
     else if (type == COMMONEVENTS)
         for (int i = 0; i < system->common_events_list.length(); i++)
             combo->addItem(shownum ? QString("%1: " + system->common_events_list.at(i)->name).arg(i+1,chars,10,QChar('0')) :
-                                    system->common_events_list.at(i)->name);
+                                    system->common_events_list.at(i)->name, QVariant(i+1));
 
     if (current >= 0 && combo->count() >= current)
         combo->setCurrentIndex(current-1);

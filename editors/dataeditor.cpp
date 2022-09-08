@@ -23,6 +23,7 @@ void DataEditor::setSystem(RPGSystem *system)
     this->system = system;
     this->ui->page_actors->setSystem(system);
     this->ui->page_classes->setSystem(system);
+    this->ui->page_skills->setSystem(system);
 }
 
 
@@ -37,6 +38,10 @@ void DataEditor::on_object_list_currentRowChanged(int currentRow)
     else if (this->ui->central_menu->currentRow() == CLASSES)
     {
         this->ui->page_classes->set_class(currentRow);
+    }
+    else if (this->ui->central_menu->currentRow() == SKILLS)
+    {
+        this->ui->page_skills->set_skill(currentRow);
     }
 }
 

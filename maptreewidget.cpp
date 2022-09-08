@@ -53,17 +53,6 @@ void MapTreeWidget::list_maps()
         delete items.at(i);
     }
 
-    QStringList cols;
-    cols << "Project";
-    cols << "000";
-    cols << "-1";
-    root = new QTreeWidgetItem(cols);
-    root->setFlags(root->flags() & ~Qt::ItemIsDragEnabled);
-    this->addTopLevelItem(root);
-    this->id_map.insert(0, root);
-
-
-
     do
     {
         for (int i = 0; i < system->map_info_list.length(); i++)
@@ -74,8 +63,14 @@ void MapTreeWidget::list_maps()
             columns << QString::number(i);
 
             QTreeWidgetItem *item = new QTreeWidgetItem(columns);
-            //parent ID exists, id doesnt exist yet
-            if (this->id_map.value(system->map_info_list.at(i)->parent_id, 0) != 0 && this->id_map.value(system->map_info_list.at(i)->id, 0) == 0)
+            if (system->map_info_list.at(i)->parent_id == 0 && this->id_map.value(system->map_info_list.at(i)->id, 0) == 0)
+            {
+                this->addTopLevelItem(item);
+                if (system->map_info_list.at(i)->expanded)
+                    this->expandItem(item);
+                this->id_map.insert(system->map_info_list.at(i)->id, item);
+            }
+            else if (this->id_map.value(system->map_info_list.at(i)->parent_id, 0) != 0 && this->id_map.value(system->map_info_list.at(i)->id, 0) == 0)
             {
                 this->id_map.insert(system->map_info_list.at(i)->id, item);
                 this->id_map.value(system->map_info_list.at(i)->parent_id, 0)->addChild(item);
@@ -85,8 +80,7 @@ void MapTreeWidget::list_maps()
             }
         }
     }
-    while(system->map_info_list.size()+1 != id_map.size()); //+1 for root
-    this->expandItem(root);
+    while(system->map_info_list.size() != id_map.size());
     this->sortItems(1,Qt::SortOrder::AscendingOrder);
 }
 
@@ -124,16 +118,7 @@ void MapTreeWidget::dropEvent(QDropEvent *event)
     //allow reordering
     QTreeWidget::dropEvent(event); //do the drag and drop in super class
 
-    if (this->topLevelItemCount() > 1)
-    {
-        qDebug() << "dropped outside of project";
-        this->list_maps(); //restore as you cant have more top level items
-        return;
-    }
-
-    //if here, moving item was accepted
-    int order = 0;
-    this->restore_order_and_parent(root, &order);
+    this->restore_after_move();
 }
 
 void MapTreeWidget::handleParserException(ParserException *ex)
