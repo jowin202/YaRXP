@@ -19,7 +19,7 @@ public:
 
 
     void fill_list(QListWidget *list, int type, bool shownum, int chars);
-    void fill_combo(QComboBox *combo, int type, bool shownum, int chars, int current);
+    void fill_combo(QComboBox *combo, int type, bool shownum, int chars, int current, bool allow_none);
 
     void fill_combo_weapon_by_class(QComboBox *combo, int class_id, bool shownum, int chars, int current);
     void fill_combo_armor_by_class(QComboBox *combo, int class_id, bool shownum, int chars, int current, int amor_type);

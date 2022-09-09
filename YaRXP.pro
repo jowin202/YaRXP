@@ -68,17 +68,23 @@ SOURCES += \
     RXIO/testcases.cpp \
     audiowidget.cpp \
     datasource.cpp \
+    editors/abcbox.cpp \
+    editors/abclist.cpp \
     editors/actors/editactors.cpp \
     editors/actors/editexpcurve.cpp \
     editors/actors/editoractorparameterlabel.cpp \
     editors/actors/editoractorparameterpage.cpp \
     editors/actors/editoractorparameters.cpp \
-    editors/classes/comboelement.cpp \
+    editors/armors/editarmors.cpp \
+    editors/checkboxlist.cpp \
     editors/classes/editclasses.cpp \
     editors/classes/skilllearning.cpp \
     editors/dataeditor.cpp \
+    editors/items/edititems.cpp \
     editors/plusminusbox.cpp \
+    editors/plusminuslist.cpp \
     editors/skills/editskills.cpp \
+    editors/weapons/editweapons.cpp \
     event_dialogs/choicesdialog.cpp \
     event_dialogs/commands/multilineeventcell.cpp \
     event_dialogs/commands/simpleeventcell.cpp \
@@ -148,17 +154,23 @@ HEADERS += \
     RXIO/testcases.h \
     audiowidget.h \
     datasource.h \
+    editors/abcbox.h \
+    editors/abclist.h \
     editors/actors/editactors.h \
     editors/actors/editexpcurve.h \
     editors/actors/editoractorparameterlabel.h \
     editors/actors/editoractorparameterpage.h \
     editors/actors/editoractorparameters.h \
-    editors/classes/comboelement.h \
+    editors/armors/editarmors.h \
+    editors/checkboxlist.h \
     editors/classes/editclasses.h \
     editors/classes/skilllearning.h \
     editors/dataeditor.h \
+    editors/items/edititems.h \
     editors/plusminusbox.h \
+    editors/plusminuslist.h \
     editors/skills/editskills.h \
+    editors/weapons/editweapons.h \
     event_dialogs/choicesdialog.h \
     event_dialogs/commands/multilineeventcell.h \
     event_dialogs/commands/simpleeventcell.h \
@@ -176,16 +188,22 @@ HEADERS += \
 
 FORMS += \
     audiowidget.ui \
+    editors/abcbox.ui \
+    editors/abclist.ui \
     editors/actors/editactors.ui \
     editors/actors/editexpcurve.ui \
     editors/actors/editoractorparameterpage.ui \
     editors/actors/editoractorparameters.ui \
-    editors/classes/comboelement.ui \
+    editors/armors/editarmors.ui \
+    editors/checkboxlist.ui \
     editors/classes/editclasses.ui \
     editors/classes/skilllearning.ui \
     editors/dataeditor.ui \
+    editors/items/edititems.ui \
     editors/plusminusbox.ui \
+    editors/plusminuslist.ui \
     editors/skills/editskills.ui \
+    editors/weapons/editweapons.ui \
     event_dialogs/choicesdialog.ui \
     event_dialogs/conditionalbranchdialog.ui \
     event_dialogs/eventcommanddialog.ui \

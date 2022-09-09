@@ -332,14 +332,14 @@
        <item>
         <widget class="QStackedWidget" name="stackedWidget">
          <property name="currentIndex">
-          <number>2</number>
+          <number>5</number>
          </property>
          <widget class="EditActors" name="page_actors"/>
          <widget class="EditClasses" name="page_classes"/>
          <widget class="EditSkills" name="page_skills"/>
-         <widget class="QWidget" name="page_items"/>
-         <widget class="QWidget" name="page_weapons"/>
-         <widget class="QWidget" name="page_armors"/>
+         <widget class="EditItems" name="page_items"/>
+         <widget class="EditWeapons" name="page_weapons"/>
+         <widget class="EditArmors" name="page_armors"/>
          <widget class="QWidget" name="page_enemies"/>
          <widget class="QWidget" name="page_troops"/>
          <widget class="QWidget" name="page_states"/>
@@ -373,6 +373,24 @@
    <class>EditSkills</class>
    <extends>QWidget</extends>
    <header>editors/skills/editskills.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>EditItems</class>
+   <extends>QWidget</extends>
+   <header>editors/items/edititems.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>EditWeapons</class>
+   <extends>QWidget</extends>
+   <header>editors/weapons/editweapons.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>EditArmors</class>
+   <extends>QWidget</extends>
+   <header>editors/armors/editarmors.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

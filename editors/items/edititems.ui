@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>EditSkills</class>
- <widget class="QWidget" name="EditSkills">
+ <class>EditItems</class>
+ <widget class="QWidget" name="EditItems">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>986</width>
-    <height>700</height>
+    <width>778</width>
+    <height>623</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -201,116 +201,147 @@
     </layout>
    </item>
    <item row="0" column="1" rowspan="2">
-    <layout class="QVBoxLayout" name="verticalLayout">
+    <layout class="QHBoxLayout" name="horizontalLayout_3">
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_3">
-       <item>
-        <widget class="QGroupBox" name="groupBox">
-         <property name="title">
-          <string>Element:</string>
-         </property>
-         <layout class="QGridLayout" name="gridLayout_4">
-          <item row="0" column="0">
-           <widget class="QScrollArea" name="scrollArea">
-            <property name="widgetResizable">
-             <bool>true</bool>
-            </property>
-            <widget class="QWidget" name="scrollAreaWidgetContents">
-             <property name="geometry">
-              <rect>
-               <x>0</x>
-               <y>0</y>
-               <width>217</width>
-               <height>638</height>
-              </rect>
-             </property>
-             <layout class="QGridLayout" name="gridLayout_7">
-              <item row="0" column="0">
-               <widget class="CheckBoxList" name="element_widget" native="true"/>
-              </item>
-             </layout>
-            </widget>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
-        <widget class="QGroupBox" name="groupBox_2">
-         <property name="title">
-          <string>State:</string>
-         </property>
-         <layout class="QGridLayout" name="gridLayout_5">
-          <item row="0" column="0">
-           <widget class="QScrollArea" name="scrollArea_2">
-            <property name="widgetResizable">
-             <bool>true</bool>
-            </property>
-            <widget class="QWidget" name="scrollAreaWidgetContents_2">
-             <property name="geometry">
-              <rect>
-               <x>0</x>
-               <y>0</y>
-               <width>217</width>
-               <height>638</height>
-              </rect>
-             </property>
-             <layout class="QGridLayout" name="gridLayout_9">
-              <item row="0" column="0">
-               <widget class="PlusMinusList" name="state_widget" native="true"/>
-              </item>
-             </layout>
-            </widget>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-      </layout>
+      <widget class="QGroupBox" name="groupBox">
+       <property name="title">
+        <string>Element:</string>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_4">
+        <item row="0" column="0">
+         <widget class="QScrollArea" name="scrollArea">
+          <property name="widgetResizable">
+           <bool>true</bool>
+          </property>
+          <widget class="QWidget" name="scrollAreaWidgetContents">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>166</width>
+             <height>563</height>
+            </rect>
+           </property>
+           <layout class="QGridLayout" name="gridLayout_7">
+            <item row="0" column="0">
+             <widget class="CheckBoxList" name="element_widget" native="true"/>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <widget class="QGroupBox" name="groupBox_2">
+       <property name="title">
+        <string>State:</string>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_5">
+        <item row="0" column="0">
+         <widget class="QScrollArea" name="scrollArea_2">
+          <property name="widgetResizable">
+           <bool>true</bool>
+          </property>
+          <widget class="QWidget" name="scrollAreaWidgetContents_2">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>166</width>
+             <height>563</height>
+            </rect>
+           </property>
+           <layout class="QGridLayout" name="gridLayout_9">
+            <item row="0" column="0">
+             <widget class="PlusMinusList" name="state_widget" native="true"/>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+       </layout>
+      </widget>
      </item>
     </layout>
    </item>
    <item row="1" column="0">
     <layout class="QGridLayout" name="gridLayout">
-     <item row="3" column="3">
-      <widget class="QSpinBox" name="spin_intf">
+     <item row="5" column="0">
+      <widget class="QSpinBox" name="spin_hit">
        <property name="minimum">
         <number>0</number>
        </property>
        <property name="maximum">
         <number>100</number>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="2">
+      <widget class="QLabel" name="label_10">
+       <property name="text">
+        <string>Rcvr SP%:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="1">
+      <widget class="QLabel" name="label_12">
+       <property name="text">
+        <string>PDEF-F:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="label_8">
+       <property name="text">
+        <string>Rcvr HP%:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="2">
+      <widget class="QSpinBox" name="spin_rcvr_sp_rate">
+       <property name="minimum">
+        <number>-100</number>
+       </property>
+       <property name="maximum">
+        <number>100</number>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Price:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="1">
+      <widget class="QSpinBox" name="spin_pdef">
+       <property name="minimum">
+        <number>0</number>
+       </property>
+       <property name="maximum">
+        <number>100</number>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="3">
+      <widget class="QLabel" name="label_14">
+       <property name="text">
+        <string>Variance:</string>
        </property>
       </widget>
      </item>
      <item row="2" column="1">
       <widget class="QLabel" name="label_9">
        <property name="text">
-        <string>Dex-F:</string>
+        <string>Rcvr HP:</string>
        </property>
       </widget>
      </item>
-     <item row="3" column="2">
-      <widget class="QSpinBox" name="spin_agif">
-       <property name="minimum">
-        <number>0</number>
-       </property>
-       <property name="maximum">
-        <number>100</number>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="1">
-      <widget class="QSpinBox" name="spin_dexf">
-       <property name="minimum">
-        <number>0</number>
-       </property>
-       <property name="maximum">
-        <number>100</number>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="0">
-      <widget class="QSpinBox" name="spin_strf">
+     <item row="5" column="3">
+      <widget class="QSpinBox" name="spin_variance">
        <property name="minimum">
         <number>0</number>
        </property>
@@ -326,22 +357,8 @@
        </property>
       </widget>
      </item>
-     <item row="4" column="3">
-      <widget class="QLabel" name="label_14">
-       <property name="text">
-        <string>Variance:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="label_8">
-       <property name="text">
-        <string>STR-F:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QSpinBox" name="spin_power">
+     <item row="3" column="1">
+      <widget class="QSpinBox" name="spin_rcvr_hp">
        <property name="minimum">
         <number>-9999</number>
        </property>
@@ -350,37 +367,31 @@
        </property>
       </widget>
      </item>
+     <item row="4" column="0">
+      <widget class="QLabel" name="label_7">
+       <property name="text">
+        <string>Hit:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>Consumable:</string>
+       </property>
+      </widget>
+     </item>
      <item row="2" column="3">
       <widget class="QLabel" name="label_11">
        <property name="text">
-        <string>INT-F:</string>
+        <string>Rcvr SP:</string>
        </property>
       </widget>
      </item>
-     <item row="5" column="3">
-      <widget class="QSpinBox" name="spin_variance">
-       <property name="minimum">
-        <number>0</number>
-       </property>
-       <property name="maximum">
-        <number>100</number>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="0">
-      <widget class="QSpinBox" name="spin_hit">
-       <property name="minimum">
-        <number>0</number>
-       </property>
-       <property name="maximum">
-        <number>100</number>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="3">
-      <widget class="QLabel" name="label_4">
+     <item row="0" column="2">
+      <widget class="QLabel" name="label_3">
        <property name="text">
-        <string>EVA-F:</string>
+        <string>Parameter:</string>
        </property>
       </widget>
      </item>
@@ -397,51 +408,23 @@
        </property>
       </spacer>
      </item>
-     <item row="2" column="2">
-      <widget class="QLabel" name="label_10">
-       <property name="text">
-        <string>AGI-F:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="2">
-      <widget class="QLabel" name="label_3">
-       <property name="text">
-        <string>ATK-F:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="1">
-      <widget class="QLabel" name="label_12">
-       <property name="text">
-        <string>PDEF-F:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="3">
-      <widget class="QSpinBox" name="spin_evaf">
+     <item row="3" column="3">
+      <widget class="QSpinBox" name="spin_rcvr_sp">
        <property name="minimum">
-        <number>0</number>
+        <number>-9999</number>
+       </property>
+       <property name="maximum">
+        <number>9999</number>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0">
+      <widget class="QSpinBox" name="spin_rcvr_hp_rate">
+       <property name="minimum">
+        <number>-100</number>
        </property>
        <property name="maximum">
         <number>100</number>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QLabel" name="label_2">
-       <property name="text">
-        <string>Power:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="2">
-      <widget class="QSpinBox" name="spin_atkf">
-       <property name="minimum">
-        <number>0</number>
-       </property>
-       <property name="maximum">
-        <number>200</number>
        </property>
       </widget>
      </item>
@@ -458,31 +441,67 @@
      <item row="1" column="0">
       <widget class="QSpinBox" name="spin_price">
        <property name="maximum">
-        <number>9999</number>
+        <number>999999</number>
        </property>
       </widget>
      </item>
-     <item row="0" column="0">
-      <widget class="QLabel" name="label">
-       <property name="text">
-        <string>SP Cost:</string>
-       </property>
+     <item row="1" column="1">
+      <widget class="QComboBox" name="combo_consumable">
+       <item>
+        <property name="text">
+         <string>Yes</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>No</string>
+        </property>
+       </item>
       </widget>
      </item>
-     <item row="5" column="1">
-      <widget class="QSpinBox" name="spin_pdef">
-       <property name="minimum">
-        <number>0</number>
-       </property>
+     <item row="1" column="2">
+      <widget class="QComboBox" name="combo_parameter">
+       <item>
+        <property name="text">
+         <string>None</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>MaxHP</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>MaxSP</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>STR</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>DEX</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>AGI</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>INT</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="1" column="3">
+      <widget class="QSpinBox" name="spin_param">
        <property name="maximum">
-        <number>100</number>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="0">
-      <widget class="QLabel" name="label_7">
-       <property name="text">
-        <string>Hit:</string>
+        <number>9999</number>
        </property>
       </widget>
      </item>

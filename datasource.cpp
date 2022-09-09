@@ -65,9 +65,12 @@ void DataSource::fill_list(QListWidget *list, int type, bool shownum, int chars)
 }
 
 
-void DataSource::fill_combo(QComboBox *combo, int type, bool shownum, int chars, int current = -1)
+void DataSource::fill_combo(QComboBox *combo, int type, bool shownum, int chars, int current = -1, bool allow_none = false)
 {
     combo->clear();
+
+    if (allow_none)
+        combo->addItem("(None)",QVariant(0));
 
     if (type == ACTORS)
         for (int i = 0; i < system->actor_list.length(); i++)
@@ -119,7 +122,7 @@ void DataSource::fill_combo(QComboBox *combo, int type, bool shownum, int chars,
                                     system->common_events_list.at(i)->name, QVariant(i+1));
 
     if (current >= 0 && combo->count() >= current)
-        combo->setCurrentIndex(current-1);
+        combo->setCurrentIndex(current-1 + (allow_none ? 1 : 0)); // +1 when (None) activated
 }
 
 void DataSource::fill_combo_weapon_by_class(QComboBox *combo, int class_id, bool shownum, int chars, int current = -1)

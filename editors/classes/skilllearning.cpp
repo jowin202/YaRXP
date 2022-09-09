@@ -9,7 +9,7 @@ SkillLearning::SkillLearning(RPGSystem *system, int row, int level, int skill, Q
     ui->setupUi(this);
     this->system = system;
 
-    this->system->datasource.fill_combo(this->ui->combo_skill, RPGSystem::SKILLS, true, 3, skill);
+    this->system->datasource.fill_combo(this->ui->combo_skill, RPGSystem::SKILLS, true, 3, skill, false);
     this->ui->spin_level->setValue(level);
     this->row = row;
 }

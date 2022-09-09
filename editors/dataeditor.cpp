@@ -24,6 +24,9 @@ void DataEditor::setSystem(RPGSystem *system)
     this->ui->page_actors->setSystem(system);
     this->ui->page_classes->setSystem(system);
     this->ui->page_skills->setSystem(system);
+    this->ui->page_items->setSystem(system);
+    this->ui->page_weapons->setSystem(system);
+    this->ui->page_armors->setSystem(system);
 }
 
 
@@ -42,6 +45,18 @@ void DataEditor::on_object_list_currentRowChanged(int currentRow)
     else if (this->ui->central_menu->currentRow() == SKILLS)
     {
         this->ui->page_skills->set_skill(currentRow);
+    }
+    else if (this->ui->central_menu->currentRow() == ITEMS)
+    {
+        this->ui->page_items->set_item(currentRow);
+    }
+    else if (this->ui->central_menu->currentRow() == WEAPONS)
+    {
+        this->ui->page_weapons->set_weapon(currentRow);
+    }
+    else if (this->ui->central_menu->currentRow() == ARMORS)
+    {
+        this->ui->page_armors->set_armor(currentRow);
     }
 }
 

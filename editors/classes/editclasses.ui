@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>794</width>
-    <height>581</height>
+    <width>744</width>
+    <height>618</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -41,17 +41,13 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>214</width>
-             <height>459</height>
+             <width>196</width>
+             <height>496</height>
             </rect>
            </property>
            <layout class="QGridLayout" name="gridLayout_7">
             <item row="0" column="0">
-             <layout class="QVBoxLayout" name="armor_layout">
-              <property name="spacing">
-               <number>0</number>
-              </property>
-             </layout>
+             <widget class="CheckBoxList" name="armor_widget" native="true"/>
             </item>
            </layout>
           </widget>
@@ -78,44 +74,13 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>113</width>
-               <height>234</height>
+               <width>106</width>
+               <height>252</height>
               </rect>
              </property>
              <layout class="QGridLayout" name="gridLayout_12">
               <item row="0" column="0">
-               <layout class="QGridLayout" name="element_layout"/>
-              </item>
-             </layout>
-            </widget>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item row="0" column="1">
-        <widget class="QGroupBox" name="groupBox_4">
-         <property name="title">
-          <string>State</string>
-         </property>
-         <layout class="QGridLayout" name="gridLayout_9">
-          <item row="0" column="0">
-           <widget class="QScrollArea" name="scrollArea_4">
-            <property name="widgetResizable">
-             <bool>true</bool>
-            </property>
-            <widget class="QWidget" name="scrollAreaWidgetContents_4">
-             <property name="geometry">
-              <rect>
-               <x>0</x>
-               <y>0</y>
-               <width>113</width>
-               <height>234</height>
-              </rect>
-             </property>
-             <layout class="QGridLayout" name="gridLayout_13">
-              <item row="0" column="0">
-               <layout class="QGridLayout" name="state_layout"/>
+               <widget class="ABCList" name="element_widget" native="true"/>
               </item>
              </layout>
             </widget>
@@ -160,6 +125,50 @@
             </column>
            </widget>
           </item>
+          <item row="1" column="0">
+           <spacer name="horizontalSpacer">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QGroupBox" name="groupBox_4">
+         <property name="title">
+          <string>State</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_9">
+          <item row="0" column="0">
+           <widget class="QScrollArea" name="scrollArea_4">
+            <property name="widgetResizable">
+             <bool>true</bool>
+            </property>
+            <widget class="QWidget" name="scrollAreaWidgetContents_4">
+             <property name="geometry">
+              <rect>
+               <x>0</x>
+               <y>0</y>
+               <width>106</width>
+               <height>252</height>
+              </rect>
+             </property>
+             <layout class="QGridLayout" name="gridLayout_13">
+              <item row="0" column="0">
+               <widget class="ABCList" name="state_widget" native="true"/>
+              </item>
+             </layout>
+            </widget>
+           </widget>
+          </item>
          </layout>
         </widget>
        </item>
@@ -187,17 +196,13 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>214</width>
-             <height>459</height>
+             <width>196</width>
+             <height>496</height>
             </rect>
            </property>
            <layout class="QGridLayout" name="gridLayout_6">
             <item row="0" column="0">
-             <layout class="QVBoxLayout" name="weapon_layout">
-              <property name="spacing">
-               <number>0</number>
-              </property>
-             </layout>
+             <widget class="CheckBoxList" name="weapon_widget" native="true"/>
             </item>
            </layout>
           </widget>
@@ -259,6 +264,20 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>ABCList</class>
+   <extends>QWidget</extends>
+   <header>editors/abclist.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>CheckBoxList</class>
+   <extends>QWidget</extends>
+   <header>editors/checkboxlist.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

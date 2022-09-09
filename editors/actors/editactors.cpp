@@ -118,7 +118,7 @@ void EditActors::set_actor(int n)
     this->ui->spin_initial->setValue(current_actor->initial_level);
     this->ui->spin_final->setValue(current_actor->final_level);
 
-    system->datasource.fill_combo(this->ui->combo_class,RPGSystem::CLASSES,true, 3, current_actor->class_id);
+    system->datasource.fill_combo(this->ui->combo_class,RPGSystem::CLASSES,true, 3, current_actor->class_id, false);
 
     system->datasource.fill_combo_weapon_by_class(this->ui->combo_weapon, current_actor->class_id, true, 3, current_actor->weapon_id);
     system->datasource.fill_combo_shield_by_class(this->ui->combo_shield, current_actor->class_id, true, 3, current_actor->armor1_id);
