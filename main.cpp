@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
     QCoreApplication::setApplicationName("YaRXP");
 
     MainWindow w;
-    w.show();
+    w.showMaximized();
 
 
 

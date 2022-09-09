@@ -54,11 +54,11 @@ public slots:
     void on_actionFlood_Fill_triggered();
     void on_actionAll_Layers_triggered();
     void on_actionCurrent_Layers_and_below_triggered();
+    void on_actionRun_Testcases_triggered();
 
 private slots:
     void on_actionImport_RGSSAD_triggered();
 
-    void on_actionRun_Testcases_triggered();
 
     void on_actionActors_triggered();
 

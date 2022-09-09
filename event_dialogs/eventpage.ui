@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1163</width>
-    <height>628</height>
+    <height>695</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -60,149 +60,6 @@
        </layout>
       </item>
      </layout>
-    </widget>
-   </item>
-   <item row="1" column="1">
-    <widget class="QGroupBox" name="groupBox_3">
-     <property name="title">
-      <string>Autonomous Movement</string>
-     </property>
-     <layout class="QGridLayout" name="gridLayout_4">
-      <item row="0" column="0">
-       <layout class="QGridLayout" name="gridLayout_3">
-        <item row="0" column="0">
-         <widget class="QLabel" name="label_6">
-          <property name="text">
-           <string>Type:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QPushButton" name="button_move_route">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="text">
-           <string>Move Route</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QComboBox" name="combo_move_type">
-          <item>
-           <property name="text">
-            <string>Fixed</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Random</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Approach</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Custom</string>
-           </property>
-          </item>
-         </widget>
-        </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="label_7">
-          <property name="text">
-           <string>Speed:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="0">
-         <widget class="QLabel" name="label_8">
-          <property name="text">
-           <string>Freq:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1">
-         <widget class="QComboBox" name="combo_speed">
-          <item>
-           <property name="text">
-            <string>1: Slowest</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>2: Slower</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>3: Slow</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>4: Fast</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>5: Faster</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>6: Fastest</string>
-           </property>
-          </item>
-         </widget>
-        </item>
-        <item row="3" column="1">
-         <widget class="QComboBox" name="combo_freq">
-          <item>
-           <property name="text">
-            <string>1: Lowest</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>2: Lower</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>3: Low</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>4: High</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>5: Higher</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>6: Highest</string>
-           </property>
-          </item>
-         </widget>
-        </item>
-       </layout>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item row="1" column="0">
-    <widget class="QGroupBox" name="groupBox_2">
-     <property name="title">
-      <string>Graphics</string>
-     </property>
     </widget>
    </item>
    <item row="0" column="0" colspan="2">
@@ -363,42 +220,147 @@
      </layout>
     </widget>
    </item>
-   <item row="0" column="2" rowspan="3">
-    <widget class="QGroupBox" name="groupBox_6">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
+   <item row="1" column="1">
+    <widget class="QGroupBox" name="groupBox_3">
      <property name="title">
-      <string>Event List</string>
+      <string>Autonomous Movement</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout_10">
-      <item row="1" column="0">
-       <spacer name="horizontalSpacer">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item row="1" column="1">
-       <widget class="QPushButton" name="button_add_command">
-        <property name="text">
-         <string>Add Command</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0" colspan="2">
-       <widget class="EventList" name="eventList"/>
+     <layout class="QGridLayout" name="gridLayout_4">
+      <item row="0" column="0">
+       <layout class="QGridLayout" name="gridLayout_3">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_6">
+          <property name="text">
+           <string>Type:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QPushButton" name="button_move_route">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="text">
+           <string>Move Route</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QComboBox" name="combo_move_type">
+          <item>
+           <property name="text">
+            <string>Fixed</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Random</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Approach</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Custom</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="label_7">
+          <property name="text">
+           <string>Speed:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="label_8">
+          <property name="text">
+           <string>Freq:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QComboBox" name="combo_speed">
+          <item>
+           <property name="text">
+            <string>1: Slowest</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>2: Slower</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>3: Slow</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>4: Fast</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>5: Faster</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>6: Fastest</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QComboBox" name="combo_freq">
+          <item>
+           <property name="text">
+            <string>1: Lowest</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>2: Lower</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>3: Low</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>4: High</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>5: Higher</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>6: Highest</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+       </layout>
       </item>
      </layout>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QGroupBox" name="groupBox_2">
+     <property name="title">
+      <string>Graphics</string>
+     </property>
     </widget>
    </item>
    <item row="2" column="0">
@@ -449,18 +411,56 @@
      </layout>
     </widget>
    </item>
-   <item row="3" column="2">
-    <spacer name="horizontalSpacer_2">
+   <item row="3" column="1">
+    <spacer name="verticalSpacer">
      <property name="orientation">
-      <enum>Qt::Horizontal</enum>
+      <enum>Qt::Vertical</enum>
      </property>
      <property name="sizeHint" stdset="0">
       <size>
-       <width>40</width>
-       <height>0</height>
+       <width>20</width>
+       <height>40</height>
       </size>
      </property>
     </spacer>
+   </item>
+   <item row="0" column="2" rowspan="4">
+    <widget class="QGroupBox" name="groupBox_6">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="title">
+      <string>Event List</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_10">
+      <item row="1" column="0">
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="1" column="1">
+       <widget class="QPushButton" name="button_add_command">
+        <property name="text">
+         <string>Add Command</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0" colspan="2">
+       <widget class="EventList" name="eventList"/>
+      </item>
+     </layout>
+    </widget>
    </item>
   </layout>
  </widget>

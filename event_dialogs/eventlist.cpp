@@ -26,7 +26,8 @@ void EventList::fill_list()
     for (int i = 0; i < list->length(); i++)
     {
         command = list->at(i);
-        //qDebug() << command->code;
+        qDebug() << i << command->code << command->get_command_text(system);
+
 
         //Multiline Commands
         if (command->code == 101 || command->code == 401 || //text
@@ -39,6 +40,8 @@ void EventList::fill_list()
             if (command->code == 209)
             {
                 current_move_route = &command->move_route;
+                current_mv_index = 0;
+                current_move_command = 0;
             }
             else if (command->code == 509)
             {
@@ -63,9 +66,14 @@ void EventList::fill_list()
         }
         //Single Line Commands
         else
+        {
+            //breaks multi line move route
+            current_mv_index = 0;
+            current_move_route = 0;
+            current_move_command = 0;
+
             this->addItem(new SimpleEventCell(command,system));
-
-
+        }
     }
 }
 

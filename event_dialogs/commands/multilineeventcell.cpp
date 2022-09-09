@@ -16,14 +16,17 @@ MultilineEventCell::MultilineEventCell(RPGEventCommand *command, RPGSystem *syst
         int e = parameters.at(0).toInt();
         if (e == -1) actor = "Player";
         else if (e==0) actor = "This event";
+        else if (system->get_current_map_info() == 0)
+            actor = "";
         else
         {
             QList<RPGEvent*> list = system->get_current_map_info()->map->events;
             for (int i = 0; i < list.length(); i++)
                 if (e == list.at(i)->id)
-                    actor = list.at(i)->name;
+                    actor = "[" + list.at(i)->name + "]";
         }
-        this->setText(indent_as_string +"@>Set Move Route : " + actor);
+
+        this->setText(indent_as_string + "@>Set Move Route : " + actor);
     }
     else if (code == 509)
     {

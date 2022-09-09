@@ -22,6 +22,8 @@
 
 #include <QTemporaryFile>
 
+#include "event_dialogs/eventlist.h"
+
 Testcases::Testcases(QObject *parent) : QObject(parent)
 {
 
@@ -29,26 +31,162 @@ Testcases::Testcases(QObject *parent) : QObject(parent)
 
 Testcases::Testcases(RPGSystem *settings)
 {
+    EventList event_list;
+
     this->ok = true;
     QByteArray hash1, hash2;
+    QTemporaryFile tmpfile;
+    tmpfile.setAutoRemove(true);
+    tmpfile.open();
+    tmpfile.close();
 
+
+    qDebug() << "Checking System...";
+    //Check system
+    RPGSystem system;
+    IOSystemFile system_file(settings->data_dir + "System.rxdata", &system);
+    hash1 = system_file.getHash();
+
+    system_file.write_to_file(tmpfile.fileName(), &system);
+    hash2 = system_file.getHash();
+
+    qDebug() << "System..." << (hash1==hash2 ? "passed":"failed");
+    if (hash1!=hash2)
+        ok = false;
+
+
+
+    qDebug() << "Checking MapInfo...";
+    //Check MapInfo
+    IOMapInfoFile info_file(settings->data_dir + "MapInfos.rxdata", &system.map_info_list);
+    hash1 = info_file.getHash();
+
+    info_file.write_to_file(tmpfile.fileName(), &system.map_info_list);
+    hash2 = info_file.getHash();
+
+    qDebug() << "MapInfos..." << (hash1==hash2 ? "passed":"failed");
+    if (hash1!=hash2)
+        ok = false;
+
+
+    QHash<int,QString> map_id_name;
+    QHash<int,int> parent;
+    for (int i = 0; i < system.map_info_list.length(); i++)
+    {
+        map_id_name.insert(system.map_info_list.at(i)->id, system.map_info_list.at(i)->name);
+        parent.insert(system.map_info_list.at(i)->id, system.map_info_list.at(i)->parent_id);
+    }
+
+
+
+    qDebug() << "Checking Items...";
+    //Check Items
+    IOItemFile item_file(settings->data_dir + "Items.rxdata", &system.items_list);
+    hash1 = item_file.getHash();
+
+
+    item_file.write_to_file(tmpfile.fileName(), &system.items_list);
+    hash2 = item_file.getHash();
+
+
+    qDebug() << "Items..." << (hash1==hash2 ? "passed":"failed");
+    if (hash1!=hash2)
+        ok = false;
+
+
+    qDebug() << "Checking Animations...";
+    //Check Animations
+    IOAnimationFile animations_file(settings->data_dir + "Animations.rxdata", &system.animation_list);
+    hash1 = animations_file.getHash();
+
+
+    animations_file.write_to_file(tmpfile.fileName(), &system.animation_list);
+    hash2 = animations_file.getHash();
+
+
+    qDebug() << "Animations..." << (hash1==hash2 ? "passed":"failed");
+    if (hash1!=hash2)
+        ok = false;
+
+
+    qDebug() << "Checking Actors...";
+    //Check Actors
+    IOActorFile actor_file(settings->data_dir + "Actors.rxdata", &system.actor_list);
+    hash1 = actor_file.getHash();
+
+
+    actor_file.write_to_file(tmpfile.fileName(), &system.actor_list);
+    hash2 = actor_file.getHash();
+
+
+    qDebug() << "Actors..." << (hash1==hash2 ? "passed":"failed");
+    if (hash1!=hash2)
+        ok = false;
+
+
+
+    qDebug() << "Checking Skills...";
+    //Check Skills
+    IOSKillFile skill_file(settings->data_dir + "Skills.rxdata", &system.skills_list);
+    hash1 = skill_file.getHash();
+
+
+
+    skill_file.write_to_file(tmpfile.fileName(), &system.skills_list);
+    hash2 = skill_file.getHash();
+
+
+
+    qDebug() << "Skills..." << (hash1==hash2 ? "passed":"failed");
+    if (hash1!=hash2)
+        ok = false;
+
+
+
+    //Check Maps
     int num_maps = 0;
     int passed = 0;
 
-    for (int i = 0; i <= 999; i++)
+    for (int k = 0; k < system.map_info_list.length(); k++)
     {
+        int i = system.map_info_list.at(k)->id;
+
         QString filler;
         if (i >= 0 && i <= 9) filler = "00";
         else if (i >= 10 && i <= 99) filler = "0";
         else filler = "";
 
-        RPGMap *map = new RPGMap();
+        RPGMap *map = system.map_info_list.at(k)->map = new RPGMap;
         QString path = settings->data_dir + "Map" + filler + QString::number(i) + ".rxdata";
         if (QFile(path).exists())
         {
             num_maps++;
             IOMapFile mapfile(path, map);
             hash1 = mapfile.getHash();
+            system.current_map_id = k; // simulate that map is currently seen
+
+            //recursive path
+            QString map_path = map_id_name.value(i);
+            int par_id = i;
+            do
+            {
+                par_id = parent.value(par_id);
+                map_path = map_path.prepend(map_id_name.value(par_id) + ">>");
+            }while(par_id != 0);
+
+
+            qDebug() << "Map: " << i << map_path;
+            for (int e = 0; e < map->events.length(); e++)
+            {
+                qDebug() << "Map: " << i << "Event: " << map->events.at(e)->id << "(" + map->events.at(e)->name + ")"
+                         << "x: " << map->events.at(e)->x << "y: " << map->events.at(e)->y;
+                for (int j = 0; j < map->events.at(e)->pages.length(); j++)
+                {
+                    event_list.clear();
+                    event_list.set_data(&system, &map->events.at(e)->pages.at(j)->list);
+                    event_list.fill_list();
+                }
+            }
 
             mapfile.write_to_file("/tmp/test_map.rxdata", map);
             hash2 = mapfile.getHash();
@@ -66,20 +204,7 @@ Testcases::Testcases(RPGSystem *settings)
         ok = false;
 
 
-    QList<RPGMapInfo*> mapinfo_list;
-    IOMapInfoFile info_file(settings->data_dir + "MapInfos.rxdata", &mapinfo_list);
-    hash1 = info_file.getHash();
 
-    QTemporaryFile tmpfile;
-    tmpfile.setAutoRemove(true);
-    tmpfile.open();
-    tmpfile.close();
-    info_file.write_to_file(tmpfile.fileName(), &mapinfo_list);
-    hash2 = info_file.getHash();
-
-    qDebug() << "MapInfos..." << (hash1==hash2 ? "passed":"failed");
-    if (hash1!=hash2)
-        ok = false;
 
 
 
@@ -98,34 +223,6 @@ Testcases::Testcases(RPGSystem *settings)
 
 
 
-
-    //Check system
-    RPGSystem system;
-    IOSystemFile system_file(settings->data_dir + "System.rxdata", &system);
-    hash1 = system_file.getHash();
-
-    system_file.write_to_file(tmpfile.fileName(), &system);
-    hash2 = system_file.getHash();
-
-    qDebug() << "System..." << (hash1==hash2 ? "passed":"failed");
-    if (hash1!=hash2)
-        ok = false;
-
-
-
-    //Check Actors
-    QList<RPGActor*> actor_list;
-    IOActorFile actor_file(settings->data_dir + "Actors.rxdata", &actor_list);
-    hash1 = actor_file.getHash();
-
-
-    actor_file.write_to_file(tmpfile.fileName(), &actor_list);
-    hash2 = actor_file.getHash();
-
-
-    qDebug() << "Actors..." << (hash1==hash2 ? "passed":"failed");
-    if (hash1!=hash2)
-        ok = false;
 
 
 
@@ -149,39 +246,11 @@ Testcases::Testcases(RPGSystem *settings)
 
 
 
-    //Check Skills
-    QList<RPGSkill*> skill_list;
-    IOSKillFile skill_file(settings->data_dir + "Skills.rxdata", &skill_list);
-    hash1 = skill_file.getHash();
-
-
-
-    skill_file.write_to_file(tmpfile.fileName(), &skill_list);
-    hash2 = skill_file.getHash();
-
-
-
-    qDebug() << "Skills..." << (hash1==hash2 ? "passed":"failed");
-    if (hash1!=hash2)
-        ok = false;
 
 
 
 
 
-    //Check Items
-    QList<RPGItem*> item_list;
-    IOItemFile item_file(settings->data_dir + "Items.rxdata", &item_list);
-    hash1 = item_file.getHash();
-
-
-    item_file.write_to_file(tmpfile.fileName(), &item_list);
-    hash2 = item_file.getHash();
-
-
-    qDebug() << "Items..." << (hash1==hash2 ? "passed":"failed");
-    if (hash1!=hash2)
-        ok = false;
 
 
 
@@ -285,19 +354,6 @@ Testcases::Testcases(RPGSystem *settings)
 
 
 
-    //Check Animations
-    QList<RPGAnimation*> animations_list;
-    IOAnimationFile animations_file(settings->data_dir + "Animations.rxdata", &animations_list);
-    hash1 = animations_file.getHash();
-
-
-    animations_file.write_to_file(tmpfile.fileName(), &animations_list);
-    hash2 = animations_file.getHash();
-
-
-    qDebug() << "Animations..." << (hash1==hash2 ? "passed":"failed");
-    if (hash1!=hash2)
-        ok = false;
 
 
 

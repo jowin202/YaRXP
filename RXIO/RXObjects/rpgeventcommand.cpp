@@ -325,11 +325,19 @@ QString RPGEventCommand::get_command_text(RPGSystem *system)
         int operation = parameters.at(2).toInt();
         int operand_type = parameters.at(3).toInt();
 
+
         QString var;
-        if (var_from == var_to)
-            var = "[" + QString::number(var_from).rightJustified(4,'0') + ": " + system->variable_names.at(var_from-1) + "] ";
+        if (system->variable_names.length() > var_from && system->variable_names.length() > var_to)
+        {
+            if (var_from == var_to)
+                var = "[" + QString::number(var_from).rightJustified(4,'0') + ": " + system->variable_names.at(var_from-1) + "] ";
+            else
+                var = "[" + QString::number(var_from).rightJustified(4,'0') + ".." + QString::number(var_to).rightJustified(4,'0') + "] ";
+        }
         else
-            var = "[" + QString::number(var_from).rightJustified(4,'0') + ".." + QString::number(var_to).rightJustified(4,'0') + "] ";
+        {
+            var = "[" + QString::number(var_from) + ".." + QString::number(var_to) + "]";
+        }
 
         QString op = "= ";
         if (operation == 1) op = "+= ";
@@ -449,7 +457,9 @@ QString RPGEventCommand::get_command_text(RPGSystem *system)
     }
     else if (code == 126)
     {
-        QString item = "[" + system->items_list.at(parameters.at(0).toInt()-1)->name + "], ";
+        QString item ="[], ";
+        if (parameters.at(0).toInt() < system->items_list.length())
+            item = "[" + system->items_list.at(parameters.at(0).toInt()-1)->name + "], ";
         QString plus_minus = (parameters.at(1).toInt() == 0 ? "+ " : "- ");
 
         QString var;
