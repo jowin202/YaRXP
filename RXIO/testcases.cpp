@@ -142,6 +142,122 @@ Testcases::Testcases(RPGSystem *settings)
         ok = false;
 
 
+    qDebug() << "Checking Classes...";
+    //Check Classes
+    IOClassFile class_file(settings->data_dir + "Classes.rxdata", &system.classes_list);
+    hash1 = class_file.getHash();
+
+
+    class_file.write_to_file(tmpfile.fileName(), &system.classes_list);
+    hash2 = class_file.getHash();
+
+
+    qDebug() << "Classes..." << (hash1==hash2 ? "passed":"failed");
+    if (hash1!=hash2)
+        ok = false;
+
+
+
+
+    qDebug() << "Checking Armor...";
+    //Check Armor
+    IOArmorFile armor_file(settings->data_dir + "Armors.rxdata", &system.armors_list);
+    hash1 = armor_file.getHash();
+
+
+    armor_file.write_to_file(tmpfile.fileName(), &system.armors_list);
+    hash2 = armor_file.getHash();
+
+
+    qDebug() << "Armors..." << (hash1==hash2 ? "passed":"failed");
+    if (hash1!=hash2)
+        ok = false;
+
+
+
+    qDebug() << "Checking Weapons...";
+    //Check Weapons
+    IOWeaponFile weapon_file(settings->data_dir + "Weapons.rxdata", &system.weapons_list);
+    hash1 = weapon_file.getHash();
+
+
+    weapon_file.write_to_file(tmpfile.fileName(), &system.weapons_list);
+    hash2 = weapon_file.getHash();
+
+
+    qDebug() << "Weapons..." << (hash1==hash2 ? "passed":"failed");
+    if (hash1!=hash2)
+        ok = false;
+
+
+
+
+    qDebug() << "Checking Enemies...";
+    //Check Enemies
+    IOEnemyFile enemy_file(settings->data_dir + "Enemies.rxdata", &system.enemies_list);
+    hash1 = enemy_file.getHash();
+
+
+    enemy_file.write_to_file(tmpfile.fileName(), &system.enemies_list);
+    hash2 = enemy_file.getHash();
+
+
+    qDebug() << "Enemies..." << (hash1==hash2 ? "passed":"failed");
+    if (hash1!=hash2)
+        ok = false;
+
+
+
+
+
+    qDebug() << "Checking Troops...";
+    //Check Troops
+    IOTroopFile troop_file(settings->data_dir + "Troops.rxdata", &system.troops_list);
+    hash1 = troop_file.getHash();
+
+
+    troop_file.write_to_file(tmpfile.fileName(), &system.troops_list);
+    hash2 = troop_file.getHash();
+
+
+    qDebug() << "Troops..." << (hash1==hash2 ? "passed":"failed");
+    if (hash1!=hash2)
+        ok = false;
+
+
+
+    qDebug() << "Checking States...";
+    //Check States
+    IOStateFile state_file(settings->data_dir + "States.rxdata", &system.states_list);
+    hash1 = state_file.getHash();
+
+
+    state_file.write_to_file(tmpfile.fileName(), &system.states_list);
+    hash2 = state_file.getHash();
+
+
+    qDebug() << "States..." << (hash1==hash2 ? "passed":"failed");
+    if (hash1!=hash2)
+        ok = false;
+
+
+
+    qDebug() << "Checking CommonEvents...";
+    //Check CommonEvents
+    QList<RPGCommonEvent*> common_event_list;
+    IOCommonEventFile common_event_file(settings->data_dir + "CommonEvents.rxdata", &system.common_events_list);
+    hash1 = common_event_file.getHash();
+
+
+    common_event_file.write_to_file(tmpfile.fileName(), &system.common_events_list);
+    hash2 = common_event_file.getHash();
+
+
+    qDebug() << "Common Events..." << (hash1==hash2 ? "passed":"failed");
+    if (hash1!=hash2)
+        ok = false;
+
+
 
     //Check Maps
     int num_maps = 0;
@@ -220,143 +336,6 @@ Testcases::Testcases(RPGSystem *settings)
     qDebug() << "Tilesets..." << (hash1==hash2 ? "passed":"failed");
     if (hash1!=hash2)
         ok = false;
-
-
-
-
-
-
-
-
-    //Check Classes
-    QList<RPGClass*> class_list;
-    IOClassFile class_file(settings->data_dir + "Classes.rxdata", &class_list);
-    hash1 = class_file.getHash();
-
-
-    class_file.write_to_file(tmpfile.fileName(), &class_list);
-    hash2 = class_file.getHash();
-
-
-    qDebug() << "Classes..." << (hash1==hash2 ? "passed":"failed");
-    if (hash1!=hash2)
-        ok = false;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    //Check Armor
-    QList<RPGArmor*> armor_list;
-    IOArmorFile armor_file(settings->data_dir + "Armors.rxdata", &armor_list);
-    hash1 = armor_file.getHash();
-
-
-    armor_file.write_to_file(tmpfile.fileName(), &armor_list);
-    hash2 = armor_file.getHash();
-
-
-    qDebug() << "Armors..." << (hash1==hash2 ? "passed":"failed");
-    if (hash1!=hash2)
-        ok = false;
-
-
-
-    //Check Weapons
-    QList<RPGWeapon*> weapon_list;
-    IOWeaponFile weapon_file(settings->data_dir + "Weapons.rxdata", &weapon_list);
-    hash1 = weapon_file.getHash();
-
-
-    weapon_file.write_to_file(tmpfile.fileName(), &weapon_list);
-    hash2 = weapon_file.getHash();
-
-
-    qDebug() << "Weapons..." << (hash1==hash2 ? "passed":"failed");
-    if (hash1!=hash2)
-        ok = false;
-
-
-
-
-    //Check Enemies
-    QList<RPGEnemy*> enemy_list;
-    IOEnemyFile enemy_file(settings->data_dir + "Enemies.rxdata", &enemy_list);
-    hash1 = enemy_file.getHash();
-
-
-    enemy_file.write_to_file(tmpfile.fileName(), &enemy_list);
-    hash2 = enemy_file.getHash();
-
-
-    qDebug() << "Enemies..." << (hash1==hash2 ? "passed":"failed");
-    if (hash1!=hash2)
-        ok = false;
-
-
-
-
-
-    //Check Troops
-    QList<RPGTroop*> troop_list;
-    IOTroopFile troop_file(settings->data_dir + "Troops.rxdata", &troop_list);
-    hash1 = troop_file.getHash();
-
-
-    troop_file.write_to_file(tmpfile.fileName(), &troop_list);
-    hash2 = troop_file.getHash();
-
-
-    qDebug() << "Troops..." << (hash1==hash2 ? "passed":"failed");
-    if (hash1!=hash2)
-        ok = false;
-
-
-
-    //Check States
-    QList<RPGState*> state_list;
-    IOStateFile state_file(settings->data_dir + "States.rxdata", &state_list);
-    hash1 = state_file.getHash();
-
-
-    state_file.write_to_file(tmpfile.fileName(), &state_list);
-    hash2 = state_file.getHash();
-
-
-    qDebug() << "States..." << (hash1==hash2 ? "passed":"failed");
-    if (hash1!=hash2)
-        ok = false;
-
-
-
-    //Check CommonEvents
-    QList<RPGCommonEvent*> common_event_list;
-    IOCommonEventFile common_event_file(settings->data_dir + "CommonEvents.rxdata", &common_event_list);
-    hash1 = common_event_file.getHash();
-
-
-    common_event_file.write_to_file(tmpfile.fileName(), &common_event_list);
-    hash2 = common_event_file.getHash();
-
-
-    qDebug() << "Common Events..." << (hash1==hash2 ? "passed":"failed");
-    if (hash1!=hash2)
-        ok = false;
-
-
-
-
-
-
 
 
 }

@@ -186,27 +186,170 @@ void DataSource::fill_combo_accessory_by_class(QComboBox *combo, int class_id, b
     this->fill_combo_armor_by_class(combo,class_id, shownum, chars, current, 3);
 }
 
-QString DataSource::get_obj_name_by_id(int id, int type, bool shownum, int chars)
+QString DataSource::get_switch_name(int from_id, int to_id, bool shownum, int chars, bool brackets)
 {
+    QString sw;
+
+    if (from_id == to_id)
+    {
+        if (from_id >= 0 && from_id <= this->system->switches_names.length() )
+            sw = this->system->switches_names.at(from_id-1);
+        else if (brackets && chars)
+            return QString("[%1]").arg(from_id, chars, 10, QChar('0'));
+        else if (brackets)
+            return QString("[%1]").arg(from_id);
+        else
+            return QString("%1").arg(from_id);
+
+        if (shownum)
+            sw = QString("%1: %2").arg(from_id, chars, 10, QChar('0')).arg(sw);
+
+        if (brackets)
+            sw = "[" + sw + "]";
+    }
+    else
+    {
+        //not equal
+
+        if (from_id > to_id)
+        { //swap
+            int tmp = to_id; to_id = from_id; from_id = tmp;
+        }
+        sw = QString("[%1..%2]").arg(from_id,chars,10,QChar('0')).arg(to_id,chars,10,QChar('0'));
+    }
+
+
+    return sw;
+}
+
+QString DataSource::get_variable_name(int from_id, int to_id, bool shownum, int chars, bool brackets)
+{
+    QString var;
+
+    if (from_id == to_id)
+    {
+        if (from_id >= 0 && from_id <= this->system->variable_names.length() )
+            var = this->system->variable_names.at(from_id-1);
+        else if (brackets && chars)
+            return QString("[%1]").arg(from_id, chars, 10, QChar('0'));
+        else if (brackets)
+            return QString("[%1]").arg(from_id);
+        else
+            return QString("%1").arg(from_id);
+
+        if (shownum)
+            var = QString("%1: %2").arg(from_id, chars, 10, QChar('0')).arg(var);
+
+        if (brackets)
+            var = "[" + var + "]";
+    }
+    else
+    {
+        //not equal
+
+        if (from_id > to_id)
+        { //swap
+            int tmp = to_id; to_id = from_id; from_id = tmp;
+        }
+
+
+        var = QString("[%1..%2]").arg(from_id,chars,10,QChar('0')).arg(to_id,chars,10,QChar('0'));
+
+    }
+    return var;
+}
+
+QString DataSource::get_obj_name_by_id(int id, int type, bool shownum, int chars, bool brackets)
+{
+    QString result;
     if (type == ACTORS && system->actor_list.length() >= id)
     {
         if (shownum)
-            return QString("%1: %2").arg(id,chars,10,QChar('0')).arg(system->actor_list.at(id-1)->name);
-        else return system->actor_list.at(id-1)->name;
+            result = QString("%1: %2").arg(id,chars,10,QChar('0')).arg(system->actor_list.at(id-1)->name);
+        else
+            result = system->actor_list.at(id-1)->name;
     }
     else if (type == CLASSES && system->classes_list.length() >= id)
     {
         if (shownum)
-            return QString("%1: %2").arg(id,chars,10,QChar('0')).arg(system->classes_list.at(id-1)->name);
-        else return system->classes_list.at(id-1)->name;
+            result = QString("%1: %2").arg(id,chars,10,QChar('0')).arg(system->classes_list.at(id-1)->name);
+        else
+            result = system->classes_list.at(id-1)->name;
     }
     else if (type == SKILLS && system->skills_list.length() >= id)
     {
         if (shownum)
-            return QString("%1: %2").arg(id,chars,10,QChar('0')).arg(system->skills_list.at(id-1)->name);
-        else return system->skills_list.at(id-1)->name;
+            result = QString("%1: %2").arg(id,chars,10,QChar('0')).arg(system->skills_list.at(id-1)->name);
+        else
+            result = system->skills_list.at(id-1)->name;
+    }
+    else if (type == ITEMS && system->items_list.length() >= id)
+    {
+        if (shownum)
+            result = QString("%1: %2").arg(id,chars,10,QChar('0')).arg(system->items_list.at(id-1)->name);
+        else
+            result = system->items_list.at(id-1)->name;
+    }
+    else if (type == WEAPONS && system->weapons_list.length() >= id)
+    {
+        if (shownum)
+            result = QString("%1: %2").arg(id,chars,10,QChar('0')).arg(system->weapons_list.at(id-1)->name);
+        else
+            result = system->weapons_list.at(id-1)->name;
+    }
+    else if (type == ARMORS && system->armors_list.length() >= id)
+    {
+        if (shownum)
+            result = QString("%1: %2").arg(id,chars,10,QChar('0')).arg(system->armors_list.at(id-1)->name);
+        else
+            result = system->armors_list.at(id-1)->name;
+    }
+    else if (type == ENEMIES && system->enemies_list.length() >= id)
+    {
+        if (shownum)
+            result = QString("%1: %2").arg(id,chars,10,QChar('0')).arg(system->enemies_list.at(id-1)->name);
+        else
+            result = system->enemies_list.at(id-1)->name;
+    }
+    else if (type == TROOPS && system->troops_list.length() >= id)
+    {
+        if (shownum)
+            result = QString("%1: %2").arg(id,chars,10,QChar('0')).arg(system->troops_list.at(id-1)->name);
+        else
+            result = system->troops_list.at(id-1)->name;
+    }
+    else if (type == STATES && system->states_list.length() >= id)
+    {
+        if (shownum)
+            result = QString("%1: %2").arg(id,chars,10,QChar('0')).arg(system->states_list.at(id-1)->name);
+        else
+            result = system->states_list.at(id-1)->name;
+    }
+    else if (type == ANIMATIONS && system->animation_list.length() >= id)
+    {
+        if (shownum)
+            result = QString("%1: %2").arg(id,chars,10,QChar('0')).arg(system->animation_list.at(id-1)->name);
+        else
+            result = system->animation_list.at(id-1)->name;
+    }
+    else if (type == COMMONEVENTS && system->common_events_list.length() >= id)
+    {
+        if (shownum)
+            result = QString("%1: %2").arg(id,chars,10,QChar('0')).arg(system->common_events_list.at(id-1)->name);
+        else
+            result = system->common_events_list.at(id-1)->name;
+    }
+    else if (type == TILESETS && system->tileset_list.length() >= id)
+    {
+        if (shownum)
+            result = QString("%1: %2").arg(id,chars,10,QChar('0')).arg(system->tileset_list.at(id-1)->name);
+        else
+            result = system->tileset_list.at(id-1)->name;
     }
 
-    return "";
+    if (brackets)
+        result = "[" + result + "]";
+
+    return result;
 }
 

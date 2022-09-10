@@ -43,7 +43,7 @@ void EditClasses::set_class(int n)
     {
         int level = current_class->learnings_level.at(i);
         int skill_id = current_class->learnings_skill_id.at(i);
-        QString skill_name = system->datasource.get_obj_name_by_id(skill_id, RPGSystem::SKILLS, true, 3);
+        QString skill_name = system->datasource.get_obj_name_by_id(skill_id, RPGSystem::SKILLS, true, 3, false);
 
         this->ui->table_skills->setRowCount(this->ui->table_skills->rowCount()+1);
         this->ui->table_skills->setItem(i,0, new QTableWidgetItem("Lv. " + QString::number(level)));
@@ -57,7 +57,7 @@ void EditClasses::set_class(int n)
 
 void EditClasses::set_skill_from_dialog(int row, int level, int skill)
 {
-    QString skill_name = system->datasource.get_obj_name_by_id(skill, RPGSystem::SKILLS, true, 3);
+    QString skill_name = system->datasource.get_obj_name_by_id(skill, RPGSystem::SKILLS, true, 3, false);
 
     this->ui->table_skills->item(row,0)->setText("Lv. " + QString::number(level));
     this->ui->table_skills->item(row,1)->setText(skill_name);

@@ -246,9 +246,8 @@ QString RPGEventCommand::get_command_text(RPGSystem *system)
         return "TODO Show Choices Branch End";
     else if (code == 103)
     {
-        QString num = QString::number(parameters.at(0).toInt()).rightJustified(4,'0');
-        QString var = system->variable_names.at(parameters.at(0).toInt()-1);
-        return "@>Input Number: [" + num + ": " + var + "], " + QString::number(parameters.at(1).toInt()) + " digit(s)";
+        QString var = system->datasource.get_variable_name(parameters.at(0).toInt(),parameters.at(0).toInt(),true,4,true);
+        return "@>Input Number: " + var + ", " + QString::number(parameters.at(1).toInt()) + " digit(s)";
     }
     else if (code == 104)
     {
@@ -265,9 +264,8 @@ QString RPGEventCommand::get_command_text(RPGSystem *system)
     }
     else if (code == 105)
     {
-        QString num = QString::number(parameters.at(0).toInt()).rightJustified(4,'0');
-        QString var = system->variable_names.at(parameters.at(0).toInt()-1);
-        return "@>Button Input Processing: [" + num + ": " + var + "]";
+        QString var = system->datasource.get_variable_name(parameters.at(0).toInt(),parameters.at(0).toInt(),true,4,true);
+        return "@>Button Input Processing: " + var;
     }
     else if (code == 106)
         return "@>Wait: " + QString::number(parameters.at(0).toInt()) + " frame(s)";
@@ -292,31 +290,18 @@ QString RPGEventCommand::get_command_text(RPGSystem *system)
     else if (code == 116)
         return "@>Erase Event";
     else if (code == 117)
-    {
-        QString common_event_name = "";
-        if (system->common_events_list.length() >= parameters.at(0).toInt())
-            common_event_name = system->common_events_list.at(parameters.at(0).toInt()-1)->name;
-        return "@>Call Common Event: " + common_event_name;
-    }
+        return "@>Call Common Event: " + system->datasource.get_obj_name_by_id(parameters.at(0).toInt(), RPGSystem::COMMONEVENTS, false,0,false);
     else if (code == 118)
         return "@>Label: " + parameters.at(0).str;
     else if (code == 119)
         return "@>Jump to Label: " + parameters.at(0).str;
     else if (code == 121)
     {
-        QString status = (parameters.at(2).toInt() == 0 ? "ON" : "OFF");
 
-        if (parameters.at(0).toInt() == parameters.at(1).toInt())
-        {
-            QString num = QString::number(parameters.at(0).toInt()).rightJustified(4,'0');
-            return "@>Control Switches: [" + num + ": " + system->switches_names.at(parameters.at(0).toInt()-1) + "] = " + status;
-        }
-        else
-        {
-            QString num1 = QString::number(parameters.at(0).toInt()).rightJustified(4,'0');
-            QString num2 = QString::number(parameters.at(1).toInt()).rightJustified(4,'0');
-            return "@>Control Switches: [" + num1 + ".." + num2 + "] = " + status;
-        }
+        return "@>Control Switches: " + system->datasource.get_switch_name(parameters.at(0).toInt(),
+                                                                           parameters.at(1).toInt(),
+                                                                           true, 4, true)
+                + (parameters.at(2).toInt() == 0 ? " = ON" : " = OFF");
     }
     else if (code == 122)
     {
@@ -327,34 +312,24 @@ QString RPGEventCommand::get_command_text(RPGSystem *system)
 
 
         QString var;
-        if (system->variable_names.length() > var_from && system->variable_names.length() > var_to)
-        {
-            if (var_from == var_to)
-                var = "[" + QString::number(var_from).rightJustified(4,'0') + ": " + system->variable_names.at(var_from-1) + "] ";
-            else
-                var = "[" + QString::number(var_from).rightJustified(4,'0') + ".." + QString::number(var_to).rightJustified(4,'0') + "] ";
-        }
-        else
-        {
-            var = "[" + QString::number(var_from) + ".." + QString::number(var_to) + "]";
-        }
+        var = system->datasource.get_variable_name(var_from, var_to, true, 4, true);
 
-        QString op = "= ";
-        if (operation == 1) op = "+= ";
-        else if (operation == 2) op = "-= ";
-        else if (operation == 3) op = "*= ";
-        else if (operation == 4) op = "/= ";
-        else if (operation == 5) op = "%= ";
+        QString op = " = ";
+        if (operation == 1) op = " += ";
+        else if (operation == 2) op = " -= ";
+        else if (operation == 3) op = " *= ";
+        else if (operation == 4) op = " /= ";
+        else if (operation == 5) op = " %= ";
 
         QString op2 = "";
         if (operand_type == 0)  //constant
             op2 = QString::number(parameters.at(4).toInt());
         else if (operand_type == 1) // variable
-            op2 = "Variable [" + QString::number(parameters.at(4).toInt()).rightJustified(4,'0') + ": " + system->variable_names.at(parameters.at(4).toInt()-1) + "]";
+            op2 = "Variable " + system->datasource.get_variable_name(parameters.at(4).toInt(),parameters.at(4).toInt(),true,4,true);
         else if (operand_type == 2) // random
             op2 = "Random No. (" + QString::number(parameters.at(4).toInt()) +".." + QString::number(parameters.at(5).toInt()) +")";
         else if (operand_type == 3) // item
-            op2 = "[" + system->items_list.at(parameters.at(4).toInt()-1)->name + "] In Inventory";
+            op2 = system->datasource.get_obj_name_by_id(parameters.at(4).toInt(),RPGSystem::ITEMS, false,-1, true) + " In Inventory";
         else if (operand_type == 4) // actor
         {
             int s = parameters.at(5).toInt();
@@ -373,7 +348,7 @@ QString RPGEventCommand::get_command_text(RPGSystem *system)
             else if (s == 11) status_var = "PDEF";
             else if (s == 12) status_var = "MDEF";
             else if (s == 13) status_var = "EVA";
-            op2 = "[" + system->actor_list.at(parameters.at(4).toInt()-1)->name + "]'s " + status_var;
+            op2 = system->datasource.get_obj_name_by_id(parameters.at(4).toInt(),RPGSystem::ACTORS,false, -1,true) + "'s " + status_var;
         }
         else if (operand_type == 5) // enemies
         {
@@ -403,12 +378,16 @@ QString RPGEventCommand::get_command_text(RPGSystem *system)
             if (v == -1) name = "Player";
             else if (v == 0) name = "This event";
             else {
-                QList<RPGEvent*> list = system->get_current_map_info()->map->events;
-                for (int i = 0; i < list.length(); i++)
+                if (system->get_current_map_info() != 0)
                 {
-                    if (list.at(i)->id == v)
-                        name = "[" + list.at(i)->name + "]";
+                    QList<RPGEvent*> list = system->get_current_map_info()->map->events;
+                    for (int i = 0; i < list.length(); i++)
+                    {
+                        if (list.at(i)->id == v)
+                            name = "[" + list.at(i)->name + "]";
+                    }
                 }
+                else name = "[" + QString::number(v) + "]";
             }
             int s = parameters.at(5).toInt();
             QString status_var;
@@ -452,51 +431,53 @@ QString RPGEventCommand::get_command_text(RPGSystem *system)
         if (parameters.at(1).toInt() == 0)
             var = QString::number(parameters.at(2).toInt());
         else
-            var = "Variable [" + QString::number(parameters.at(2).toInt()).rightJustified(4,'0') + ": " + system->variable_names.at(parameters.at(2).toInt()-1) + "]";
+            var = "Variable " + system->datasource.get_variable_name(parameters.at(2).toInt(), parameters.at(2).toInt(), true, 4, true);
         return "@>Change Gold: " + plus_minus + var;
     }
     else if (code == 126)
     {
-        QString item ="[], ";
-        if (parameters.at(0).toInt() < system->items_list.length())
-            item = "[" + system->items_list.at(parameters.at(0).toInt()-1)->name + "], ";
+        QString item = system->datasource.get_obj_name_by_id(parameters.at(0).toInt(),RPGSystem::ITEMS,false,0,true);
+        item.append(", ");
+
         QString plus_minus = (parameters.at(1).toInt() == 0 ? "+ " : "- ");
 
         QString var;
         if (parameters.at(2).toInt() == 0)
             var = QString::number(parameters.at(3).toInt());
         else
-            var = "Variable [" + QString::number(parameters.at(3).toInt()).rightJustified(4,'0') + ": " + system->variable_names.at(parameters.at(3).toInt()-1) + "]";
+            var = "Variable " + system->datasource.get_variable_name(parameters.at(3).toInt(),parameters.at(3).toInt(),true,4,true);
         return "@>Change Items: " + item + plus_minus + var;
     }
     else if (code == 127)
     {
-        QString weapon = "[" + system->weapons_list.at(parameters.at(0).toInt()-1)->name + "], ";
+        QString weapon = system->datasource.get_obj_name_by_id(parameters.at(0).toInt(),RPGSystem::WEAPONS, false,0,true);
+        weapon.append(", ");
         QString plus_minus = (parameters.at(1).toInt() == 0 ? "+ " : "- ");
 
         QString var;
         if (parameters.at(2).toInt() == 0)
             var = QString::number(parameters.at(3).toInt());
         else
-            var = "Variable [" + QString::number(parameters.at(3).toInt()).rightJustified(4,'0') + ": " + system->variable_names.at(parameters.at(3).toInt()-1) + "]";
+            var = "Variable " + system->datasource.get_variable_name(parameters.at(3).toInt(),parameters.at(3).toInt(),true,4,true);
         return "@>Change Weapons: " + weapon + plus_minus + var;
     }
     else if (code == 128)
     {
-        QString armor = "[" + system->armors_list.at(parameters.at(0).toInt()-1)->name + "], ";
+        QString armor = system->datasource.get_obj_name_by_id(parameters.at(0).toInt(),RPGSystem::ARMORS, false,0,true);
+        armor.append(", ");
         QString plus_minus = (parameters.at(1).toInt() == 0 ? "+ " : "- ");
 
         QString var;
         if (parameters.at(2).toInt() == 0)
             var = QString::number(parameters.at(3).toInt());
         else
-            var = "Variable [" + QString::number(parameters.at(3).toInt()).rightJustified(4,'0') + ": " + system->variable_names.at(parameters.at(3).toInt()-1) + "]";
+            var = "Variable " +  system->datasource.get_variable_name(parameters.at(3).toInt(),parameters.at(3).toInt(),true,4,true);
         return "@>Change Armors: " + armor + plus_minus + var;
     }
     else if (code == 129)
     {
-        QString actor = " [" + system->actor_list.at(parameters.at(0).toInt()-1)->name + "]";
-        QString action = parameters.at(1).toInt() == 0 ? "Add" : "Remove";
+        QString actor = system->datasource.get_obj_name_by_id(parameters.at(0).toInt(),RPGSystem::ACTORS, false,0,true);
+        QString action = parameters.at(1).toInt() == 0 ? "Add " : "Remove ";
 
         return "@>Change Party Member: " + action + actor + (parameters.at(1).toInt() == 0 && parameters.at(2).toInt() == 1 ? ", Initlialize" : "");
     }
@@ -549,8 +530,12 @@ QString RPGEventCommand::get_command_text(RPGSystem *system)
         QString data;
         if (parameters.at(0).toInt() == 0) data = "This event";
         else
-            data = "[" + system->get_current_map_info()->map->event_by_id(parameters.at(0).toInt())->name + "]";
-
+        {
+            //TODO: Think about this (code 202), ->map could be zero, event_by_id could be zero
+            if (system->get_current_map_info()->map != 0)
+                if (system->get_current_map_info()->map->event_by_id(parameters.at(0).toInt()) != 0)
+                    data = "[" + system->get_current_map_info()->map->event_by_id(parameters.at(0).toInt())->name + "]";
+        }
         if (parameters.at(1).toInt() == 0) //direct appointment
             data += ", (" + QString::number(parameters.at(2).toInt()).rightJustified(3,'0') + "," + QString::number(parameters.at(3).toInt()).rightJustified(3,'0') + ")";
         else if (parameters.at(1).toInt() == 1) //variable
@@ -628,7 +613,7 @@ QString RPGEventCommand::get_command_text(RPGSystem *system)
             data = "[" + system->get_current_map_info()->map->event_by_id(parameters.at(0).toInt())->name + "]";
 
         data += ", ";
-        data += "[" + system->animation_list.at(parameters.at(1).toInt()-1)->name + "]";
+        data += system->datasource.get_obj_name_by_id(parameters.at(1).toInt(), RPGSystem::ANIMATIONS, false, 0, true);
         return "@>Show Animation: " + data;
     }
     else if (code == 208)
@@ -768,33 +753,31 @@ QString RPGEventCommand::get_command_text(RPGSystem *system)
     {
         QString data;
         if (parameters.at(0).toInt() == 0) // item
-            data.append(system->items_list.at(parameters.at(1).toInt()-1)->name);
+            data.append(system->datasource.get_obj_name_by_id(parameters.at(1).toInt(),RPGSystem::ITEMS,false,0,true));
         else if (parameters.at(0).toInt() == 1) // weapon
-            data.append(system->weapons_list.at(parameters.at(1).toInt()-1)->name);
+            data.append(system->datasource.get_obj_name_by_id(parameters.at(1).toInt(),RPGSystem::WEAPONS,false,0,true));
         else if (parameters.at(0).toInt() == 2) // armor
-            data.append(system->armors_list.at(parameters.at(1).toInt()-1)->name);
-        data.append("]");
-        return "@>Shop Processing : [" + data;
+            data.append(system->datasource.get_obj_name_by_id(parameters.at(1).toInt(),RPGSystem::ARMORS,false,0,true));
+        return "@>Shop Processing : " + data;
     }
     else if (code == 605)
     {
         QString data;
         if (parameters.at(0).toInt() == 0) // item
-            data.append(system->items_list.at(parameters.at(1).toInt()-1)->name);
+            data.append(system->datasource.get_obj_name_by_id(parameters.at(1).toInt(),RPGSystem::ITEMS,false,0,true));
         else if (parameters.at(0).toInt() == 1) // weapon
-            data.append(system->weapons_list.at(parameters.at(1).toInt()-1)->name);
+            data.append(system->datasource.get_obj_name_by_id(parameters.at(1).toInt(),RPGSystem::WEAPONS,false,0,true));
         else if (parameters.at(0).toInt() == 2) // armor
-            data.append(system->armors_list.at(parameters.at(1).toInt()-1)->name);
-        data.append("]");
-        return "                  : [" + data;
+            data.append(system->datasource.get_obj_name_by_id(parameters.at(1).toInt(),RPGSystem::ARMORS,false,0,true));
+        return "                  : " + data;
     }
     else if (code == 303)
-        return "@>Name Input Processing: " + system->actor_list.at(parameters.at(0).toInt()-1)->name + ", " + QString::number(parameters.at(1).toInt()) + " characters";
+        return "@>Name Input Processing: " + system->datasource.get_obj_name_by_id(parameters.at(0).toInt(), RPGSystem::ACTORS, false,0,false) + ", " + QString::number(parameters.at(1).toInt()) + " characters";
     else if (code == 311)
     {
         QString data;
         if (parameters.at(0).toInt() == 0) data.append("Entire Party");
-        else data.append(QString("[%1]").arg(system->actor_list.at(parameters.at(0).toInt()-1)->name));
+        else data.append(system->datasource.get_obj_name_by_id(parameters.at(0).toInt(), RPGSystem::ACTORS, false,0,true));
         data.append(", ");
 
         data.append( parameters.at(1).toInt() == 0 ? "+ " : "- ");
@@ -802,7 +785,7 @@ QString RPGEventCommand::get_command_text(RPGSystem *system)
         if (parameters.at(2).toInt() == 0) //constant
             data.append(QString::number(parameters.at(3).toInt()));
         else //variable
-            data.append(QString("Variable [%1: %2]").arg(parameters.at(3).toInt(),4,10,QChar('0')).arg(system->variable_names.at(parameters.at(3).toInt()-1)));
+            data.append("Variable " + system->datasource.get_variable_name(parameters.at(3).toInt(),parameters.at(3).toInt(),true, 4,true));
 
 
         //last parameter is ignored here
@@ -812,7 +795,7 @@ QString RPGEventCommand::get_command_text(RPGSystem *system)
     {
         QString data;
         if (parameters.at(0).toInt() == 0) data.append("Entire Party");
-        else data.append(QString("[%1]").arg(system->actor_list.at(parameters.at(0).toInt()-1)->name));
+        else data.append(system->datasource.get_obj_name_by_id(parameters.at(0).toInt(), RPGSystem::ACTORS, false,0,true));
         data.append(", ");
 
         data.append( parameters.at(1).toInt() == 0 ? "+ " : "- ");
@@ -820,7 +803,7 @@ QString RPGEventCommand::get_command_text(RPGSystem *system)
         if (parameters.at(2).toInt() == 0) //constant
             data.append(QString::number(parameters.at(3).toInt()));
         else //variable
-            data.append(QString("Variable [%1: %2]").arg(parameters.at(3).toInt(),4,10,QChar('0')).arg(system->variable_names.at(parameters.at(3).toInt()-1)));
+            data.append("Variable " + system->datasource.get_variable_name(parameters.at(3).toInt(),parameters.at(3).toInt(),true, 4,true));
 
 
         return "@>Change SP: " + data;
@@ -829,12 +812,12 @@ QString RPGEventCommand::get_command_text(RPGSystem *system)
     {
         QString data;
         if (parameters.at(0).toInt() == 0) data.append("Entire Party");
-        else data.append(QString("[%1]").arg(system->actor_list.at(parameters.at(0).toInt()-1)->name));
+        else data.append(system->datasource.get_obj_name_by_id(parameters.at(0).toInt(), RPGSystem::ACTORS, false,0,true));
         data.append(", ");
 
         data.append( parameters.at(1).toInt() == 0 ? "+ " : "- ");
 
-        data.append(QString("[%1]").arg(system->states_list.at(parameters.at(2).toInt()-1)->name));
+        data.append(system->datasource.get_obj_name_by_id(parameters.at(2).toInt(), RPGSystem::STATES, false,0,true));
 
         return "@>Change State: " + data;
     }
@@ -842,7 +825,7 @@ QString RPGEventCommand::get_command_text(RPGSystem *system)
     {
         QString data;
         if (parameters.at(0).toInt() == 0) data.append("Entire Party");
-        else data.append(QString("[%1]").arg(system->actor_list.at(parameters.at(0).toInt()-1)->name));
+        else data.append(system->datasource.get_obj_name_by_id(parameters.at(0).toInt(), RPGSystem::ACTORS, false,0,true));
 
         return "@>Recover All: " + data;
     }
@@ -850,7 +833,7 @@ QString RPGEventCommand::get_command_text(RPGSystem *system)
     {
         QString data;
         if (parameters.at(0).toInt() == 0) data.append("Entire Party");
-        else data.append(QString("[%1]").arg(system->actor_list.at(parameters.at(0).toInt()-1)->name));
+        else data.append(system->datasource.get_obj_name_by_id(parameters.at(0).toInt(), RPGSystem::ACTORS, false,0,true));
         data.append(", ");
 
         data.append( parameters.at(1).toInt() == 0 ? "+ " : "- ");
@@ -858,8 +841,7 @@ QString RPGEventCommand::get_command_text(RPGSystem *system)
         if (parameters.at(2).toInt() == 0) //constant
             data.append(QString::number(parameters.at(3).toInt()));
         else //variable
-            data.append(QString("Variable [%1: %2]").arg(parameters.at(3).toInt(),4,10,QChar('0')).arg(system->variable_names.at(parameters.at(3).toInt()-1)));
-
+            data.append("Variable " + system->datasource.get_variable_name(parameters.at(3).toInt(),parameters.at(3).toInt(),true, 4,true));
 
         return "@>Change EXP: " + data;
     }
@@ -867,7 +849,7 @@ QString RPGEventCommand::get_command_text(RPGSystem *system)
     {
         QString data;
         if (parameters.at(0).toInt() == 0) data.append("Entire Party");
-        else data.append(QString("[%1]").arg(system->actor_list.at(parameters.at(0).toInt()-1)->name));
+        else data.append(system->datasource.get_obj_name_by_id(parameters.at(0).toInt(), RPGSystem::ACTORS, false,0,true));
         data.append(", ");
 
         data.append( parameters.at(1).toInt() == 0 ? "+ " : "- ");
@@ -875,7 +857,7 @@ QString RPGEventCommand::get_command_text(RPGSystem *system)
         if (parameters.at(2).toInt() == 0) //constant
             data.append(QString::number(parameters.at(3).toInt()));
         else //variable
-            data.append(QString("Variable [%1: %2]").arg(parameters.at(3).toInt(),4,10,QChar('0')).arg(system->variable_names.at(parameters.at(3).toInt()-1)));
+            data.append("Variable " + system->datasource.get_variable_name(parameters.at(3).toInt(),parameters.at(3).toInt(),true, 4,true));
 
 
         return "@>Change Level: " + data;
@@ -884,7 +866,7 @@ QString RPGEventCommand::get_command_text(RPGSystem *system)
     {
         QString data;
         if (parameters.at(0).toInt() == 0) data.append(""); //this should not happen
-        else data.append(QString("[%1]").arg(system->actor_list.at(parameters.at(0).toInt()-1)->name));
+        else data.append(system->datasource.get_obj_name_by_id(parameters.at(0).toInt(), RPGSystem::ACTORS, false,0,true));
         data.append(", ");
 
         QStringList params;
@@ -897,7 +879,7 @@ QString RPGEventCommand::get_command_text(RPGSystem *system)
         if (parameters.at(3).toInt() == 0) //constant
             data.append(QString::number(parameters.at(4).toInt()));
         else //variable
-            data.append(QString("Variable [%1: %2]").arg(parameters.at(4).toInt(),4,10,QChar('0')).arg(system->variable_names.at(parameters.at(4).toInt()-1)));
+            data.append("Variable " + system->datasource.get_variable_name(parameters.at(4).toInt(),parameters.at(4).toInt(),true, 4,true));
 
 
         return "@>Change Parameters: " + data;
@@ -906,19 +888,19 @@ QString RPGEventCommand::get_command_text(RPGSystem *system)
     {
         QString data;
         if (parameters.at(0).toInt() == 0) data.append(""); //this should not happen
-        else data.append(QString("[%1]").arg(system->actor_list.at(parameters.at(0).toInt()-1)->name));
+        else data.append(system->datasource.get_obj_name_by_id(parameters.at(0).toInt(), RPGSystem::ACTORS, false,0,true));
         data.append(", ");
 
         data.append( parameters.at(1).toInt() == 0 ? "+ " : "- ");
 
-        data.append(QString("[%1]").arg(system->skills_list.at(parameters.at(2).toInt()-1)->name));
+        data.append(system->datasource.get_obj_name_by_id(parameters.at(2).toInt(), RPGSystem::SKILLS, false,0,true));
 
         return "@>Change Skills: " + data;
     }
     else if (code == 319)
     {
-        QString data;
-        data.append(QString("[%1], ").arg(system->actor_list.at(parameters.at(0).toInt()-1)->name));
+        QString data = system->datasource.get_obj_name_by_id(parameters.at(0).toInt(), RPGSystem::ACTORS, false,0,true);
+        data.append(", ");
 
         QStringList tool;
         tool << "Weapon" << "Shield" << "Helmet" << "Body Armor" << "Accessory";
@@ -930,22 +912,22 @@ QString RPGEventCommand::get_command_text(RPGSystem *system)
         else
         {
             if (parameters.at(1).toInt() == 0) //Weapon
-                data.append(QString("[%1]").arg(system->weapons_list.at(parameters.at(2).toInt()-1)->name));
+                data.append(system->datasource.get_obj_name_by_id(parameters.at(2).toInt(), RPGSystem::WEAPONS, false,0,true));
             else //Armor
-                data.append(QString("[%1]").arg(system->armors_list.at(parameters.at(2).toInt()-1)->name));
+                data.append(system->datasource.get_obj_name_by_id(parameters.at(2).toInt(), RPGSystem::ARMORS, false,0,true));
         }
 
         return "@>Change Equipment: " + data;
     }
     else if (code == 320)
-        return "@>Change Actor Name: " + QString("[%1], '%2'").arg(system->actor_list.at(parameters.at(0).toInt()-1)->name)
+        return "@>Change Actor Name: " + QString("%1, '%2'").arg(system->datasource.get_obj_name_by_id(parameters.at(0).toInt(), RPGSystem::ACTORS, false,0,true))
                 .arg(parameters.at(1).str);
     else if (code == 321)
-        return "@>Change Actor Class: " + QString("[%1], [%2]").arg(system->actor_list.at(parameters.at(0).toInt()-1)->name)
-                .arg(system->classes_list.at(parameters.at(1).toInt()-1)->name);
+        return "@>Change Actor Class: " + QString("%1, %2").arg(system->datasource.get_obj_name_by_id(parameters.at(0).toInt(), RPGSystem::ACTORS, false,0,true))
+                .arg(system->datasource.get_obj_name_by_id(parameters.at(1).toInt(), RPGSystem::CLASSES, false,0,true));
     else if (code == 322)
-        return "@>Change Actor Graphic: " + QString("[%1], %2, %3, %4, %5")
-                .arg(system->actor_list.at(parameters.at(0).toInt()-1)->name)
+        return "@>Change Actor Graphic: " + QString("%1, %2, %3, %4, %5")
+                .arg(system->datasource.get_obj_name_by_id(parameters.at(0).toInt(), RPGSystem::ACTORS, false,0,true))
                 .arg(parameters.at(1).str)
                 .arg(parameters.at(2).toInt())
                 .arg(parameters.at(3).str)
@@ -962,7 +944,7 @@ QString RPGEventCommand::get_command_text(RPGSystem *system)
         if (parameters.at(2).toInt() == 0) //constant
             data.append(QString::number(parameters.at(3).toInt()));
         else //variable
-            data.append(QString("Variable [%1: %2]").arg(parameters.at(3).toInt(),4,10,QChar('0')).arg(system->variable_names.at(parameters.at(3).toInt()-1)));
+            data.append("Variable " + system->datasource.get_variable_name(parameters.at(3).toInt(),parameters.at(3).toInt(),true, 4,true));
 
 
         //last parameter is ignored here
@@ -980,7 +962,7 @@ QString RPGEventCommand::get_command_text(RPGSystem *system)
         if (parameters.at(2).toInt() == 0) //constant
             data.append(QString::number(parameters.at(3).toInt()));
         else //variable
-            data.append(QString("Variable [%1: %2]").arg(parameters.at(3).toInt(),4,10,QChar('0')).arg(system->variable_names.at(parameters.at(3).toInt()-1)));
+            data.append("Variable " + system->datasource.get_variable_name(parameters.at(3).toInt(),parameters.at(3).toInt(),true, 4,true));
 
 
         return "@>Change Enemy SP: " + data;
@@ -993,7 +975,7 @@ QString RPGEventCommand::get_command_text(RPGSystem *system)
         data.append(", ");
 
         data.append( parameters.at(1).toInt() == 0 ? "+ " : "- ");
-        data.append(QString("[%1]").arg(system->states_list.at(parameters.at(2).toInt()-1)->name));
+        data.append(system->datasource.get_obj_name_by_id(parameters.at(2).toInt(), RPGSystem::STATES, false,0,true));
 
 
         return "@>Change Enemy State: " + data;
@@ -1003,9 +985,9 @@ QString RPGEventCommand::get_command_text(RPGSystem *system)
     else if (code == 335)
         return "@>Enemy Appearance: " + QString("[%1.]").arg(parameters.at(0).toInt()+1);
     else if (code == 336)
-        return "@>Enemy Transform: " + QString("[%1.], [%2]")
+        return "@>Enemy Transform: " + QString("[%1.], %2")
                 .arg(parameters.at(0).toInt()+1)
-                .arg(system->enemies_list.at(parameters.at(1).toInt()-1)->name);
+                .arg(system->datasource.get_obj_name_by_id(parameters.at(1).toInt(), RPGSystem::ENEMIES, false,0,true));
     else if (code == 337)
     {
         QString data;
@@ -1024,9 +1006,7 @@ QString RPGEventCommand::get_command_text(RPGSystem *system)
                 data.append(QString("Actor No. %1, ").arg(parameters.at(1).toInt()+1));
         }
 
-        data.append("[");
-        data.append(system->animation_list.at(parameters.at(2).toInt()-1)->name);
-        data.append("]");
+        data.append(system->datasource.get_obj_name_by_id(parameters.at(2).toInt(), RPGSystem::ANIMATIONS, false,0,true));
 
         return "@>Show battle Animation: " + data;
     }
@@ -1057,10 +1037,9 @@ QString RPGEventCommand::get_command_text(RPGSystem *system)
         else
         {
             //Variable
-            data.append("[");
-            data.append(QString::number(parameters.at(3).toInt()).rightJustified(4,'0'));
-            data.append(": " + system->variable_names.at(parameters.at(3).toInt()-1));
-            data.append("]");
+            data.append("Variable ");
+            data.append(system->datasource.get_variable_name(parameters.at(3).toInt(),parameters.at(3).toInt(),true,4,true));
+
         }
 
         return "@>Deal Damage: " + data;
@@ -1081,7 +1060,7 @@ QString RPGEventCommand::get_command_text(RPGSystem *system)
         if (parameters.at(2).toInt() == 0) //Basic
             data.append(actions.at(parameters.at(3).toInt()));
         else //Skill
-            data.append(QString("[%1]").arg(system->skills_list.at(parameters.at(3).toInt()-1)->name));
+            data.append(system->datasource.get_obj_name_by_id(parameters.at(3).toInt(), RPGSystem::SKILLS, false,0,true));
 
         data.append(", ");
 

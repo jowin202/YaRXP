@@ -29,7 +29,10 @@ public:
     void fill_combo_accessory_by_class(QComboBox *combo, int class_id, bool shownum, int chars, int current);
 
 
-    QString get_obj_name_by_id(int id, int type, bool shownum, int chars);
+    QString get_switch_name(int from_id, int to_id, bool shownum, int chars, bool brackets);
+    QString get_variable_name(int from_id, int to_id, bool shownum, int chars, bool brackets);
+
+    QString get_obj_name_by_id(int id, int type, bool shownum, int chars, bool brackets);
 
 signals:
 
