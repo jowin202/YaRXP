@@ -26,7 +26,7 @@ void EventList::fill_list()
     for (int i = 0; i < list->length(); i++)
     {
         command = list->at(i);
-        qDebug() << i << command->code << command->get_command_text(system);
+        //qDebug() << i << command->code << command->get_command_text(system);
 
 
         //Multiline Commands

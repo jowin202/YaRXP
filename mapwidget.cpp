@@ -192,7 +192,8 @@ void MapWidget::mouseReleaseEvent(QMouseEvent *ev)
     if (this->mode == EVENT && ev->button() == Qt::LeftButton && event_move_from_pos != curr_pos) //move event
     {
         RPGEvent *event = map->event_on_pos(this->event_move_from_pos);
-        if (event != 0)
+        RPGEvent *target_tile = map->event_on_pos(this->curr_pos); //cannot put 2 events on one place
+        if (event != 0 && target_tile == 0)
         {
             event->x = curr_pos.x();
             event->y = curr_pos.y();

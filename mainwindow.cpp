@@ -104,7 +104,7 @@ void MainWindow::open_project(QString project_path)
         this->system.autotiles_dir = this->system.current_project_dir + QDir::separator() + "Graphics" + QDir::separator() + "Autotiles" + QDir::separator();
         this->system.characters_dir = this->system.current_project_dir + QDir::separator() + "Graphics" + QDir::separator() + "Characters" + QDir::separator();
         this->system.battlers_dir = this->system.current_project_dir + QDir::separator() + "Graphics" + QDir::separator() + "Battlers" + QDir::separator();
-
+        this->system.audio_dir = this->system.current_project_dir + QDir::separator() + "Audio" + QDir::separator();
 
         try{
             IOSystemFile systemfile(this->system.data_dir + "System.rxdata", &this->system);

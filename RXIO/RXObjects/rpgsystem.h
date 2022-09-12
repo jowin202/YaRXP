@@ -40,6 +40,7 @@ public:
     RPGString battlers_dir;
     RPGString data_dir;
     RPGString autotiles_dir;
+    RPGString audio_dir;
 
     QHash<int,RPGTileset*> tileset_hash;
     QList<RPGTileset*> tileset_list;

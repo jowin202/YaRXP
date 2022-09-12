@@ -112,6 +112,9 @@
          <property name="sortingEnabled">
           <bool>false</bool>
          </property>
+         <property name="expandsOnDoubleClick">
+          <bool>false</bool>
+         </property>
          <column>
           <property name="text">
            <string>Map Names</string>

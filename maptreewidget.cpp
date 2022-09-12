@@ -7,6 +7,8 @@ MapTreeWidget::MapTreeWidget(QWidget *parent) : QTreeWidget(parent)
     connect(this, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)), this, SLOT(clicked_at_item(QTreeWidgetItem*)));
     connect(this, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(prepare_context_menu(QPoint)));
 
+    connect(this, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)), this, SLOT(show_map_properties_dialog()));
+
     action1.setText("&Map properties");
     action1.setShortcut(QKeySequence(Qt::Key_Space));
     connect(&action1, SIGNAL(triggered()), this, SLOT(show_map_properties_dialog()));
@@ -46,12 +48,13 @@ MapTreeWidget::MapTreeWidget(QWidget *parent) : QTreeWidget(parent)
 
 void MapTreeWidget::list_maps()
 {
+    int last_id = -1;
+    if (this->currentItem() != 0)
+        last_id = this->currentItem()->text(2).toInt();
+
     id_map.clear();
-    QList<QTreeWidgetItem*> items = this->findItems("", Qt::MatchContains, 0);
-    for (int i = 0; i < items.count(); i++)
-    {
-        delete items.at(i);
-    }
+    QList<QTreeWidgetItem*> items_to_delete = this->findItems("", Qt::MatchContains, 0); //delete them later
+
 
     do
     {
@@ -69,6 +72,9 @@ void MapTreeWidget::list_maps()
                 if (system->map_info_list.at(i)->expanded)
                     this->expandItem(item);
                 this->id_map.insert(system->map_info_list.at(i)->id, item);
+
+                if (item->text(2).toInt() == last_id)
+                    this->setCurrentItem(item);
             }
             else if (this->id_map.value(system->map_info_list.at(i)->parent_id, 0) != 0 && this->id_map.value(system->map_info_list.at(i)->id, 0) == 0)
             {
@@ -77,11 +83,19 @@ void MapTreeWidget::list_maps()
 
                 if (system->map_info_list.at(i)->expanded)
                     this->expandItem(item);
+
+                if (item->text(2).toInt() == last_id)
+                    this->setCurrentItem(item);
             }
         }
     }
     while(system->map_info_list.size() != id_map.size());
     this->sortItems(1,Qt::SortOrder::AscendingOrder);
+
+
+    //delete items
+    for (int i = 0; i < items_to_delete.count(); i++)
+        delete items_to_delete.at(i); //items cant be deleted while chosen
 }
 
 void MapTreeWidget::clicked_at_item(QTreeWidgetItem *current_item)

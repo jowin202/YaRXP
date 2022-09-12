@@ -101,7 +101,7 @@ QString RPGEventCommand::getType()
     else if (code == 204)
         return "Change Map Settings";
     else if (code == 205)
-        return "Fog Color Tone"; //BUGGY TODO
+        return "Fog Color Tone";
     else if (code == 206)
         return "Change Fog Opacity";
     else if (code == 207)
@@ -109,19 +109,19 @@ QString RPGEventCommand::getType()
     else if (code == 208)
         return "Change Transparent Flag";
     else if (code == 209)
-        return "Set Move Route"; //BUGGY TODO
+        return "Set Move Route";
     else if (code == 509)
         return "Set Move Route multiline";
     else if (code == 210)
         return "Wait for Move's Completition";
     else if (code == 221)
-        return "Prepare for Transition"; //Irrelevant for Pokemon
+        return "Prepare for Transition";
     else if (code == 222)
-        return "Execute Transition"; //Irrelevant for Pokemon
+        return "Execute Transition";
     else if (code == 223)
-        return "Change Screen Color Tone"; // BUGGY TODO
+        return "Change Screen Color Tone";
     else if (code == 224) //number maybe not right
-        return "Screen Flash"; // BUGGY TODO
+        return "Screen Flash";
     else if (code == 225)
         return "Screen Shake";
     else if (code == 231)
@@ -131,7 +131,7 @@ QString RPGEventCommand::getType()
     else if (code == 233)
         return "Rotate Picture";
     else if (code == 234)
-        return "Change Picture Color Tone"; //BUGGY TODO
+        return "Change Picture Color Tone";
     else if (code == 235)
         return "Erase Picture";
     else if (code == 236)
@@ -151,7 +151,7 @@ QString RPGEventCommand::getType()
     else if (code == 249)
         return "Play ME";
     else if (code == 250)
-        return "Play SE"; //Buggy TODO
+        return "Play SE";
     else if (code == 251)
         return "Stop SE";
     /**
@@ -252,13 +252,10 @@ QString RPGEventCommand::get_command_text(RPGSystem *system)
     else if (code == 104)
     {
         QStringList pos;
-        pos << "Top";
-        pos << "Middle";
-        pos << "Bottom";
+        pos << "Top" << "Middle" << "Bottom";
 
         QStringList win;
-        win << "Show";
-        win << "Hide";
+        win << "Show" << "Hide";
 
         return "@>Change Text Options: " + pos[parameters.at(0).toInt()] + ", " + win[parameters.at(1).toInt()];
     }

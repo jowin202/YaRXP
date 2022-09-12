@@ -31,6 +31,8 @@ Testcases::Testcases(QObject *parent) : QObject(parent)
 
 Testcases::Testcases(RPGSystem *settings)
 {
+    if (settings->data_dir == "") return;
+
     EventList event_list;
 
     this->ok = true;

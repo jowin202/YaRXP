@@ -122,6 +122,7 @@ private slots:
 
     void on_actionExport_Map_Images_triggered();
 
+
 private:
     Ui::MainWindow *ui;
     QActionGroup *layergroup;

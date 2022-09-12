@@ -14,6 +14,7 @@ public:
     ~RPGAudioFile();
 
     void debug();
+    void copy_to(RPGAudioFile *target);
 
     int pitch;
     int volume;

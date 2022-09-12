@@ -15,7 +15,7 @@
 #include "RXIO/iotilesetfile.h"
 #include "RXIO/iomapfile.h"
 
-#include "mappropertiesdialog.h"
+#include "dialogs/mappropertiesdialog.h"
 #include "RXIO/RXObjects/rpgsystem.h"
 
 #include <QDebug>

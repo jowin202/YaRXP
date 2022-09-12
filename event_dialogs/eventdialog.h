@@ -24,7 +24,7 @@ public:
     void closeEvent(QCloseEvent *event);
     void keyPressEvent(QKeyEvent *event)
     {
-        if (event->key() == Qt::Key_Return)
+        if(event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter)
             this->on_button_ok_clicked();
         if (event->key() == Qt::Key_Escape)
             this->on_button_cancel_clicked();

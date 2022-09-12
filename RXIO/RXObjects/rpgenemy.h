@@ -4,11 +4,14 @@
 #include <QObject>
 #include "rpgenemyaction.h"
 
+class RPGSystem;
 class RPGEnemy : public QObject
 {
     Q_OBJECT
 public:
     explicit RPGEnemy(QObject *parent = nullptr);
+
+    QImage get_battler_graphics(RPGSystem* system);
 
     int id;
 

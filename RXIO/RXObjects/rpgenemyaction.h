@@ -2,12 +2,15 @@
 #define RPGENEMYACTION_H
 
 #include <QObject>
+#include <QDebug>
 
 class RPGEnemyAction : public QObject
 {
     Q_OBJECT
 public:
     explicit RPGEnemyAction(QObject *parent = nullptr);
+
+    QString get_condition_as_string();
 
     int condition_level;
     int condition_switch_id;

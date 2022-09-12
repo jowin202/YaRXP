@@ -1,4 +1,4 @@
-QT       += core gui
+QT       += core gui multimedia
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -66,8 +66,9 @@ SOURCES += \
     RXIO/iotroopfile.cpp \
     RXIO/ioweaponfile.cpp \
     RXIO/testcases.cpp \
-    audiowidget.cpp \
     datasource.cpp \
+    dialogs/audiodialog.cpp \
+    dialogs/mappropertiesdialog.cpp \
     editors/abcbox.cpp \
     editors/abclist.cpp \
     editors/actors/editactors.cpp \
@@ -80,6 +81,8 @@ SOURCES += \
     editors/classes/editclasses.cpp \
     editors/classes/skilllearning.cpp \
     editors/dataeditor.cpp \
+    editors/enemies/editenemies.cpp \
+    editors/enemies/enemyactiondialog.cpp \
     editors/items/edititems.cpp \
     editors/plusminusbox.cpp \
     editors/plusminuslist.cpp \
@@ -96,7 +99,6 @@ SOURCES += \
     event_dialogs/moveroutedialog.cpp \
     main.cpp \
     mainwindow.cpp \
-    mappropertiesdialog.cpp \
     maptreewidget.cpp \
     mapwidget.cpp \
     tilesetwidget.cpp
@@ -152,8 +154,9 @@ HEADERS += \
     RXIO/iotroopfile.h \
     RXIO/ioweaponfile.h \
     RXIO/testcases.h \
-    audiowidget.h \
     datasource.h \
+    dialogs/audiodialog.h \
+    dialogs/mappropertiesdialog.h \
     editors/abcbox.h \
     editors/abclist.h \
     editors/actors/editactors.h \
@@ -166,6 +169,8 @@ HEADERS += \
     editors/classes/editclasses.h \
     editors/classes/skilllearning.h \
     editors/dataeditor.h \
+    editors/enemies/editenemies.h \
+    editors/enemies/enemyactiondialog.h \
     editors/items/edititems.h \
     editors/plusminusbox.h \
     editors/plusminuslist.h \
@@ -181,13 +186,13 @@ HEADERS += \
     event_dialogs/eventpage.h \
     event_dialogs/moveroutedialog.h \
     mainwindow.h \
-    mappropertiesdialog.h \
     maptreewidget.h \
     mapwidget.h \
     tilesetwidget.h
 
 FORMS += \
-    audiowidget.ui \
+    dialogs/audiodialog.ui \
+    dialogs/mappropertiesdialog.ui \
     editors/abcbox.ui \
     editors/abclist.ui \
     editors/actors/editactors.ui \
@@ -199,6 +204,8 @@ FORMS += \
     editors/classes/editclasses.ui \
     editors/classes/skilllearning.ui \
     editors/dataeditor.ui \
+    editors/enemies/editenemies.ui \
+    editors/enemies/enemyactiondialog.ui \
     editors/items/edititems.ui \
     editors/plusminusbox.ui \
     editors/plusminuslist.ui \
@@ -210,8 +217,7 @@ FORMS += \
     event_dialogs/eventdialog.ui \
     event_dialogs/eventpage.ui \
     event_dialogs/moveroutedialog.ui \
-    mainwindow.ui \
-    mappropertiesdialog.ui
+    mainwindow.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

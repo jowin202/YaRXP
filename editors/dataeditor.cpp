@@ -27,6 +27,7 @@ void DataEditor::setSystem(RPGSystem *system)
     this->ui->page_items->setSystem(system);
     this->ui->page_weapons->setSystem(system);
     this->ui->page_armors->setSystem(system);
+    this->ui->page_enemies->setSystem(system);
 }
 
 
@@ -57,6 +58,10 @@ void DataEditor::on_object_list_currentRowChanged(int currentRow)
     else if (this->ui->central_menu->currentRow() == ARMORS)
     {
         this->ui->page_armors->set_armor(currentRow);
+    }
+    else if (this->ui->central_menu->currentRow() == ENEMIES)
+    {
+        this->ui->page_enemies->set_enemy(currentRow);
     }
 }
 
