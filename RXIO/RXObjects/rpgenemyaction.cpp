@@ -1,4 +1,5 @@
 #include "rpgenemyaction.h"
+#include "rpgsystem.h"
 
 RPGEnemyAction::RPGEnemyAction(QObject *parent) : QObject(parent)
 {
@@ -47,4 +48,12 @@ QString RPGEnemyAction::get_condition_as_string()
 
 
     return cond;
+}
+
+QString RPGEnemyAction::get_action_as_string(RPGSystem *system)
+{
+    if (kind == 0)
+        return (QStringList() << "Attack" << "Defend" << "Escape" << "Do Nothing").at(basic);
+    else
+        return system->datasource.get_obj_name_by_id(skill_id,RPGSystem::SKILLS,false,0,false);
 }

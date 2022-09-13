@@ -45,9 +45,13 @@ void EditClasses::set_class(int n)
         int skill_id = current_class->learnings_skill_id.at(i);
         QString skill_name = system->datasource.get_obj_name_by_id(skill_id, RPGSystem::SKILLS, true, 3, false);
 
+        QTableWidgetItem *item;
+
         this->ui->table_skills->setRowCount(this->ui->table_skills->rowCount()+1);
-        this->ui->table_skills->setItem(i,0, new QTableWidgetItem("Lv. " + QString::number(level)));
-        this->ui->table_skills->setItem(i,1, new QTableWidgetItem(skill_name));
+        this->ui->table_skills->setItem(i,0, item = new QTableWidgetItem("Lv. " + QString::number(level)));
+        this->set_readonly(item);
+        this->ui->table_skills->setItem(i,1, item = new QTableWidgetItem(skill_name));
+        this->set_readonly(item);
         this->ui->table_skills->setItem(i,2, new QTableWidgetItem(QString::number(level)));
         this->ui->table_skills->setItem(i,3, new QTableWidgetItem(QString::number(skill_id)));
     }
@@ -59,10 +63,28 @@ void EditClasses::set_skill_from_dialog(int row, int level, int skill)
 {
     QString skill_name = system->datasource.get_obj_name_by_id(skill, RPGSystem::SKILLS, true, 3, false);
 
-    this->ui->table_skills->item(row,0)->setText("Lv. " + QString::number(level));
-    this->ui->table_skills->item(row,1)->setText(skill_name);
-    this->ui->table_skills->item(row,2)->setText(QString::number(level));
-    this->ui->table_skills->item(row,3)->setText(QString::number(skill));
+    if (row == -1)
+    {
+        int row = this->ui->table_skills->rowCount();
+        this->ui->table_skills->setRowCount(row+1);
+
+
+        QTableWidgetItem *item;
+        this->ui->table_skills->setItem(row,0, item = new QTableWidgetItem("Lv. " + QString::number(level)));
+        this->set_readonly(item);
+        this->ui->table_skills->setItem(row,1, item = new QTableWidgetItem(skill_name));
+        this->set_readonly(item);
+        this->ui->table_skills->setItem(row,2, new QTableWidgetItem(QString::number(level)));
+        this->ui->table_skills->setItem(row,3, new QTableWidgetItem(QString::number(skill)));
+
+    }
+    else
+    {
+        this->ui->table_skills->item(row,0)->setText("Lv. " + QString::number(level));
+        this->ui->table_skills->item(row,1)->setText(skill_name);
+        this->ui->table_skills->item(row,2)->setText(QString::number(level));
+        this->ui->table_skills->item(row,3)->setText(QString::number(skill));
+    }
 }
 
 void EditClasses::on_table_skills_itemDoubleClicked(QTableWidgetItem *item)
@@ -73,4 +95,17 @@ void EditClasses::on_table_skills_itemDoubleClicked(QTableWidgetItem *item)
     SkillLearning *dialog = new SkillLearning(system,item->row(),level,skill, 0);
     connect(dialog, SIGNAL(ok_clicked(int,int,int)), this, SLOT(set_skill_from_dialog(int,int,int)));
     dialog->show();
+}
+
+
+void EditClasses::on_button_skill_add_clicked()
+{
+    SkillLearning *dialog = new SkillLearning(system, -1 , 1, 1, 0);
+    connect(dialog, SIGNAL(ok_clicked(int,int,int)), this, SLOT(set_skill_from_dialog(int,int,int)));
+    dialog->show();
+}
+
+void EditClasses::on_button_skill_del_clicked()
+{
+    this->ui->table_skills->removeRow(this->ui->table_skills->currentRow());
 }

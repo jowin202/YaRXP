@@ -14,7 +14,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>YaRXP - Action</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="4" column="1">
@@ -62,6 +62,12 @@
            <widget class="QSpinBox" name="spin_hp">
             <property name="enabled">
              <bool>false</bool>
+            </property>
+            <property name="minimum">
+             <number>1</number>
+            </property>
+            <property name="maximum">
+             <number>100</number>
             </property>
            </widget>
           </item>
@@ -119,6 +125,9 @@
             <property name="enabled">
              <bool>false</bool>
             </property>
+            <property name="minimum">
+             <number>2</number>
+            </property>
            </widget>
           </item>
           <item row="3" column="2">
@@ -138,7 +147,7 @@
           <item row="1" column="2">
            <widget class="QLabel" name="label_3">
             <property name="text">
-             <string>% or more</string>
+             <string>% or below</string>
             </property>
            </widget>
           </item>
@@ -153,14 +162,14 @@
            <item row="0" column="0">
             <layout class="QGridLayout" name="gridLayout_6">
              <item row="1" column="0">
-              <widget class="QRadioButton" name="radioButton_2">
+              <widget class="QRadioButton" name="radio_skill">
                <property name="text">
                 <string>Skill</string>
                </property>
               </widget>
              </item>
              <item row="0" column="0">
-              <widget class="QRadioButton" name="radioButton">
+              <widget class="QRadioButton" name="radio_basic">
                <property name="text">
                 <string>Basic</string>
                </property>
@@ -170,7 +179,7 @@
               </widget>
              </item>
              <item row="0" column="1">
-              <widget class="QComboBox" name="comboBox_2">
+              <widget class="QComboBox" name="combo_basic">
                <item>
                 <property name="text">
                  <string>Attack</string>
@@ -194,7 +203,7 @@
               </widget>
              </item>
              <item row="1" column="1">
-              <widget class="QComboBox" name="comboBox_3">
+              <widget class="QComboBox" name="combo_skill">
                <property name="enabled">
                 <bool>false</bool>
                </property>
@@ -231,7 +240,7 @@
             </widget>
            </item>
            <item row="0" column="1">
-            <widget class="QSpinBox" name="spinBox_5">
+            <widget class="QSpinBox" name="spin_rating">
              <property name="minimum">
               <number>1</number>
              </property>
@@ -266,9 +275,9 @@
  <resources/>
  <connections>
   <connection>
-   <sender>radioButton</sender>
+   <sender>radio_basic</sender>
    <signal>toggled(bool)</signal>
-   <receiver>comboBox_2</receiver>
+   <receiver>combo_basic</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
@@ -282,9 +291,9 @@
    </hints>
   </connection>
   <connection>
-   <sender>radioButton_2</sender>
+   <sender>radio_skill</sender>
    <signal>toggled(bool)</signal>
-   <receiver>comboBox_3</receiver>
+   <receiver>combo_skill</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
@@ -380,7 +389,7 @@
   <connection>
    <sender>slider_rating</sender>
    <signal>sliderMoved(int)</signal>
-   <receiver>spinBox_5</receiver>
+   <receiver>spin_rating</receiver>
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
@@ -394,7 +403,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>spinBox_5</sender>
+   <sender>spin_rating</sender>
    <signal>valueChanged(int)</signal>
    <receiver>slider_rating</receiver>
    <slot>setValue(int)</slot>

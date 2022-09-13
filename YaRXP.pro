@@ -83,6 +83,7 @@ SOURCES += \
     editors/dataeditor.cpp \
     editors/enemies/editenemies.cpp \
     editors/enemies/enemyactiondialog.cpp \
+    editors/enemies/treasuredialog.cpp \
     editors/items/edititems.cpp \
     editors/plusminusbox.cpp \
     editors/plusminuslist.cpp \
@@ -171,6 +172,7 @@ HEADERS += \
     editors/dataeditor.h \
     editors/enemies/editenemies.h \
     editors/enemies/enemyactiondialog.h \
+    editors/enemies/treasuredialog.h \
     editors/items/edititems.h \
     editors/plusminusbox.h \
     editors/plusminuslist.h \
@@ -206,6 +208,7 @@ FORMS += \
     editors/dataeditor.ui \
     editors/enemies/editenemies.ui \
     editors/enemies/enemyactiondialog.ui \
+    editors/enemies/treasuredialog.ui \
     editors/items/edititems.ui \
     editors/plusminusbox.ui \
     editors/plusminuslist.ui \
