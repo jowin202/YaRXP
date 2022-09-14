@@ -69,6 +69,9 @@ SOURCES += \
     datasource.cpp \
     dialogs/audiodialog.cpp \
     dialogs/mappropertiesdialog.cpp \
+    dialogs/objectcombodialog.cpp \
+    dialogs/switchdialog.cpp \
+    dialogs/variabledialog.cpp \
     editors/abcbox.cpp \
     editors/abclist.cpp \
     editors/actors/editactors.cpp \
@@ -88,6 +91,8 @@ SOURCES += \
     editors/plusminusbox.cpp \
     editors/plusminuslist.cpp \
     editors/skills/editskills.cpp \
+    editors/troops/edittroops.cpp \
+    editors/troops/troopeventpage.cpp \
     editors/weapons/editweapons.cpp \
     event_dialogs/choicesdialog.cpp \
     event_dialogs/commands/multilineeventcell.cpp \
@@ -158,6 +163,9 @@ HEADERS += \
     datasource.h \
     dialogs/audiodialog.h \
     dialogs/mappropertiesdialog.h \
+    dialogs/objectcombodialog.h \
+    dialogs/switchdialog.h \
+    dialogs/variabledialog.h \
     editors/abcbox.h \
     editors/abclist.h \
     editors/actors/editactors.h \
@@ -177,6 +185,8 @@ HEADERS += \
     editors/plusminusbox.h \
     editors/plusminuslist.h \
     editors/skills/editskills.h \
+    editors/troops/edittroops.h \
+    editors/troops/troopeventpage.h \
     editors/weapons/editweapons.h \
     event_dialogs/choicesdialog.h \
     event_dialogs/commands/multilineeventcell.h \
@@ -195,6 +205,9 @@ HEADERS += \
 FORMS += \
     dialogs/audiodialog.ui \
     dialogs/mappropertiesdialog.ui \
+    dialogs/objectcombodialog.ui \
+    dialogs/switchdialog.ui \
+    dialogs/variabledialog.ui \
     editors/abcbox.ui \
     editors/abclist.ui \
     editors/actors/editactors.ui \
@@ -213,6 +226,8 @@ FORMS += \
     editors/plusminusbox.ui \
     editors/plusminuslist.ui \
     editors/skills/editskills.ui \
+    editors/troops/edittroops.ui \
+    editors/troops/troopeventpage.ui \
     editors/weapons/editweapons.ui \
     event_dialogs/choicesdialog.ui \
     event_dialogs/conditionalbranchdialog.ui \
