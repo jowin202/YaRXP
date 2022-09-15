@@ -12,6 +12,8 @@ EnemyActionDialog::EnemyActionDialog(RPGSystem *system, int row,
 {
     ui->setupUi(this);
     this->system = system;
+    this->ui->switch_widget->setSwitchWidget(system);
+    this->ui->switch_widget->setValue(switch_id);
     this->row = row;
 
     if (turn_a != 0 || turn_b != 1)
@@ -70,7 +72,7 @@ void EnemyActionDialog::on_button_ok_clicked()
     int level = this->ui->spin_level->value();
     if (this->ui->check_level->isChecked() == false) level = 1;
 
-    int switch_id = this->ui->combo_switch->currentData().toInt();
+    int switch_id = this->ui->switch_widget->getValue();
     if (this->ui->check_switch->isChecked() == false) switch_id = 0;
 
 

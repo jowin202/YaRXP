@@ -2,6 +2,7 @@
 #define AUDIODIALOG_H
 
 
+#include <QFileDialog>
 #include <QWidget>
 #include <QKeyEvent>
 #include <QDir>
@@ -31,14 +32,21 @@ public:
             this->on_button_ok_clicked();
     }
 
+
+    void update_audio_list();
+
 signals:
-    void ok_clicked();
+    void ok_clicked(QString name);
 
 private slots:
     void on_button_ok_clicked();
     void on_button_cancel_clicked();
     void on_button_play_clicked();
     void on_button_stop_clicked();
+
+    void on_list_doubleClicked(const QModelIndex &index);
+
+    void on_button_import_clicked();
 
 private:
     Ui::AudioDialog *ui;

@@ -46,7 +46,6 @@ private slots:
     void on_button_bgm_clicked();
     void on_button_bgs_clicked();
 
-    void update_audio();
     void update_troop(int val);
 
 

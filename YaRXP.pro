@@ -68,10 +68,10 @@ SOURCES += \
     RXIO/testcases.cpp \
     datasource.cpp \
     dialogs/audiodialog.cpp \
+    dialogs/listdialog.cpp \
     dialogs/mappropertiesdialog.cpp \
     dialogs/objectcombodialog.cpp \
-    dialogs/switchdialog.cpp \
-    dialogs/variabledialog.cpp \
+    dialogs/switchvariablewidget.cpp \
     editors/abcbox.cpp \
     editors/abclist.cpp \
     editors/actors/editactors.cpp \
@@ -93,6 +93,7 @@ SOURCES += \
     editors/skills/editskills.cpp \
     editors/troops/edittroops.cpp \
     editors/troops/troopeventpage.cpp \
+    editors/troops/trooppageconditiondialog.cpp \
     editors/weapons/editweapons.cpp \
     event_dialogs/choicesdialog.cpp \
     event_dialogs/commands/multilineeventcell.cpp \
@@ -162,10 +163,10 @@ HEADERS += \
     RXIO/testcases.h \
     datasource.h \
     dialogs/audiodialog.h \
+    dialogs/listdialog.h \
     dialogs/mappropertiesdialog.h \
     dialogs/objectcombodialog.h \
-    dialogs/switchdialog.h \
-    dialogs/variabledialog.h \
+    dialogs/switchvariablewidget.h \
     editors/abcbox.h \
     editors/abclist.h \
     editors/actors/editactors.h \
@@ -187,6 +188,7 @@ HEADERS += \
     editors/skills/editskills.h \
     editors/troops/edittroops.h \
     editors/troops/troopeventpage.h \
+    editors/troops/trooppageconditiondialog.h \
     editors/weapons/editweapons.h \
     event_dialogs/choicesdialog.h \
     event_dialogs/commands/multilineeventcell.h \
@@ -204,10 +206,10 @@ HEADERS += \
 
 FORMS += \
     dialogs/audiodialog.ui \
+    dialogs/listdialog.ui \
     dialogs/mappropertiesdialog.ui \
     dialogs/objectcombodialog.ui \
-    dialogs/switchdialog.ui \
-    dialogs/variabledialog.ui \
+    dialogs/switchvariablewidget.ui \
     editors/abcbox.ui \
     editors/abclist.ui \
     editors/actors/editactors.ui \
@@ -228,6 +230,7 @@ FORMS += \
     editors/skills/editskills.ui \
     editors/troops/edittroops.ui \
     editors/troops/troopeventpage.ui \
+    editors/troops/trooppageconditiondialog.ui \
     editors/weapons/editweapons.ui \
     event_dialogs/choicesdialog.ui \
     event_dialogs/conditionalbranchdialog.ui \

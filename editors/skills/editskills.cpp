@@ -1,7 +1,8 @@
 #include <QCheckBox>
-
+#include "dialogs/audiodialog.h"
 #include "editors/plusminusbox.h"
 
+#include "RXIO/RXObjects/rpgaudiofile.h"
 #include "RXIO/RXObjects/rpgskill.h"
 #include "RXIO/RXObjects/rpgsystem.h"
 
@@ -56,5 +57,16 @@ void EditSkills::set_skill(int n)
 
     this->ui->state_widget->setStates(this->system, &current_skill->plus_state_set, &current_skill->minus_state_set);
     this->ui->element_widget->setValues(this->system, &current_skill->element_set, -1); //-1 for elements
+
+    this->ui->line_menu_use->setText(current_skill->menu_se.name);
+    current_skill->menu_se.copy_to(&this->menu_se);
+
+}
+
+void EditSkills::on_button_se_clicked()
+{
+    AudioDialog *dialog = new AudioDialog(system, &this->menu_se, AudioDialog::SE, 0);
+    connect(dialog,SIGNAL(ok_clicked(QString)), this->ui->line_menu_use, SLOT(setText(QString)));
+    dialog->show();
 
 }

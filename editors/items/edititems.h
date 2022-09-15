@@ -3,6 +3,8 @@
 
 #include <QWidget>
 
+#include "RXIO/RXObjects/rpgaudiofile.h"
+
 namespace Ui {
 class EditItems;
 }
@@ -26,9 +28,13 @@ public:
 private slots:
     void on_combo_parameter_currentIndexChanged(int index);
 
+
+    void on_button_se_clicked();
+
 private:
     Ui::EditItems *ui;
     RPGSystem *system;
+    RPGAudioFile menu_se;
 };
 
 #endif // EDITITEMS_H

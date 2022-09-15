@@ -10,25 +10,9 @@ EventPage::EventPage(QWidget *parent, RPGEventPage *page, RPGSystem *system) :
 
     if (system != 0)
     {
-        for (int i = 0; i < system->switches_names.length(); i++)
-        {
-            this->ui->combo_switch1->addItem(QString::number(i+1).rightJustified(3,'0') + ": " + system->switches_names.at(i),i+1);
-            this->ui->combo_switch2->addItem(QString::number(i+1).rightJustified(3,'0') + ": " + system->switches_names.at(i),i+1);
-        }
-        for (int i = 0; i < system->variable_names.length(); i++)
-        {
-            this->ui->combo_variable->addItem(QString::number(i+1).rightJustified(3,'0') + ": " + system->variable_names.at(i),i+1);
-        }
-
-        if (page->switch1_valid)
-            this->ui->combo_switch1->setCurrentIndex(page->switch1_id-1);
-        if (page->switch2_valid)
-            this->ui->combo_switch2->setCurrentIndex(page->switch2_id-1);
-        if (page->variable_valid)
-        {
-            this->ui->combo_variable->setCurrentIndex(page->variable_id-1);
-            this->ui->spin_variable->setValue(page->variable_value);
-        }
+        this->ui->widget_switch1->setSwitchWidget(system);
+        this->ui->widget_switch2->setSwitchWidget(system);
+        this->ui->widget_variable->setVariableWidget(system);
 
         this->ui->eventList->set_data(system, &page->list);
         this->ui->eventList->fill_list(); // happens only if settings are valid ... TODO: check
@@ -42,13 +26,13 @@ EventPage::EventPage(QWidget *parent, RPGEventPage *page, RPGSystem *system) :
 
 
     this->ui->check_switch1->setChecked(page->switch1_valid);
-    this->ui->combo_switch1->setEnabled(page->switch1_valid);
+    this->ui->widget_switch1->setValue(page->switch1_id);
 
     this->ui->check_switch2->setChecked(page->switch2_valid);
-    this->ui->combo_switch2->setEnabled(page->switch2_valid);
+    this->ui->widget_switch2->setValue(page->switch2_id);
 
     this->ui->check_variable->setChecked(page->variable_valid);
-    this->ui->combo_variable->setEnabled(page->variable_valid);
+    this->ui->widget_variable->setValue(page->variable_id);
     this->ui->spin_variable->setEnabled(page->variable_valid);
     this->ui->spin_variable->setValue(page->variable_value);
 

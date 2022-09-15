@@ -22,8 +22,13 @@ public:
 
 
 
+private slots:
+
+    void on_button_condition_clicked();
+
 private:
     Ui::TroopEventPage *ui;
+    RPGSystem *system;
 };
 
 #endif // TROOPEVENTPAGE_H

@@ -25,13 +25,20 @@ AudioDialog::AudioDialog(RPGSystem *system, RPGAudioFile *audiofile, int mode, Q
     case SE: music_type = "SE"; break;
     }
     this->setWindowTitle(music_type);
-
-    QDir music_dir(this->system->audio_dir + music_type);
-
-    QString name = audiofile->name;
-
-
     this->ui->list->addItem("(None)");
+
+    this->update_audio_list();
+}
+
+AudioDialog::~AudioDialog()
+{
+    delete ui;
+}
+
+void AudioDialog::update_audio_list()
+{
+    this->ui->list->clear();
+    QDir music_dir(this->system->audio_dir + music_type);
 
     QDirIterator it(music_dir);
     while (it.hasNext()) {
@@ -47,11 +54,6 @@ AudioDialog::AudioDialog(RPGSystem *system, RPGAudioFile *audiofile, int mode, Q
     }
 }
 
-AudioDialog::~AudioDialog()
-{
-    delete ui;
-}
-
 void AudioDialog::on_button_ok_clicked()
 {
     if (this->ui->list->currentItem() == 0)
@@ -64,7 +66,7 @@ void AudioDialog::on_button_ok_clicked()
     this->audiofile->volume = this->ui->slider_volume->value();
     this->audiofile->pitch = this->ui->slider_pitch->value();
 
-    emit ok_clicked();
+    emit ok_clicked(this->audiofile->name);
     this->close();
 }
 
@@ -81,4 +83,26 @@ void AudioDialog::on_button_play_clicked()
 void AudioDialog::on_button_stop_clicked()
 {
 
+}
+
+void AudioDialog::on_list_doubleClicked(const QModelIndex &index)
+{
+    if (index.row() >= 0)
+        this->on_button_ok_clicked();
+}
+
+void AudioDialog::on_button_import_clicked()
+{
+    //TODO : Check this
+    QStringList files = QFileDialog::getOpenFileNames(this, "Choose files", QDir::currentPath(), "");
+
+    for (int i = 0; i < files.length(); i++)
+    {
+        if (QFile::exists(files.at(i)))
+        {
+            QFile::copy(files.at(i), system->audio_dir + music_type + QDir::separator() + QFile(files.at(i)).fileName());
+        }
+    }
+
+    this->update_audio_list();
 }

@@ -2,7 +2,7 @@
 #define EDITSKILLS_H
 
 #include <QWidget>
-
+#include "RXIO/RXObjects/rpgaudiofile.h"
 
 class RPGSystem;
 
@@ -25,9 +25,14 @@ public:
     void set_skill(int n);
 
 
+private slots:
+    void on_button_se_clicked();
+
 private:
     Ui::EditSkills *ui;
     RPGSystem *system;
+
+    RPGAudioFile menu_se;
 };
 
 #endif // EDITSKILLS_H

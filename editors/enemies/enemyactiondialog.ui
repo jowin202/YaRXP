@@ -85,13 +85,6 @@
             </property>
            </widget>
           </item>
-          <item row="3" column="1">
-           <widget class="QComboBox" name="combo_switch">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-           </widget>
-          </item>
           <item row="2" column="0">
            <widget class="QCheckBox" name="check_level">
             <property name="text">
@@ -148,6 +141,13 @@
            <widget class="QLabel" name="label_3">
             <property name="text">
              <string>% or below</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="SwitchVariableWidget" name="switch_widget" native="true">
+            <property name="enabled">
+             <bool>false</bool>
             </property>
            </widget>
           </item>
@@ -272,6 +272,14 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>SwitchVariableWidget</class>
+   <extends>QWidget</extends>
+   <header>dialogs/switchvariablewidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections>
   <connection>
@@ -282,11 +290,11 @@
    <hints>
     <hint type="sourcelabel">
      <x>147</x>
-     <y>256</y>
+     <y>246</y>
     </hint>
     <hint type="destinationlabel">
      <x>276</x>
-     <y>261</y>
+     <y>251</y>
     </hint>
    </hints>
   </connection>
@@ -298,11 +306,11 @@
    <hints>
     <hint type="sourcelabel">
      <x>147</x>
-     <y>294</y>
+     <y>284</y>
     </hint>
     <hint type="destinationlabel">
      <x>276</x>
-     <y>299</y>
+     <y>289</y>
     </hint>
    </hints>
   </connection>
@@ -317,7 +325,7 @@
      <y>53</y>
     </hint>
     <hint type="destinationlabel">
-     <x>193</x>
+     <x>192</x>
      <y>73</y>
     </hint>
    </hints>
@@ -349,7 +357,7 @@
      <y>92</y>
     </hint>
     <hint type="destinationlabel">
-     <x>193</x>
+     <x>192</x>
      <y>111</y>
     </hint>
    </hints>
@@ -365,24 +373,8 @@
      <y>144</y>
     </hint>
     <hint type="destinationlabel">
-     <x>193</x>
+     <x>192</x>
      <y>149</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>check_switch</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>combo_switch</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>96</x>
-     <y>173</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>193</x>
-     <y>187</y>
     </hint>
    </hints>
   </connection>
@@ -409,12 +401,28 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>251</x>
-     <y>377</y>
+     <x>277</x>
+     <y>375</y>
     </hint>
     <hint type="destinationlabel">
      <x>179</x>
      <y>358</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>check_switch</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>switch_widget</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>72</x>
+     <y>164</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>140</x>
+     <y>167</y>
     </hint>
    </hints>
   </connection>

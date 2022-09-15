@@ -39,7 +39,9 @@ MapPropertiesDialog::MapPropertiesDialog(RPGMapInfo *info, RPGSystem *system, QW
         this->set_encounter_list_value(rows, info->map->encounter_list.at(i));
     }
 
-    this->update_audio();
+    this->ui->line_bgm->setText(this->bgm.name);
+    this->ui->line_bgs->setText(this->bgs.name);
+
     this->ui->table_encounters->hideColumn(1);
     this->ui->table_encounters->resizeColumnsToContents();
 }
@@ -91,22 +93,18 @@ void MapPropertiesDialog::on_button_cancel_clicked()
 void MapPropertiesDialog::on_button_bgm_clicked()
 {
     AudioDialog *dialog = new AudioDialog(system, &this->bgm, AudioDialog::BGM);
-    connect(dialog, SIGNAL(ok_clicked()), this, SLOT(update_audio()));
+    connect(dialog, SIGNAL(ok_clicked(QString)), this->ui->line_bgm, SLOT(setText(QString)));
     dialog->show();
 }
 
 void MapPropertiesDialog::on_button_bgs_clicked()
 {
     AudioDialog *dialog = new AudioDialog(system, &this->bgs, AudioDialog::BGS);
-    connect(dialog, SIGNAL(ok_clicked()), this, SLOT(update_audio()));
+    connect(dialog, SIGNAL(ok_clicked(QString)), this->ui->line_bgs, SLOT(setText(QString)));
     dialog->show();
 }
 
-void MapPropertiesDialog::update_audio()
-{
-    this->ui->line_bgm->setText(this->bgm.name);
-    this->ui->line_bgs->setText(this->bgs.name);
-}
+
 
 void MapPropertiesDialog::update_troop(int val)
 {
