@@ -8,14 +8,14 @@
 #include "RXIO/RXObjects/rpgeventpage.h"
 #include "RXIO/RXObjects/rpgeventcommand.h"
 
-#include "RXIO/RXObjects/rpgsystem.h"
 #include "eventcommanddialog.h"
-
 
 namespace Ui {
 class EventPage;
 }
 
+
+class RPGSystem;
 class EventPage : public QWidget
 {
     Q_OBJECT
@@ -28,10 +28,12 @@ private slots:
     void move_type_changed(int val);
 
     void on_button_add_command_clicked();
+    void open_page_graphic_dialog();
 
 private:
     Ui::EventPage *ui;
     RPGEventPage *page;
+    RPGSystem *system;
 };
 
 #endif // EVENTPAGE_H

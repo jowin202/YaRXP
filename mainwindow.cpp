@@ -99,7 +99,7 @@ void MainWindow::open_project(QString project_path)
     {
         this->system.current_project_dir = fi.absoluteDir().path();
         this->system.data_dir = this->system.current_project_dir + QDir::separator() + "Data" + QDir::separator();
-        this->system.grahpics_dir = this->system.current_project_dir + QDir::separator() + "Graphics" + QDir::separator();
+        this->system.graphics_dir = this->system.current_project_dir + QDir::separator() + "Graphics" + QDir::separator();
         this->system.tileset_dir = this->system.current_project_dir + QDir::separator() + "Graphics" + QDir::separator() + "Tilesets" + QDir::separator();
         this->system.autotiles_dir = this->system.current_project_dir + QDir::separator() + "Graphics" + QDir::separator() + "Autotiles" + QDir::separator();
         this->system.characters_dir = this->system.current_project_dir + QDir::separator() + "Graphics" + QDir::separator() + "Characters" + QDir::separator();
@@ -219,7 +219,8 @@ void MainWindow::on_actionOpen_triggered()
         dir = QDir::homePath();
 
     QString name = QFileDialog::getOpenFileName(this, "Choose Project", dir, "RPG Maker Project Files (*.rxproj);;Data Files(*.rxdata)");
-    settings.setValue("lastopened", name);
+    if (name != "")
+        settings.setValue("lastopened", name);
 
     this->open_project(name);
 }

@@ -31,6 +31,8 @@ private slots:
 
     void on_button_se_clicked();
 
+    void on_button_icon_clicked();
+
 private:
     Ui::EditItems *ui;
     RPGSystem *system;

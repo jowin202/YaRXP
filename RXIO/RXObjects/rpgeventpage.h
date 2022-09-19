@@ -6,11 +6,18 @@
 #include "rpgeventcommand.h"
 #include "rpgmoveroute.h"
 
+class RPGSystem;
 class RPGEventPage : public QObject
 {
     Q_OBJECT
 public:
     explicit RPGEventPage(QObject *parent = nullptr);
+
+    QImage get_page_graphic(RPGSystem *system);
+
+
+
+
     int move_speed;
     int move_frequency;
     int move_type;

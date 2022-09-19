@@ -1,6 +1,8 @@
 #include "editarmors.h"
 #include "ui_editarmors.h"
 
+#include "dialogs/imagedialog.h"
+
 #include "RXIO/RXObjects/rpgsystem.h"
 #include "RXIO/RXObjects/rpgarmor.h"
 
@@ -41,4 +43,11 @@ void EditArmors::set_armor(int n)
 
     this->ui->element_widget->setValues(system, &current_armor->guard_element_set,-1); // -1 for elements
     this->ui->state_widget->setValues(system, &current_armor->guard_state_set, RPGSystem::STATES);
+}
+
+void EditArmors::on_button_icon_clicked()
+{
+    ImageDialog *dialog = new ImageDialog(system, ImageDialog::ICONS, this->ui->line_icon->text());
+    connect(dialog, SIGNAL(ok_clicked(QString)), this->ui->line_icon, SLOT(setText(QString)));
+    dialog->show();
 }

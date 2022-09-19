@@ -1,6 +1,8 @@
 #include "editweapons.h"
 #include "ui_editweapons.h"
 
+#include "dialogs/imagedialog.h"
+
 #include "RXIO/RXObjects/rpgsystem.h"
 
 EditWeapons::EditWeapons(QWidget *parent) :
@@ -39,4 +41,11 @@ void EditWeapons::set_weapon(int n)
 
     this->ui->element_widget->setValues(system, &current_weapon->element_set,-1); // -1 for elements
     this->ui->state_widget->setStates(system, &current_weapon->plus_state_set, &current_weapon->minus_state_set);
+}
+
+void EditWeapons::on_button_icon_clicked()
+{
+    ImageDialog *dialog = new ImageDialog(system, ImageDialog::ICONS, this->ui->line_icon->text());
+    connect(dialog, SIGNAL(ok_clicked(QString)), this->ui->line_icon, SLOT(setText(QString)));
+    dialog->show();
 }

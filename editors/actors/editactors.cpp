@@ -1,6 +1,8 @@
 #include "editactors.h"
 #include "ui_editactors.h"
 
+#include "dialogs/imagedialog.h"
+
 #include "editexpcurve.h"
 #include "editoractorparameters.h"
 
@@ -9,8 +11,6 @@ EditActors::EditActors(QWidget *parent) :
     ui(new Ui::EditActors)
 {
     ui->setupUi(this);
-
-
 }
 
 EditActors::~EditActors()
@@ -128,9 +128,13 @@ void EditActors::set_actor(int n)
 
     this->set_exp_curve(current_actor->exp_basis, current_actor->exp_inflation);
 
+
+    this->ui->label_character_graphic->set_data(system, ImageDialog::CHARACTERS, current_actor->character_name, current_actor->character_hue);
+    this->ui->label_battler_graphic->set_data(system, ImageDialog::BATTLERS, current_actor->battler_name, current_actor->battler_hue);
+
+    /*
     QImage character_graphic = current_actor->get_character_graphic(system);
     QImage battler_graphic = current_actor->get_battler_graphic(system);
-
 
     if (!character_graphic.isNull())
         this->ui->label_character_graphic->setPixmap(QPixmap::fromImage(character_graphic));
@@ -138,6 +142,7 @@ void EditActors::set_actor(int n)
     if (!battler_graphic.isNull())
         this->ui->label_battler_graphic->setPixmap(QPixmap::fromImage(battler_graphic));
     else this->ui->label_battler_graphic->setPixmap(QPixmap());
+    */
 
     //copy params from actor
     for (int i = 0; i < 100; i++)

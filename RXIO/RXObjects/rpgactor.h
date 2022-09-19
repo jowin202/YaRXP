@@ -12,10 +12,6 @@ class RPGActor : public QObject
 public:
     explicit RPGActor(QObject *parent = nullptr);
 
-
-    QImage get_character_graphic(RPGSystem* system);
-    QImage get_battler_graphic(RPGSystem* system);
-
     RPGString battler_name;
     RPGString name;
     RPGString character_name;

@@ -108,7 +108,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QToolButton" name="toolButton">
+        <widget class="QToolButton" name="button_icon">
          <property name="text">
           <string>...</string>
          </property>
@@ -492,15 +492,15 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>PlusMinusList</class>
-   <extends>QWidget</extends>
-   <header>editors/plusminuslist.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>CheckBoxList</class>
    <extends>QWidget</extends>
    <header>editors/checkboxlist.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>PlusMinusList</class>
+   <extends>QWidget</extends>
+   <header>editors/plusminuslist.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

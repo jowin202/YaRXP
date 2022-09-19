@@ -1,5 +1,6 @@
 #include <QCheckBox>
 #include "dialogs/audiodialog.h"
+#include "dialogs/imagedialog.h"
 #include "editors/plusminusbox.h"
 
 #include "RXIO/RXObjects/rpgaudiofile.h"
@@ -69,4 +70,11 @@ void EditSkills::on_button_se_clicked()
     connect(dialog,SIGNAL(ok_clicked(QString)), this->ui->line_menu_use, SLOT(setText(QString)));
     dialog->show();
 
+}
+
+void EditSkills::on_button_icon_clicked()
+{
+    ImageDialog *dialog = new ImageDialog(system, ImageDialog::ICONS, this->ui->line_icon->text());
+    connect(dialog, SIGNAL(ok_clicked(QString)), this->ui->line_icon, SLOT(setText(QString)));
+    dialog->show();
 }

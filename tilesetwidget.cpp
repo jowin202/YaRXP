@@ -20,7 +20,7 @@ void TilesetWidget::updateView()
         QImage background(256,32, QImage::Format_ARGB32);
 
         QPainter painter(&background);
-        painter.fillRect(0,0,background.width(),background.height(), QColor(0xaa,0x16,0xa0));
+        painter.fillRect(0,0,background.width(),background.height(), system->purple);
 
         if (this->current_tileset->autotiles.length() == 7)
         {

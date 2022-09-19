@@ -28,6 +28,8 @@ public:
 private slots:
     void on_button_se_clicked();
 
+    void on_button_icon_clicked();
+
 private:
     Ui::EditSkills *ui;
     RPGSystem *system;

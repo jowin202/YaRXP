@@ -2,6 +2,7 @@
 #include "ui_edititems.h"
 
 #include "dialogs/audiodialog.h"
+#include "dialogs/imagedialog.h"
 
 #include "RXIO/RXObjects/rpgsystem.h"
 
@@ -69,5 +70,13 @@ void EditItems::on_button_se_clicked()
 {
     AudioDialog *dialog = new AudioDialog(system, &this->menu_se, AudioDialog::SE, 0);
     connect(dialog,SIGNAL(ok_clicked(QString)), this->ui->line_menu_use, SLOT(setText(QString)));
+    dialog->show();
+}
+
+
+void EditItems::on_button_icon_clicked()
+{
+    ImageDialog *dialog = new ImageDialog(system, ImageDialog::ICONS, this->ui->line_icon->text());
+    connect(dialog, SIGNAL(ok_clicked(QString)), this->ui->line_icon, SLOT(setText(QString)));
     dialog->show();
 }

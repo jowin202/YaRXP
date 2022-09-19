@@ -24,6 +24,10 @@ public:
     void set_weapon(int n);
 
 
+private slots:
+
+    void on_button_icon_clicked();
+
 private:
     Ui::EditWeapons *ui;
     RPGSystem *system;

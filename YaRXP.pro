@@ -68,6 +68,8 @@ SOURCES += \
     RXIO/testcases.cpp \
     datasource.cpp \
     dialogs/audiodialog.cpp \
+    dialogs/imagedialog.cpp \
+    dialogs/imagedisplaywidget.cpp \
     dialogs/listdialog.cpp \
     dialogs/mappropertiesdialog.cpp \
     dialogs/objectcombodialog.cpp \
@@ -163,6 +165,8 @@ HEADERS += \
     RXIO/testcases.h \
     datasource.h \
     dialogs/audiodialog.h \
+    dialogs/imagedialog.h \
+    dialogs/imagedisplaywidget.h \
     dialogs/listdialog.h \
     dialogs/mappropertiesdialog.h \
     dialogs/objectcombodialog.h \
@@ -206,6 +210,7 @@ HEADERS += \
 
 FORMS += \
     dialogs/audiodialog.ui \
+    dialogs/imagedialog.ui \
     dialogs/listdialog.ui \
     dialogs/mappropertiesdialog.ui \
     dialogs/objectcombodialog.ui \

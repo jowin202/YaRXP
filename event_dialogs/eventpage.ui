@@ -370,6 +370,36 @@
      <property name="title">
       <string>Graphics</string>
      </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_11">
+      <item row="0" column="0">
+       <widget class="ImageDisplayWidget" name="label_graphic">
+        <property name="minimumSize">
+         <size>
+          <width>84</width>
+          <height>114</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>84</width>
+          <height>114</height>
+         </size>
+        </property>
+        <property name="autoFillBackground">
+         <bool>true</bool>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </widget>
    </item>
    <item row="2" column="0">
@@ -484,6 +514,11 @@
    <class>EventList</class>
    <extends>QListView</extends>
    <header>event_dialogs/eventlist.h</header>
+  </customwidget>
+  <customwidget>
+   <class>ImageDisplayWidget</class>
+   <extends>QLabel</extends>
+   <header>dialogs/imagedisplaywidget.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

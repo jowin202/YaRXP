@@ -1,6 +1,7 @@
 #ifndef RPGSYSTEM_H
 #define RPGSYSTEM_H
 
+#include <QColor>
 #include <QObject>
 #include "rpgaudiofile.h"
 #include "rpgtileset.h"
@@ -34,7 +35,7 @@ public:
 
     //Projekt stuff, not included in system file
     RPGString current_project_dir;
-    RPGString grahpics_dir;
+    RPGString graphics_dir;
     RPGString tileset_dir;
     RPGString characters_dir;
     RPGString battlers_dir;
@@ -64,6 +65,7 @@ public:
 
     enum {ACTORS, CLASSES, SKILLS, ITEMS, WEAPONS, ARMORS, ENEMIES, TROOPS, STATES, ANIMATIONS, TILESETS, COMMONEVENTS, SYSTEM};
 
+    QColor purple = QColor(0x8a,0x16,0xa0);
 
     int current_map_id = -1;
     RPGMapInfo* get_current_map_info() {

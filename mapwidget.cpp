@@ -282,7 +282,7 @@ void MapWidget::draw_rectangle()
 
             if (!this->selection_tmp.isNull())
             {
-                painter.fillRect(QRect(this->select_rectangle_tmp1.topLeft()*tile, (QPoint(1,1) +this->select_rectangle_tmp1.bottomRight())*tile) , QColor(0xaa,0x16,0xa0));
+                painter.fillRect(QRect(this->select_rectangle_tmp1.topLeft()*tile, (QPoint(1,1) +this->select_rectangle_tmp1.bottomRight())*tile) , system->purple);
                 painter.drawImage(QRect(this->select_rectangle_tmp2.topLeft()*tile, (QPoint(1,1) +this->select_rectangle_tmp2.bottomRight())*tile), this->selection_tmp);
             }
 

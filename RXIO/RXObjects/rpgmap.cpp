@@ -72,7 +72,7 @@ QImage RPGMap::create_map_image(int zoom, bool dim_other, bool show_current_and_
             if (this->data[index] == 0 && layer == 0)
             {
                 //if empty and first layer, background is pink
-                painter.fillRect(target_rect, QColor(0xaa,0x16,0xa0));
+                painter.fillRect(target_rect, QColor(0x8a,0x16,0xa0));
             }
             else if (this->data[index] > 0 && this->data[index] < 0x0180)
             {

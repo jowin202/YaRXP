@@ -142,7 +142,7 @@
        </property>
        <layout class="QGridLayout" name="gridLayout_4">
         <item row="0" column="0">
-         <widget class="QLabel" name="label_character_graphic">
+         <widget class="ImageDisplayWidget" name="label_character_graphic">
           <property name="minimumSize">
            <size>
             <width>128</width>
@@ -154,6 +154,9 @@
             <width>128</width>
             <height>108</height>
            </size>
+          </property>
+          <property name="autoFillBackground">
+           <bool>true</bool>
           </property>
           <property name="text">
            <string/>
@@ -170,7 +173,7 @@
        </property>
        <layout class="QGridLayout" name="gridLayout_5">
         <item row="0" column="0">
-         <widget class="QLabel" name="label_battler_graphic">
+         <widget class="ImageDisplayWidget" name="label_battler_graphic">
           <property name="minimumSize">
            <size>
             <width>128</width>
@@ -182,6 +185,9 @@
             <width>128</width>
             <height>165</height>
            </size>
+          </property>
+          <property name="autoFillBackground">
+           <bool>true</bool>
           </property>
           <property name="text">
            <string/>
@@ -489,6 +495,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>ImageDisplayWidget</class>
+   <extends>QLabel</extends>
+   <header>dialogs/imagedisplaywidget.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

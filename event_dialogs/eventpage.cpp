@@ -1,12 +1,18 @@
 #include "eventpage.h"
 #include "ui_eventpage.h"
 
+#include "dialogs/imagedialog.h"
+#include "RXIO/RXObjects/rpgsystem.h"
+
 EventPage::EventPage(QWidget *parent, RPGEventPage *page, RPGSystem *system) :
     QWidget(parent),
     ui(new Ui::EventPage)
 {
     ui->setupUi(this);
     this->page = page;
+
+
+    this->ui->label_graphic->set_data_from_page(system, page);
 
     if (system != 0)
     {
@@ -67,8 +73,6 @@ EventPage::EventPage(QWidget *parent, RPGEventPage *page, RPGSystem *system) :
     else if (page->trigger == 4)
         this->ui->radio_parallel_process->setChecked(true);
 
-
-
 }
 
 EventPage::~EventPage()
@@ -86,4 +90,11 @@ void EventPage::on_button_add_command_clicked()
 {
     EventCommandDialog *evcommdia = new EventCommandDialog;
     evcommdia->show();
+}
+
+void EventPage::open_page_graphic_dialog()
+{
+    ImageDialog *dialog = new ImageDialog(system, ImageDialog::EVENTPAGE, page->character_name, 0);
+
+    dialog->show();
 }

@@ -21,6 +21,9 @@ public:
     void setSystem(RPGSystem *system)
     {this->system = system;}
 
+private slots:
+    void on_button_icon_clicked();
+
 private:
     Ui::EditArmors *ui;
     RPGSystem *system;
