@@ -81,6 +81,7 @@ SOURCES += \
     editors/actors/editoractorparameterlabel.cpp \
     editors/actors/editoractorparameterpage.cpp \
     editors/actors/editoractorparameters.cpp \
+    editors/actors/generatecurvedialog.cpp \
     editors/armors/editarmors.cpp \
     editors/checkboxlist.cpp \
     editors/classes/editclasses.cpp \
@@ -178,6 +179,7 @@ HEADERS += \
     editors/actors/editoractorparameterlabel.h \
     editors/actors/editoractorparameterpage.h \
     editors/actors/editoractorparameters.h \
+    editors/actors/generatecurvedialog.h \
     editors/armors/editarmors.h \
     editors/checkboxlist.h \
     editors/classes/editclasses.h \
@@ -221,6 +223,7 @@ FORMS += \
     editors/actors/editexpcurve.ui \
     editors/actors/editoractorparameterpage.ui \
     editors/actors/editoractorparameters.ui \
+    editors/actors/generatecurvedialog.ui \
     editors/armors/editarmors.ui \
     editors/checkboxlist.ui \
     editors/classes/editclasses.ui \

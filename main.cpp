@@ -21,9 +21,6 @@ int main(int argc, char *argv[])
 
 
 
-    //w.open_project("/home/johannes/RPG_maker/pokemon_decrypted/Game.rxproj");
-    //w.on_actionRun_Testcases_triggered();
-
 
     return a.exec();
 

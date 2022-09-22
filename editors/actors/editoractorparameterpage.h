@@ -29,10 +29,15 @@ private slots:
     void on_button_D_clicked();
     void on_button_E_clicked();
 
+    void redraw();
     void update_curve(int level, int value);
     void update_curve_from_spin();
 
+    void update_spin_value(int level);
+
     void set_linear(int start, int end);
+
+    void on_pushButton_6_clicked();
 
 private:
     Ui::EditorActorParameterPage *ui;

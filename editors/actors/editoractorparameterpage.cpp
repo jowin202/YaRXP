@@ -3,6 +3,8 @@
 
 #include "editactors.h"
 
+#include "generatecurvedialog.h"
+
 
 EditorActorParameterPage::EditorActorParameterPage(QWidget *parent) :
     QWidget(parent),
@@ -10,7 +12,7 @@ EditorActorParameterPage::EditorActorParameterPage(QWidget *parent) :
 {
     ui->setupUi(this);
     connect(this->ui->label_curve, SIGNAL(curve_changed(int,int)), this, SLOT(update_curve(int,int)));
-    connect(this->ui->spin_level, SIGNAL(valueChanged(int)), this, SLOT(update_curve_from_spin()));
+    connect(this->ui->spin_level, SIGNAL(valueChanged(int)), this, SLOT(update_spin_value(int)));
     connect(this->ui->spin_value, SIGNAL(valueChanged(int)), this, SLOT(update_curve_from_spin()));
     rand.seed(QDateTime::currentMSecsSinceEpoch());
 }
@@ -115,17 +117,27 @@ void EditorActorParameterPage::on_button_E_clicked()
     this->set_linear(start,end);
 }
 
+void EditorActorParameterPage::redraw()
+{
+    this->ui->label_curve->setPixmap(QPixmap::fromImage(parent->get_image_from_param(param,values,true)));
+}
+
 void EditorActorParameterPage::update_curve(int level, int value)
 {
     this->ui->spin_level->setValue(level);
     this->ui->spin_value->setValue(value);
-    this->ui->label_curve->setPixmap(QPixmap::fromImage(parent->get_image_from_param(param,values,true)));
+    this->redraw();
 }
 
 void EditorActorParameterPage::update_curve_from_spin()
 {
     values[this->ui->spin_level->value()] = this->ui->spin_value->value();
-    this->ui->label_curve->setPixmap(QPixmap::fromImage(parent->get_image_from_param(param,values,true)));
+    this->redraw();
+}
+
+void EditorActorParameterPage::update_spin_value(int level)
+{
+    this->ui->spin_value->setValue(values[level]);
 }
 
 void EditorActorParameterPage::set_linear(int start, int end)
@@ -140,3 +152,15 @@ void EditorActorParameterPage::set_linear(int start, int end)
     this->ui->label_curve->setPixmap(QPixmap::fromImage(parent->get_image_from_param(param,values,true)));
 }
 
+
+void EditorActorParameterPage::on_pushButton_6_clicked()
+{
+    GenerateCurveDialog *dialog;
+    if (param == EditActors::MAXHP || param == EditActors::MAXSP)
+        dialog = new GenerateCurveDialog(values, 9999);
+    else
+        dialog = new GenerateCurveDialog(values, 999);
+
+    connect(dialog, SIGNAL(ok_clicked()), this, SLOT(redraw()));
+    dialog->show();
+}
