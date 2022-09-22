@@ -132,9 +132,23 @@
    <item row="2" column="0" colspan="4">
     <layout class="QGridLayout" name="gridLayout_5">
      <item row="3" column="0">
-      <widget class="QPushButton" name="pushButton_6">
+      <widget class="QPushButton" name="pushButton_7">
        <property name="text">
-        <string>Paste Event Page</string>
+        <string>Delete Event Page</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="0">
+      <widget class="QPushButton" name="pushButton_8">
+       <property name="text">
+        <string>Clear Event Page</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1" rowspan="9">
+      <widget class="QTabWidget" name="tab_pages">
+       <property name="currentIndex">
+        <number>-1</number>
        </property>
       </widget>
      </item>
@@ -145,14 +159,21 @@
        </property>
       </widget>
      </item>
-     <item row="4" column="0">
-      <widget class="QPushButton" name="pushButton_7">
+     <item row="2" column="0">
+      <widget class="QPushButton" name="pushButton_6">
        <property name="text">
-        <string>Delete Event Page</string>
+        <string>Paste Event Page</string>
        </property>
       </widget>
      </item>
-     <item row="6" column="0">
+     <item row="0" column="0">
+      <widget class="QPushButton" name="pushButton_5">
+       <property name="text">
+        <string>New Event Page</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="0">
       <spacer name="verticalSpacer_3">
        <property name="orientation">
         <enum>Qt::Vertical</enum>
@@ -164,27 +185,6 @@
         </size>
        </property>
       </spacer>
-     </item>
-     <item row="5" column="0">
-      <widget class="QPushButton" name="pushButton_8">
-       <property name="text">
-        <string>Clear Event Page</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="0">
-      <widget class="QPushButton" name="pushButton_5">
-       <property name="text">
-        <string>New Event Page</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1" rowspan="7">
-      <widget class="QTabWidget" name="tab_pages">
-       <property name="currentIndex">
-        <number>-1</number>
-       </property>
-      </widget>
      </item>
     </layout>
    </item>

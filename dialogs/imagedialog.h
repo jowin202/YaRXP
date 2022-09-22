@@ -31,7 +31,6 @@ public:
 
 signals:
     void ok_clicked(QString);
-    //void ok_clicked_extended(QString, int, int, int, int, int, int);
 
 public slots:
     void update_image_list();

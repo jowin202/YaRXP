@@ -123,14 +123,12 @@ void ImageDialog::update_image_list()
 
     QDir pics_dir(this->system->graphics_dir + folder_name);
 
-    QDirIterator it(pics_dir);
-    while (it.hasNext()) {
-        it.next();
-        if (it.fileName() == "." || it.fileName() == "..")
-            continue;
-
-        this->ui->list->addItem(it.fileName());
-        if (this->current == it.fileName().chopped(4))
+    QStringList entries = pics_dir.entryList(QDir::Filter::NoFilter, QDir::SortFlag::Name);
+    for (QString entry : entries)
+    {
+        if (entry == "." || entry == "..") continue;
+        this->ui->list->addItem(entry);
+        if (this->current == entry.chopped(4))
         {
             this->ui->list->setCurrentItem(this->ui->list->item(this->ui->list->count()-1));
         }
@@ -142,8 +140,10 @@ void ImageDialog::on_button_ok_clicked()
 
     if (this->ui->list->currentItem() != 0)
     {
-        if (this->ui->list->currentRow() != 0)
-            emit ok_clicked(QString(this->ui->list->currentItem()->text().chopped(4)));
+        if (this->ui->list->currentRow() == 0)
+            emit ok_clicked("");
+        else
+            emit ok_clicked(QString(this->ui->list->currentItem()->text()).chopped(4));
     }
 
     this->close();

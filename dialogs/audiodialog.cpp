@@ -40,14 +40,13 @@ void AudioDialog::update_audio_list()
     this->ui->list->addItem("(None)");
     QDir music_dir(this->system->audio_dir + music_type);
 
-    QDirIterator it(music_dir);
-    while (it.hasNext()) {
-        it.next();
-        if (it.fileName() == "." || it.fileName() == "..")
-            continue;
 
-        this->ui->list->addItem(it.fileName());
-        if (this->audiofile->name == it.fileName().chopped(4))
+    QStringList entries = music_dir.entryList(QDir::Filter::NoFilter, QDir::SortFlag::Name);
+    for (QString entry : entries)
+    {
+        if (entry == "." || entry == "..") continue;
+        this->ui->list->addItem(entry);
+        if (this->audiofile->name == entry.chopped(4))
         {
             this->ui->list->setCurrentItem(this->ui->list->item(this->ui->list->count()-1));
         }

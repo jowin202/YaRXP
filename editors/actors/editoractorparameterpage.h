@@ -2,6 +2,8 @@
 #define EDITORACTORPARAMETERPAGE_H
 
 #include <QWidget>
+#include <QRandomGenerator>
+#include <QDateTime>
 
 namespace Ui {
 class EditorActorParameterPage;
@@ -28,12 +30,16 @@ private slots:
     void on_button_E_clicked();
 
     void update_curve(int level, int value);
+    void update_curve_from_spin();
+
+    void set_linear(int start, int end);
 
 private:
     Ui::EditorActorParameterPage *ui;
     EditActors *parent;
     int *values;
     int param;
+    QRandomGenerator rand;
 };
 
 #endif // EDITORACTORPARAMETERPAGE_H

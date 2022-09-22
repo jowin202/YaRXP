@@ -1,6 +1,7 @@
 #include "editexpcurve.h"
 #include "ui_editexpcurve.h"
 
+#include <QScrollBar>
 #include <QDebug>
 #include <QtMath>
 #include <QSlider>
@@ -31,18 +32,24 @@ void EditExpCurve::update_levels()
 {
     int basis = this->ui->spin_basis->value();
     int inflation = this->ui->spin_inflation->value();
-    qreal total = 0;
+    int total = 0;
 
     this->ui->text_next_lv->clear();
     this->ui->text_total->clear();
-    for (int i = 1; i < 99; i++)
+
+    this->ui->text_total->append("L 01:  <font color=\"red\">0</font>");
+
+
+    qreal pow = 2.4 + inflation/100.0;
+    for (int i = 2; i <= 99; i++)
     {
-        qreal pow = 2.4 + inflation/1000.0;
-        qreal val = basis * qPow((i + 4),pow) / (qPow(5,pow));
+        qreal val = basis * qPow((i + 3),pow) / (qPow(5,pow));
         total += val;
-        this->ui->text_next_lv->append("L " + QString::number(i).rightJustified(2,'0') + ":  <font color=\"green\">" + QString::number((int)val).rightJustified(7,' ') + "</font>");
+        this->ui->text_next_lv->append("L " + QString::number(i-1).rightJustified(2,'0') + ":  <font color=\"green\">" + QString::number((int)val).rightJustified(7,' ') + "</font>");
         this->ui->text_total->append("L " + QString::number(i).rightJustified(2,'0')  + ":  <font color=\"red\">" + QString::number((int)total).rightJustified(7,' ') + "</font>");
     }
+    this->ui->text_next_lv->verticalScrollBar()->setValue(0);
+    this->ui->text_total->verticalScrollBar()->setValue(0);
 }
 
 void EditExpCurve::on_button_ok_clicked()

@@ -8,7 +8,14 @@ EditorActorParameterLabel::EditorActorParameterLabel(QWidget *parent) : QLabel(p
 void EditorActorParameterLabel::mousePressEvent(QMouseEvent *ev)
 {
     if (ev->button() == Qt::LeftButton)
+    {
         this->left_click = true;
+        int x = ev->x()/4;
+        int y = qRound((250 - ev->y())/250.0 * this->maxval);
+        if (y==0) y=1;
+        this->values[x] = y;
+        emit curve_changed(x,y);
+    }
 }
 
 void EditorActorParameterLabel::mouseMoveEvent(QMouseEvent *ev)
@@ -28,3 +35,4 @@ void EditorActorParameterLabel::mouseReleaseEvent(QMouseEvent *ev)
     if (ev->button() == Qt::LeftButton)
         this->left_click = false;
 }
+
