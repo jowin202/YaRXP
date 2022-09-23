@@ -1,6 +1,7 @@
 #ifndef TROOPPAGECONDITIONDIALOG_H
 #define TROOPPAGECONDITIONDIALOG_H
 
+#include <QDebug>
 #include <QWidget>
 #include <QKeyEvent>
 
@@ -10,6 +11,7 @@ namespace Ui {
 class TroopPageConditionDialog;
 }
 
+class RPGTroopPage;
 class TroopPageConditionDialog : public QWidget
 {
     Q_OBJECT
@@ -17,6 +19,8 @@ class TroopPageConditionDialog : public QWidget
 public:
     explicit TroopPageConditionDialog(RPGSystem *system, QWidget *parent = nullptr);
     ~TroopPageConditionDialog();
+
+    void setPage(RPGTroopPage *page, QStringList enemy_list);
 
 
     void keyPressEvent(QKeyEvent *e) {
@@ -33,6 +37,7 @@ private slots:
 
 private:
     Ui::TroopPageConditionDialog *ui;
+    RPGSystem *system;
 };
 
 #endif // TROOPPAGECONDITIONDIALOG_H

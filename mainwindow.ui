@@ -284,7 +284,7 @@
     <addaction name="actionArmors"/>
     <addaction name="actionEnemies"/>
     <addaction name="actionTroops"/>
-    <addaction name="actionStates_2"/>
+    <addaction name="actionStates"/>
     <addaction name="actionAnimations"/>
     <addaction name="actionTileset_Editor"/>
     <addaction name="actionCommon_Scripts"/>
@@ -662,11 +662,6 @@
     <string>Troops</string>
    </property>
   </action>
-  <action name="actionStates">
-   <property name="text">
-    <string>States</string>
-   </property>
-  </action>
   <action name="actionAnimations">
    <property name="text">
     <string>Animations</string>
@@ -697,7 +692,7 @@
     <string>Run Testcases</string>
    </property>
   </action>
-  <action name="actionStates_2">
+  <action name="actionStates">
    <property name="text">
     <string>States</string>
    </property>

@@ -15,7 +15,7 @@
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
    <item row="1" column="0">
-    <widget class="QLabel" name="label_troop_pic">
+    <widget class="TroopPicLabel" name="label_troop_pic">
      <property name="minimumSize">
       <size>
        <width>321</width>
@@ -71,7 +71,7 @@
    <item row="1" column="1">
     <layout class="QGridLayout" name="gridLayout_4">
      <item row="1" column="1">
-      <widget class="QToolButton" name="toolButton">
+      <widget class="QToolButton" name="button_add">
        <property name="text">
         <string>&lt;</string>
        </property>
@@ -104,21 +104,21 @@
       </spacer>
      </item>
      <item row="2" column="1">
-      <widget class="QToolButton" name="toolButton_2">
+      <widget class="QToolButton" name="button_remove">
        <property name="text">
         <string>&gt;</string>
        </property>
       </widget>
      </item>
      <item row="3" column="1">
-      <widget class="QToolButton" name="toolButton_3">
+      <widget class="QToolButton" name="button_clear">
        <property name="text">
         <string>C</string>
        </property>
       </widget>
      </item>
      <item row="4" column="1">
-      <widget class="QToolButton" name="toolButton_4">
+      <widget class="QToolButton" name="button_arrange">
        <property name="text">
         <string>A</string>
        </property>
@@ -190,6 +190,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>TroopPicLabel</class>
+   <extends>QLabel</extends>
+   <header>editors/troops/trooppiclabel.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

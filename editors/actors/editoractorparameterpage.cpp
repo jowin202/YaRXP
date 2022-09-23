@@ -153,7 +153,7 @@ void EditorActorParameterPage::set_linear(int start, int end)
 }
 
 
-void EditorActorParameterPage::on_pushButton_6_clicked()
+void EditorActorParameterPage::on_button_gen_curve_clicked()
 {
     GenerateCurveDialog *dialog;
     if (param == EditActors::MAXHP || param == EditActors::MAXSP)

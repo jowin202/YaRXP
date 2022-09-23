@@ -382,6 +382,7 @@ void MainWindow::on_actionStates_triggered()
     da->setSystem(&this->system);
     da->set_widget(DataEditor::STATES);
     da->show();
+    qDebug() << "test";
 }
 
 void MainWindow::on_actionAnimations_triggered()
@@ -389,6 +390,14 @@ void MainWindow::on_actionAnimations_triggered()
     DataEditor *da = new DataEditor;
     da->setSystem(&this->system);
     da->set_widget(DataEditor::ANIMATIONS);
+    da->show();
+}
+
+void MainWindow::on_actionTileset_Editor_triggered()
+{
+    DataEditor *da = new DataEditor;
+    da->setSystem(&this->system);
+    da->set_widget(DataEditor::TILESETS);
     da->show();
 }
 

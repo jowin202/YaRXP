@@ -5,6 +5,7 @@
 
 class RPGSystem;
 class RPGTroopPage;
+class TroopPicLabel;
 
 namespace Ui {
 class TroopEventPage;
@@ -18,7 +19,7 @@ public:
     explicit TroopEventPage(QWidget *parent = nullptr);
     ~TroopEventPage();
 
-    void setTroopPage(RPGSystem *system, RPGTroopPage *page);
+    void setTroopPage(RPGSystem *system, RPGTroopPage *page, TroopPicLabel *label);
 
 
 
@@ -29,6 +30,8 @@ private slots:
 private:
     Ui::TroopEventPage *ui;
     RPGSystem *system;
+    RPGTroopPage *page;
+    TroopPicLabel *troop_pic_label;
 };
 
 #endif // TROOPEVENTPAGE_H

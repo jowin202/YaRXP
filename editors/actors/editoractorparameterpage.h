@@ -37,7 +37,7 @@ private slots:
 
     void set_linear(int start, int end);
 
-    void on_pushButton_6_clicked();
+    void on_button_gen_curve_clicked();
 
 private:
     Ui::EditorActorParameterPage *ui;

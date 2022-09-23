@@ -80,6 +80,8 @@ private slots:
 
     void on_actionAnimations_triggered();
 
+    void on_actionTileset_Editor_triggered();
+
     void on_actionCommon_Scripts_triggered();
 
     void on_actionSystem_triggered();
@@ -121,6 +123,7 @@ private slots:
     void on_actionOpen_Project_Folder_triggered();
 
     void on_actionExport_Map_Images_triggered();
+
 
 
 private:

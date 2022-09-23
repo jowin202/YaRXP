@@ -97,6 +97,7 @@ SOURCES += \
     editors/troops/edittroops.cpp \
     editors/troops/troopeventpage.cpp \
     editors/troops/trooppageconditiondialog.cpp \
+    editors/troops/trooppiclabel.cpp \
     editors/weapons/editweapons.cpp \
     event_dialogs/choicesdialog.cpp \
     event_dialogs/commands/multilineeventcell.cpp \
@@ -195,6 +196,7 @@ HEADERS += \
     editors/troops/edittroops.h \
     editors/troops/troopeventpage.h \
     editors/troops/trooppageconditiondialog.h \
+    editors/troops/trooppiclabel.h \
     editors/weapons/editweapons.h \
     event_dialogs/choicesdialog.h \
     event_dialogs/commands/multilineeventcell.h \
