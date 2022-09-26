@@ -280,15 +280,15 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>ABCList</class>
-   <extends>QWidget</extends>
-   <header>editors/abclist.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>CheckBoxList</class>
    <extends>QWidget</extends>
    <header>editors/checkboxlist.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>ABCList</class>
+   <extends>QWidget</extends>
+   <header>editors/abclist.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

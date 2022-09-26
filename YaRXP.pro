@@ -82,10 +82,12 @@ SOURCES += \
     editors/actors/editoractorparameterpage.cpp \
     editors/actors/editoractorparameters.cpp \
     editors/actors/generatecurvedialog.cpp \
+    editors/animations/editanimations.cpp \
     editors/armors/editarmors.cpp \
     editors/checkboxlist.cpp \
     editors/classes/editclasses.cpp \
     editors/classes/skilllearning.cpp \
+    editors/commonevents/editcommonevents.cpp \
     editors/dataeditor.cpp \
     editors/enemies/editenemies.cpp \
     editors/enemies/enemyactiondialog.cpp \
@@ -94,6 +96,8 @@ SOURCES += \
     editors/plusminusbox.cpp \
     editors/plusminuslist.cpp \
     editors/skills/editskills.cpp \
+    editors/states/editstates.cpp \
+    editors/tilesets/edittilesets.cpp \
     editors/troops/edittroops.cpp \
     editors/troops/troopeventpage.cpp \
     editors/troops/trooppageconditiondialog.cpp \
@@ -181,10 +185,12 @@ HEADERS += \
     editors/actors/editoractorparameterpage.h \
     editors/actors/editoractorparameters.h \
     editors/actors/generatecurvedialog.h \
+    editors/animations/editanimations.h \
     editors/armors/editarmors.h \
     editors/checkboxlist.h \
     editors/classes/editclasses.h \
     editors/classes/skilllearning.h \
+    editors/commonevents/editcommonevents.h \
     editors/dataeditor.h \
     editors/enemies/editenemies.h \
     editors/enemies/enemyactiondialog.h \
@@ -193,6 +199,8 @@ HEADERS += \
     editors/plusminusbox.h \
     editors/plusminuslist.h \
     editors/skills/editskills.h \
+    editors/states/editstates.h \
+    editors/tilesets/edittilesets.h \
     editors/troops/edittroops.h \
     editors/troops/troopeventpage.h \
     editors/troops/trooppageconditiondialog.h \
@@ -226,10 +234,12 @@ FORMS += \
     editors/actors/editoractorparameterpage.ui \
     editors/actors/editoractorparameters.ui \
     editors/actors/generatecurvedialog.ui \
+    editors/animations/editanimations.ui \
     editors/armors/editarmors.ui \
     editors/checkboxlist.ui \
     editors/classes/editclasses.ui \
     editors/classes/skilllearning.ui \
+    editors/commonevents/editcommonevents.ui \
     editors/dataeditor.ui \
     editors/enemies/editenemies.ui \
     editors/enemies/enemyactiondialog.ui \
@@ -238,6 +248,8 @@ FORMS += \
     editors/plusminusbox.ui \
     editors/plusminuslist.ui \
     editors/skills/editskills.ui \
+    editors/states/editstates.ui \
+    editors/tilesets/edittilesets.ui \
     editors/troops/edittroops.ui \
     editors/troops/troopeventpage.ui \
     editors/troops/trooppageconditiondialog.ui \

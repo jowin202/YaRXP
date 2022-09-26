@@ -382,7 +382,6 @@ void MainWindow::on_actionStates_triggered()
     da->setSystem(&this->system);
     da->set_widget(DataEditor::STATES);
     da->show();
-    qDebug() << "test";
 }
 
 void MainWindow::on_actionAnimations_triggered()

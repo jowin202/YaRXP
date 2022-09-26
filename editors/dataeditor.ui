@@ -332,7 +332,7 @@
        <item>
         <widget class="QStackedWidget" name="stackedWidget">
          <property name="currentIndex">
-          <number>7</number>
+          <number>11</number>
          </property>
          <widget class="EditActors" name="page_actors"/>
          <widget class="EditClasses" name="page_classes"/>
@@ -342,10 +342,10 @@
          <widget class="EditArmors" name="page_armors"/>
          <widget class="EditEnemies" name="page_enemies"/>
          <widget class="EditTroops" name="page_troops"/>
-         <widget class="QWidget" name="page_states"/>
-         <widget class="QWidget" name="page_animations"/>
-         <widget class="QWidget" name="page_tilesets"/>
-         <widget class="QWidget" name="page_commonevents"/>
+         <widget class="EditStates" name="page_states"/>
+         <widget class="EditAnimations" name="page_animations"/>
+         <widget class="EditTilesets" name="page_tilesets"/>
+         <widget class="EditCommonEvents" name="page_commonevents"/>
          <widget class="QWidget" name="page_system"/>
          <widget class="QWidget" name="page_scripts"/>
         </widget>
@@ -403,6 +403,30 @@
    <class>EditTroops</class>
    <extends>QWidget</extends>
    <header>editors/troops/edittroops.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>EditStates</class>
+   <extends>QWidget</extends>
+   <header>editors/states/editstates.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>EditAnimations</class>
+   <extends>QWidget</extends>
+   <header>editors/animations/editanimations.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>EditTilesets</class>
+   <extends>QWidget</extends>
+   <header>editors/tilesets/edittilesets.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>EditCommonEvents</class>
+   <extends>QWidget</extends>
+   <header>editors/commonevents/editcommonevents.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

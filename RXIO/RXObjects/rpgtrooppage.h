@@ -30,10 +30,6 @@ public:
 
 
 
-    QString get_condition_as_string(RPGSystem *system, QStringList enemy_list);
-
-
-
     QStringList condition_param_order;
     QStringList param_order;
 signals:
