@@ -37,7 +37,7 @@ QImage RPGMap::create_map_image(int zoom, bool dim_other, bool show_current_and_
     bool events = false;
     int img_height = this->height * 32;
     int img_width = this->width * 32;
-    QImage result(img_width, img_height, QImage::Format_ARGB32);
+    QImage result(img_width, img_height, QImage::Format_ARGB4444_Premultiplied);
 
     if (current_layer == 3) //events
     {

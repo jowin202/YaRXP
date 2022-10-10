@@ -22,6 +22,9 @@ public:
     void set_animation(int n);
 
 
+private slots:
+    void on_button_animation_clicked();
+
 private:
     Ui::EditAnimations *ui;
     RPGSystem *system;
