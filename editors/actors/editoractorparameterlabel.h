@@ -27,6 +27,8 @@ private:
     bool left_click;
     int *values;
     qreal maxval;
+
+    int last_x;
 };
 
 #endif // EDITORACTORPARAMETERLABEL_H

@@ -2,6 +2,9 @@
 #define RPGACTOR_H
 
 #include <QObject>
+#include <QJsonDocument>
+#include <QJsonArray>
+#include <QJsonObject>
 #include "rpgstring.h"
 
 class RPGSystem;
@@ -46,7 +49,12 @@ public:
 
     QStringList param_order;
 
+
+    QByteArray to_json();
+    QByteArray to_hash();
+
 signals:
+
 
 };
 

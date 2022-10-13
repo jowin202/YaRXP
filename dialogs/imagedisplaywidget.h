@@ -23,12 +23,18 @@ public:
 
     void mouseDoubleClickEvent(QMouseEvent *ev);
 
+    QString current_file;
+    int hue;
+
+public slots:
+    void set_current(QString file)
+    { this->current_file = file; this->update_image(); }
+    void set_hue(int hue)
+    { this->hue = hue; this->update_image(); }
 
 private:
     RPGSystem *system;
     int mode;
-    QString current_file;
-    int hue;
     RPGEventPage *page = 0;
 
 };

@@ -113,6 +113,7 @@ void EditActors::set_actor(int n)
 {
     if (this->system->actor_list.length() <= n) return;
     RPGActor *current_actor = this->system->actor_list.at(n);
+    this->current = n;
 
     this->ui->line_name->setText(current_actor->name);
     this->ui->spin_initial->setValue(current_actor->initial_level);
@@ -132,20 +133,8 @@ void EditActors::set_actor(int n)
     this->ui->label_character_graphic->set_data(system, ImageDialog::CHARACTERS, current_actor->character_name, current_actor->character_hue);
     this->ui->label_battler_graphic->set_data(system, ImageDialog::BATTLERS, current_actor->battler_name, current_actor->battler_hue);
 
-    /*
-    QImage character_graphic = current_actor->get_character_graphic(system);
-    QImage battler_graphic = current_actor->get_battler_graphic(system);
-
-    if (!character_graphic.isNull())
-        this->ui->label_character_graphic->setPixmap(QPixmap::fromImage(character_graphic));
-    else this->ui->label_character_graphic->setPixmap(QPixmap());
-    if (!battler_graphic.isNull())
-        this->ui->label_battler_graphic->setPixmap(QPixmap::fromImage(battler_graphic));
-    else this->ui->label_battler_graphic->setPixmap(QPixmap());
-    */
-
     //copy params from actor
-    for (int i = 0; i < 100; i++)
+    for (int i = 0; i < 100; i++) //TODO: check if start from 1 or 0
     {
         this->maxhp[i] = current_actor->maxhp.at(i);
         this->maxsp[i] = current_actor->maxsp.at(i);
@@ -161,7 +150,74 @@ void EditActors::set_actor(int n)
     this->ui->check_helmet->setChecked(current_actor->armor2_fix);
     this->ui->check_body->setChecked(current_actor->armor3_fix);
     this->ui->check_accessory->setChecked(current_actor->armor4_fix);
- }
+
+    /*
+    qDebug() << current_actor->to_hash();
+    QFile test("/tmp/opened.json");
+    test.open(QIODevice::WriteOnly);
+    test.write(current_actor->to_json());
+    test.close();
+    */
+}
+
+void EditActors::save()
+{
+    int n = this->current;
+    if (this->system->actor_list.length() <= n) return;
+    RPGActor *current_actor = this->system->actor_list.at(n);
+
+
+    current_actor->name = this->ui->line_name->text();
+    current_actor->initial_level = this->ui->spin_initial->value();
+    current_actor->final_level = this->ui->spin_final->value();
+
+    current_actor->class_id = this->ui->combo_class->currentData().toInt();
+
+    current_actor->weapon_id = this->ui->combo_weapon->currentData().toInt();
+    current_actor->armor1_id = this->ui->combo_shield->currentData().toInt();
+    current_actor->armor2_id = this->ui->combo_helmet->currentData().toInt();
+    current_actor->armor3_id = this->ui->combo_body->currentData().toInt();
+    current_actor->armor4_id = this->ui->combo_accessory->currentData().toInt();
+
+    current_actor->exp_basis = this->exp_basis;
+    current_actor->exp_inflation = this->exp_inflation;
+
+    current_actor->character_name = this->ui->label_character_graphic->current_file;
+    current_actor->character_hue = this->ui->label_character_graphic->hue;
+
+    current_actor->battler_name = this->ui->label_battler_graphic->current_file;
+    current_actor->battler_hue = this->ui->label_battler_graphic->hue;
+
+    current_actor->maxhp.clear();
+    current_actor->maxsp.clear();
+    current_actor->str.clear();
+    current_actor->dex.clear();
+    current_actor->agi.clear();
+    current_actor->int_var.clear();
+    for (int i = 0; i < 100; i++)
+    {
+        current_actor->maxhp.append(this->maxhp[i]);
+        current_actor->maxsp.append(this->maxsp[i]);
+        current_actor->str.append(this->str[i]);
+        current_actor->dex.append(this->dex[i]);
+        current_actor->agi.append(this->agi[i]);
+        current_actor->int_var.append(this->int_var[i]);
+    }
+
+    current_actor->weapon_fix = this->ui->check_weapon->isChecked();
+    current_actor->armor1_fix = this->ui->check_shield->isChecked();
+    current_actor->armor2_fix = this->ui->check_helmet->isChecked();
+    current_actor->armor3_fix = this->ui->check_body->isChecked();
+    current_actor->armor4_fix = this->ui->check_accessory->isChecked();
+
+    /*
+    qDebug() << current_actor->to_hash();
+    QFile test("/tmp/saved.json");
+    test.open(QIODevice::WriteOnly);
+    test.write(current_actor->to_json());
+    test.close();
+    */
+}
 
 
 void EditActors::on_button_param_maxhp_clicked()

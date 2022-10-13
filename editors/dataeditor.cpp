@@ -98,7 +98,7 @@ void DataEditor::on_button_cancel_clicked()
 void DataEditor::on_central_menu_currentRowChanged(int currentRow)
 {
     if (system == 0) return;
-    if (currentRow > 0)
+    if (currentRow >= 0)
         this->ui->label->setText(this->ui->central_menu->item(currentRow)->text());
 
     if (currentRow >= 0 && currentRow <= 13)
@@ -110,3 +110,11 @@ void DataEditor::on_central_menu_currentRowChanged(int currentRow)
         this->ui->object_list->setCurrentRow(0);
 }
 
+
+void DataEditor::on_button_apply_clicked()
+{
+    if (this->ui->central_menu->currentRow() == ACTORS)
+    {
+        this->ui->page_actors->save();
+    }
+}

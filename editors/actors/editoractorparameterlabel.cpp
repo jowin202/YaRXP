@@ -9,6 +9,7 @@ void EditorActorParameterLabel::mousePressEvent(QMouseEvent *ev)
 {
     if (ev->button() == Qt::LeftButton)
     {
+        this->last_x = -1;
         this->left_click = true;
         int x = ev->x()/4;
         int y = qRound((250 - ev->y())/250.0 * this->maxval);
@@ -27,6 +28,17 @@ void EditorActorParameterLabel::mouseMoveEvent(QMouseEvent *ev)
         if (y==0) y=1;
         this->values[x] = y;
         emit curve_changed(x,y);
+
+        if (qAbs(x-last_x) > 1 && last_x > 0)
+        {
+            qreal k = (this->values[x] - this->values[last_x]*1.0)/(x-last_x);
+            for (int i = qMin(x,last_x)+1; i < qMax(x,last_x); i++)
+            {
+                this->values[i] = this->values[qMin(x,last_x)] + k*(i-qMin(x,last_x));
+            }
+        }
+
+        this->last_x = x;
     }
 }
 

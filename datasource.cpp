@@ -138,7 +138,7 @@ void DataSource::fill_combo_weapon_by_class(QComboBox *combo, int class_id, bool
         int id = system->classes_list.at(class_id-1)->weapon_set.at(i);
         QString name = system->weapons_list.at(id-1)->name;
 
-        combo->addItem(shownum ? QString("%1: " + name).arg(id,chars,10,QChar('0')) : name);
+        combo->addItem(shownum ? QString("%1: " + name).arg(id,chars,10,QChar('0')) : name, QVariant(id));
 
         if (id == current)
             combo->setCurrentIndex(combo->count()-1);
@@ -159,7 +159,7 @@ void DataSource::fill_combo_armor_by_class(QComboBox *combo, int class_id, bool 
         QString name = system->armors_list.at(id-1)->name;
         if (system->armors_list.at(id-1)->kind == amor_type) //0 == Shield, 1 == Helmet, 2 == Body, 3 == Accessory
         {
-            combo->addItem(shownum ? QString("%1: " + name).arg(id,chars,10,QChar('0')) : name);
+            combo->addItem(shownum ? QString("%1: " + name).arg(id,chars,10,QChar('0')) : name, QVariant(id));
             if (id == current)
                 combo->setCurrentIndex(combo->count()-1);
         }

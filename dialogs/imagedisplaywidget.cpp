@@ -31,7 +31,17 @@ void ImageDisplayWidget::update_image()
     else if (mode == ImageDialog::BATTLERS)
         pic = QImage(system->battlers_dir + current_file);
 
-    //TODO: Hue stuff
+
+    for (int y = 0; y < pic.height(); y++)
+    {
+        for (int x = 0; x < pic.width(); x++)
+        {
+            QColor col = pic.pixelColor(x,y);
+            if (col.alpha() == 0) continue;
+            col.setHsv(col.hsvHue() + hue,col.saturation(), col.value());
+            pic.setPixelColor(x,y,col);
+        }
+    }
 
     this->setPixmap(QPixmap::fromImage(pic));
 }
@@ -75,5 +85,8 @@ void ImageDisplayWidget::mouseDoubleClickEvent(QMouseEvent *ev)
         return;
 
     ImageDialog *dialog = new ImageDialog(system, mode, current_file);
+    dialog->set_hue(this->hue);
+    connect(dialog, SIGNAL(ok_clicked_with_hue(int)), this, SLOT(set_hue(int)));
+    connect(dialog, SIGNAL(ok_clicked(QString)), this, SLOT(set_current(QString)));
     dialog->show();
 }

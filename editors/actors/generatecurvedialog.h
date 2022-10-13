@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QKeyEvent>
+#include <QDebug>
 
 namespace Ui {
 class GenerateCurveDialog;

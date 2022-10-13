@@ -113,6 +113,12 @@ ImageDialog::~ImageDialog()
     delete ui;
 }
 
+void ImageDialog::set_hue(int hue)
+{
+    this->ui->slider_hue->setValue(hue);
+    this->update_image();
+}
+
 void ImageDialog::update_image_list()
 {
     this->ui->list->clear();
@@ -135,6 +141,23 @@ void ImageDialog::update_image_list()
     }
 }
 
+void ImageDialog::update_image()
+{
+    QImage new_img = current_img.copy();
+    for (int y = 0; y < new_img.height(); y++)
+    {
+        for (int x = 0; x < new_img.width(); x++)
+        {
+            QColor col = new_img.pixelColor(x,y);
+            if (col.alpha() == 0) continue;
+            col.setHsv(col.hsvHue() + hue,col.saturation(), col.value());
+            new_img.setPixelColor(x,y,col);
+        }
+    }
+
+    this->ui->label_display->setPixmap(QPixmap::fromImage(new_img));
+}
+
 void ImageDialog::on_button_ok_clicked()
 {
 
@@ -143,7 +166,11 @@ void ImageDialog::on_button_ok_clicked()
         if (this->ui->list->currentRow() == 0)
             emit ok_clicked("");
         else
-            emit ok_clicked(QString(this->ui->list->currentItem()->text()).chopped(4));
+        {
+            if (this->visible_hue)
+                emit ok_clicked_with_hue(this->ui->slider_hue->value());
+            emit ok_clicked(QString(this->ui->list->currentItem()->text()).chopped(4));   
+        }
     }
 
     this->close();
@@ -156,6 +183,12 @@ void ImageDialog::on_button_cancel_clicked()
 
 void ImageDialog::on_list_currentRowChanged(int currentRow)
 {
-    QImage img(system->graphics_dir + this->folder_name + QDir::separator() + this->ui->list->item(currentRow)->text());
-    this->ui->label_display->setPixmap(QPixmap::fromImage(img));
+    this->current_img = QImage(system->graphics_dir + this->folder_name + QDir::separator() + this->ui->list->item(currentRow)->text());
+    this->update_image();
+}
+
+void ImageDialog::on_slider_hue_valueChanged(int value)
+{
+    this->hue = value;
+    this->update_image();
 }
