@@ -31,6 +31,7 @@ void ImageDisplayWidget::update_image()
     else if (mode == ImageDialog::BATTLERS)
         pic = QImage(system->battlers_dir + current_file);
 
+    pic = pic.convertToFormat(QImage::Format_ARGB32);
 
     for (int y = 0; y < pic.height(); y++)
     {

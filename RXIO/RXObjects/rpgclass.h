@@ -26,6 +26,12 @@ public:
     bool learning_order;
 
     QStringList param_order;
+
+
+
+    QByteArray to_json();
+    QByteArray to_hash();
+
 signals:
 
 };

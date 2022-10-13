@@ -27,6 +27,7 @@ public:
 
 public slots:
     void set_class(int n);
+    void save();
     void set_skill_from_dialog(int row, int level, int skill);
 
 private slots:
@@ -40,6 +41,8 @@ private slots:
 private:
     Ui::EditClasses *ui;
     RPGSystem *system = 0;
+
+    int current;
 };
 
 #endif // EDITCLASSES_H

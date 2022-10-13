@@ -24,6 +24,7 @@ void EditClasses::set_class(int n)
 {
     if (this->system->classes_list.length() <= n) return;
     RPGClass *current_class = system->classes_list.at(n);
+    this->current = n;
 
     this->ui->line_name->setText(current_class->name);
     this->ui->combo_pos->setCurrentIndex(current_class->position);
@@ -57,6 +58,40 @@ void EditClasses::set_class(int n)
     }
 
     this->ui->table_skills->resizeColumnsToContents();
+
+    qDebug() << current_class->to_hash();
+}
+
+void EditClasses::save()
+{
+    int n = this->current;
+    if (this->system->classes_list.length() <= n) return;
+    RPGClass *current_class = this->system->classes_list.at(n);
+
+    current_class->name = this->ui->line_name->text();
+    current_class->position = this->ui->combo_pos->currentIndex();
+
+    this->ui->weapon_widget->getValues(&current_class->weapon_set);
+    this->ui->armor_widget->getValues(&current_class->armor_set);
+
+    this->ui->state_widget->getValues(&current_class->state_ranks);
+    this->ui->element_widget->getValues(&current_class->element_ranks);
+
+
+    current_class->learnings_level.clear();
+    current_class->learnings_skill_id.clear();
+
+    for (int i = 0; i < this->ui->table_skills->rowCount(); i++)
+    {
+        int level = this->ui->table_skills->item(i,2)->text().toInt();
+        int skill_id = this->ui->table_skills->item(i,3)->text().toInt();
+
+        current_class->learnings_level.append(level);
+        current_class->learnings_skill_id.append(skill_id);
+    }
+
+
+    qDebug() << current_class->to_hash();
 }
 
 void EditClasses::set_skill_from_dialog(int row, int level, int skill)

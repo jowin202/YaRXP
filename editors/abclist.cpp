@@ -39,6 +39,24 @@ void ABCList::setElements(RPGSystem *system, QList<int> *ranks)
     }
 }
 
+void ABCList::getValues(QList<int> *ranks)
+{
+    ranks->clear();
+    ranks->append(this->ui->verticalLayout->count()+1);
+    ranks->append(1);
+    ranks->append(1);
+    ranks->append(1);
+    ranks->append(0);
+    ranks->append(0);
+
+    for (int i = 0; i < this->ui->verticalLayout->count(); i++)
+    {
+        int v = ((ABCBox*)this->ui->verticalLayout->itemAt(i)->widget())->getValue();
+        ranks->append(v);
+        ranks->append(0);
+    }
+}
+
 void ABCList::clear()
 {
     QLayoutItem *item;

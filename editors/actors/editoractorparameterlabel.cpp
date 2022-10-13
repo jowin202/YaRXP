@@ -12,6 +12,7 @@ void EditorActorParameterLabel::mousePressEvent(QMouseEvent *ev)
         this->last_x = -1;
         this->left_click = true;
         int x = ev->x()/4;
+        if (x==0) return;
         int y = qRound((250 - ev->y())/250.0 * this->maxval);
         if (y==0) y=1;
         this->values[x] = y;
@@ -24,6 +25,7 @@ void EditorActorParameterLabel::mouseMoveEvent(QMouseEvent *ev)
     if (this->left_click && ev->pos().x() >= 0 && ev->pos().x() < 400 && ev->pos().y() >= 0 && ev->y() <= 250)
     {
         int x = ev->x()/4;
+        if (x==0) return;
         int y = qRound((250 - ev->y())/250.0 * this->maxval);
         if (y==0) y=1;
         this->values[x] = y;

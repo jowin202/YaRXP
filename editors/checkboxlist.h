@@ -18,6 +18,7 @@ public:
     ~CheckBoxList();
 
     void setValues(RPGSystem *system, QList<int> *set, int type);
+    void getValues(QList<int> *set);
 
     void clear();
 

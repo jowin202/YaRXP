@@ -117,4 +117,8 @@ void DataEditor::on_button_apply_clicked()
     {
         this->ui->page_actors->save();
     }
+    else if (this->ui->central_menu->currentRow() == CLASSES)
+    {
+        this->ui->page_classes->save();
+    }
 }

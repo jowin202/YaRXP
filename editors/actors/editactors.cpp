@@ -71,7 +71,7 @@ QImage EditActors::get_image_from_param(int param, int *values, bool big)
     QPainter painter;
     painter.begin(&img);
     painter.fillRect(0,0,width,height,Qt::white);
-    for (int i = 0; i < 100; i++)
+    for (int i = 1; i < 100; i++)
     {
         int h = height_factor * values[i];
         painter.fillRect(val_width*i, height - h, val_width, h, col);

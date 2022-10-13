@@ -2,6 +2,12 @@
 #include "ui_checkboxlist.h"
 
 #include <QCheckBox>
+
+
+//for typeid
+#include <typeinfo>
+#include <iostream>
+
 #include "RXIO/RXObjects/rpgsystem.h"
 
 
@@ -62,6 +68,17 @@ void CheckBoxList::setValues(RPGSystem *system, QList<int> *set, int type)
             check->setChecked(set->contains(i));
             this->ui->verticalLayout->addWidget(check);
         }
+    }
+}
+
+void CheckBoxList::getValues(QList<int> *set)
+{
+    set->clear();
+
+    for (int i = 0; i < this->ui->verticalLayout->count(); i++)
+    {
+        if (((QCheckBox*)this->ui->verticalLayout->itemAt(i)->widget())->isChecked())
+            set->append(i+1); //should be always the id
     }
 }
 

@@ -19,6 +19,8 @@ public:
 
     void setStates(RPGSystem *system, QList<int> *ranks);
     void setElements(RPGSystem *system, QList<int> *ranks);
+
+    void getValues(QList<int> *ranks);
     void clear();
 
 private:

@@ -144,6 +144,7 @@ void ImageDialog::update_image_list()
 void ImageDialog::update_image()
 {
     QImage new_img = current_img.copy();
+    //format cannot be indexed or monochrome
     for (int y = 0; y < new_img.height(); y++)
     {
         for (int x = 0; x < new_img.width(); x++)
@@ -183,7 +184,7 @@ void ImageDialog::on_button_cancel_clicked()
 
 void ImageDialog::on_list_currentRowChanged(int currentRow)
 {
-    this->current_img = QImage(system->graphics_dir + this->folder_name + QDir::separator() + this->ui->list->item(currentRow)->text());
+    this->current_img = QImage(system->graphics_dir + this->folder_name + QDir::separator() + this->ui->list->item(currentRow)->text()).convertToFormat(QImage::Format_ARGB32);
     this->update_image();
 }
 
