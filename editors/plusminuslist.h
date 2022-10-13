@@ -18,6 +18,7 @@ public:
     ~PlusMinusList();
 
     void setStates(RPGSystem *system, QList<int> *plus_states, QList<int> *minus_states);
+    void getStates(QList<int> *plus_states, QList<int> *minus_states);
 private:
     Ui::PlusMinusList *ui;
 };

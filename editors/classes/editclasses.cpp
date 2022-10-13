@@ -59,7 +59,7 @@ void EditClasses::set_class(int n)
 
     this->ui->table_skills->resizeColumnsToContents();
 
-    qDebug() << current_class->to_hash();
+    //qDebug() << current_class->to_hash();
 }
 
 void EditClasses::save()
@@ -91,7 +91,7 @@ void EditClasses::save()
     }
 
 
-    qDebug() << current_class->to_hash();
+    //qDebug() << current_class->to_hash();
 }
 
 void EditClasses::set_skill_from_dialog(int row, int level, int skill)

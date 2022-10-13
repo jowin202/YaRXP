@@ -21,11 +21,9 @@ PlusMinusList::~PlusMinusList()
 
 void PlusMinusList::setStates(RPGSystem *system, QList<int> *plus_states, QList<int> *minus_states)
 {
-
     QLayoutItem *item;
     while ( (item = this->ui->verticalLayout->takeAt(0)) != 0)
         delete item->widget();
-
 
     //state starts counting at 0
     for (int i = 0; i < system->states_list.length(); i++)
@@ -36,5 +34,18 @@ void PlusMinusList::setStates(RPGSystem *system, QList<int> *plus_states, QList<
         else if (minus_states->contains(i+1))
             checkbox->setMinus();
         this->ui->verticalLayout->addWidget(checkbox);
+    }
+}
+
+void PlusMinusList::getStates(QList<int> *plus_states, QList<int> *minus_states)
+{
+    plus_states->clear();
+    minus_states->clear();
+
+    for (int i = 0; i < this->ui->verticalLayout->count(); i++)
+    {
+        int v = ((PlusMinusBox*)this->ui->verticalLayout->itemAt(i)->widget())->value();
+        if (v==1) plus_states->append(i+1);
+        else if (v==2) minus_states->append(i+1);
     }
 }

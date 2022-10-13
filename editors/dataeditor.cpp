@@ -121,4 +121,8 @@ void DataEditor::on_button_apply_clicked()
     {
         this->ui->page_classes->save();
     }
+    else if (this->ui->central_menu->currentRow() == SKILLS)
+    {
+        this->ui->page_skills->save();
+    }
 }

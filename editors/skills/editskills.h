@@ -23,6 +23,7 @@ public:
     {this->system = system;}
 
     void set_skill(int n);
+    void save();
 
 
 private slots:
@@ -33,6 +34,7 @@ private slots:
 private:
     Ui::EditSkills *ui;
     RPGSystem *system;
+    int current;
 
     RPGAudioFile menu_se;
 };
