@@ -125,4 +125,16 @@ void DataEditor::on_button_apply_clicked()
     {
         this->ui->page_skills->save();
     }
+    else if (this->ui->central_menu->currentRow() == ITEMS)
+    {
+        this->ui->page_items->save();
+    }
+    else if (this->ui->central_menu->currentRow() == WEAPONS)
+    {
+        this->ui->page_weapons->save();
+    }
+    else if (this->ui->central_menu->currentRow() == ARMORS)
+    {
+        this->ui->page_armors->save();
+    }
 }

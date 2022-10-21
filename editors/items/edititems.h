@@ -23,6 +23,7 @@ public:
     {this->system = system;}
 
     void set_item(int n);
+    void save();
 
 
 private slots:
@@ -37,6 +38,8 @@ private:
     Ui::EditItems *ui;
     RPGSystem *system;
     RPGAudioFile menu_se;
+
+    int current;
 };
 
 #endif // EDITITEMS_H

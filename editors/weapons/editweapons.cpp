@@ -21,6 +21,7 @@ void EditWeapons::set_weapon(int n)
 {
     if (this->system->weapons_list.length() <= n) return;
     RPGWeapon *current_weapon = this->system->weapons_list.at(n);
+    this->current = n;
 
     this->ui->line_name->setText(current_weapon->name);
     this->ui->line_description->setText(current_weapon->description);
@@ -41,6 +42,38 @@ void EditWeapons::set_weapon(int n)
 
     this->ui->element_widget->setValues(system, &current_weapon->element_set,-1); // -1 for elements
     this->ui->state_widget->setStates(system, &current_weapon->plus_state_set, &current_weapon->minus_state_set);
+}
+
+void EditWeapons::save()
+{
+    int n = this->current;
+    if (this->system->weapons_list.length() <= n) return;
+    RPGWeapon *current_weapon = this->system->weapons_list.at(n);
+
+
+    current_weapon->name = this->ui->line_name->text();
+    current_weapon->description = this->ui->line_description->text();
+    current_weapon->icon_name = this->ui->line_icon->text();
+
+    current_weapon->animation1_id = this->ui->combo_attacker->currentData().toInt();
+    current_weapon->animation2_id = this->ui->combo_target->currentData().toInt();
+
+
+
+    current_weapon->price = this->ui->spin_price->value();
+    current_weapon->atk = this->ui->spin_atk->value();
+    current_weapon->pdef = this->ui->spin_pdef->value();
+    current_weapon->mdef = this->ui->spin_mdef->value();
+
+    current_weapon->str_plus = this->ui->spin_str->value();
+    current_weapon->dex_plus = this->ui->spin_dex->value();
+    current_weapon->agi_plus = this->ui->spin_agi->value();
+    current_weapon->int_plus = this->ui->spin_int->value();
+
+
+    this->ui->element_widget->getValues(&current_weapon->element_set);
+    this->ui->state_widget->getStates(&current_weapon->plus_state_set, &current_weapon->minus_state_set);
+
 }
 
 void EditWeapons::on_button_icon_clicked()

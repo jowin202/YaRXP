@@ -17,6 +17,7 @@ public:
     ~EditArmors();
 
     void set_armor(int n);
+    void save();
 
     void setSystem(RPGSystem *system)
     {this->system = system;}
@@ -27,6 +28,7 @@ private slots:
 private:
     Ui::EditArmors *ui;
     RPGSystem *system;
+    int current;
 };
 
 #endif // EDITARMORS_H

@@ -22,6 +22,7 @@ void EditArmors::set_armor(int n)
 {
     if (this->system->armors_list.length() <= n) return;
     RPGArmor *current_armor = this->system->armors_list.at(n);
+    this->current = n;
 
     this->ui->line_name->setText(current_armor->name);
     this->ui->line_description->setText(current_armor->description);
@@ -43,6 +44,36 @@ void EditArmors::set_armor(int n)
 
     this->ui->element_widget->setValues(system, &current_armor->guard_element_set,-1); // -1 for elements
     this->ui->state_widget->setValues(system, &current_armor->guard_state_set, RPGSystem::STATES);
+}
+
+void EditArmors::save()
+{
+    int n = this->current;
+    if (this->system->armors_list.length() <= n) return;
+    RPGArmor *current_armor = this->system->armors_list.at(n);
+
+
+    current_armor->name = this->ui->line_name->text();
+    current_armor->description = this->ui->line_description->text();
+    current_armor->icon_name = this->ui->line_icon->text();
+
+    current_armor->kind = this->ui->combo_kind->currentIndex();
+    current_armor->auto_state_id = this->ui->combo_auto->currentData().toInt();
+
+
+    current_armor->price = this->ui->spin_price->value();
+    current_armor->pdef = this->ui->spin_pdef->value();
+    current_armor->mdef = this->ui->spin_mdef->value();
+    current_armor->eva = this->ui->spin_eva->value();
+
+    current_armor->str_plus = this->ui->spin_str->value();
+    current_armor->dex_plus = this->ui->spin_dex->value();
+    current_armor->agi_plus = this->ui->spin_agi->value();
+    current_armor->int_plus = this->ui->spin_int->value();
+
+    this->ui->element_widget->getValues(&current_armor->guard_element_set);
+    this->ui->state_widget->getValues(&current_armor->guard_state_set);
+
 }
 
 void EditArmors::on_button_icon_clicked()

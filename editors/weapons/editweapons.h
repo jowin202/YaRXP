@@ -22,6 +22,7 @@ public:
     {this->system = system;}
 
     void set_weapon(int n);
+    void save();
 
 
 private slots:
@@ -31,6 +32,8 @@ private slots:
 private:
     Ui::EditWeapons *ui;
     RPGSystem *system;
+    int current;
+
 };
 
 #endif // EDITWEAPONS_H

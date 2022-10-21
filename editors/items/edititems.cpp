@@ -24,6 +24,7 @@ void EditItems::set_item(int n)
 {
     if (this->system->items_list.length() <= n) return;
     RPGItem *current_item = this->system->items_list.at(n);
+    this->current = n;
 
     this->ui->line_name->setText(current_item->name);
     this->ui->line_icon->setText(current_item->icon_name);
@@ -59,6 +60,47 @@ void EditItems::set_item(int n)
 
     this->ui->element_widget->setValues(system, &current_item->element_set, -1); //-1 for elements
     this->ui->state_widget->setStates(system, &current_item->plus_state_set, &current_item->minus_state_set);
+}
+
+void EditItems::save()
+{
+    int n = this->current;
+    if (this->system->items_list.length() <= n) return;
+    RPGItem *current_item = this->system->items_list.at(n);
+
+
+    current_item->name = this->ui->line_name->text();
+    current_item->icon_name = this->ui->line_icon->text();
+    current_item->description = this->ui->line_description->text();
+
+    current_item->scope = this->ui->combo_scope->currentIndex();
+    current_item->occasion = this->ui->combo_occasion->currentIndex();
+
+    current_item->animation1_id = this->ui->combo_user->currentData().toInt();
+    current_item->animation2_id = this->ui->combo_target->currentData().toInt();
+
+    this->menu_se.copy_to(&current_item->menu_se);
+    current_item->common_event_id = this->ui->combo_common->currentData().toInt();
+
+
+    current_item->price = this->ui->spin_price->value();
+    current_item->consumable = (this->ui->combo_consumable->currentIndex() == 0);
+    current_item->parameter_type = this->ui->combo_parameter->currentIndex();
+    current_item->parameter_points = this->ui->spin_param->value();
+
+    current_item->recover_hp = this->ui->spin_rcvr_hp->value();
+    current_item->recover_hp_rate = this->ui->spin_rcvr_hp_rate->value();
+    current_item->recover_sp = this->ui->spin_rcvr_sp->value();
+    current_item->recover_sp_rate = this->ui->spin_rcvr_sp_rate->value();
+
+    current_item->hit = this->ui->spin_hit->value();
+    current_item->pdef_f = this->ui->spin_pdef->value();
+    current_item->mdef_f = this->ui->spin_mdef->value();
+    current_item->variance = this->ui->spin_variance->value();
+
+    this->ui->element_widget->getValues(&current_item->element_set);
+    this->ui->state_widget->getStates(&current_item->plus_state_set, &current_item->minus_state_set);
+
 }
 
 void EditItems::on_combo_parameter_currentIndexChanged(int index)
