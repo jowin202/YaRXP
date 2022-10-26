@@ -157,31 +157,54 @@ IOMapFile::IOMapFile(QString path, RPGMap *map)
                                 }
                                 else if (current_symbol == "@graphic")
                                 {
-                                    QVariantList params = this->read_object();
-                                    if (params.at(0).toString() != "RPG::Event::Page::Graphic")
-                                        throw getException("PG::Event::Page::Graphic expected");
-                                    int graphic_param_count = params.at(1).toInt();
-
-                                    for (int g = 0; g < graphic_param_count; g++)
+                                    if (this->look_one_byte_ahead() == '@')
                                     {
-                                        current_symbol = read_symbol_or_link();
-                                        current_page->graphic_param_order.append(current_symbol);
+                                        //graphic is given as a link
+                                        this->read_one_byte(); // @ symbol
+                                        int ref = this->read_fixnum();
 
-                                        if (current_symbol == "@direction")
-                                            current_page->direction = this->read_integer();
-                                        else if (current_symbol == "@blend_type")
-                                            current_page->blend_type = this->read_integer();
-                                        else if (current_symbol == "@tile_id")
-                                            current_page->tile_id = this->read_integer();
-                                        else if (current_symbol == "@pattern")
-                                            current_page->pattern = this->read_integer();
-                                        else if (current_symbol == "@character_hue")
-                                            current_page->character_hue = this->read_integer();
-                                        else if (current_symbol == "@opacity")
-                                            current_page->opacity = this->read_integer();
-                                        else if (current_symbol == "@character_name")
-                                            current_page->character_name = this->read_string();
+                                        if (!this->eventpage_reference_map.contains(ref))
+                                            throw getException("Invalid event graphic reference");
+                                        RPGEventPage *ref_page = this->eventpage_reference_map.value(ref);
+
+                                        current_page->direction = ref_page->direction;
+                                        current_page->blend_type = ref_page->blend_type;
+                                        current_page->tile_id = ref_page->tile_id;
+                                        current_page->pattern = ref_page->pattern;
+                                        current_page->character_hue = ref_page->character_hue;
+                                        current_page->opacity = ref_page->opacity;
+                                        current_page->character_name = RPGString(ref_page->character_name);
                                     }
+                                    else
+                                    {
+                                        this->eventpage_reference_map.insert(object_count, current_page);
+                                        QVariantList params = this->read_object();
+                                        if (params.at(0).toString() != "RPG::Event::Page::Graphic")
+                                            throw getException("PG::Event::Page::Graphic expected");
+                                        int graphic_param_count = params.at(1).toInt();
+
+                                        for (int g = 0; g < graphic_param_count; g++)
+                                        {
+                                            current_symbol = read_symbol_or_link();
+                                            current_page->graphic_param_order.append(current_symbol);
+
+                                            if (current_symbol == "@direction")
+                                                current_page->direction = this->read_integer();
+                                            else if (current_symbol == "@blend_type")
+                                                current_page->blend_type = this->read_integer();
+                                            else if (current_symbol == "@tile_id")
+                                                current_page->tile_id = this->read_integer();
+                                            else if (current_symbol == "@pattern")
+                                                current_page->pattern = this->read_integer();
+                                            else if (current_symbol == "@character_hue")
+                                                current_page->character_hue = this->read_integer();
+                                            else if (current_symbol == "@opacity")
+                                                current_page->opacity = this->read_integer();
+                                            else if (current_symbol == "@character_name")
+                                                current_page->character_name = this->read_string();
+                                        }
+                                    }
+
                                 }
                                 else throw getException("event page parameters missing");
                             }

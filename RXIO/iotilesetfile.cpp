@@ -72,6 +72,8 @@ IOTilesetFile::IOTilesetFile(QString path, QHash<int,RPGTileset *> *tileset_hash
                 int num_autotiles = read_array(); //7
                 for (int k = 0; k < num_autotiles; k++)
                 {
+                    tileset_object->autotile_names.append(this->read_string());
+                    /*
                     //TODO: Shitty workaround to run Knights Game. Fix this soon
                     if (this->look_one_byte_ahead() == '"' || this->look_one_byte_ahead() == 'I')
                         tileset_object->autotile_names.append(this->read_string());
@@ -80,7 +82,7 @@ IOTilesetFile::IOTilesetFile(QString path, QHash<int,RPGTileset *> *tileset_hash
                         this->read_one_byte();
                         this->read_fixnum();
                         tileset_object->autotile_names.append(RPGString("TODO: shitty reference"));
-                    }
+                    }*/
                 }
             }
         }

@@ -14,6 +14,7 @@
 #include "RXObjects/parserexception.h"
 #include "RXObjects/rpgaudiofile.h"
 #include "RXObjects/rpgmoveroute.h"
+#include "RXObjects/rpgeventpage.h"
 #include "RXObjects/rpgeventcommand.h"
 
 
@@ -93,6 +94,12 @@ public:
         object_count++;
         object_count_debug_messages << QString::number(object_count) + ": " + msg;
     }
+
+    QMap<int,QString> string_reference_map;
+    QMap<int,RPGMoveRoute*> moveroute_reference_map;
+    QMap<int,RPGEventPage*> eventpage_reference_map; //for double use of graphic
+
+
 
     QByteArray getHash();
     void fixnum_test();

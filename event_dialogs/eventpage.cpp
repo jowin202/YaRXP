@@ -11,7 +11,6 @@ EventPage::EventPage(QWidget *parent, RPGEventPage *page, RPGSystem *system) :
     ui->setupUi(this);
     this->page = page;
 
-
     this->ui->label_graphic->set_data_from_page(system, page);
 
     if (system != 0)

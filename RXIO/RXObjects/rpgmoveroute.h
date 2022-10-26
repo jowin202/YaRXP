@@ -16,6 +16,14 @@ public:
     bool repeat;
     QList<RPGMoveCommand*> list;
 
+    void copy_to(RPGMoveRoute *mvr)
+    {
+        mvr->skippable = this->skippable;
+        mvr->repeat = this->repeat;
+        mvr->list.clear();
+        for (int i = 0; i < this->list.length(); i++)
+            mvr->list.append(this->list.at(i)->copy());
+    }
 
     QStringList param_order;
 signals:

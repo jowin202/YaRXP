@@ -398,7 +398,11 @@ void MapWidget::destroy_selection_rectangle()
 void MapWidget::set_map(int map_id)
 {
     this->destroy_selection_rectangle();
-    this->system->map_info_list.at(map_id)->load_map(this->system);
+    try {
+        this->system->map_info_list.at(map_id)->load_map(this->system);
+    } catch (ParserException *ex) {
+        qDebug() << ex->error_data << ex->message;
+    }
     this->map = this->system->map_info_list.at(map_id)->map;
 
     if (!this->system->tileset_hash.contains(this->map->tileset_id))

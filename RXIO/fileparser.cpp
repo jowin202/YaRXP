@@ -281,7 +281,10 @@ RPGString FileParser::read_string()
     if (var == '"')
     {
         int str_len = this->read_fixnum();
-        return RPGString(this->file.read(str_len), false);
+        RPGString str = RPGString(this->file.read(str_len), false);
+        this->string_reference_map.insert(object_count,str);
+        this->increase_object_count("string: " + str);
+        return str;
     }
     else if (var == 'I')
     {
@@ -294,6 +297,13 @@ RPGString FileParser::read_string()
         this->read_symbol_or_link(); //should be E
         this->read_bool(); //should be (T)rue
         return RPGString(str, true);
+    }
+    else if (var == '@')
+    {
+        int ref_value = this->read_fixnum();
+        if (this->string_reference_map.contains(ref_value))
+            return RPGString(this->string_reference_map.value(ref_value));
+        else throw getException("Invalid string reference");
     }
     else
     {
@@ -400,6 +410,8 @@ int FileParser::read_list()
     {
         throw getException("list expected");
     }
+
+    this->increase_object_count("{}");
     return read_fixnum(); //list length
 }
 
@@ -417,6 +429,7 @@ int FileParser::read_array()
     {
         throw getException("list expected");
     }
+    this->increase_object_count("[]");
     return read_fixnum(); //list length
 }
 
@@ -436,10 +449,12 @@ QVariantList FileParser::read_object()
     }
 
 
+    QString symbol;
     QVariantList result;
-    result.append(QVariant(read_symbol_or_link()));
+    result.append(QVariant(symbol = read_symbol_or_link()));
     result.append(QVariant(read_fixnum()));
 
+    this->increase_object_count("object + " + symbol);
     return result;
 }
 
@@ -488,6 +503,8 @@ void FileParser::read_table(QList<int> *list)
 
     for (int i = 0; i < size*2; i++)
         list->append(this->read_one_byte());
+
+    this->increase_object_count("table");
 }
 
 void FileParser::read_table_for_actor_parameters(QList<int> *maxhp, QList<int> *maxsp,QList<int> *str, QList<int> *dex, QList<int> *agi, QList<int> *int_var)
@@ -546,6 +563,7 @@ void FileParser::read_table_for_actor_parameters(QList<int> *maxhp, QList<int> *
         int_var->append(val);
     }
 
+    this->increase_object_count("table for parameters");
 }
 
 void FileParser::read_table_for_map(QList<int> *list)
@@ -575,6 +593,8 @@ void FileParser::read_table_for_map(QList<int> *list)
 
     for (int i = 0; i < x*y*z; i++)
         list->append((this->read_one_byte()&0xFF) | ((this->read_one_byte() & 0xFF) << 8));
+
+    this->increase_object_count("table for map");
 }
 
 void FileParser::write_table(QList<int> *list)
@@ -764,6 +784,8 @@ void FileParser::read_tone(double *r, double *g, double *b, double *gray)
         this->file.read((char*)gray, 8);
     }
     else throw getException("Color tone expected");
+
+    this->increase_object_count("Tone");
 }
 
 void FileParser::write_tone(double r, double g, double b, double gray, bool color_tone = true)
@@ -787,6 +809,19 @@ void FileParser::write_tone(double r, double g, double b, double gray, bool colo
 void FileParser::read_move_route_object(RPGMoveRoute *move_route_object)
 {
     this->last_visited_function = "read_move_route_object()";
+
+    //for pokemon uranium, move route can be a reference
+    if (this->look_one_byte_ahead() == '@')
+    {
+        this->read_one_byte();
+        int ref = this->read_fixnum();
+        if (moveroute_reference_map.contains(ref))
+            this->moveroute_reference_map.value(ref)->copy_to(move_route_object);
+        else throw getException("Invalid reference at MoveRoute");
+        return;
+    }
+
+    this->moveroute_reference_map.insert(object_count, move_route_object);
     QVariantList params = this->read_object();
     if (params.at(0).toString() != "RPG::MoveRoute")
         throw getException("RPG::MoveRoute expected");

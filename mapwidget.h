@@ -16,6 +16,7 @@
 #include <QAction>
 #include <QMenu>
 
+#include "RXIO/RXObjects/parserexception.h"
 #include "event_dialogs/eventdialog.h"
 #include "RXIO/RXObjects/rpgsystem.h"
 #include "RXIO/RXObjects/rpgmap.h"
