@@ -73,6 +73,7 @@ void ImageDisplayWidget::set_data_from_page(RPGSystem *system, RPGEventPage *pag
     this->system = system;
     this->mode = ImageDialog::EVENTPAGE;
     this->current_file = page->character_name;
+    this->hue = page->character_hue;
     this->page = page;
 
 
