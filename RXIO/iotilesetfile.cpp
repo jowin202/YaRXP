@@ -11,6 +11,7 @@ IOTilesetFile::IOTilesetFile(QString path, QHash<int,RPGTileset *> *tileset_hash
 {
     this->last_visited_function = "IOTilesetFile";
     this->symbol_cache.clear();
+    this->object_count = 0;
 
     this->path = path;
     this->file.setFileName(path);
@@ -25,7 +26,6 @@ IOTilesetFile::IOTilesetFile(QString path, QHash<int,RPGTileset *> *tileset_hash
     {
         RPGTileset *tileset_object = new RPGTileset();
 
-        this->object_count++;
         QVariantList list = read_object();
         if (list.at(0).toString() != "RPG::Tileset")
             throw getException("RPG::Tileset expected");
@@ -97,6 +97,7 @@ void IOTilesetFile::write_to_file(QString path, QList<RPGTileset*> *tileset_list
 {
     this->last_visited_function = "write_to_file";
     this->symbol_cache.clear();
+    this->object_count = 0;
 
     if (!path.isEmpty())
         this->path = path;

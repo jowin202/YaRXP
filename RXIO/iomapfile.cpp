@@ -10,6 +10,7 @@ IOMapFile::IOMapFile(QString path, RPGMap *map)
 {
     this->last_visited_function = "IOMapInfoFile";
     this->symbol_cache.clear();
+    this->object_count = 0;
 
     this->path = path;
     this->file.setFileName(path);

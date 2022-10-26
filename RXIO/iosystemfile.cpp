@@ -9,6 +9,7 @@ IOSystemFile::IOSystemFile(QString path, RPGSystem *settings)
 {
     this->last_visited_function = "IOSystemFile";
     this->symbol_cache.clear();
+    this->object_count = 0;
 
     this->path = path;
     this->file.setFileName(path);
@@ -163,6 +164,7 @@ void IOSystemFile::write_to_file(QString path, RPGSystem *settings)
 {
     this->last_visited_function = "write_to_file";
     this->symbol_cache.clear();
+    this->object_count = 0;
 
     if (!path.isEmpty())
         this->path = path;

@@ -9,6 +9,7 @@ IOAnimationFile::IOAnimationFile(QString path, QList<RPGAnimation *> *animation_
 {
     this->last_visited_function = "IOAnimationFile";
     this->symbol_cache.clear();
+    this->object_count = 0;
 
     this->path = path;
     this->file.setFileName(path);
@@ -110,6 +111,7 @@ void IOAnimationFile::write_to_file(QString path, QList<RPGAnimation *> *animati
 {
     this->last_visited_function = "write_to_file";
     this->symbol_cache.clear();
+    this->object_count = 0;
 
     if (!path.isEmpty())
         this->path = path;

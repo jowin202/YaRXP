@@ -9,6 +9,7 @@ IOTroopFile::IOTroopFile(QString path, QList<RPGTroop *> *troop_list)
 {
     this->last_visited_function = "IOTroopFile";
     this->symbol_cache.clear();
+    this->object_count = 0;
 
     this->path = path;
     this->file.setFileName(path);

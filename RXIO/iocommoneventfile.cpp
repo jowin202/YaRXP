@@ -9,6 +9,7 @@ IOCommonEventFile::IOCommonEventFile(QString path, QList<RPGCommonEvent *> *comm
 {
     this->last_visited_function = "IOCommonEventFile";
     this->symbol_cache.clear();
+    this->object_count = 0;
 
     this->path = path;
     this->file.setFileName(path);

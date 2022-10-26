@@ -87,10 +87,11 @@ public:
     void write_event_list(QList<RPGEventCommand *> *event_command_list);
 
 
+    QStringList object_count_debug_messages; //for debug resasons
     void increase_object_count(QString msg)
     {
         object_count++;
-        //qDebug() << object_count << msg;
+        object_count_debug_messages << QString::number(object_count) + ": " + msg;
     }
 
     QByteArray getHash();
