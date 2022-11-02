@@ -511,6 +511,30 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>line_name</tabstop>
+  <tabstop>spin_maxhp</tabstop>
+  <tabstop>spin_maxsp</tabstop>
+  <tabstop>spin_str</tabstop>
+  <tabstop>spin_dex</tabstop>
+  <tabstop>spin_agi</tabstop>
+  <tabstop>spin_int</tabstop>
+  <tabstop>spin_atk</tabstop>
+  <tabstop>spin_pdef</tabstop>
+  <tabstop>spin_mdef</tabstop>
+  <tabstop>spin_eva</tabstop>
+  <tabstop>comb_attacker</tabstop>
+  <tabstop>combo_target</tabstop>
+  <tabstop>spin_exp</tabstop>
+  <tabstop>spin_gold</tabstop>
+  <tabstop>line_treasure</tabstop>
+  <tabstop>button_change_treasure</tabstop>
+  <tabstop>table_action</tabstop>
+  <tabstop>scrollArea_3</tabstop>
+  <tabstop>scrollArea_4</tabstop>
+  <tabstop>button_action_add</tabstop>
+  <tabstop>button_action_del</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

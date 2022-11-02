@@ -23,10 +23,12 @@ public:
     {this->system = system;}
 
     void set_state(int n);
+    void save();
 
 private:
     Ui::EditStates *ui;
     RPGSystem *system;
+    int current;
 };
 
 #endif // EDITSTATES_H

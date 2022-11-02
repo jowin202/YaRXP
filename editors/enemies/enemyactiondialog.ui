@@ -280,6 +280,24 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>check_turn</tabstop>
+  <tabstop>spin_turn_a</tabstop>
+  <tabstop>spin_turn_b</tabstop>
+  <tabstop>check_hp</tabstop>
+  <tabstop>spin_hp</tabstop>
+  <tabstop>check_level</tabstop>
+  <tabstop>spin_level</tabstop>
+  <tabstop>check_switch</tabstop>
+  <tabstop>radio_basic</tabstop>
+  <tabstop>combo_basic</tabstop>
+  <tabstop>radio_skill</tabstop>
+  <tabstop>combo_skill</tabstop>
+  <tabstop>slider_rating</tabstop>
+  <tabstop>spin_rating</tabstop>
+  <tabstop>button_ok</tabstop>
+  <tabstop>button_cancel</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>

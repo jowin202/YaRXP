@@ -315,6 +315,24 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>line_name</tabstop>
+  <tabstop>line_icon</tabstop>
+  <tabstop>button_icon</tabstop>
+  <tabstop>line_description</tabstop>
+  <tabstop>combo_attacker</tabstop>
+  <tabstop>combo_target</tabstop>
+  <tabstop>spin_price</tabstop>
+  <tabstop>spin_atk</tabstop>
+  <tabstop>spin_pdef</tabstop>
+  <tabstop>spin_mdef</tabstop>
+  <tabstop>spin_str</tabstop>
+  <tabstop>spin_dex</tabstop>
+  <tabstop>spin_agi</tabstop>
+  <tabstop>spin_int</tabstop>
+  <tabstop>scrollArea</tabstop>
+  <tabstop>scrollArea_2</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

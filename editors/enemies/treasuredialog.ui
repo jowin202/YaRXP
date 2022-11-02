@@ -130,6 +130,18 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>radio_none</tabstop>
+  <tabstop>radio_item</tabstop>
+  <tabstop>combo_item</tabstop>
+  <tabstop>radio_weapon</tabstop>
+  <tabstop>combo_weapon</tabstop>
+  <tabstop>radio_armor</tabstop>
+  <tabstop>combo_armor</tabstop>
+  <tabstop>spin_probability</tabstop>
+  <tabstop>button_ok</tabstop>
+  <tabstop>button_cancel</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>

@@ -292,6 +292,17 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>line_name</tabstop>
+  <tabstop>combo_pos</tabstop>
+  <tabstop>scrollArea</tabstop>
+  <tabstop>scrollArea_2</tabstop>
+  <tabstop>scrollArea_3</tabstop>
+  <tabstop>scrollArea_4</tabstop>
+  <tabstop>table_skills</tabstop>
+  <tabstop>button_skill_add</tabstop>
+  <tabstop>button_skill_del</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

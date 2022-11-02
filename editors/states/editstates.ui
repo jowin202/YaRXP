@@ -502,6 +502,34 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>line_name</tabstop>
+  <tabstop>combo_animation</tabstop>
+  <tabstop>combo_restriction</tabstop>
+  <tabstop>check_nonresistance</tabstop>
+  <tabstop>check_zero_hp</tabstop>
+  <tabstop>check_cant_get_exp</tabstop>
+  <tabstop>check_cant_evade</tabstop>
+  <tabstop>check_slip_damage</tabstop>
+  <tabstop>spin_rating</tabstop>
+  <tabstop>spin_hitrate</tabstop>
+  <tabstop>spin_maxhp</tabstop>
+  <tabstop>spin_maxsp</tabstop>
+  <tabstop>spin_str</tabstop>
+  <tabstop>spin_dex</tabstop>
+  <tabstop>spin_agi</tabstop>
+  <tabstop>spin_int</tabstop>
+  <tabstop>spin_atk</tabstop>
+  <tabstop>spin_pdef</tabstop>
+  <tabstop>spin_mdef</tabstop>
+  <tabstop>spin_eva</tabstop>
+  <tabstop>check_battle</tabstop>
+  <tabstop>spin_turns</tabstop>
+  <tabstop>spin_prob1</tabstop>
+  <tabstop>spin_prob2</tabstop>
+  <tabstop>scrollArea</tabstop>
+  <tabstop>scrollArea_2</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

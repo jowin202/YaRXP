@@ -523,6 +523,33 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>line_name</tabstop>
+  <tabstop>line_icon</tabstop>
+  <tabstop>button_icon</tabstop>
+  <tabstop>line_description</tabstop>
+  <tabstop>combo_scope</tabstop>
+  <tabstop>combo_occasion</tabstop>
+  <tabstop>combo_user</tabstop>
+  <tabstop>combo_target</tabstop>
+  <tabstop>line_menu_use</tabstop>
+  <tabstop>button_se</tabstop>
+  <tabstop>combo_common</tabstop>
+  <tabstop>spin_price</tabstop>
+  <tabstop>combo_consumable</tabstop>
+  <tabstop>combo_parameter</tabstop>
+  <tabstop>spin_param</tabstop>
+  <tabstop>spin_rcvr_hp_rate</tabstop>
+  <tabstop>spin_rcvr_hp</tabstop>
+  <tabstop>spin_rcvr_sp_rate</tabstop>
+  <tabstop>spin_rcvr_sp</tabstop>
+  <tabstop>spin_hit</tabstop>
+  <tabstop>spin_pdef</tabstop>
+  <tabstop>spin_mdef</tabstop>
+  <tabstop>spin_variance</tabstop>
+  <tabstop>scrollArea</tabstop>
+  <tabstop>scrollArea_2</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

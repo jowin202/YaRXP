@@ -185,6 +185,16 @@
    <header>editors/actors/editoractorparameterlabel.h</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>button_A</tabstop>
+  <tabstop>button_B</tabstop>
+  <tabstop>button_C</tabstop>
+  <tabstop>button_D</tabstop>
+  <tabstop>button_E</tabstop>
+  <tabstop>spin_level</tabstop>
+  <tabstop>spin_value</tabstop>
+  <tabstop>button_gen_curve</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

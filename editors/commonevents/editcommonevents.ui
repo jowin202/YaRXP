@@ -86,6 +86,11 @@
    <header>event_dialogs/eventlist.h</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>line_name</tabstop>
+  <tabstop>combo_trigger</tabstop>
+  <tabstop>list</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

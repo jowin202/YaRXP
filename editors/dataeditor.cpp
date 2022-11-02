@@ -137,4 +137,10 @@ void DataEditor::on_button_apply_clicked()
     {
         this->ui->page_armors->save();
     }
+
+    //TODO: some missing
+    else if (this->ui->central_menu->currentRow() == STATES)
+    {
+        this->ui->page_states->save();
+    }
 }

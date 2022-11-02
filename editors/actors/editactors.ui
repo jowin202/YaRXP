@@ -508,6 +508,30 @@
    <header>dialogs/imagedisplaywidget.h</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>line_name</tabstop>
+  <tabstop>combo_class</tabstop>
+  <tabstop>spin_initial</tabstop>
+  <tabstop>spin_final</tabstop>
+  <tabstop>line_exp_curve</tabstop>
+  <tabstop>button_exp_curve</tabstop>
+  <tabstop>button_param_maxhp</tabstop>
+  <tabstop>button_param_maxsp</tabstop>
+  <tabstop>button_param_str</tabstop>
+  <tabstop>button_param_dex</tabstop>
+  <tabstop>button_param_agi</tabstop>
+  <tabstop>button_param_int</tabstop>
+  <tabstop>combo_weapon</tabstop>
+  <tabstop>check_weapon</tabstop>
+  <tabstop>combo_shield</tabstop>
+  <tabstop>check_shield</tabstop>
+  <tabstop>combo_helmet</tabstop>
+  <tabstop>check_helmet</tabstop>
+  <tabstop>combo_body</tabstop>
+  <tabstop>check_body</tabstop>
+  <tabstop>combo_accessory</tabstop>
+  <tabstop>check_accessory</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
