@@ -16,179 +16,73 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0">
-     <layout class="QHBoxLayout" name="horizontalLayout">
-      <item>
-       <widget class="QSplitter" name="splitter">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
+     <widget class="QSplitter" name="splitter">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <widget class="TilesetView" name="tilesetView"/>
+      <widget class="MapTreeWidget" name="map_tree_widget">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>300</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="contextMenuPolicy">
+        <enum>Qt::CustomContextMenu</enum>
+       </property>
+       <property name="dragDropMode">
+        <enum>QAbstractItemView::InternalMove</enum>
+       </property>
+       <property name="sortingEnabled">
+        <bool>false</bool>
+       </property>
+       <property name="expandsOnDoubleClick">
+        <bool>false</bool>
+       </property>
+       <column>
+        <property name="text">
+         <string>Map Names</string>
         </property>
-        <widget class="QScrollArea" name="tileset_scroll">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>300</width>
-           <height>0</height>
-          </size>
-         </property>
-         <property name="horizontalScrollBarPolicy">
-          <enum>Qt::ScrollBarAlwaysOff</enum>
-         </property>
-         <property name="widgetResizable">
-          <bool>true</bool>
-         </property>
-         <widget class="QWidget" name="scrollAreaWidgetContents">
-          <property name="geometry">
-           <rect>
-            <x>0</x>
-            <y>0</y>
-            <width>296</width>
-            <height>128</height>
-           </rect>
-          </property>
-          <layout class="QGridLayout" name="gridLayout_2">
-           <property name="spacing">
-            <number>0</number>
-           </property>
-           <item row="1" column="0">
-            <widget class="TilesetWidget" name="tileset_label">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="minimumSize">
-              <size>
-               <width>256</width>
-               <height>0</height>
-              </size>
-             </property>
-             <property name="text">
-              <string/>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="0">
-            <widget class="TilesetWidget" name="autotiles_label">
-             <property name="text">
-              <string/>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="0">
-            <widget class="TilesetWidget" name="tileset_label_2">
-             <property name="text">
-              <string/>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </widget>
-        <widget class="MapTreeWidget" name="map_tree_widget">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>300</width>
-           <height>0</height>
-          </size>
-         </property>
-         <property name="contextMenuPolicy">
-          <enum>Qt::CustomContextMenu</enum>
-         </property>
-         <property name="dragDropMode">
-          <enum>QAbstractItemView::InternalMove</enum>
-         </property>
-         <property name="sortingEnabled">
-          <bool>false</bool>
-         </property>
-         <property name="expandsOnDoubleClick">
-          <bool>false</bool>
-         </property>
-         <column>
-          <property name="text">
-           <string>Map Names</string>
-          </property>
-         </column>
-         <column>
-          <property name="text">
-           <string>order</string>
-          </property>
-         </column>
-         <column>
-          <property name="text">
-           <string>list_id</string>
-          </property>
-         </column>
-        </widget>
-       </widget>
-      </item>
-      <item>
-       <widget class="QScrollArea" name="map_scroll">
-        <property name="widgetResizable">
-         <bool>true</bool>
+       </column>
+       <column>
+        <property name="text">
+         <string>order</string>
         </property>
-        <widget class="QWidget" name="scrollAreaWidgetContents_2">
-         <property name="geometry">
-          <rect>
-           <x>0</x>
-           <y>0</y>
-           <width>476</width>
-           <height>491</height>
-          </rect>
-         </property>
-         <layout class="QGridLayout" name="gridLayout_3">
-          <item row="1" column="0">
-           <spacer name="verticalSpacer">
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>20</width>
-              <height>40</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item row="0" column="0">
-           <widget class="MapWidget" name="map_label">
-            <property name="contextMenuPolicy">
-             <enum>Qt::CustomContextMenu</enum>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <spacer name="horizontalSpacer_2">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-         </layout>
-        </widget>
-       </widget>
-      </item>
-     </layout>
+       </column>
+       <column>
+        <property name="text">
+         <string>list_id</string>
+        </property>
+       </column>
+      </widget>
+     </widget>
+    </item>
+    <item row="0" column="1">
+     <widget class="MapView" name="mapView">
+      <property name="mouseTracking">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0" colspan="2">
+     <widget class="QSlider" name="slider_scale">
+      <property name="maximum">
+       <number>500</number>
+      </property>
+      <property name="value">
+       <number>250</number>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>
@@ -239,9 +133,6 @@
     <addaction name="actionLayer3"/>
     <addaction name="actionEvents"/>
     <addaction name="separator"/>
-    <addaction name="actionDim_other_Layers"/>
-    <addaction name="separator"/>
-    <addaction name="separator"/>
     <addaction name="actionCurrent_Layers_and_below"/>
     <addaction name="actionAll_Layers"/>
    </widget>
@@ -253,15 +144,6 @@
     <addaction name="actionRectangle_Fill"/>
     <addaction name="actionFlood_Fill"/>
     <addaction name="actionSelect"/>
-   </widget>
-   <widget class="QMenu" name="menuScale">
-    <property name="title">
-     <string>Scale</string>
-    </property>
-    <addaction name="action_zoom_100"/>
-    <addaction name="separator"/>
-    <addaction name="action_zoom_50"/>
-    <addaction name="action_zoom_25"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -313,7 +195,6 @@
    <addaction name="menuView"/>
    <addaction name="menuDraw"/>
    <addaction name="menuMap"/>
-   <addaction name="menuScale"/>
    <addaction name="menuTools"/>
    <addaction name="menuHelp"/>
   </widget>
@@ -577,21 +458,6 @@
     <string>Select</string>
    </property>
   </action>
-  <action name="action_zoom_100">
-   <property name="text">
-    <string>1x (Normal)</string>
-   </property>
-  </action>
-  <action name="action_zoom_50">
-   <property name="text">
-    <string>50%</string>
-   </property>
-  </action>
-  <action name="action_zoom_25">
-   <property name="text">
-    <string>25%</string>
-   </property>
-  </action>
   <action name="actionChange_Title">
    <property name="text">
     <string>Change Game Title</string>
@@ -811,19 +677,19 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>TilesetWidget</class>
-   <extends>QLabel</extends>
-   <header>tilesetwidget.h</header>
-  </customwidget>
-  <customwidget>
-   <class>MapWidget</class>
-   <extends>QLabel</extends>
-   <header>mapwidget.h</header>
-  </customwidget>
-  <customwidget>
    <class>MapTreeWidget</class>
    <extends>QTreeWidget</extends>
    <header>maptreewidget.h</header>
+  </customwidget>
+  <customwidget>
+   <class>MapView</class>
+   <extends>QGraphicsView</extends>
+   <header>viewer/mapview.h</header>
+  </customwidget>
+  <customwidget>
+   <class>TilesetView</class>
+   <extends>QGraphicsView</extends>
+   <header>viewer/tilesetview.h</header>
   </customwidget>
  </customwidgets>
  <resources>

@@ -114,9 +114,14 @@ SOURCES += \
     event_dialogs/moveroutedialog.cpp \
     main.cpp \
     mainwindow.cpp \
+    viewer/maprectangle.cpp \
+    viewer/maptile.cpp \
     maptreewidget.cpp \
+    viewer/mapview.cpp \
     mapwidget.cpp \
-    tilesetwidget.cpp
+    tilesetwidget.cpp \
+    viewer/tilesetrectangle.cpp \
+    viewer/tilesetview.cpp
 
 HEADERS += \
     RXIO/RXObjects/autotileset.h \
@@ -216,9 +221,14 @@ HEADERS += \
     event_dialogs/eventpage.h \
     event_dialogs/moveroutedialog.h \
     mainwindow.h \
+    viewer/maprectangle.h \
+    viewer/maptile.h \
     maptreewidget.h \
+    viewer/mapview.h \
     mapwidget.h \
-    tilesetwidget.h
+    tilesetwidget.h \
+    viewer/tilesetrectangle.h \
+    viewer/tilesetview.h
 
 FORMS += \
     dialogs/audiodialog.ui \

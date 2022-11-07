@@ -43,7 +43,6 @@ public slots:
     void on_actionLayer2_triggered();
     void on_actionLayer3_triggered();
     void on_actionEvents_triggered();
-    void on_actionDim_other_Layers_toggled(bool arg1);
     void on_actionOpen_triggered();
     void on_actionPen_triggered();
     void on_actionSelect_triggered();
@@ -88,12 +87,6 @@ private slots:
 
     void on_actionScripting_Editor_triggered();
 
-    void on_action_zoom_100_triggered();
-
-    void on_action_zoom_50_triggered();
-
-    void on_action_zoom_25_triggered();
-
     void on_actionSave_triggered();
 
     void on_actionshift_up_triggered();
@@ -124,6 +117,9 @@ private slots:
 
     void on_actionExport_Map_Images_triggered();
 
+    void on_slider_scale_valueChanged(int value);
+    void zoom_in();
+    void zoom_out();
 
 
 private:

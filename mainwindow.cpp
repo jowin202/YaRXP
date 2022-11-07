@@ -20,9 +20,11 @@
 
 #include "RXIO/ioscriptfile.h"
 
+
 #include <QDebug>
 #include <QToolButton>
 #include <QActionGroup>
+#include <QtMath>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -31,30 +33,15 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     this->ui->map_tree_widget->setSystem(&this->system);
-    this->ui->map_label->setSystem(&this->system);
 
-    //tilesets need 3 widgets
-    this->ui->autotiles_label->setSystem(&this->system);
-    this->ui->tileset_label->setSystem(&this->system);
-    this->ui->tileset_label_2->setSystem(&this->system);
-    this->ui->autotiles_label->setRange(0); //autotiles
-    this->ui->tileset_label->setRange(1); //normal tiles
-    this->ui->tileset_label_2->setRange(2); //extension if tileset longer than 32768
-    connect(this->ui->autotiles_label, SIGNAL(selection_changed(QList<int>)), this, SLOT(on_actionPen_triggered())); //set pen when select tile
-    connect(this->ui->autotiles_label, SIGNAL(selection_changed(QList<int>)), this->ui->map_label, SLOT(set_brush(QList<int>)));
-    connect(this->ui->tileset_label, SIGNAL(selection_changed(QList<int>)), this, SLOT(on_actionPen_triggered())); //set pen when select tile
-    connect(this->ui->tileset_label, SIGNAL(selection_changed(QList<int>)), this->ui->map_label, SLOT(set_brush(QList<int>)));
-    connect(this->ui->tileset_label_2, SIGNAL(selection_changed(QList<int>)), this, SLOT(on_actionPen_triggered())); //set pen when select tile
-    connect(this->ui->tileset_label_2, SIGNAL(selection_changed(QList<int>)), this->ui->map_label, SLOT(set_brush(QList<int>)));
+    this->ui->mapView->setSystem(&this->system);
+    connect(this->ui->mapView, SIGNAL(zoom_in()), this, SLOT(zoom_in()));
+    connect(this->ui->mapView, SIGNAL(zoom_out()), this, SLOT(zoom_out()));
 
-    //widget lose focus if clicked on other widget
-    connect(this->ui->autotiles_label, SIGNAL(selection_changed(QList<int>)), this->ui->tileset_label, SLOT(updateView()));
-    connect(this->ui->autotiles_label, SIGNAL(selection_changed(QList<int>)), this->ui->tileset_label_2, SLOT(updateView()));
-    connect(this->ui->tileset_label, SIGNAL(selection_changed(QList<int>)), this->ui->autotiles_label, SLOT(updateView()));
-    connect(this->ui->tileset_label, SIGNAL(selection_changed(QList<int>)), this->ui->tileset_label_2, SLOT(updateView()));
-    connect(this->ui->tileset_label_2, SIGNAL(selection_changed(QList<int>)), this->ui->autotiles_label, SLOT(updateView()));
-    connect(this->ui->tileset_label_2, SIGNAL(selection_changed(QList<int>)), this->ui->tileset_label, SLOT(updateView()));
+    this->ui->tilesetView->setSystem(&this->system);
+    connect(this->ui->tilesetView, SIGNAL(selection_changed(QList<int>)), this->ui->mapView, SLOT(set_brush(QList<int>)));
 
+    this->ui->splitter->setSizes(QList<int>({3, 3}));
 
     connect(this->ui->map_tree_widget, SIGNAL(on_map_selected(int)), this, SLOT(change_map(int)));
 
@@ -79,7 +66,6 @@ MainWindow::MainWindow(QWidget *parent)
     this->ui->actionLayer1->setChecked(true);
     this->ui->actionPen->setChecked(true);
     this->ui->actionAll_Layers->setChecked(true);
-
 
     //Must be here as columns are set in QtCreator->MainWindow file.
     this->ui->map_tree_widget->hideColumn(1);
@@ -152,6 +138,13 @@ void MainWindow::open_project(QString project_path)
 
 void MainWindow::change_map(int id)
 {
+    this->ui->mapView->set_map(id);
+    this->system.current_map_id = id;
+    this->ui->tilesetView->set_tileset(this->system.map_info_list.at(id)->map->tileset_id);
+
+
+    //TODO: restore this
+    /*
     if (this->ui->map_label->has_map_changed())
     {
         QMessageBox msgbox;
@@ -164,12 +157,12 @@ void MainWindow::change_map(int id)
 
         if (msgbox.clickedButton() == (QAbstractButton*)save)
         {
-            this->ui->map_label->do_save();
+            //this->ui->map_label->do_save();
         }
         else if (msgbox.clickedButton() == (QAbstractButton*)withdraw)
         {
             //withdraw chances
-            this->ui->map_label->do_withdraw();
+            //this->ui->map_label->do_withdraw();
         }
         else if (msgbox.clickedButton() == (QAbstractButton*)cancel)
         {
@@ -177,38 +170,34 @@ void MainWindow::change_map(int id)
             return; // dont change anything
         }
     }
-    this->ui->map_label->set_map(id);
+    //this->ui->map_label->set_map(id);
     this->system.current_map_id = id;
     this->ui->autotiles_label->change_tileset(this->system.map_info_list.at(id)->map->tileset_id);
     this->ui->tileset_label->change_tileset(this->system.map_info_list.at(id)->map->tileset_id);
     this->ui->tileset_label_2->change_tileset(this->system.map_info_list.at(id)->map->tileset_id);
+    */
 }
 
 void MainWindow::on_actionLayer1_triggered()
 {
-    this->ui->map_label->set_layer(0);
+    this->ui->mapView->set_layer(0);
 }
 
 void MainWindow::on_actionLayer2_triggered()
 {
-    this->ui->map_label->set_layer(1);
+    this->ui->mapView->set_layer(1);
 }
 
 void MainWindow::on_actionLayer3_triggered()
 {
-    this->ui->map_label->set_layer(2);
+    this->ui->mapView->set_layer(2);
 }
 
 void MainWindow::on_actionEvents_triggered()
 {
     this->ui->actionPen->setChecked(false);
     this->ui->actionSelect->setChecked(false);
-    this->ui->map_label->set_mode(MapWidget::EVENT);
-}
-
-void MainWindow::on_actionDim_other_Layers_toggled(bool arg1)
-{
-    this->ui->map_label->set_dim(arg1);
+    //this->ui->map_label->set_mode(MapWidget::EVENT);
 }
 
 void MainWindow::on_actionOpen_triggered()
@@ -227,39 +216,41 @@ void MainWindow::on_actionOpen_triggered()
 
 void MainWindow::on_actionPen_triggered()
 {
-    this->ui->map_label->set_mode(MapWidget::PEN);
+    //this->ui->map_label->set_mode(MapWidget::PEN);
     this->ui->actionPen->setChecked(true); // if activated per signal, pen should be selected in gui
 }
 
 void MainWindow::on_actionSelect_triggered()
 {
-    this->ui->map_label->set_mode(MapWidget::SELECT);
+    //this->ui->map_label->set_mode(MapWidget::SELECT);
 }
 
 void MainWindow::on_actionCut_triggered()
 {
-    this->clipboard = this->ui->map_label->do_cut();
+    //this->clipboard = this->ui->map_label->do_cut();
 }
 
 void MainWindow::on_actionCopy_triggered()
 {
-    this->clipboard = this->ui->map_label->do_copy();
+    //this->clipboard = this->ui->map_label->do_copy();
 }
 
 void MainWindow::on_actionPaste_triggered()
 {
+    /*
     if (this->clipboard.length() >= 3)
         this->ui->map_label->do_paste(this->clipboard);
+        */
 }
 
 void MainWindow::on_actionDelete_triggered()
 {
-    this->ui->map_label->do_delete();
+    //this->ui->map_label->do_delete();
 }
 
 void MainWindow::on_actionFlood_Fill_triggered()
 {
-    this->ui->map_label->set_mode(MapWidget::FLOOD);
+    //this->ui->map_label->set_mode(MapWidget::FLOOD);
 }
 
 
@@ -268,12 +259,12 @@ void MainWindow::on_actionFlood_Fill_triggered()
 
 void MainWindow::on_actionAll_Layers_triggered()
 {
-    this->ui->map_label->set_show_other_layers(true);
+    this->ui->mapView->set_current_and_below(false);
 }
 
 void MainWindow::on_actionCurrent_Layers_and_below_triggered()
 {
-    this->ui->map_label->set_show_other_layers(false);
+    this->ui->mapView->set_current_and_below(true);
 }
 
 void MainWindow::on_actionImport_RGSSAD_triggered()
@@ -421,99 +412,92 @@ void MainWindow::on_actionScripting_Editor_triggered()
 
 }
 
-void MainWindow::on_action_zoom_100_triggered()
-{
-    this->ui->map_label->set_zoom(MapWidget::ZOOM_100);
-}
-
-void MainWindow::on_action_zoom_50_triggered()
-{
-    this->ui->map_label->set_zoom(MapWidget::ZOOM_50);
-}
-
-void MainWindow::on_action_zoom_25_triggered()
-{
-    this->ui->map_label->set_zoom(MapWidget::ZOOM_25);
-}
-
 void MainWindow::on_actionSave_triggered()
 {
-    this->ui->map_label->do_save();
-    this->ui->map_label->set_map_changed(false);
+    //this->ui->map_label->do_save();
+    //this->ui->map_label->set_map_changed(false);
 
     this->ui->map_tree_widget->do_save();
 }
 
 void MainWindow::on_actionshift_up_triggered()
 {
-    this->ui->map_label->shift(MapWidget::UP, 1);
+    //this->ui->map_label->shift(MapWidget::UP, 1);
 }
 
 void MainWindow::on_actionShift_Down_triggered()
 {
-    this->ui->map_label->shift(MapWidget::DOWN, 1);
+    //this->ui->map_label->shift(MapWidget::DOWN, 1);
 }
 
 void MainWindow::on_actionShift_right_triggered()
 {
-    this->ui->map_label->shift(MapWidget::RIGHT, 1);
+    //this->ui->map_label->shift(MapWidget::RIGHT, 1);
 }
 
 void MainWindow::on_actionShift_left_triggered()
 {
-    this->ui->map_label->shift(MapWidget::LEFT, 1);
+    //this->ui->map_label->shift(MapWidget::LEFT, 1);
 }
 
 void MainWindow::on_actionExtend_Left_triggered()
 {
-    this->ui->map_label->extend(MapWidget::LEFT, 1);
+    //this->ui->map_label->extend(MapWidget::LEFT, 1);
 }
 
 void MainWindow::on_actionExtend_Right_triggered()
 {
-    this->ui->map_label->extend(MapWidget::RIGHT, 1);
+    //this->ui->map_label->extend(MapWidget::RIGHT, 1);
 }
 
 void MainWindow::on_actionExtend_Up_triggered()
 {
-    this->ui->map_label->extend(MapWidget::UP, 1);
+    //this->ui->map_label->extend(MapWidget::UP, 1);
 }
 
 void MainWindow::on_actionExtend_Down_triggered()
 {
-    this->ui->map_label->extend(MapWidget::DOWN, 1);
+    //this->ui->map_label->extend(MapWidget::DOWN, 1);
 }
 
 void MainWindow::on_actionCrop_Left_triggered()
 {
+    /*
     bool ok;
     int val = QInputDialog::getInt(this, "Crop Left", "How many tiles should be cropped?", 1, 1, 20, 1, &ok);
     if (ok)
         this->ui->map_label->crop(MapWidget::LEFT, val);
+        */
 }
 
 void MainWindow::on_actionCrop_Right_triggered()
 {
+    /*
     bool ok;
     int val = QInputDialog::getInt(this, "Crop Right", "How many tiles should be cropped?", 1, 1, 20, 1, &ok);
     if (ok)
         this->ui->map_label->crop(MapWidget::RIGHT, val);
+        */
 }
 
 void MainWindow::on_actionCrop_Up_triggered()
 {
+    /*
     bool ok;
     int val = QInputDialog::getInt(this, "Crop Up", "How many tiles should be cropped?", 1, 1, 20, 1, &ok);
     if (ok)
         this->ui->map_label->crop(MapWidget::UP, val);
+        */
 }
 
 void MainWindow::on_actionCrop_Down_triggered()
 {
+    /*
     bool ok;
     int val = QInputDialog::getInt(this, "Crop Down", "How many tiles should be cropped?", 1, 1, 20, 1, &ok);
     if (ok)
         this->ui->map_label->crop(MapWidget::DOWN, val);
+        */
 }
 
 void MainWindow::on_actionOpen_Project_Folder_triggered()
@@ -534,4 +518,24 @@ void MainWindow::on_actionExport_Map_Images_triggered()
             img.save(dir + QDir::separator() + system.map_info_list.at(i)->name + ".png");
         }
     }
+}
+
+
+void MainWindow::on_slider_scale_valueChanged(int value)
+{
+    qreal scale = qPow(qreal(2), (value - 250) / qreal(50));
+
+    QTransform matrix;
+    matrix.scale(scale,scale);
+    this->ui->mapView->setTransform(matrix);
+}
+
+void MainWindow::zoom_in()
+{
+    this->ui->slider_scale->setValue(this->ui->slider_scale->value()+10);
+}
+
+void MainWindow::zoom_out()
+{
+    this->ui->slider_scale->setValue(this->ui->slider_scale->value()-10);
 }

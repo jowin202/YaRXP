@@ -11,6 +11,12 @@ RPGMap::~RPGMap()
     qDebug() << "Map deleted";
 }
 
+int RPGMap::get_tile_id_from_pos(QPoint pos, int layer)
+{
+    int index = array_position(pos, layer);
+    return this->data[index];
+}
+
 RPGEvent* RPGMap::event_on_pos(QPoint pos)
 {
     for (int i = 0; i < events.size(); i++)
@@ -74,6 +80,8 @@ QImage RPGMap::create_map_image(int zoom, bool dim_other, bool show_current_and_
                 //if empty and first layer, background is pink
                 painter.fillRect(target_rect, QColor(0x8a,0x16,0xa0));
             }
+            /*
+             * //tileset->getTile() should work with autotiles automatically
             else if (this->data[index] > 0 && this->data[index] < 0x0180)
             {
                 //autotiles
@@ -84,7 +92,7 @@ QImage RPGMap::create_map_image(int zoom, bool dim_other, bool show_current_and_
 
                 if (!tile.isNull())
                     painter.drawImage(target_rect,tile);
-            }
+            }*/
             else{
                 QImage tile = tileset->getTile(this->data[index]);
                 if (!tile.isNull())

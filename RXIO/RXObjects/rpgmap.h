@@ -29,6 +29,9 @@ public:
     { return index / (this->height * this->width); }
 
 
+    int get_tile_id_from_pos(QPoint pos, int layer);
+
+
     RPGEvent *event_on_pos(QPoint pos);
     RPGEvent *event_by_id(int id);
     QImage create_map_image(int zoom, bool dim_other, bool show_current_and_below, int current_layer, RPGTileset *tileset);
