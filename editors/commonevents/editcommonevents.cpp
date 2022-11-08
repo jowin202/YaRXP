@@ -32,7 +32,7 @@ void EditCommonEvents::set_commonevent(int n)
     this->ui->switch_widget->setValue(current_common_event->switch_id);
 
     this->ui->list->set_data(system, &current_common_event->list);
-    this->ui->list->fill_list();
+    this->ui->list->import_list();
 }
 
 void EditCommonEvents::on_combo_trigger_currentIndexChanged(int index)

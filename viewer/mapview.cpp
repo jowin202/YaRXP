@@ -1,10 +1,13 @@
 #include "mapview.h"
 #include "maprectangle.h"
 #include "maptile.h"
+#include "mapselectrectangle.h"
 #include "RXIO/RXObjects/rpgmap.h"
 #include "RXIO/RXObjects/rpgsystem.h"
 #include "RXIO/RXObjects/rpgtileset.h"
 #include "RXIO/RXObjects/parserexception.h"
+
+#include "event_dialogs/eventdialog.h"
 
 MapView::MapView(QWidget *parent) : QGraphicsView(parent)
 {
@@ -18,6 +21,19 @@ MapView::MapView(QWidget *parent) : QGraphicsView(parent)
     //this->opt.dim = true;
     this->opt.mode = PEN;
 
+}
+
+void MapView::set_mode(int mode)
+{
+    if (map == 0) return;
+
+    if (this->opt.mode == SELECT && mode != SELECT && this->select_rectangle != 0)
+    {
+        //restore select rectangle to map
+        this->select_rectangle->save_to_map(this->map);
+    }
+    this->opt.mode = mode;
+    this->redraw();
 }
 
 void MapView::set_map(int id)
@@ -64,7 +80,7 @@ void MapView::mouseMoveEvent(QMouseEvent *event)
 {
     if (map == 0 || this->rectangle == 0) return;
     if (mapToScene(event->pos()).x() <= 0 || mapToScene(event->pos()).x() >= 32*map->width) return;
-    if (mapToScene(event->pos()).y() <= 0) return;
+    if (mapToScene(event->pos()).y() <= 0 || mapToScene(event->pos()).y() >= 32*map->height) return;
 
     QPointF posf = mapToScene(event->pos());
     QPoint pos = QPoint((int)posf.x()/32, (int)posf.y()/32);
@@ -96,11 +112,33 @@ void MapView::mouseMoveEvent(QMouseEvent *event)
         rectangle->setPos(32*(pos+rectangle_offset));
         rectangle->update();
     }
+    else if (opt.mode == SELECT)
+    {
+        if (this->select_rectangle == 0) return;
+        if ((pos+select_rectangle_offset).x() < 0)  pos.setX(-select_rectangle_offset.x());
+        if ((pos+select_rectangle_offset).y() < 0)  pos.setY(-select_rectangle_offset.y());
+        if ((pos+select_rectangle_offset).x()+select_rectangle->width() >= map->width )  pos.setX(map->width-select_rectangle_offset.x()-select_rectangle->width());
+        if ((pos+select_rectangle_offset).y()+select_rectangle->height()>= map->height)  pos.setY(map->height-select_rectangle_offset.y()-select_rectangle->height());
+
+        if (pos != select_click && !is_moving && this->select_mouse_button_pressed)
+        {
+            QPoint topleft = QPoint(qMin(pos.x(),this->select_click.x()),qMin(pos.y(),this->select_click.y()));
+            this->select_rectangle->setSize(1+qAbs(pos.x()-this->select_click.x()),1+qAbs(pos.y()-this->select_click.y()));
+            this->select_rectangle->setPos(32*topleft);
+            this->select_rectangle->update();
+        }
+        else if (pos != select_click && is_moving && this->select_mouse_button_pressed)
+        {
+            this->select_rectangle->setPos(32*(pos+select_rectangle_offset));
+            this->select_rectangle->update();
+        }
+    }
 }
 
 void MapView::mousePressEvent(QMouseEvent *event)
 {
-    if (map == 0 || this->rectangle == 0) return;
+    if (map == 0 || this->rectangle == 0)
+        return;
 
     QPointF posf = mapToScene(event->pos());
     QPoint pos = QPoint((int)posf.x()/32, (int)posf.y()/32);
@@ -130,6 +168,39 @@ void MapView::mousePressEvent(QMouseEvent *event)
             this->rectangle->update();
         }
     }
+    else if (opt.mode == SELECT)
+    {
+        this->select_mouse_button_pressed = true;
+
+        if (this->select_rectangle != 0 && this->select_rectangle->pos_is_in_rectangle(pos))
+        {
+            //allow move rectangle
+            this->is_moving = true;
+            this->select_rectangle_offset = QPoint(this->select_rectangle->x()/32, this->select_rectangle->y()/32) - pos;
+        }
+        else if (this->select_rectangle != 0)
+        {
+            //kill rectangle
+            this->select_rectangle->save_to_map(this->map);
+            this->kill_select_rectangle();
+        }
+
+        if (this->select_rectangle == 0)
+        {
+            //create rectangle
+            this->select_click = pos;
+            this->select_rectangle = new MapSelectRectangle(0,0);
+            this->scene()->addItem(this->select_rectangle);
+        }
+    }
+    else if (opt.mode == EVENT)
+    {
+        if (event->button() == Qt::LeftButton)
+        {
+            this->event_left_button_for_moving = true;
+            this->event_for_moving = this->map->event_on_pos(pos);
+        }
+    }
 }
 
 void MapView::mouseReleaseEvent(QMouseEvent *event)
@@ -143,13 +214,59 @@ void MapView::mouseReleaseEvent(QMouseEvent *event)
     if (event->button() == Qt::RightButton)
     {
         this->right_button_clicked = false;
-        this->rectangle_offset = QPoint(this->rectangle->pos().x()/32,this->rectangle->pos().y()/32)-pos;
+        if (this->rectangle != 0)
+            this->rectangle_offset = QPoint(this->rectangle->pos().x()/32,this->rectangle->pos().y()/32)-pos;
+
+        if (this->brush.at(0) == 1 && this->brush.at(1) == 1 && this->brush.length() == 3)
+            emit one_tile_selected(this->brush.at(2));
+    }
+
+    if (opt.mode == SELECT)
+    {
+        this->select_mouse_button_pressed = false;
+
+        if (!is_moving)
+        {
+            //selection rectangle
+            QPoint topleft = QPoint(this->select_rectangle->x()/32, this->select_rectangle->y()/32);
+
+            this->select_rectangle->set_brush(this->map->get_elements_in_rectangle(QRect(topleft,this->select_rectangle->size()),0,2), this->tileset, &this->opt);
+            this->select_rectangle->update();
+            this->map->delete_elements_in_rectangle(QRect(topleft,this->select_rectangle->size()),0,2);
+        }
+        this->is_moving = false;
+    }
+
+    if (opt.mode == EVENT)
+    {
+        if (event->button() == Qt::LeftButton)
+        {
+            this->event_left_button_for_moving = false;
+            if (this->event_for_moving != 0 && this->map->event_on_pos(pos) == 0) // dest pos is free
+            {
+                QPointF oldf = mapToScene(32*QPoint(this->event_for_moving->x, this->event_for_moving->y));
+                QPoint old = QPoint((int)oldf.x()/32, (int)oldf.y()/32);
+                this->event_for_moving->x = pos.x();
+                this->event_for_moving->y = pos.y();
+                ((MapTile*)this->itemAt(32*old))->update();
+                ((MapTile*)this->itemAt(32*pos))->update();
+            }
+
+        }
     }
 }
 
 void MapView::mouseDoubleClickEvent(QMouseEvent *event)
 {
+    QPointF posf = mapToScene(event->pos());
+    QPoint pos = QPoint((int)posf.x()/32, (int)posf.y()/32);
 
+    if (opt.mode == EVENT)
+    {
+        RPGEvent *event = this->map->event_on_pos(pos);
+        EventDialog *dialog = new EventDialog(event,system);
+        dialog->show();
+    }
 }
 
 void MapView::wheelEvent(QWheelEvent *event)
@@ -168,6 +285,11 @@ void MapView::wheelEvent(QWheelEvent *event)
 
 void MapView::redraw()
 {
+    if (this->select_rectangle != 0)
+    {
+        delete this->select_rectangle;
+        this->select_rectangle = 0;
+    }
     this->scene()->clear();
 
     for (int y = 0; y < map->height; y++)
@@ -180,8 +302,21 @@ void MapView::redraw()
         }
     }
 
-    this->rectangle_offset = QPoint(0,0);
-    this->rectangle = new MapRectangle(1,1);
-    this->scene()->addItem(this->rectangle);
-
+    if (opt.mode == PEN)
+    {
+        this->rectangle_offset = QPoint(0,0);
+        int w = 1;
+        int h = 1;
+        if (brush.length() > 2)
+        {
+            w = brush.at(0);
+            h = brush.at(1);
+        }
+        this->rectangle = new MapRectangle(w,h);
+        this->scene()->addItem(this->rectangle);
+    }
+    else if (opt.mode == SELECT)
+    {
+        //this->select_rectangle = new MapSelectRectangle(0,0); //not displayed
+    }
 }

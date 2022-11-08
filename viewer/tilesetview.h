@@ -37,6 +37,11 @@ public:
     QPoint last_pos;
     int max_height = 0;
 
+
+public slots:
+    void select_tile(int value);
+
+
 signals:
     void selection_changed(QList<int>);
 

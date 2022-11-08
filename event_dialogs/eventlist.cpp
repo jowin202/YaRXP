@@ -10,7 +10,7 @@ EventList::EventList(QWidget *parent) : QListWidget(parent)
     connect(this, SIGNAL(itemSelectionChanged()), this, SLOT(fix_selections()));
 }
 
-void EventList::fill_list()
+void EventList::import_list()
 {
     RPGEventCommand *command;
 
@@ -19,8 +19,6 @@ void EventList::fill_list()
     RPGMoveRoute *current_move_route = 0;
     RPGMoveCommand *current_move_command = 0;
     int current_mv_index = 0;
-
-
 
 
     for (int i = 0; i < list->length(); i++)
@@ -75,6 +73,11 @@ void EventList::fill_list()
             this->addItem(new SimpleEventCell(command,system));
         }
     }
+}
+
+void EventList::export_list()
+{
+    //TODO
 }
 
 void EventList::fix_selections()

@@ -44,6 +44,21 @@ void MapTile::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, Q
         }
     }
 
+    if (opt->mode == MapView::EVENT)
+    {
+        painter->drawRect(0,0,32,32);
+        RPGEvent *event = map->event_on_pos(pos);
+        if (event != 0)
+        {
+            painter->setOpacity(0.5);
+            painter->setPen(Qt::white);
+            painter->drawRect(0,0,32,32);
+            painter->fillRect(0,0,32,32, Qt::white);
+            painter->setOpacity(1);
+            painter->drawImage(QPoint(0,0),event->get_event_pic());
+        }
+    }
+
     //for debugging
     //painter->drawRect(0,0,32,32);
 }
@@ -53,22 +68,3 @@ QRectF MapTile::boundingRect() const
     return QRectF(0,0,32,32);
 }
 
-void MapTile::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
-{
-
-}
-
-void MapTile::mousePressEvent(QGraphicsSceneMouseEvent *event)
-{
-
-}
-
-void MapTile::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
-{
-
-}
-
-void MapTile::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
-{
-
-}

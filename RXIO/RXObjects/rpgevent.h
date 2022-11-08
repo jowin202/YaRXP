@@ -20,6 +20,8 @@ public:
 
 
     QStringList param_order;
+
+    QImage get_event_pic();
 signals:
 
 

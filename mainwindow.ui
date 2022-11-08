@@ -227,6 +227,7 @@
    <addaction name="separator"/>
    <addaction name="actionPen"/>
    <addaction name="actionSelect"/>
+   <addaction name="separator"/>
   </widget>
   <action name="actionNew">
    <property name="text">
@@ -368,6 +369,9 @@
    </property>
    <property name="text">
     <string>Pen</string>
+   </property>
+   <property name="shortcut">
+    <string>F9</string>
    </property>
   </action>
   <action name="actionRectangle_Fill">

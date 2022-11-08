@@ -20,7 +20,7 @@ EventPage::EventPage(QWidget *parent, RPGEventPage *page, RPGSystem *system) :
         this->ui->widget_variable->setVariableWidget(system);
 
         this->ui->eventList->set_data(system, &page->list);
-        this->ui->eventList->fill_list(); // happens only if settings are valid ... TODO: check
+        this->ui->eventList->import_list();
     }
 
     connect(this->ui->combo_move_type, SIGNAL(currentIndexChanged(int)), this, SLOT(move_type_changed(int)));

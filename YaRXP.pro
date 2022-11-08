@@ -115,11 +115,10 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     viewer/maprectangle.cpp \
+    viewer/mapselectrectangle.cpp \
     viewer/maptile.cpp \
     maptreewidget.cpp \
     viewer/mapview.cpp \
-    mapwidget.cpp \
-    tilesetwidget.cpp \
     viewer/tilesetrectangle.cpp \
     viewer/tilesetview.cpp
 
@@ -222,11 +221,10 @@ HEADERS += \
     event_dialogs/moveroutedialog.h \
     mainwindow.h \
     viewer/maprectangle.h \
+    viewer/mapselectrectangle.h \
     viewer/maptile.h \
     maptreewidget.h \
     viewer/mapview.h \
-    mapwidget.h \
-    tilesetwidget.h \
     viewer/tilesetrectangle.h \
     viewer/tilesetview.h
 

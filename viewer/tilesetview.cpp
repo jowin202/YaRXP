@@ -1,6 +1,8 @@
 #include "RXIO/RXObjects/rpgtileset.h"
 #include "RXIO/RXObjects/rpgsystem.h"
 
+#include <QScrollBar>
+
 #include "tilesetrectangle.h"
 #include "tilesetview.h"
 
@@ -96,8 +98,9 @@ void TilesetView::mouseReleaseEvent(QMouseEvent *event)
 {
     Q_UNUSED(event);
 
-    this->clicked = false;
+    if (this->rectangle == 0) return;
 
+    this->clicked = false;
     QList<int> data;
 
     if (mapToScene(event->pos()).y() < 32)
@@ -127,4 +130,27 @@ void TilesetView::mouseReleaseEvent(QMouseEvent *event)
     }
 
     emit selection_changed(data);
+}
+
+void TilesetView::select_tile(int value)
+{
+    int x,y;
+
+    if (value >= 0x180)
+    {
+        value -= 0x180;
+        y = 1 + value/8;
+        x = value%8;
+    }
+    else
+    {
+        value /= 0x30;
+        x = value;
+        y = 0;
+    }
+
+    this->centerOn(128,32*y);
+    this->rectangle->setPos(32*x,32*y);
+    this->rectangle->setSize(1,1);
+    this->rectangle->update();
 }

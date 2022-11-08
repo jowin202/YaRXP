@@ -25,7 +25,7 @@ void TroopEventPage::setTroopPage(RPGSystem *system, RPGTroopPage *page, TroopPi
     this->page = page;
     this->troop_pic_label = label; //for enemies
     this->ui->list->set_data(system, &page->list);
-    this->ui->list->fill_list();
+    this->ui->list->import_list();
     this->ui->combo_span->setCurrentIndex(page->span);
 
     //condition

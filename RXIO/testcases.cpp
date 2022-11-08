@@ -302,7 +302,7 @@ Testcases::Testcases(RPGSystem *settings)
                 {
                     event_list.clear();
                     event_list.set_data(&system, &map->events.at(e)->pages.at(j)->list);
-                    event_list.fill_list();
+                    event_list.import_list();
                 }
             }
 

@@ -13,7 +13,6 @@
 
 #include "editors/dataeditor.h"
 
-#include "tilesetwidget.h"
 #include "RXIO/RXObjects/rpgsystem.h"
 
 #include "RXIO/iosystemfile.h"

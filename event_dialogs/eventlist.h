@@ -28,7 +28,8 @@ public:
 
 
 
-    void fill_list();
+    void import_list();
+    void export_list();
 
 public slots:
     void fix_selections();

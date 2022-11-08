@@ -1,7 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include "tilesetwidget.h"
 #include "RXIO/testcases.h"
 #include "RXIO/ioactorfile.h"
 #include "RXIO/ioclassfile.h"
@@ -37,6 +36,7 @@ MainWindow::MainWindow(QWidget *parent)
     this->ui->mapView->setSystem(&this->system);
     connect(this->ui->mapView, SIGNAL(zoom_in()), this, SLOT(zoom_in()));
     connect(this->ui->mapView, SIGNAL(zoom_out()), this, SLOT(zoom_out()));
+    connect(this->ui->mapView, SIGNAL(one_tile_selected(int)), this->ui->tilesetView, SLOT(select_tile(int)));
 
     this->ui->tilesetView->setSystem(&this->system);
     connect(this->ui->tilesetView, SIGNAL(selection_changed(QList<int>)), this->ui->mapView, SLOT(set_brush(QList<int>)));
@@ -50,12 +50,12 @@ MainWindow::MainWindow(QWidget *parent)
     this->layergroup->addAction(this->ui->actionLayer1);
     this->layergroup->addAction(this->ui->actionLayer2);
     this->layergroup->addAction(this->ui->actionLayer3);
-    this->layergroup->addAction(this->ui->actionEvents);
 
     this->modegroup = new QActionGroup(this);
     this->modegroup->addAction(this->ui->actionPen);
     this->modegroup->addAction(this->ui->actionSelect);
     this->modegroup->addAction(this->ui->actionFlood_Fill);
+    this->modegroup->addAction(this->ui->actionEvents);
 
     this->viewgroup = new QActionGroup(this);
     this->modegroup->addAction(this->ui->actionCurrent_Layers_and_below);
@@ -197,7 +197,7 @@ void MainWindow::on_actionEvents_triggered()
 {
     this->ui->actionPen->setChecked(false);
     this->ui->actionSelect->setChecked(false);
-    //this->ui->map_label->set_mode(MapWidget::EVENT);
+    this->ui->mapView->set_mode(MapView::EVENT);
 }
 
 void MainWindow::on_actionOpen_triggered()
@@ -216,36 +216,34 @@ void MainWindow::on_actionOpen_triggered()
 
 void MainWindow::on_actionPen_triggered()
 {
-    //this->ui->map_label->set_mode(MapWidget::PEN);
+    this->ui->mapView->set_mode(MapView::PEN);
     this->ui->actionPen->setChecked(true); // if activated per signal, pen should be selected in gui
 }
 
 void MainWindow::on_actionSelect_triggered()
 {
-    //this->ui->map_label->set_mode(MapWidget::SELECT);
+    this->ui->mapView->set_mode(MapView::SELECT);
 }
 
 void MainWindow::on_actionCut_triggered()
 {
-    //this->clipboard = this->ui->map_label->do_cut();
+    this->clipboard = this->ui->mapView->do_cut();
 }
 
 void MainWindow::on_actionCopy_triggered()
 {
-    //this->clipboard = this->ui->map_label->do_copy();
+    this->clipboard = this->ui->mapView->do_copy();
 }
 
 void MainWindow::on_actionPaste_triggered()
 {
-    /*
     if (this->clipboard.length() >= 3)
-        this->ui->map_label->do_paste(this->clipboard);
-        */
+        this->ui->mapView->do_paste(this->clipboard);
 }
 
 void MainWindow::on_actionDelete_triggered()
 {
-    //this->ui->map_label->do_delete();
+    this->ui->mapView->do_delete();
 }
 
 void MainWindow::on_actionFlood_Fill_triggered()
@@ -422,82 +420,74 @@ void MainWindow::on_actionSave_triggered()
 
 void MainWindow::on_actionshift_up_triggered()
 {
-    //this->ui->map_label->shift(MapWidget::UP, 1);
+    this->ui->mapView->shift(MapView::UP, 1);
 }
 
 void MainWindow::on_actionShift_Down_triggered()
 {
-    //this->ui->map_label->shift(MapWidget::DOWN, 1);
+    this->ui->mapView->shift(MapView::DOWN, 1);
 }
 
 void MainWindow::on_actionShift_right_triggered()
 {
-    //this->ui->map_label->shift(MapWidget::RIGHT, 1);
+    this->ui->mapView->shift(MapView::RIGHT, 1);
 }
 
 void MainWindow::on_actionShift_left_triggered()
 {
-    //this->ui->map_label->shift(MapWidget::LEFT, 1);
+    this->ui->mapView->shift(MapView::LEFT, 1);
 }
 
 void MainWindow::on_actionExtend_Left_triggered()
 {
-    //this->ui->map_label->extend(MapWidget::LEFT, 1);
+    this->ui->mapView->extend(MapView::LEFT, 1);
 }
 
 void MainWindow::on_actionExtend_Right_triggered()
 {
-    //this->ui->map_label->extend(MapWidget::RIGHT, 1);
+    this->ui->mapView->extend(MapView::RIGHT, 1);
 }
 
 void MainWindow::on_actionExtend_Up_triggered()
 {
-    //this->ui->map_label->extend(MapWidget::UP, 1);
+    this->ui->mapView->extend(MapView::UP, 1);
 }
 
 void MainWindow::on_actionExtend_Down_triggered()
 {
-    //this->ui->map_label->extend(MapWidget::DOWN, 1);
+    this->ui->mapView->extend(MapView::DOWN, 1);
 }
 
 void MainWindow::on_actionCrop_Left_triggered()
 {
-    /*
     bool ok;
     int val = QInputDialog::getInt(this, "Crop Left", "How many tiles should be cropped?", 1, 1, 20, 1, &ok);
     if (ok)
-        this->ui->map_label->crop(MapWidget::LEFT, val);
-        */
+        this->ui->mapView->crop(MapView::LEFT, val);
 }
 
 void MainWindow::on_actionCrop_Right_triggered()
 {
-    /*
     bool ok;
     int val = QInputDialog::getInt(this, "Crop Right", "How many tiles should be cropped?", 1, 1, 20, 1, &ok);
     if (ok)
-        this->ui->map_label->crop(MapWidget::RIGHT, val);
-        */
+        this->ui->mapView->crop(MapView::RIGHT, val);
 }
 
 void MainWindow::on_actionCrop_Up_triggered()
 {
-    /*
     bool ok;
     int val = QInputDialog::getInt(this, "Crop Up", "How many tiles should be cropped?", 1, 1, 20, 1, &ok);
     if (ok)
-        this->ui->map_label->crop(MapWidget::UP, val);
-        */
+        this->ui->mapView->crop(MapView::UP, val);
 }
 
 void MainWindow::on_actionCrop_Down_triggered()
 {
-    /*
     bool ok;
     int val = QInputDialog::getInt(this, "Crop Down", "How many tiles should be cropped?", 1, 1, 20, 1, &ok);
     if (ok)
-        this->ui->map_label->crop(MapWidget::DOWN, val);
-        */
+        this->ui->mapView->crop(MapView::DOWN, val);
 }
 
 void MainWindow::on_actionOpen_Project_Folder_triggered()
