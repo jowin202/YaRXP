@@ -70,6 +70,7 @@ void MapView::set_current_and_below(bool val)
 
 void MapView::set_brush(QList<int> data)
 {
+    this->set_mode(PEN);
     this->brush = data;
     this->rectangle_offset = QPoint(0,0);
     this->rectangle->setSize(data.at(0), data.at(1));
