@@ -19,6 +19,7 @@ public:
 
 
     void set_enemy(int n);
+    void save();
 
 
     void setSystem(RPGSystem *system)
@@ -44,9 +45,11 @@ private slots:
 
     void on_button_change_treasure_clicked();
 
+
 private:
     Ui::EditEnemies *ui;
     RPGSystem *system;
+    int current;
 
     int current_item_id;
     int current_weapon_id;

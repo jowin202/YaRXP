@@ -53,6 +53,7 @@ ImageDialog::ImageDialog(RPGSystem *system, int mode, QString current_image_file
     case FOGS:
         title = "Fog Graphic";
         folder_name = "Fogs";
+        visible_hue = true;
         visible_fog_options = true;
         visible_options = true;
         break;
@@ -119,6 +120,15 @@ void ImageDialog::set_hue(int hue)
     this->update_image();
 }
 
+void ImageDialog::set_fog_options(int fog_sx, int fog_sy, int fog_opacity, int fog_zoom, int fog_blend_type)
+{
+    this->ui->spin_sx->setValue(fog_sx);
+    this->ui->spin_sy->setValue(fog_sy);
+    this->ui->spin_opacity->setValue(fog_opacity);
+    this->ui->spin_zoom->setValue(fog_zoom);
+    this->ui->combo_blending->setCurrentIndex(fog_blend_type);
+}
+
 void ImageDialog::update_image_list()
 {
     this->ui->list->clear();
@@ -161,6 +171,13 @@ void ImageDialog::update_image()
 
 void ImageDialog::on_button_ok_clicked()
 {
+
+    if (this->mode == FOGS)
+        emit ok_clicked_with_fog_options(this->ui->spin_sx->value(),
+                                         this->ui->spin_sy->value(),
+                                         this->ui->spin_opacity->value(),
+                                         this->ui->spin_zoom->value(),
+                                         this->ui->combo_blending->currentIndex());
 
     if (this->ui->list->currentItem() != 0)
     {

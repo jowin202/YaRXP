@@ -137,10 +137,19 @@ void DataEditor::on_button_apply_clicked()
     {
         this->ui->page_armors->save();
     }
-
-    //TODO: some missing
+    else if (this->ui->central_menu->currentRow() == ENEMIES)
+    {
+        this->ui->page_enemies->save();
+    }
+    //TODO: TROOPS
     else if (this->ui->central_menu->currentRow() == STATES)
     {
         this->ui->page_states->save();
     }
+    //TODO: ANIMATIONS
+    else if (this->ui->central_menu->currentRow() == TILESETS)
+    {
+        this->ui->page_tilesets->save();
+    }
+
 }

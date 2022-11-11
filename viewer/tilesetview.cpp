@@ -44,7 +44,6 @@ void TilesetView::set_tileset(int id)
     this->rectangle = new TilesetRectangle(1,1);
     this->rectangle->setPos(0,0);
     this->scene()->addItem(this->rectangle);
-
 }
 
 void TilesetView::mouseMoveEvent(QMouseEvent *event)

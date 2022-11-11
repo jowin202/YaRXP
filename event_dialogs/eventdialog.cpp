@@ -14,6 +14,7 @@ EventDialog::EventDialog(RPGEvent *event, RPGSystem *system, QWidget *parent) :
 
     if (this->event != 0)
     {
+        qDebug() << event->pages.length();
         this->ui->label_event_name->setText(event->name);
         for (int i = 0; i < this->event->pages.size(); i++)
         {
@@ -55,7 +56,6 @@ void EventDialog::on_button_new_clicked()
 
 void EventDialog::on_button_delete_clicked()
 {
-    //TODO event page
     if (this->ui->tab_widget->count() > 1)
     {
         this->ui->tab_widget->removeTab(this->ui->tab_widget->currentIndex());
@@ -76,5 +76,14 @@ void EventDialog::on_button_cancel_clicked()
 
 void EventDialog::on_button_apply_clicked()
 {
+    for (int i = 0 ; i < event->pages.length(); i++)
+    {
+        delete event->pages.at(i);
+    }
+    event->pages.clear();
 
+    for (int i = 0; i < this->ui->tab_widget->count(); i++)
+    {
+        event->pages.append(((EventPage*)this->ui->tab_widget->widget(i))->create_new_rpgeventpage());
+    }
 }

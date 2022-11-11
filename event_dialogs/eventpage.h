@@ -23,17 +23,23 @@ class EventPage : public QWidget
 public:
     explicit EventPage(QWidget *parent = nullptr, RPGEventPage *page = 0, RPGSystem *system = 0);
     ~EventPage();
-    QString character_name;
+
+    RPGEventPage *create_new_rpgeventpage();
 
 private slots:
     void move_type_changed(int val);
 
     void on_button_add_command_clicked();
-    void open_page_graphic_dialog();
 
 private:
     Ui::EventPage *ui;
     RPGSystem *system;
+
+
+    //save this from rpgeventpage
+    QStringList param_order;
+    QStringList condition_param_order;
+    QStringList graphic_param_order;
 };
 
 #endif // EVENTPAGE_H

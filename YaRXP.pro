@@ -98,6 +98,7 @@ SOURCES += \
     editors/skills/editskills.cpp \
     editors/states/editstates.cpp \
     editors/tilesets/edittilesets.cpp \
+    editors/tilesets/tileseteditwidget.cpp \
     editors/troops/edittroops.cpp \
     editors/troops/troopeventpage.cpp \
     editors/troops/trooppageconditiondialog.cpp \
@@ -205,6 +206,7 @@ HEADERS += \
     editors/skills/editskills.h \
     editors/states/editstates.h \
     editors/tilesets/edittilesets.h \
+    editors/tilesets/tileseteditwidget.h \
     editors/troops/edittroops.h \
     editors/troops/troopeventpage.h \
     editors/troops/trooppageconditiondialog.h \

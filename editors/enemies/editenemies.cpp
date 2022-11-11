@@ -3,6 +3,7 @@
 
 #include "RXIO/RXObjects/rpgsystem.h"
 
+#include "dialogs/imagedialog.h"
 #include "enemyactiondialog.h"
 #include "treasuredialog.h"
 
@@ -25,6 +26,7 @@ void EditEnemies::set_enemy(int n)
 {
     if (this->system->enemies_list.length() <= n) return;
     RPGEnemy *current_enemy = this->system->enemies_list.at(n);
+    this->current = n;
 
     this->ui->line_name->setText(current_enemy->name);
     this->ui->spin_maxhp->setValue(current_enemy->maxhp);
@@ -46,10 +48,10 @@ void EditEnemies::set_enemy(int n)
 
     this->setTreasure(current_enemy->item_id,current_enemy->weapon_id,current_enemy->armor_id, current_enemy->treasure_prob);
 
-    this->ui->label_battler_img->setPixmap(QPixmap::fromImage(current_enemy->get_battler_graphics(system)));
+    this->ui->label_battler_img->set_data(system, ImageDialog::BATTLERS, current_enemy->battler_name, current_enemy->battler_hue);
 
     this->ui->element_widget->setElements(system, &current_enemy->element_ranks);
-    this->ui->state_widget->setElements(system, &current_enemy->state_ranks);
+    this->ui->state_widget->setStates(system, &current_enemy->state_ranks);
 
 
     this->ui->table_action->clearContents();
@@ -75,11 +77,68 @@ void EditEnemies::set_enemy(int n)
         this->ui->table_action->setItem(row,8,new QTableWidgetItem(QString::number(action->skill_id)));
         this->ui->table_action->setItem(row,9,new QTableWidgetItem(QString::number(action->rating)));
         this->ui->table_action->setItem(row,10,new QTableWidgetItem(QString::number(action->basic)));
-
-
     }
 
     this->ui->table_action->resizeColumnsToContents();
+
+}
+
+void EditEnemies::save()
+{
+    int n = this->current;
+    if (this->system->enemies_list.length() <= n) return;
+    RPGEnemy *current_enemy = this->system->enemies_list.at(n);
+
+    current_enemy->name = this->ui->line_name->text();
+    current_enemy->maxhp = this->ui->spin_maxhp->value();
+    current_enemy->maxsp = this->ui->spin_maxsp->value();
+    current_enemy->str = this->ui->spin_str->value();
+    current_enemy->dex = this->ui->spin_dex->value();
+    current_enemy->agi = this->ui->spin_agi->value();
+    current_enemy->int_var = this->ui->spin_int->value();
+    current_enemy->atk = this->ui->spin_atk->value();
+    current_enemy->pdef = this->ui->spin_pdef->value();
+    current_enemy->mdef = this->ui->spin_mdef->value();
+    current_enemy->eva = this->ui->spin_eva->value();
+
+    current_enemy->animation1_id = this->ui->comb_attacker->currentData().toInt();
+    current_enemy->animation2_id = this->ui->combo_target->currentData().toInt();
+
+    current_enemy->exp = this->ui->spin_exp->value();
+    current_enemy->gold = this->ui->spin_gold->value();
+
+    current_enemy->item_id = this->current_item_id;
+    current_enemy->weapon_id = this->current_weapon_id;
+    current_enemy->armor_id = this->current_armor_id;
+    current_enemy->treasure_prob = this->current_prob;
+
+    current_enemy->battler_name = this->ui->label_battler_img->current_file;
+    current_enemy->battler_hue = this->ui->label_battler_img->hue;
+
+    this->ui->element_widget->getValues(&current_enemy->element_ranks);
+    this->ui->state_widget->getValues(&current_enemy->state_ranks);
+
+    for (int i = 0; i < current_enemy->action.length(); i++)
+        delete current_enemy->action.at(i);
+    current_enemy->action.clear();
+
+    for (int i = 0; i < this->ui->table_action->rowCount(); i++)
+    {
+        RPGEnemyAction *current_action = new RPGEnemyAction;
+
+
+        current_action->condition_turn_a = this->ui->table_action->item(i,2)->text().toInt();
+        current_action->condition_turn_b = this->ui->table_action->item(i,3)->text().toInt();
+        current_action->condition_hp = this->ui->table_action->item(i,4)->text().toInt();
+        current_action->condition_level = this->ui->table_action->item(i,5)->text().toInt();
+        current_action->condition_switch_id = this->ui->table_action->item(i,6)->text().toInt();
+        current_action->kind = this->ui->table_action->item(i,7)->text().toInt();
+        current_action->skill_id = this->ui->table_action->item(i,8)->text().toInt();
+        current_action->rating = this->ui->table_action->item(i,9)->text().toInt();
+        current_action->basic = this->ui->table_action->item(i,10)->text().toInt();
+
+        current_enemy->action.append(current_action);
+    }
 
 }
 
@@ -119,6 +178,8 @@ void EditEnemies::change_action(int row, int turn_a, int turn_b, int hp, int lev
 
     if (row == -1)
     {
+        row = this->ui->table_action->rowCount();
+        this->ui->table_action->setRowCount(row+1);
         QTableWidgetItem *item;
         this->ui->table_action->setItem(row,0, item = new QTableWidgetItem(action.get_action_as_string(system)));
         this->set_readonly(item);

@@ -24,7 +24,8 @@ public:
     void mouseDoubleClickEvent(QMouseEvent *ev);
 
     QString current_file;
-    int hue;
+    int hue = 0;
+    int tile_id;
 
 public slots:
     void set_current(QString file)
@@ -35,7 +36,7 @@ public slots:
 private:
     RPGSystem *system;
     int mode;
-    RPGEventPage *page = 0;
+    RPGEventPage *page;
 
 };
 

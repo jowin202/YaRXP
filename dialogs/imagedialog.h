@@ -20,6 +20,7 @@ public:
     ~ImageDialog();
 
     void set_hue(int hue);
+    void set_fog_options(int fog_sx, int fog_sy, int fog_opacity, int fog_zoom, int fog_blend_type);
 
     enum { EVENTPAGE, ANIMATIONS, AUTOTILES, BATTLEBACKS, BATTLERS, CHARACTERS, FOGS, ICONS, PANOMRAMAS, PICTURES, TILESETS, TITLES, TRANSITIONS, WINDOWSKINS};
 
@@ -34,6 +35,7 @@ public:
 signals:
     void ok_clicked(QString);
     void ok_clicked_with_hue(int);
+    void ok_clicked_with_fog_options(int,int,int,int,int);
 
 public slots:
     void update_image_list();
