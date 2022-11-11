@@ -23,6 +23,7 @@ class EventPage : public QWidget
 public:
     explicit EventPage(QWidget *parent = nullptr, RPGEventPage *page = 0, RPGSystem *system = 0);
     ~EventPage();
+    QString character_name;
 
 private slots:
     void move_type_changed(int val);
@@ -32,7 +33,6 @@ private slots:
 
 private:
     Ui::EventPage *ui;
-    RPGEventPage *page;
     RPGSystem *system;
 };
 

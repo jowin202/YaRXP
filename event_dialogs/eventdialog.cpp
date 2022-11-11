@@ -10,10 +10,10 @@ EventDialog::EventDialog(RPGEvent *event, RPGSystem *system, QWidget *parent) :
     ui->setupUi(this);
 
     this->event = event;
+    this->system = system;
 
     if (this->event != 0)
     {
-        //ONLY DO THIS FOR EXISTING EVENTS
         this->ui->label_event_name->setText(event->name);
         for (int i = 0; i < this->event->pages.size(); i++)
         {
@@ -21,6 +21,7 @@ EventDialog::EventDialog(RPGEvent *event, RPGSystem *system, QWidget *parent) :
         }
     }
 
+    this->do_numbers_of_tabs_right();
 }
 
 EventDialog::~EventDialog()
@@ -40,19 +41,26 @@ void EventDialog::do_numbers_of_tabs_right()
     {
         this->ui->tab_widget->setTabText(i,QString::number(i+1));
     }
+
+    if (this->ui->tab_widget->count() <= 1) this->ui->button_delete->setEnabled(false);
+    else this->ui->button_delete->setEnabled(true);
+
 }
 
 void EventDialog::on_button_new_clicked()
 {
-    this->ui->tab_widget->addTab(new EventPage, "1");
+    this->ui->tab_widget->addTab(new EventPage(nullptr, 0, system), "1");
     this->do_numbers_of_tabs_right();
 }
 
 void EventDialog::on_button_delete_clicked()
 {
     //TODO event page
-    this->ui->tab_widget->removeTab(this->ui->tab_widget->currentIndex());
-    this->do_numbers_of_tabs_right();
+    if (this->ui->tab_widget->count() > 1)
+    {
+        this->ui->tab_widget->removeTab(this->ui->tab_widget->currentIndex());
+        this->do_numbers_of_tabs_right();
+    }
 }
 
 void EventDialog::on_button_ok_clicked()

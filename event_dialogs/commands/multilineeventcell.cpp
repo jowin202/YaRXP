@@ -30,6 +30,7 @@ MultilineEventCell::MultilineEventCell(RPGEventCommand *command, RPGSystem *syst
     }
     else if (code == 509)
     {
+        this->mvcmd = mvcmd;
         this->setText(indent_as_string + "                 : " + QString(mvcmd->get_command_text()));
     }
     else

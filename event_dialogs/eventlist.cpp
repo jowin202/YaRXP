@@ -14,6 +14,9 @@ void EventList::import_list()
 {
     RPGEventCommand *command;
 
+    if (this->list->length() > 0)
+        this->param_order = this->list->first()->param_order;
+
     //Multiline Commands
     MultilineEventCell *last_head = 0;
     RPGMoveRoute *current_move_route = 0;
@@ -24,6 +27,7 @@ void EventList::import_list()
     for (int i = 0; i < list->length(); i++)
     {
         command = list->at(i);
+        command->debug();
         //qDebug() << i << command->code << command->get_command_text(system);
 
 
@@ -77,7 +81,17 @@ void EventList::import_list()
 
 void EventList::export_list()
 {
-    //TODO
+    this->list->clear();
+
+    for (int i = 0; i < this->count(); i++)
+    {
+        SimpleEventCell *current_cell = (SimpleEventCell*)this->item(i);
+        RPGEventCommand *command = new RPGEventCommand;
+        command->code = current_cell->code;
+        command->indent = current_cell->indent;
+        command->parameters = current_cell->parameters;
+
+    }
 }
 
 void EventList::fix_selections()

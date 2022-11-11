@@ -55,63 +55,36 @@ public slots:
     void on_actionRun_Testcases_triggered();
 
 private slots:
+    void show_current_coordinates(int x,int y);
+
     void on_actionImport_RGSSAD_triggered();
-
-
     void on_actionActors_triggered();
-
     void on_actionClasses_triggered();
-
     void on_actionSkills_triggered();
-
     void on_actionItem_triggered();
-
     void on_actionWeapons_triggered();
-
     void on_actionArmors_triggered();
-
     void on_actionEnemies_triggered();
-
     void on_actionTroops_triggered();
-
     void on_actionStates_triggered();
-
     void on_actionAnimations_triggered();
-
     void on_actionTileset_Editor_triggered();
-
     void on_actionCommon_Scripts_triggered();
-
     void on_actionSystem_triggered();
-
     void on_actionScripting_Editor_triggered();
-
     void on_actionSave_triggered();
-
     void on_actionshift_up_triggered();
-
     void on_actionShift_Down_triggered();
-
     void on_actionShift_right_triggered();
-
     void on_actionShift_left_triggered();
-
     void on_actionExtend_Left_triggered();
-
     void on_actionExtend_Right_triggered();
-
     void on_actionExtend_Up_triggered();
-
     void on_actionExtend_Down_triggered();
-
     void on_actionCrop_Left_triggered();
-
     void on_actionCrop_Right_triggered();
-
     void on_actionCrop_Up_triggered();
-
     void on_actionCrop_Down_triggered();
-
     void on_actionOpen_Project_Folder_triggered();
 
     void on_actionExport_Map_Images_triggered();

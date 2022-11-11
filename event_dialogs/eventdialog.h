@@ -43,6 +43,7 @@ private slots:
 private:
     Ui::EventDialog *ui;
     RPGEvent *event;
+    RPGSystem *system;
 };
 
 #endif // EVENTDIALOG_H

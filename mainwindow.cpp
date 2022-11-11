@@ -37,6 +37,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(this->ui->mapView, SIGNAL(zoom_in()), this, SLOT(zoom_in()));
     connect(this->ui->mapView, SIGNAL(zoom_out()), this, SLOT(zoom_out()));
     connect(this->ui->mapView, SIGNAL(one_tile_selected(int)), this->ui->tilesetView, SLOT(select_tile(int)));
+    connect(this->ui->mapView, SIGNAL(mouse_over_coordinates(int,int)), this, SLOT(show_current_coordinates(int,int)));
 
     this->ui->tilesetView->setSystem(&this->system);
     connect(this->ui->tilesetView, SIGNAL(selection_changed(QList<int>)), this->ui->mapView, SLOT(set_brush(QList<int>)));
@@ -299,6 +300,11 @@ void MainWindow::on_actionRun_Testcases_triggered()
         QMessageBox::information(this, "Run Testcases","Testcases successfull");
     else
         QMessageBox::critical(this, "Run Testcases","Testcases failed! Please contact developer!");
+}
+
+void MainWindow::show_current_coordinates(int x, int y)
+{
+    this->ui->statusbar->showMessage(QString("x: %1, y: %2").arg(x,3,10,QChar('0')).arg(y,3,10,QChar('0')));
 }
 
 void MainWindow::on_actionActors_triggered()

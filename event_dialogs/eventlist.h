@@ -31,6 +31,7 @@ public:
     void import_list();
     void export_list();
 
+    QStringList param_order;
 public slots:
     void fix_selections();
 

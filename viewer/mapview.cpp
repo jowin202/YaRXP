@@ -21,6 +21,8 @@ MapView::MapView(QWidget *parent) : QGraphicsView(parent)
     //this->opt.dim = true;
     this->opt.mode = PEN;
 
+    //connect(this, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(prepare_context_menu(QPoint)));
+
 }
 
 void MapView::set_mode(int mode)
@@ -68,9 +70,15 @@ void MapView::set_current_and_below(bool val)
     this->scene()->update();
 }
 
+MapTile *MapView::get_tile_on_pos(int x, int y)
+{
+    return 0; //TODO
+}
+
 void MapView::set_brush(QList<int> data)
 {
-    this->set_mode(PEN);
+    if (this->opt.mode != PEN)
+        this->set_mode(PEN);
     this->brush = data;
     this->rectangle_offset = QPoint(0,0);
     this->rectangle->setSize(data.at(0), data.at(1));
@@ -87,6 +95,8 @@ void MapView::mouseMoveEvent(QMouseEvent *event)
     QPoint pos = QPoint((int)posf.x()/32, (int)posf.y()/32);
     if (pos == last_pos) return;
     this->last_pos = pos;
+
+    emit mouse_over_coordinates(pos.x(), pos.y());
 
     if (opt.mode == PEN)
     {
@@ -200,6 +210,15 @@ void MapView::mousePressEvent(QMouseEvent *event)
         {
             this->event_left_button_for_moving = true;
             this->event_for_moving = this->map->event_on_pos(pos);
+
+            if (event_for_moving != 0)
+            {
+                //update old pos
+                if (this->scene()->itemAt(this->opt.marked_event, QTransform()) != 0) this->scene()->update(); //itemAt(this->opt.marked_event, QTransform())->update();
+                this->opt.marked_event = pos;
+                //update new pos
+                if (this->scene()->itemAt(this->opt.marked_event, QTransform()) != 0) this->scene()->update(); //itemAt(this->opt.marked_event, QTransform())->update();
+            }
         }
     }
 }
@@ -245,12 +264,12 @@ void MapView::mouseReleaseEvent(QMouseEvent *event)
             this->event_left_button_for_moving = false;
             if (this->event_for_moving != 0 && this->map->event_on_pos(pos) == 0) // dest pos is free
             {
-                QPointF oldf = mapToScene(32*QPoint(this->event_for_moving->x, this->event_for_moving->y));
-                QPoint old = QPoint((int)oldf.x()/32, (int)oldf.y()/32);
+                //QPointF oldf = mapToScene(32*QPoint(this->event_for_moving->x, this->event_for_moving->y));
+                QPoint old = QPoint(this->event_for_moving->x, this->event_for_moving->y); //QPoint((int)oldf.x()/32, (int)oldf.y()/32);
                 this->event_for_moving->x = pos.x();
                 this->event_for_moving->y = pos.y();
-                ((MapTile*)this->itemAt(32*old))->update();
-                ((MapTile*)this->itemAt(32*pos))->update();
+                ((MapTile*)this->scene()->itemAt(32*old,QTransform()))->update();
+                ((MapTile*)this->scene()->itemAt(32*pos,QTransform()))->update();
             }
 
         }
@@ -265,8 +284,11 @@ void MapView::mouseDoubleClickEvent(QMouseEvent *event)
     if (opt.mode == EVENT)
     {
         RPGEvent *event = this->map->event_on_pos(pos);
-        EventDialog *dialog = new EventDialog(event,system);
-        dialog->show();
+        if (event != 0)
+        {
+            EventDialog *dialog = new EventDialog(event,system);
+            dialog->show();
+        }
     }
 }
 

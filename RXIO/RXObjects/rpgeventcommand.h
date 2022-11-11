@@ -28,7 +28,7 @@ public:
     int code;
     int indent;
     QList<RPGVariant> parameters;
-    RPGString type;
+    //RPGString type;
     RPGAudioFile audiofile;
     RPGMoveRoute move_route;
     QList<RPGString> choices_list; //code 102 only

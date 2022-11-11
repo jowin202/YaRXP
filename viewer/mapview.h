@@ -25,6 +25,7 @@ struct tile_options {
     int layer;
     bool current_and_below;
     //bool dim;
+    QPoint marked_event;
 };
 
 class MapView : public QGraphicsView
@@ -44,6 +45,9 @@ public:
     void set_layer(int layer);
     void set_current_and_below(bool val);
 
+
+    MapTile *get_tile_on_pos(QPoint pos) { return get_tile_on_pos(pos.x(), pos.y()); }
+    MapTile *get_tile_on_pos(int x, int y);
 
 
     void mouseMoveEvent(QMouseEvent *event) override;
@@ -123,7 +127,8 @@ signals:
     void zoom_in();
     void zoom_out();
     void one_tile_selected(int);
-    void hover_coordinates(int,int);
+    //void hover_coordinates(int,int);
+    void mouse_over_coordinates(int,int);
 
 public slots:
     void redraw();

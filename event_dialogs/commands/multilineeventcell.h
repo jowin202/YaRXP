@@ -28,6 +28,7 @@ public:
     bool is_head = false;
     QList<MultilineEventCell*> tail;
     MultilineEventCell *head = 0;
+    RPGMoveCommand *mvcmd = 0;
 
 
 private:
