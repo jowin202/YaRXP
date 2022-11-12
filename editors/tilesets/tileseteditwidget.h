@@ -5,7 +5,9 @@
 #include <QtMath>
 #include <QGraphicsView>
 #include <QGraphicsPixmapItem>
+#include <QScrollBar>
 
+#include "tile.h"
 
 class RPGTileset;
 class RPGSystem;
@@ -18,7 +20,7 @@ public:
 
     void setSystem(RPGSystem *system) {this->system = system; }
     void set_data(QList<int> *passages, QList<int> *priorities, QList<int> *terrain);
-
+    void set_mode(int mode);
 
 public slots:
     void set_tileset(QString tileset_image);
@@ -35,6 +37,12 @@ private:
     RPGTileset *current_tileset;
     RPGSystem *system;
     int tiles_num;
+    QGraphicsPixmapItem *autotiles_items[8];
+
+    QList<int> passages;
+    QList<int> priorities;
+    QList<int> terrain;
+    tile_options opt;
 };
 
 #endif // TILESETEDITWIDGET_H

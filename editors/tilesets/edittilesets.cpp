@@ -3,6 +3,7 @@
 
 #include "dialogs/imagedialog.h"
 
+#include "tile.h"
 #include "RXIO/RXObjects/rpgsystem.h"
 
 EditTilesets::EditTilesets(QWidget *parent) :
@@ -10,6 +11,7 @@ EditTilesets::EditTilesets(QWidget *parent) :
     ui(new Ui::EditTilesets)
 {
     ui->setupUi(this);
+
 }
 
 EditTilesets::~EditTilesets()
@@ -62,6 +64,7 @@ void EditTilesets::set_tileset(int n)
     this->ui->tileset_widget->set_autotile_6(this->ui->line_autotile_6->text());
     this->ui->tileset_widget->set_autotile_7(this->ui->line_autotile_7->text());
 
+    this->ui->tileset_widget->set_data(&current_tileset->passages, &current_tileset->priorities, &current_tileset->terrain_tag);
 
 
 }
@@ -193,30 +196,35 @@ void EditTilesets::on_button_battleback_clicked()
 
 void EditTilesets::on_button_passage_clicked()
 {
-
+    this->ui->tileset_widget->set_mode(Tile::PASSAGES);
 }
 
 void EditTilesets::on_button_passage_4dir_clicked()
 {
-
+    this->ui->tileset_widget->set_mode(Tile::PASSAGES4);
 }
 
 void EditTilesets::on_button_priority_clicked()
 {
-
+    this->ui->tileset_widget->set_mode(Tile::PRIORITY);
 }
 
 void EditTilesets::on_button_bush_flag_clicked()
 {
-
+    this->ui->tileset_widget->set_mode(Tile::BUSH);
 }
 
 void EditTilesets::on_button_counter_flag_clicked()
 {
-
+    this->ui->tileset_widget->set_mode(Tile::COUNTER);
 }
 
 void EditTilesets::on_button_terrain_flag_clicked()
+{
+    this->ui->tileset_widget->set_mode(Tile::TERRAIN);
+}
+
+void EditTilesets::on_button_autotile_1_triggered(QAction *arg1)
 {
 
 }

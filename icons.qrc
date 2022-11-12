@@ -24,5 +24,7 @@
         <file>icons/bx-rectangle.svg</file>
         <file>icons/bx-selection.svg</file>
         <file>icons/bx-pencil.svg</file>
+        <file>icons/bxs-down-arrow-alt.svg</file>
+        <file>icons/bx-circle.svg</file>
     </qresource>
 </RCC>
