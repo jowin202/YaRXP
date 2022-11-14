@@ -5,6 +5,7 @@
 #include <QtMath>
 #include <QGraphicsView>
 #include <QGraphicsPixmapItem>
+#include <QMouseEvent>
 #include <QScrollBar>
 
 #include "tile.h"

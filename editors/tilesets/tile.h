@@ -2,6 +2,7 @@
 #define TILE_H
 
 #include <QGraphicsItem>
+#include <QGraphicsSceneMouseEvent>
 #include <QPainter>
 #include <QDebug>
 

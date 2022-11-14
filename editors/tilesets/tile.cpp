@@ -19,6 +19,7 @@ void Tile::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     Q_UNUSED(option);
     Q_UNUSED(widget);
 
+    QPainterPath path;
 
 
     painter->setOpacity(0.8);
@@ -27,7 +28,7 @@ void Tile::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     if (opt->mode == PASSAGES)
     {
 
-        if ((passages->at(tile_num) & 0xF) != 0)
+        if ((passages->at(tile_num) & 0xF) == 0xF)
         {
             //X
             QPen pen;
@@ -68,6 +69,7 @@ void Tile::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
         QFont font = painter->font();
         font.setBold(true);
         font.setPixelSize(20);
+        painter->setOpacity(1);
         painter->setFont(font);
         painter->drawText(QRect(0,0,32,32), Qt::AlignHCenter | Qt::AlignVCenter, QString::number(priorities->at(tile_num)));
     }
@@ -77,8 +79,12 @@ void Tile::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
         {
             QPen pen;
             pen.setColor(Qt::white);
+            pen.setWidth(4);
             painter->setPen(pen);
-            painter->drawText(10,10, "~");
+            painter->drawRect(8,8,16,16);
+            pen.setColor(Qt::black);
+            painter->setPen(pen);
+            painter->drawRect(5,5,22,22);
         }
     }
     else if (opt->mode == COUNTER)
@@ -103,6 +109,7 @@ void Tile::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
         font.setBold(true);
         font.setPixelSize(20);
         painter->setFont(font);
+        painter->setOpacity(1);
         painter->drawText(QRect(0,0,32,32), Qt::AlignHCenter | Qt::AlignVCenter, QString::number(terrain->at(tile_num)));
     }
 
@@ -110,5 +117,43 @@ void Tile::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 
 void Tile::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
+    if (event->button() == Qt::RightButton) return;
 
+    if (opt->mode == PASSAGES)
+    {
+        int val = passages->at(tile_num);
+        if (val == 0xF)
+            passages->replace(tile_num, val & 0xFFFFF0); //32 bit integer assumed
+        else
+            passages->replace(tile_num, val | 0xF);
+    }
+    else if (opt->mode == PASSAGES4)
+    {
+
+    }
+    else if (opt->mode == PRIORITY)
+    {
+        int val = priorities->at(tile_num);
+        if (val == 5) val = 0;
+        else val++;
+        priorities->replace(tile_num, val);
+    }
+    else if (opt->mode == BUSH)
+    {
+        int val = passages->at(tile_num);
+        passages->replace(tile_num, val ^ 0x40);
+    }
+    else if (opt->mode == COUNTER)
+    {
+        int val = passages->at(tile_num);
+        passages->replace(tile_num, val ^ 0x80);
+    }
+    else if (opt->mode == TERRAIN)
+    {
+        int val = terrain->at(tile_num);
+        if (val == 31) val = 0;
+        else val++;
+        terrain->replace(tile_num, val);
+    }
+    this->update();
 }

@@ -47,7 +47,6 @@ void TilesetEditWidget::set_mode(int mode)
     this->scene()->update();
 }
 
-
 void TilesetEditWidget::set_tileset(QString tileset_image)
 {
     this->scene()->clear();
@@ -90,11 +89,17 @@ void TilesetEditWidget::set_tileset(QString tileset_image)
 
 void TilesetEditWidget::set_autotile(QString autotile_image, int pos)
 {
+    if (autotile_image == "")
+        return;
+
     QImage autotile_img(system->autotiles_dir + autotile_image);
 
     //QGraphicsPixmapItem *background = new QGraphicsPixmapItem(QPixmap::fromImage(autotile_img.copy(0,0,32,32)));
     //background->setPos(32*pos,0);
     //this->scene()->addItem(background);
+
+    if (this->autotiles_items[pos] == 0)
+        return;
 
     this->autotiles_items[pos]->setPixmap(QPixmap::fromImage(autotile_img.copy(0,0,32,32)));
     this->autotiles_items[pos]->update();
