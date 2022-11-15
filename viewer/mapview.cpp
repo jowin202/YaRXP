@@ -70,11 +70,6 @@ void MapView::set_current_and_below(bool val)
     this->scene()->update();
 }
 
-MapTile *MapView::get_tile_on_pos(int x, int y)
-{
-    return 0; //TODO
-}
-
 void MapView::set_brush(QList<int> data)
 {
     if (this->opt.mode != PEN)
@@ -100,12 +95,13 @@ void MapView::mouseMoveEvent(QMouseEvent *event)
 
     if (opt.mode == PEN)
     {
+        /*
         //workaround that rectangle does not go over topleft
         if ((pos+rectangle_offset).x() < 0)  pos.setX(-rectangle_offset.x());
         if ((pos+rectangle_offset).y() < 0)  pos.setY(-rectangle_offset.y());
         if ((pos+rectangle_offset).x()+rectangle->width() >= map->width)  pos.setX(map->width-rectangle_offset.x()-rectangle->width());
         if ((pos+rectangle_offset).y()+rectangle->height() >= map->height)  pos.setY(map->height-rectangle_offset.y()-rectangle->height());
-
+        */
 
         if (this->left_button_clicked)
         {
@@ -117,6 +113,7 @@ void MapView::mouseMoveEvent(QMouseEvent *event)
             QPoint topleft = QPoint(qMin(pos.x(),this->rightclick_from_pos.x()),qMin(pos.y(),this->rightclick_from_pos.y()));
             QPoint bottomright = QPoint(qMax(pos.x(),this->rightclick_from_pos.x()),qMax(pos.y(),this->rightclick_from_pos.y()));
             this->set_brush(this->map->get_elements_in_rectangle(QRect(topleft,bottomright),opt.layer,opt.layer));
+            last_valid_pos_in_draw_rectangle = pos;
             pos = topleft; //overwrite pos to topleft. rectangle should not move while rightclick
         }
 
@@ -157,14 +154,17 @@ void MapView::mousePressEvent(QMouseEvent *event)
 
     if (opt.mode == PEN)
     {
-        //workaround that rectangle does not go over topleft
-        if ((pos+rectangle_offset).x() < 0) pos.setX(-rectangle_offset.x());
-        if ((pos+rectangle_offset).y() < 0) pos.setY(-rectangle_offset.y());
-        if ((pos+rectangle_offset).x()+rectangle->width() >= map->width)  pos.setX(map->width-rectangle_offset.x()-rectangle->width());
-        if ((pos+rectangle_offset).y()+rectangle->height() >= map->height)  pos.setY(map->height-rectangle_offset.y()-rectangle->height());
 
         if (event->button() == Qt::LeftButton)
         {
+            /*
+            //workaround that rectangle does not go over topleft
+            if ((pos+rectangle_offset).x() < 0) pos.setX(-rectangle_offset.x());
+            if ((pos+rectangle_offset).y() < 0) pos.setY(-rectangle_offset.y());
+            if ((pos+rectangle_offset).x()+rectangle->width() >= map->width)  pos.setX(map->width-rectangle_offset.x()-rectangle->width());
+            if ((pos+rectangle_offset).y()+rectangle->height() >= map->height)  pos.setY(map->height-rectangle_offset.y()-rectangle->height());
+            */
+
             this->left_button_clicked = true;
             this->draw_from_pos = pos;
             this->map->put_elements_from_list(pos+rectangle_offset, QPoint(0,0), this->brush, this->opt.layer, this->opt.layer);
@@ -175,6 +175,7 @@ void MapView::mousePressEvent(QMouseEvent *event)
             this->rectangle->setPos(32*pos);
             this->right_button_clicked = true;
             this->rightclick_from_pos = pos;
+            last_valid_pos_in_draw_rectangle = pos;
             this->set_brush(this->map->get_elements_in_rectangle(QRect(pos.x(),pos.y(),1,1),this->opt.layer,this->opt.layer));
             this->rectangle->update();
         }
@@ -235,7 +236,7 @@ void MapView::mouseReleaseEvent(QMouseEvent *event)
     {
         this->right_button_clicked = false;
         if (this->rectangle != 0)
-            this->rectangle_offset = QPoint(this->rectangle->pos().x()/32,this->rectangle->pos().y()/32)-pos;
+            this->rectangle_offset = QPoint(this->rectangle->pos().x()/32,this->rectangle->pos().y()/32)-last_valid_pos_in_draw_rectangle;
 
         if (this->brush.at(0) == 1 && this->brush.at(1) == 1 && this->brush.length() == 3)
             emit one_tile_selected(this->brush.at(2));
@@ -324,6 +325,7 @@ void MapView::redraw()
             this->scene()->addItem(tile);
         }
     }
+    this->scene()->setSceneRect(0,0,32*map->width,32*map->height);
 
     if (opt.mode == PEN)
     {

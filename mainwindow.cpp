@@ -254,8 +254,6 @@ void MainWindow::on_actionFlood_Fill_triggered()
 
 
 
-
-
 void MainWindow::on_actionAll_Layers_triggered()
 {
     this->ui->mapView->set_current_and_below(false);

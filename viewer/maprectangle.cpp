@@ -16,7 +16,7 @@ void MapRectangle::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
     //pen.setColor(QColor(150,150,150));
     painter->setPen(pen);
 
-    painter->drawRect(0,0,32*w,32*h);
+    painter->drawRect(2,2,32*w-4,32*h-4);
 }
 
 QRectF MapRectangle::boundingRect() const

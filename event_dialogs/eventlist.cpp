@@ -27,7 +27,7 @@ void EventList::import_list()
     for (int i = 0; i < list->length(); i++)
     {
         command = list->at(i);
-        command->debug();
+        //command->debug();
         //qDebug() << i << command->code << command->get_command_text(system);
 
 

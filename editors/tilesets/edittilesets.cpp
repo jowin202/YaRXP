@@ -224,7 +224,3 @@ void EditTilesets::on_button_terrain_flag_clicked()
     this->ui->tileset_widget->set_mode(Tile::TERRAIN);
 }
 
-void EditTilesets::on_button_autotile_1_triggered(QAction *arg1)
-{
-
-}

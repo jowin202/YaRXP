@@ -32,6 +32,7 @@ void TilesetView::set_tileset(int id)
     this->max_height = this->current_tileset->tileset.height()+32;
     background->setPos(0,32);
     this->scene()->addItem(background);
+    this->scene()->setSceneRect(0,0,256,max_height);
 
 
     for (int i = 0; i < 7; i++)

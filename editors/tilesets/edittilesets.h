@@ -52,8 +52,6 @@ private slots:
     void on_button_counter_flag_clicked();
     void on_button_terrain_flag_clicked();
 
-    void on_button_autotile_1_triggered(QAction *arg1);
-
 private:
     Ui::EditTilesets *ui;
     RPGSystem *system;

@@ -45,11 +45,6 @@ public:
     void set_layer(int layer);
     void set_current_and_below(bool val);
 
-
-    MapTile *get_tile_on_pos(QPoint pos) { return get_tile_on_pos(pos.x(), pos.y()); }
-    MapTile *get_tile_on_pos(int x, int y);
-
-
     void mouseMoveEvent(QMouseEvent *event) override;
     void mousePressEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
@@ -149,6 +144,7 @@ private:
     QPoint draw_from_pos;
     QPoint rightclick_from_pos;
     QPoint rectangle_offset = QPoint(0,0);
+    QPoint last_valid_pos_in_draw_rectangle; //needed for calculating rectangle offset
     bool left_button_clicked = false;
     bool right_button_clicked = false;
 
