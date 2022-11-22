@@ -239,9 +239,17 @@ QString RPGEventCommand::get_command_text(RPGSystem *system)
     else if (code == 401)
         return "       : " + parameters.at(0).str;
     else if (code == 102)
-        return "TODO Show Choices";
+    {
+        QString choices;
+        for (int i = 0; i < this->choices_list.length(); i++)
+            choices += QString(choices_list.at(i)) + QString(i+1 == this->choices_list.length() ? "" : ", ");
+        return "@>Show Choices: " + choices;
+    }
     else if (code == 402)
+    {
+        qDebug() << this->choices_list;
         return "TODO Show Choices Multiline";
+    }
     else if (code == 402)
         return "TODO Show Choices Branch End";
     else if (code == 103)

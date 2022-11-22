@@ -73,8 +73,9 @@ void EventList::import_list()
             current_mv_index = 0;
             current_move_route = 0;
             current_move_command = 0;
+            SimpleEventCell *cell = new SimpleEventCell(command,system);
 
-            this->addItem(new SimpleEventCell(command,system));
+            this->addItem(cell);
         }
     }
 }
