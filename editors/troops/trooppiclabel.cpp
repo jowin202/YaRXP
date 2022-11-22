@@ -39,7 +39,7 @@ void TroopPicLabel::mouseReleaseEvent(QMouseEvent *ev)
 
 void TroopPicLabel::mouseMoveEvent(QMouseEvent *ev)
 {
-    if (ev->x() <= 0 || ev->y() <= 0 || ev->x() >= 320 || ev->y() >= 160)
+    if (ev->position().x() <= 0 || ev->position().y() <= 0 || ev->position().x() >= 320 || ev->position().y() >= 160)
         return; //out of range
 
     if (this->left_clicked && this->marked_member >= 0)

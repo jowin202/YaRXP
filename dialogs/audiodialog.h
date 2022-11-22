@@ -7,7 +7,7 @@
 #include <QKeyEvent>
 #include <QDir>
 #include <QDirIterator>
-#include <QSound>
+#include <QSoundEffect>
 #include "RXIO/RXObjects/rpgaudiofile.h"
 
 namespace Ui {

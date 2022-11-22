@@ -76,7 +76,9 @@ void AudioDialog::on_button_cancel_clicked()
 
 void AudioDialog::on_button_play_clicked()
 {
-    QSound::play(system->audio_dir + music_type + QDir::separator() + this->ui->list->currentItem()->text());
+    QSoundEffect effect;
+    effect.setSource(QUrl::fromLocalFile(system->audio_dir + music_type + QDir::separator() + this->ui->list->currentItem()->text()));
+    effect.play();
 }
 
 void AudioDialog::on_button_stop_clicked()

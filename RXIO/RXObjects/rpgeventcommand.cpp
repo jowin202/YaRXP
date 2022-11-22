@@ -8,7 +8,7 @@ RPGEventCommand::RPGEventCommand(QObject *parent) : QObject(parent)
 
 void RPGEventCommand::debug()
 {
-    qDebug() << "code: " << code << " indent: " << indent << " val: " << this->getType() << " parameters: " << parameters;
+    //qDebug() << "code: " << code << " indent: " << indent << " val: " << this->getType() << " parameters: " << parameters;
 }
 
 QString RPGEventCommand::getType()

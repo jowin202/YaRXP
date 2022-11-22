@@ -117,8 +117,10 @@ void MapView::mouseMoveEvent(QMouseEvent *event)
             pos = topleft; //overwrite pos to topleft. rectangle should not move while rightclick
         }
 
+        QPointF oldpos = rectangle->pos();
         rectangle->setPos(32*(pos+rectangle_offset));
         rectangle->update();
+        this->scene()->update(oldpos.x(), oldpos.y(),rectangle->boundingRect().width(), rectangle->boundingRect().height());
     }
     else if (opt.mode == SELECT)
     {
@@ -297,7 +299,7 @@ void MapView::wheelEvent(QWheelEvent *event)
 {
     if ((event->modifiers() & Qt::Modifier::CTRL) != 0)
     {
-        if (event->delta() > 0)
+        if (event->pixelDelta().y() > 0)
             emit zoom_in();
         else emit zoom_out();
 
