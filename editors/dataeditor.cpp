@@ -1,6 +1,9 @@
 #include "dataeditor.h"
 #include "ui_dataeditor.h"
 
+#include "RXIO2/rpgdb.h"
+#include "RXIO2/rpgeditorcontroller.h"
+
 DataEditor::DataEditor(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::DataEditor)
@@ -18,15 +21,21 @@ void DataEditor::set_widget(int widget)
     this->ui->central_menu->setCurrentRow(widget);
 }
 
-void DataEditor::setSystem(RPGSystem *system)
+void DataEditor::setSystem(RPGSystem *system, RPGDB *db)
 {
+    this->db = db;
+    this->ec = db->prepare_data_editor();
+
     this->system = system;
-    this->ui->page_actors->setSystem(system);
+    this->ui->page_actors->setEC(ec);
     this->ui->page_classes->setSystem(system);
     this->ui->page_skills->setSystem(system);
     this->ui->page_items->setSystem(system);
     this->ui->page_weapons->setSystem(system);
-    this->ui->page_armors->setSystem(system);
+
+    this->ui->page_armors->setEC(ec);
+
+
     this->ui->page_enemies->setSystem(system);
     this->ui->page_troops->setSystem(system);
     this->ui->page_states->setSystem(system);
@@ -36,13 +45,16 @@ void DataEditor::setSystem(RPGSystem *system)
 }
 
 
+
 void DataEditor::on_object_list_currentRowChanged(int currentRow)
 {
     if (currentRow < 0) return;
 
+    this->ec->set_current_object(this->ui->central_menu->currentRow(), currentRow+1);
+
     if (this->ui->central_menu->currentRow() == ACTORS)
     {
-        this->ui->page_actors->set_actor(currentRow);
+        //this->ui->page_actors->set_actor(currentRow);
     }
     else if (this->ui->central_menu->currentRow() == CLASSES)
     {

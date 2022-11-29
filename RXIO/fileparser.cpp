@@ -356,11 +356,11 @@ void FileParser::write_variant(RPGVariant var)
 {
     if (var.rpgstring_set)
         this->write_string(var.str);
-    else if (var.type() == QVariant::String)
+    else if (var.typeId() == QMetaType::QString)
         this->write_string(var.toString());
-    else if (var.type() == QVariant::Int)
+    else if (var.typeId() == QMetaType::Int)
         this->write_integer(var.toInt());
-    else if (var.type() == QVariant::Bool)
+    else if (var.typeId() == QMetaType::Bool)
         this->write_bool(var.toBool());
 }
 

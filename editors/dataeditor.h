@@ -6,6 +6,10 @@
 
 #include "../RXIO/RXObjects/rpgsystem.h"
 
+class RPGDB;
+class RPGEditorController;
+
+
 namespace Ui {
 class DataEditor;
 }
@@ -20,7 +24,7 @@ public:
 
     enum {ACTORS, CLASSES, SKILLS, ITEMS, WEAPONS, ARMORS, ENEMIES, TROOPS, STATES, ANIMATIONS, TILESETS, COMMONEVENTS, SYSTEM};
     void set_widget(int widget);
-    void setSystem(RPGSystem *system);
+    void setSystem(RPGSystem *system, RPGDB *db);
 
 
 private slots:
@@ -36,6 +40,8 @@ private slots:
 private:
     Ui::DataEditor *ui;
     RPGSystem *system;
+    RPGDB *db;
+    RPGEditorController *ec;
 
 };
 

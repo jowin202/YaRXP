@@ -175,7 +175,7 @@
      <item row="1" column="3">
       <widget class="QSpinBox" name="spin_eva">
        <property name="minimum">
-        <number>0</number>
+        <number>-100</number>
        </property>
        <property name="maximum">
         <number>999</number>

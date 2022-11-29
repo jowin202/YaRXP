@@ -66,6 +66,11 @@ SOURCES += \
     RXIO/iotroopfile.cpp \
     RXIO/ioweaponfile.cpp \
     RXIO/testcases.cpp \
+    RXIO2/parser.cpp \
+    RXIO2/rpgdb.cpp \
+    RXIO2/rpgeditorcontroller.cpp \
+    RXIO2/rxexception.cpp \
+    RXIO2/writer.cpp \
     datasource.cpp \
     dialogs/audiodialog.cpp \
     dialogs/imagedialog.cpp \
@@ -175,6 +180,11 @@ HEADERS += \
     RXIO/iotroopfile.h \
     RXIO/ioweaponfile.h \
     RXIO/testcases.h \
+    RXIO2/parser.h \
+    RXIO2/rpgdb.h \
+    RXIO2/rpgeditorcontroller.h \
+    RXIO2/rxexception.h \
+    RXIO2/writer.h \
     datasource.h \
     dialogs/audiodialog.h \
     dialogs/imagedialog.h \

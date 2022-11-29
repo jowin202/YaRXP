@@ -20,6 +20,12 @@
 #include "RXIO/ioscriptfile.h"
 
 
+
+
+#include "RXIO2/rpgdb.h"
+#include "RXIO2/rpgeditorcontroller.h"
+
+
 #include <QDebug>
 #include <QToolButton>
 #include <QActionGroup>
@@ -84,6 +90,10 @@ void MainWindow::open_project(QString project_path)
 
     if (project_path != "" && fi.exists() && fi.isFile())
     {
+        //RXIO2
+        this->db.load_project(fi.absoluteDir().path());
+
+        //RXIO1
         this->system.current_project_dir = fi.absoluteDir().path();
         this->system.data_dir = this->system.current_project_dir + QDir::separator() + "Data" + QDir::separator();
         this->system.graphics_dir = this->system.current_project_dir + QDir::separator() + "Graphics" + QDir::separator();
@@ -308,7 +318,7 @@ void MainWindow::show_current_coordinates(int x, int y)
 void MainWindow::on_actionActors_triggered()
 {
     DataEditor *da = new DataEditor;
-    da->setSystem(&this->system);
+    da->setSystem(&this->system, &this->db);
     da->set_widget(DataEditor::ACTORS);
     da->show();
 }
@@ -316,7 +326,7 @@ void MainWindow::on_actionActors_triggered()
 void MainWindow::on_actionClasses_triggered()
 {
     DataEditor *da = new DataEditor;
-    da->setSystem(&this->system);
+    da->setSystem(&this->system, &this->db);
     da->set_widget(DataEditor::CLASSES);
     da->show();
 }
@@ -324,7 +334,7 @@ void MainWindow::on_actionClasses_triggered()
 void MainWindow::on_actionSkills_triggered()
 {
     DataEditor *da = new DataEditor;
-    da->setSystem(&this->system);
+    da->setSystem(&this->system, &this->db);
     da->set_widget(DataEditor::SKILLS);
     da->show();
 }
@@ -332,7 +342,7 @@ void MainWindow::on_actionSkills_triggered()
 void MainWindow::on_actionItem_triggered()
 {
     DataEditor *da = new DataEditor;
-    da->setSystem(&this->system);
+    da->setSystem(&this->system, &this->db);
     da->set_widget(DataEditor::ITEMS);
     da->show();
 }
@@ -340,7 +350,7 @@ void MainWindow::on_actionItem_triggered()
 void MainWindow::on_actionWeapons_triggered()
 {
     DataEditor *da = new DataEditor;
-    da->setSystem(&this->system);
+    da->setSystem(&this->system, &this->db);
     da->set_widget(DataEditor::WEAPONS);
     da->show();
 }
@@ -348,7 +358,7 @@ void MainWindow::on_actionWeapons_triggered()
 void MainWindow::on_actionArmors_triggered()
 {
     DataEditor *da = new DataEditor;
-    da->setSystem(&this->system);
+    da->setSystem(&this->system, &this->db);
     da->set_widget(DataEditor::ARMORS);
     da->show();
 }
@@ -356,7 +366,7 @@ void MainWindow::on_actionArmors_triggered()
 void MainWindow::on_actionEnemies_triggered()
 {
     DataEditor *da = new DataEditor;
-    da->setSystem(&this->system);
+    da->setSystem(&this->system, &this->db);
     da->set_widget(DataEditor::ENEMIES);
     da->show();
 }
@@ -364,7 +374,7 @@ void MainWindow::on_actionEnemies_triggered()
 void MainWindow::on_actionTroops_triggered()
 {
     DataEditor *da = new DataEditor;
-    da->setSystem(&this->system);
+    da->setSystem(&this->system, &this->db);
     da->set_widget(DataEditor::TROOPS);
     da->show();
 }
@@ -372,7 +382,7 @@ void MainWindow::on_actionTroops_triggered()
 void MainWindow::on_actionStates_triggered()
 {
     DataEditor *da = new DataEditor;
-    da->setSystem(&this->system);
+    da->setSystem(&this->system, &this->db);
     da->set_widget(DataEditor::STATES);
     da->show();
 }
@@ -380,7 +390,7 @@ void MainWindow::on_actionStates_triggered()
 void MainWindow::on_actionAnimations_triggered()
 {
     DataEditor *da = new DataEditor;
-    da->setSystem(&this->system);
+    da->setSystem(&this->system, &this->db);
     da->set_widget(DataEditor::ANIMATIONS);
     da->show();
 }
@@ -388,7 +398,7 @@ void MainWindow::on_actionAnimations_triggered()
 void MainWindow::on_actionTileset_Editor_triggered()
 {
     DataEditor *da = new DataEditor;
-    da->setSystem(&this->system);
+    da->setSystem(&this->system, &this->db);
     da->set_widget(DataEditor::TILESETS);
     da->show();
 }
@@ -396,7 +406,7 @@ void MainWindow::on_actionTileset_Editor_triggered()
 void MainWindow::on_actionCommon_Scripts_triggered()
 {
     DataEditor *da = new DataEditor;
-    da->setSystem(&this->system);
+    da->setSystem(&this->system, &this->db);
     da->set_widget(DataEditor::COMMONEVENTS);
     da->show();
 }
@@ -404,7 +414,7 @@ void MainWindow::on_actionCommon_Scripts_triggered()
 void MainWindow::on_actionSystem_triggered()
 {
     DataEditor *da = new DataEditor;
-    da->setSystem(&this->system);
+    da->setSystem(&this->system, &this->db);
     da->set_widget(DataEditor::SYSTEM);
     da->show();
 }

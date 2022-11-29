@@ -1,7 +1,10 @@
-#include "editactors.h"
+                #include "editactors.h"
 #include "ui_editactors.h"
 
 #include "dialogs/imagedialog.h"
+
+#include "RXIO2/rpgdb.h"
+#include "RXIO2/rpgeditorcontroller.h"
 
 #include "editexpcurve.h"
 #include "editoractorparameters.h"
@@ -17,6 +20,37 @@ EditActors::~EditActors()
 {
     delete ui;
 }
+
+void EditActors::setEC(RPGEditorController *ec)
+{
+    this->ec = ec;
+    this->ec->connect_string_to_text_field(RPGDB::ACTORS, "@name", this->ui->line_name);
+    this->ec->connect_int_to_spin_box(RPGDB::ACTORS, "@initial_level", this->ui->spin_initial);
+    this->ec->connect_int_to_spin_box(RPGDB::ACTORS, "@final_level", this->ui->spin_final);
+
+    connect(this->ec, SIGNAL(current_actor_exp_curve(int,int)), this, SLOT(set_exp_curve(int,int)));
+    connect(this->ec, SIGNAL(current_actor_parameters(QJsonObject)), this, SLOT(import_params(QJsonObject)));
+    connect(this->ec, SIGNAL(current_actor_parameters(QJsonObject)), this, SLOT(update_params()));
+
+    this->ec->connect_int_to_data_combo_box(RPGDB::ACTORS, "@class_id", this->ui->combo_class, RPGDB::CLASSES, true, 3, false);
+
+    connect(this->ui->combo_class, &QComboBox::currentIndexChanged, this, [=]() {  } );
+
+    this->ec->connect_int_to_data_combo_box(RPGDB::ACTORS, "@weapon_id", this->ui->combo_weapon, RPGDB::CLASSES_WEAPONS, true, 3, true);
+    this->ec->connect_int_to_data_combo_box(RPGDB::ACTORS, "@armor1_id", this->ui->combo_shield, RPGDB::CLASSES_SHIELD, true, 3, true);
+    this->ec->connect_int_to_data_combo_box(RPGDB::ACTORS, "@armor2_id", this->ui->combo_helmet, RPGDB::CLASSES_HELMET, true, 3, true);
+    this->ec->connect_int_to_data_combo_box(RPGDB::ACTORS, "@armor3_id", this->ui->combo_body, RPGDB::CLASSES_BODY, true, 3, true);
+    this->ec->connect_int_to_data_combo_box(RPGDB::ACTORS, "@armor4_id", this->ui->combo_accessory, RPGDB::CLASSES_ACCESSORY, true, 3, true);
+
+    this->ec->connect_bool_to_check_box(RPGDB::ACTORS, "@weapon_fix", this->ui->check_weapon);
+    this->ec->connect_bool_to_check_box(RPGDB::ACTORS, "@armor1_fix", this->ui->check_shield);
+    this->ec->connect_bool_to_check_box(RPGDB::ACTORS, "@armor2_fix", this->ui->check_helmet);
+    this->ec->connect_bool_to_check_box(RPGDB::ACTORS, "@armor3_fix", this->ui->check_body);
+    this->ec->connect_bool_to_check_box(RPGDB::ACTORS, "@armor4_fix", this->ui->check_accessory);
+
+
+}
+
 
 QImage EditActors::get_image_from_param(int param, int *values, bool big)
 {
@@ -87,6 +121,31 @@ void EditActors::set_exp_curve(int basis, int inflation)
     this->exp_basis = basis;
     this->exp_inflation = inflation;
     this->ui->line_exp_curve->setText(QString("Basis: %1, Inflation: %2").arg(basis).arg(inflation));
+
+    this->ec->obj_set_value(RPGDB::ACTORS, "@exp_basis", basis);
+    this->ec->obj_set_value(RPGDB::ACTORS, "@exp_inflation", inflation);
+
+}
+
+void EditActors::import_params(QJsonObject params)
+{
+    QJsonArray arr = params.value("values").toArray();
+
+    for (int i = 0; i < arr.size(); i++)
+    {
+        if (i%6 == 0)
+            this->maxhp[i/6] = arr.at(i).toInt();
+        else if (i%6 == 1)
+            this->maxsp[i/6] = arr.at(i).toInt();
+        else if (i%6 == 2)
+            this->str[i/6] = arr.at(i).toInt();
+        else if (i%6 == 3)
+            this->dex[i/6] = arr.at(i).toInt();
+        else if (i%6 == 4)
+            this->agi[i/6] = arr.at(i).toInt();
+        else if (i%6 == 5)
+            this->int_var[i/6] = arr.at(i).toInt();
+    }
 }
 
 void EditActors::update_params()
@@ -97,6 +156,29 @@ void EditActors::update_params()
     this->ui->button_param_dex->setIcon(QPixmap::fromImage(this->get_image_from_param(DEX, this->dex,false)));
     this->ui->button_param_agi->setIcon(QPixmap::fromImage(this->get_image_from_param(AGI, this->agi,false)));
     this->ui->button_param_int->setIcon(QPixmap::fromImage(this->get_image_from_param(INTVAR, this->int_var, false)));
+}
+
+void EditActors::export_params()
+{
+    QJsonArray arr;
+
+    for (int i = 0; i < 600; i++)
+    {
+        if (i%6 == 0)
+            arr.append(QJsonValue(this->maxhp[i/6]));
+        else if (i%6 == 1)
+            arr.append(QJsonValue(this->maxsp[i/6]));
+        else if (i%6 == 2)
+            arr.append(QJsonValue(this->str[i/6]));
+        else if (i%6 == 3)
+            arr.append(QJsonValue(this->dex[i/6]));
+        else if (i%6 == 4)
+            arr.append(QJsonValue(this->agi[i/6]));
+        else if (i%6 == 5)
+            arr.append(QJsonValue(this->int_var[i/6]));
+    }
+
+    this->ec->current_actor_set_parameters(arr);
 }
 
 
@@ -111,10 +193,8 @@ void EditActors::on_button_exp_curve_clicked()
 
 void EditActors::set_actor(int n)
 {
-    if (this->system->actor_list.length() <= n) return;
-    RPGActor *current_actor = this->system->actor_list.at(n);
-    this->current = n;
 
+    /*
     this->ui->line_name->setText(current_actor->name);
     this->ui->spin_initial->setValue(current_actor->initial_level);
     this->ui->spin_final->setValue(current_actor->final_level);
@@ -150,18 +230,13 @@ void EditActors::set_actor(int n)
     this->ui->check_helmet->setChecked(current_actor->armor2_fix);
     this->ui->check_body->setChecked(current_actor->armor3_fix);
     this->ui->check_accessory->setChecked(current_actor->armor4_fix);
-
-    /*
-    qDebug() << current_actor->to_hash();
-    QFile test("/tmp/opened.json");
-    test.open(QIODevice::WriteOnly);
-    test.write(current_actor->to_json());
-    test.close();
     */
+
 }
 
 void EditActors::save()
 {
+    /*
     int n = this->current;
     if (this->system->actor_list.length() <= n) return;
     RPGActor *current_actor = this->system->actor_list.at(n);
@@ -210,7 +285,7 @@ void EditActors::save()
     current_actor->armor3_fix = this->ui->check_body->isChecked();
     current_actor->armor4_fix = this->ui->check_accessory->isChecked();
 
-    /*
+
     qDebug() << current_actor->to_hash();
     QFile test("/tmp/saved.json");
     test.open(QIODevice::WriteOnly);
@@ -226,6 +301,7 @@ void EditActors::on_button_param_maxhp_clicked()
     dialog->set_parent(this);
     dialog->set_page(MAXHP);
     connect(dialog, SIGNAL(params_set()), this, SLOT(update_params()));
+    connect(dialog, SIGNAL(params_set()), this, SLOT(export_params()));
     dialog->show();
 }
 
@@ -235,6 +311,7 @@ void EditActors::on_button_param_maxsp_clicked()
     dialog->set_parent(this);
     dialog->set_page(MAXSP);
     connect(dialog, SIGNAL(params_set()), this, SLOT(update_params()));
+    connect(dialog, SIGNAL(params_set()), this, SLOT(export_params()));
     dialog->show();
 }
 
@@ -244,6 +321,7 @@ void EditActors::on_button_param_str_clicked()
     dialog->set_parent(this);
     dialog->set_page(STR);
     connect(dialog, SIGNAL(params_set()), this, SLOT(update_params()));
+    connect(dialog, SIGNAL(params_set()), this, SLOT(export_params()));
     dialog->show();
 
 }
@@ -254,6 +332,7 @@ void EditActors::on_button_param_dex_clicked()
     dialog->set_parent(this);
     dialog->set_page(DEX);
     connect(dialog, SIGNAL(params_set()), this, SLOT(update_params()));
+    connect(dialog, SIGNAL(params_set()), this, SLOT(export_params()));
     dialog->show();
 
 }
@@ -264,6 +343,7 @@ void EditActors::on_button_param_agi_clicked()
     dialog->set_parent(this);
     dialog->set_page(AGI);
     connect(dialog, SIGNAL(params_set()), this, SLOT(update_params()));
+    connect(dialog, SIGNAL(params_set()), this, SLOT(export_params()));
     dialog->show();
 
 }
@@ -274,5 +354,6 @@ void EditActors::on_button_param_int_clicked()
     dialog->set_parent(this);
     dialog->set_page(INTVAR);
     connect(dialog, SIGNAL(params_set()), this, SLOT(update_params()));
+    connect(dialog, SIGNAL(params_set()), this, SLOT(export_params()));
     dialog->show();
 }

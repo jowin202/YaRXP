@@ -3,11 +3,15 @@
 
 #include <QWidget>
 
+
+
+class RPGDB;
+class RPGEditorController;
+
 namespace Ui {
 class EditArmors;
 }
 
-class RPGSystem;
 class EditArmors : public QWidget
 {
     Q_OBJECT
@@ -16,19 +20,20 @@ public:
     explicit EditArmors(QWidget *parent = nullptr);
     ~EditArmors();
 
+    void setEC(RPGEditorController *ec);
+
     void set_armor(int n);
     void save();
 
-    void setSystem(RPGSystem *system)
-    {this->system = system;}
+
+public slots:
 
 private slots:
     void on_button_icon_clicked();
 
 private:
     Ui::EditArmors *ui;
-    RPGSystem *system;
-    int current;
+    RPGEditorController *ec;
 };
 
 #endif // EDITARMORS_H

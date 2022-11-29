@@ -18,6 +18,11 @@
 #include "RXIO/iosystemfile.h"
 #include "RXIO/iorgssad.h"
 
+
+#include "RXIO2/rpgdb.h"
+
+
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -103,6 +108,7 @@ private:
     QList<int> clipboard; //only for copy paste at map (no events
 
 
+    RPGDB db;
     RPGSystem system;
 
 };

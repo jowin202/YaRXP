@@ -120,6 +120,7 @@ void MapView::mouseMoveEvent(QMouseEvent *event)
         QPointF oldpos = rectangle->pos();
         rectangle->setPos(32*(pos+rectangle_offset));
         rectangle->update();
+        //updates old position of rectangle (for scrolling)
         this->scene()->update(oldpos.x(), oldpos.y(),rectangle->boundingRect().width(), rectangle->boundingRect().height());
     }
     else if (opt.mode == SELECT)

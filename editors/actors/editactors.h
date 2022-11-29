@@ -2,8 +2,12 @@
 #define EDITACTORS_H
 
 #include <QWidget>
-#include "../../RXIO/RXObjects/rpgactor.h"
-#include "../../RXIO/RXObjects/rpgsystem.h"
+#include <QPainter>
+#include <QJsonObject>
+#include <QJsonArray>
+
+class RPGDB;
+class RPGEditorController;
 
 namespace Ui {
 class EditActors;
@@ -17,8 +21,7 @@ public:
     explicit EditActors(QWidget *parent = nullptr);
     ~EditActors();
 
-    void setSystem(RPGSystem *system)
-    {this->system = system;}
+    void setEC(RPGEditorController *ec);
 
     enum {MAXHP, MAXSP, STR, DEX, AGI, INTVAR};
     QImage get_image_from_param(int param, int *values, bool big);
@@ -39,8 +42,11 @@ public:
 
 public slots:
     void set_exp_curve(int basis, int inflation);
-    void update_params();
+    void import_params(QJsonObject params);
+    void update_params(); //view
+    void export_params();
     void on_button_exp_curve_clicked();
+
     void set_actor(int n);
     void save();
 
@@ -58,7 +64,7 @@ private slots:
 private:
     int current;
     bool changed = false;
-    RPGSystem *system;
+    RPGEditorController *ec;
     Ui::EditActors *ui;
 };
 
