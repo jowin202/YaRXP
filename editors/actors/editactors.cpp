@@ -24,6 +24,12 @@ EditActors::~EditActors()
 void EditActors::setEC(RPGEditorController *ec)
 {
     this->ec = ec;
+
+    /*
+    this->ui->label_character_graphic->set_data(ec->get_db(), ImageDialog::CHARACTERS, current_actor->character_name, current_actor->character_hue);
+    this->ui->label_battler_graphic->set_data(ec->get_db(), ImageDialog::BATTLERS, current_actor->battler_name, current_actor->battler_hue);
+    */
+
     this->ec->connect_string_to_text_field(RPGDB::ACTORS, "@name", this->ui->line_name);
     this->ec->connect_int_to_spin_box(RPGDB::ACTORS, "@initial_level", this->ui->spin_initial);
     this->ec->connect_int_to_spin_box(RPGDB::ACTORS, "@final_level", this->ui->spin_final);
@@ -34,7 +40,8 @@ void EditActors::setEC(RPGEditorController *ec)
 
     this->ec->connect_int_to_data_combo_box(RPGDB::ACTORS, "@class_id", this->ui->combo_class, RPGDB::CLASSES, true, 3, false);
 
-    connect(this->ui->combo_class, &QComboBox::currentIndexChanged, this, [=]() {  } );
+    //TODO: refresh
+    //connect(this->ui->combo_class, &QComboBox::currentIndexChanged, this, [=]() {  } );
 
     this->ec->connect_int_to_data_combo_box(RPGDB::ACTORS, "@weapon_id", this->ui->combo_weapon, RPGDB::CLASSES_WEAPONS, true, 3, true);
     this->ec->connect_int_to_data_combo_box(RPGDB::ACTORS, "@armor1_id", this->ui->combo_shield, RPGDB::CLASSES_SHIELD, true, 3, true);
@@ -122,8 +129,8 @@ void EditActors::set_exp_curve(int basis, int inflation)
     this->exp_inflation = inflation;
     this->ui->line_exp_curve->setText(QString("Basis: %1, Inflation: %2").arg(basis).arg(inflation));
 
-    this->ec->obj_set_value(RPGDB::ACTORS, "@exp_basis", basis);
-    this->ec->obj_set_value(RPGDB::ACTORS, "@exp_inflation", inflation);
+    this->ec->obj_set_jsonvalue(RPGDB::ACTORS, "@exp_basis", basis);
+    this->ec->obj_set_jsonvalue(RPGDB::ACTORS, "@exp_inflation", inflation);
 
 }
 

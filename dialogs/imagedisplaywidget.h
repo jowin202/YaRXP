@@ -6,8 +6,7 @@
 
 #include <QMouseEvent>
 
-class RPGSystem;
-class RPGEventPage;
+class RPGDB;
 class ImageDisplayWidget : public QLabel
 {
     Q_OBJECT
@@ -17,9 +16,9 @@ public:
     void set_background_color();
 
     void update_image();
-    void set_data(RPGSystem *system, int mode, QString current_file);
-    void set_data(RPGSystem *system, int mode, QString current_file, int hue);
-    void set_data_from_page(RPGSystem *system, RPGEventPage *page);
+    void set_data(RPGDB *db, int mode, QString current_file);
+    void set_data(RPGDB *db, int mode, QString current_file, int hue);
+    //void set_data_from_page(RPGDB *db, RPGEventPage *page);
 
     void mouseDoubleClickEvent(QMouseEvent *ev);
 
@@ -34,9 +33,9 @@ public slots:
     { this->hue = hue; this->update_image(); }
 
 private:
-    RPGSystem *system;
+    RPGDB *db;
     int mode;
-    RPGEventPage *page;
+    //RPGEventPage *page;
 
 };
 

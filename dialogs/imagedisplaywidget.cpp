@@ -2,7 +2,7 @@
 #include "imagedisplaywidget.h"
 
 
-#include "RXIO/RXObjects/rpgsystem.h"
+#include "RXIO2/rpgdb.h"
 
 
 ImageDisplayWidget::ImageDisplayWidget(QWidget *parent) : QLabel(parent)
@@ -14,13 +14,14 @@ ImageDisplayWidget::ImageDisplayWidget(QWidget *parent) : QLabel(parent)
 void ImageDisplayWidget::set_background_color()
 {
     QPalette palette = this->palette();
-    palette.setColor(QPalette::Window, system->purple);
+    palette.setColor(QPalette::Window, db->transparent);
     this->setPalette(palette);
 }
 
 void ImageDisplayWidget::update_image()
 {
     QImage pic;
+    /*
     if (mode == ImageDialog::EVENTPAGE && this->page != 0)
         pic = page->get_page_graphic(system);
     else if (mode == ImageDialog::CHARACTERS)
@@ -43,13 +44,14 @@ void ImageDisplayWidget::update_image()
             pic.setPixelColor(x,y,col);
         }
     }
+    */
 
     this->setPixmap(QPixmap::fromImage(pic));
 }
 
-void ImageDisplayWidget::set_data(RPGSystem *system, int mode, QString current_file)
+void ImageDisplayWidget::set_data(RPGDB *db, int mode, QString current_file)
 {
-    this->system = system;
+    this->db = db;
     this->mode = mode;
     this->current_file = current_file;
 
@@ -57,9 +59,9 @@ void ImageDisplayWidget::set_data(RPGSystem *system, int mode, QString current_f
     this->update_image();
 }
 
-void ImageDisplayWidget::set_data(RPGSystem *system, int mode, QString current_file, int hue)
+void ImageDisplayWidget::set_data(RPGDB *db, int mode, QString current_file, int hue)
 {
-    this->system = system;
+    this->db = db;
     this->mode = mode;
     this->current_file = current_file;
     this->hue = hue;
@@ -67,10 +69,10 @@ void ImageDisplayWidget::set_data(RPGSystem *system, int mode, QString current_f
     this->set_background_color();
     this->update_image();
 }
-
-void ImageDisplayWidget::set_data_from_page(RPGSystem *system, RPGEventPage *page)
+/*
+void ImageDisplayWidget::set_data_from_page(RPGDB *db, RPGEventPage *page)
 {
-    this->system = system;
+    this->db = db;
     this->mode = ImageDialog::EVENTPAGE;
     this->current_file = page->character_name;
     this->hue = page->character_hue;
@@ -81,13 +83,14 @@ void ImageDisplayWidget::set_data_from_page(RPGSystem *system, RPGEventPage *pag
     this->set_background_color();
     this->update_image();
 }
+*/
 
 void ImageDisplayWidget::mouseDoubleClickEvent(QMouseEvent *ev)
 {
     if (ev->button() == Qt::RightButton)
         return;
 
-    ImageDialog *dialog = new ImageDialog(system, mode, current_file);
+    ImageDialog *dialog = new ImageDialog(db, mode, current_file);
     dialog->set_hue(this->hue);
     connect(dialog, SIGNAL(ok_clicked_with_hue(int)), this, SLOT(set_hue(int)));
     connect(dialog, SIGNAL(ok_clicked(QString)), this, SLOT(set_current(QString)));

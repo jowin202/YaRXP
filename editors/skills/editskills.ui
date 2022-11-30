@@ -196,7 +196,7 @@
       </layout>
      </item>
      <item row="9" column="1">
-      <widget class="QComboBox" name="combo_common"/>
+      <widget class="QComboBox" name="combo_common_event"/>
      </item>
     </layout>
    </item>
@@ -456,7 +456,7 @@
       </widget>
      </item>
      <item row="1" column="0">
-      <widget class="QSpinBox" name="spin_price">
+      <widget class="QSpinBox" name="spin_sp_cost">
        <property name="maximum">
         <number>9999</number>
        </property>
@@ -515,8 +515,8 @@
   <tabstop>combo_target</tabstop>
   <tabstop>line_menu_use</tabstop>
   <tabstop>button_se</tabstop>
-  <tabstop>combo_common</tabstop>
-  <tabstop>spin_price</tabstop>
+  <tabstop>combo_common_event</tabstop>
+  <tabstop>spin_sp_cost</tabstop>
   <tabstop>spin_power</tabstop>
   <tabstop>spin_atkf</tabstop>
   <tabstop>spin_evaf</tabstop>

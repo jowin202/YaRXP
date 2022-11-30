@@ -6,6 +6,7 @@
 #include <QJsonDocument>
 #include <QJsonArray>
 
+#include <QColor>
 #include <QDir>
 
 
@@ -23,11 +24,14 @@ public:
 
     enum {ACTORS, CLASSES, SKILLS, ITEMS, WEAPONS, ARMORS, ENEMIES, TROOPS, STATES, ANIMATIONS, TILESETS, COMMONEVENTS, SYSTEM};
 
-    enum {CLASSES_WEAPONS = 1024, CLASSES_SHIELD, CLASSES_HELMET, CLASSES_BODY, CLASSES_ACCESSORY };
+    enum {CLASSES_WEAPONS = 1024, CLASSES_SHIELD, CLASSES_HELMET, CLASSES_BODY, CLASSES_ACCESSORY, ELEMENTS };
 
     //input output for data editor
     RPGEditorController *prepare_data_editor();
     void data_editor_data_saved();
+
+    QColor transparent = QColor(0x8a,0x16,0xa0);
+    QString project_dir;
 
 
 private:

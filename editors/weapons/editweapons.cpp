@@ -3,7 +3,8 @@
 
 #include "dialogs/imagedialog.h"
 
-#include "RXIO/RXObjects/rpgsystem.h"
+#include "RXIO2/rpgdb.h"
+#include "RXIO2/rpgeditorcontroller.h"
 
 EditWeapons::EditWeapons(QWidget *parent) :
     QWidget(parent),
@@ -17,8 +18,35 @@ EditWeapons::~EditWeapons()
     delete ui;
 }
 
+void EditWeapons::setEC(RPGEditorController *ec)
+{
+    this->ec = ec;
+
+    this->ec->connect_string_to_text_field(RPGDB::WEAPONS, "@name", this->ui->line_name);
+    this->ec->connect_string_to_text_field(RPGDB::WEAPONS, "@description", this->ui->line_description);
+    this->ec->connect_string_to_text_field(RPGDB::WEAPONS, "@icon_name", this->ui->line_icon);
+
+    this->ec->connect_int_to_data_combo_box(RPGDB::WEAPONS, "@animation1_id", this->ui->combo_attacker, RPGDB::ANIMATIONS, true, 3, true);
+    this->ec->connect_int_to_data_combo_box(RPGDB::WEAPONS, "@animation2_id", this->ui->combo_target, RPGDB::ANIMATIONS, true, 3, true);
+
+
+    this->ec->connect_int_to_spin_box(RPGDB::WEAPONS, "@price", this->ui->spin_price);
+    this->ec->connect_int_to_spin_box(RPGDB::WEAPONS, "@atk", this->ui->spin_atk);
+    this->ec->connect_int_to_spin_box(RPGDB::WEAPONS, "@pdef", this->ui->spin_pdef);
+    this->ec->connect_int_to_spin_box(RPGDB::WEAPONS, "@mdef", this->ui->spin_mdef);
+
+    this->ec->connect_int_to_spin_box(RPGDB::WEAPONS, "@str_plus", this->ui->spin_str);
+    this->ec->connect_int_to_spin_box(RPGDB::WEAPONS, "@dex_plus", this->ui->spin_dex);
+    this->ec->connect_int_to_spin_box(RPGDB::WEAPONS, "@agi_plus", this->ui->spin_agi);
+    this->ec->connect_int_to_spin_box(RPGDB::WEAPONS, "@int_plus", this->ui->spin_int);
+
+    this->ec->connect_array_to_checkbox_list(RPGDB::WEAPONS, "@element_set", this->ui->element_widget, RPGDB::ELEMENTS);
+
+}
+
 void EditWeapons::set_weapon(int n)
 {
+    /*
     if (this->system->weapons_list.length() <= n) return;
     RPGWeapon *current_weapon = this->system->weapons_list.at(n);
     this->current = n;
@@ -40,12 +68,14 @@ void EditWeapons::set_weapon(int n)
     this->ui->spin_agi->setValue(current_weapon->agi_plus);
     this->ui->spin_int->setValue(current_weapon->int_plus);
 
-    this->ui->element_widget->setValues(system, &current_weapon->element_set,-1); // -1 for elements
+    //this->ui->element_widget->setValues(system, &current_weapon->element_set,-1); // -1 for elements
     this->ui->state_widget->setStates(system, &current_weapon->plus_state_set, &current_weapon->minus_state_set);
+    */
 }
 
 void EditWeapons::save()
 {
+    /*
     int n = this->current;
     if (this->system->weapons_list.length() <= n) return;
     RPGWeapon *current_weapon = this->system->weapons_list.at(n);
@@ -71,14 +101,17 @@ void EditWeapons::save()
     current_weapon->int_plus = this->ui->spin_int->value();
 
 
-    this->ui->element_widget->getValues(&current_weapon->element_set);
+    //this->ui->element_widget->getValues(&current_weapon->element_set);
     this->ui->state_widget->getStates(&current_weapon->plus_state_set, &current_weapon->minus_state_set);
+    */
 
 }
 
 void EditWeapons::on_button_icon_clicked()
 {
-    ImageDialog *dialog = new ImageDialog(system, ImageDialog::ICONS, this->ui->line_icon->text());
+    /*
+    ImageDialog *dialog = new ImageDialog(db, ImageDialog::ICONS, this->ui->line_icon->text());
     connect(dialog, SIGNAL(ok_clicked(QString)), this->ui->line_icon, SLOT(setText(QString)));
     dialog->show();
+    */
 }

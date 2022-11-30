@@ -5,7 +5,7 @@
 #include <QCheckBox>
 #include <QTableWidgetItem>
 
-class RPGSystem;
+class RPGEditorController;
 
 namespace Ui {
 class EditClasses;
@@ -19,7 +19,7 @@ public:
     explicit EditClasses(QWidget *parent = nullptr);
     ~EditClasses();
 
-    void setSystem(RPGSystem *system) {this->system = system;}
+    void setEC(RPGEditorController *ec);
 
     void set_readonly(QTableWidgetItem *item)
     { item->setFlags(item->flags() & ~Qt::ItemIsEditable); }
@@ -40,7 +40,7 @@ private slots:
 
 private:
     Ui::EditClasses *ui;
-    RPGSystem *system = 0;
+    RPGEditorController *ec = 0;
 
     int current;
 };

@@ -105,79 +105,98 @@ void EditTilesets::save()
 
 void EditTilesets::on_button_choose_tileset_clicked()
 {
+    /*
     ImageDialog *dialog = new ImageDialog(system, ImageDialog::TILESETS, this->ui->line_tileset_graphic->text());
     dialog->show();
     connect(dialog, SIGNAL(ok_clicked(QString)), this->ui->line_tileset_graphic, SLOT(setText(QString)));
     connect(dialog, SIGNAL(ok_clicked(QString)), this->ui->tileset_widget, SLOT(set_tileset(QString)));
+    */
 }
 
 void EditTilesets::on_button_autotile_1_clicked()
 {
+    /*
     ImageDialog *dialog = new ImageDialog(system, ImageDialog::AUTOTILES, this->ui->line_autotile_1->text());
     dialog->show();
     connect(dialog, SIGNAL(ok_clicked(QString)), this->ui->line_autotile_1, SLOT(setText(QString)));
     connect(dialog, SIGNAL(ok_clicked(QString)), this->ui->tileset_widget, SLOT(set_autotile_1(QString)));
+    */
 }
 
 void EditTilesets::on_button_autotile_2_clicked()
 {
+    /*
     ImageDialog *dialog = new ImageDialog(system, ImageDialog::AUTOTILES, this->ui->line_autotile_2->text());
     dialog->show();
     connect(dialog, SIGNAL(ok_clicked(QString)), this->ui->line_autotile_2, SLOT(setText(QString)));
     connect(dialog, SIGNAL(ok_clicked(QString)), this->ui->tileset_widget, SLOT(set_autotile_2(QString)));
+    */
 }
 
 void EditTilesets::on_button_autotile_3_clicked()
 {
+    /*
     ImageDialog *dialog = new ImageDialog(system, ImageDialog::AUTOTILES, this->ui->line_autotile_3->text());
     dialog->show();
     connect(dialog, SIGNAL(ok_clicked(QString)), this->ui->line_autotile_3, SLOT(setText(QString)));
     connect(dialog, SIGNAL(ok_clicked(QString)), this->ui->tileset_widget, SLOT(set_autotile_3(QString)));
+    */
 }
 
 void EditTilesets::on_button_autotile_4_clicked()
 {
+    /*
     ImageDialog *dialog = new ImageDialog(system, ImageDialog::AUTOTILES, this->ui->line_autotile_4->text());
     connect(dialog, SIGNAL(ok_clicked(QString)), this->ui->tileset_widget, SLOT(set_autotile_4(QString)));
     dialog->show();
     connect(dialog, SIGNAL(ok_clicked(QString)), this->ui->line_autotile_4, SLOT(setText(QString)));
+    */
 }
 
 void EditTilesets::on_button_autotile_5_clicked()
 {
+    /*
     ImageDialog *dialog = new ImageDialog(system, ImageDialog::AUTOTILES, this->ui->line_autotile_5->text());
     dialog->show();
     connect(dialog, SIGNAL(ok_clicked(QString)), this->ui->line_autotile_5, SLOT(setText(QString)));
     connect(dialog, SIGNAL(ok_clicked(QString)), this->ui->tileset_widget, SLOT(set_autotile_5(QString)));
+    */
 }
 
 void EditTilesets::on_button_autotile_6_clicked()
 {
+    /*
     ImageDialog *dialog = new ImageDialog(system, ImageDialog::AUTOTILES, this->ui->line_autotile_6->text());
     dialog->show();
     connect(dialog, SIGNAL(ok_clicked(QString)), this->ui->line_autotile_6, SLOT(setText(QString)));
     connect(dialog, SIGNAL(ok_clicked(QString)), this->ui->tileset_widget, SLOT(set_autotile_6(QString)));
+    */
 }
 
 void EditTilesets::on_button_autotile_7_clicked()
 {
+    /*
     ImageDialog *dialog = new ImageDialog(system, ImageDialog::AUTOTILES, this->ui->line_autotile_7->text());
     dialog->show();
     connect(dialog, SIGNAL(ok_clicked(QString)), this->ui->line_autotile_7, SLOT(setText(QString)));
     connect(dialog, SIGNAL(ok_clicked(QString)), this->ui->tileset_widget, SLOT(set_autotile_7(QString)));
+    */
 }
 
 void EditTilesets::on_button_panorama_clicked()
 {
+    /*
     ImageDialog *dialog = new ImageDialog(system, ImageDialog::PANOMRAMAS, this->ui->line_panorama->text());
     dialog->set_hue(this->panorama_hue);
     dialog->show();
     connect(dialog, SIGNAL(ok_clicked(QString)), this->ui->line_panorama, SLOT(setText(QString)));
     connect(dialog, SIGNAL(ok_clicked_with_hue(int)), this, SLOT(set_panorama_hue(int)));
+    */
 }
 
 void EditTilesets::on_button_fog_clicked()
 {
+    /*
     ImageDialog *dialog = new ImageDialog(system, ImageDialog::FOGS, this->ui->line_fog_graphic->text());
     dialog->set_hue(this->fog_hue);
     dialog->set_fog_options(fog_sx, fog_sy, fog_opacity, fog_zoom, fog_blend_type);
@@ -185,13 +204,16 @@ void EditTilesets::on_button_fog_clicked()
     connect(dialog, SIGNAL(ok_clicked(QString)), this->ui->line_fog_graphic, SLOT(setText(QString)));
     connect(dialog, SIGNAL(ok_clicked_with_hue(int)), this, SLOT(set_fog_hue(int)));
     connect(dialog, SIGNAL(ok_clicked_with_fog_options(int,int,int,int,int)), this, SLOT(set_fog_options(int,int,int,int,int)));
+    */
 }
 
 void EditTilesets::on_button_battleback_clicked()
 {
+    /*
     ImageDialog *dialog = new ImageDialog(system, ImageDialog::BATTLEBACKS, this->ui->line_battleback->text());
     dialog->show();
     connect(dialog, SIGNAL(ok_clicked(QString)), this->ui->line_battleback, SLOT(setText(QString)));
+    */
 }
 
 void EditTilesets::on_button_passage_clicked()

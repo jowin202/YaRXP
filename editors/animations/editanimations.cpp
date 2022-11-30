@@ -30,8 +30,10 @@ void EditAnimations::set_animation(int n)
 
 void EditAnimations::on_button_animation_clicked()
 {
+    /*
     ImageDialog *imdialog = new ImageDialog(system, ImageDialog::ANIMATIONS,
                                             this->ui->line_animation->text());
     connect(imdialog, SIGNAL(ok_clicked(QString)), this->ui->line_animation, SLOT(setText(QString)));
     imdialog->show();
+    */
 }

@@ -14,6 +14,7 @@ void RPGDB::load_project(QString dir)
     {
         dir += QDir::separator();
     }
+    this->project_dir = dir;
 
     Parser actor_parser(&actor_file, &param_oders, dir + "Data" + QDir::separator() + "Actors.rxdata");
     Parser animation_parser(&animation_file, &param_oders, dir + "Data" + QDir::separator() + "Animations.rxdata");
@@ -54,7 +55,6 @@ void RPGDB::load_project(QString dir)
     tmp.write(animation_file.toJson());
     tmp.close();
     */
-
 }
 
 void RPGDB::save_project()

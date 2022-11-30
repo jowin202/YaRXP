@@ -14,12 +14,18 @@
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_5">
-   <item row="0" column="0">
+   <item row="2" column="0">
     <layout class="QGridLayout" name="gridLayout">
      <item row="2" column="1" rowspan="2">
       <widget class="QGroupBox" name="groupBox_2">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="title">
-        <string>Equippable Armors</string>
+        <string>Equippable Armors:</string>
        </property>
        <layout class="QGridLayout" name="gridLayout_3">
         <item row="0" column="0">
@@ -60,8 +66,14 @@
       <layout class="QGridLayout" name="gridLayout_4">
        <item row="0" column="0">
         <widget class="QGroupBox" name="groupBox_3">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="title">
-          <string>Element</string>
+          <string>Element Efficiency:</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_10">
           <item row="0" column="0">
@@ -74,13 +86,20 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>106</width>
+               <width>113</width>
                <height>252</height>
               </rect>
              </property>
              <layout class="QGridLayout" name="gridLayout_12">
               <item row="0" column="0">
-               <widget class="ABCList" name="element_widget" native="true"/>
+               <widget class="ABCList" name="element_widget" native="true">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+               </widget>
               </item>
              </layout>
             </widget>
@@ -91,6 +110,12 @@
        </item>
        <item row="1" column="0" colspan="2">
         <widget class="QGroupBox" name="groupBox_5">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="title">
           <string>Skills to</string>
          </property>
@@ -157,8 +182,14 @@
        </item>
        <item row="0" column="1">
         <widget class="QGroupBox" name="groupBox_4">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="title">
-          <string>State</string>
+          <string>State Efficiency:</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_9">
           <item row="0" column="0">
@@ -171,13 +202,20 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>106</width>
+               <width>99</width>
                <height>252</height>
               </rect>
              </property>
              <layout class="QGridLayout" name="gridLayout_13">
               <item row="0" column="0">
-               <widget class="ABCList" name="state_widget" native="true"/>
+               <widget class="ABCList" name="state_widget" native="true">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+               </widget>
               </item>
              </layout>
             </widget>
@@ -190,8 +228,14 @@
      </item>
      <item row="2" column="0" rowspan="2">
       <widget class="QGroupBox" name="groupBox">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="title">
-        <string>Equippable Weapons</string>
+        <string>Equippable Weapons:</string>
        </property>
        <layout class="QGridLayout" name="gridLayout_2">
         <item row="0" column="0">
@@ -240,7 +284,14 @@
       </widget>
      </item>
      <item row="1" column="0">
-      <widget class="QLineEdit" name="line_name"/>
+      <widget class="QLineEdit" name="line_name">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
      </item>
      <item row="1" column="1">
       <widget class="QComboBox" name="combo_pos">

@@ -10,13 +10,14 @@ namespace Ui {
 class ImageDialog;
 }
 
-class RPGSystem;
+class RPGDB;
+
 class ImageDialog : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit ImageDialog(RPGSystem *system, int mode, QString current_image_file, QWidget *parent = nullptr);
+    explicit ImageDialog(RPGDB *db, int mode, QString current_image_file, QWidget *parent = nullptr);
     ~ImageDialog();
 
     void set_hue(int hue);
@@ -51,7 +52,7 @@ private slots:
 
 private:
     Ui::ImageDialog *ui;
-    RPGSystem *system;
+    RPGDB *db;
     int mode;
     QString current;
     QString folder_name;

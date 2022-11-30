@@ -8,7 +8,8 @@
 #include <typeinfo>
 #include <iostream>
 
-#include "RXIO/RXObjects/rpgsystem.h"
+#include "RXIO2/rpgeditorcontroller.h"
+//#include "RXIO/RXObjects/rpgsystem.h"
 
 
 CheckBoxList::CheckBoxList(QWidget *parent) :
@@ -25,62 +26,25 @@ CheckBoxList::~CheckBoxList()
     delete ui;
 }
 
-void CheckBoxList::setValues(RPGSystem *system, QList<int> *set, int type)
+void CheckBoxList::add_checkbox(QString name, bool is_checked)
 {
-    this->clear();
-    if (type == RPGSystem::WEAPONS)
-    {
-        for (int i = 0; i < system->weapons_list.length(); i++)
-        {
-            QCheckBox *check = new QCheckBox;
-            check->setText(system->weapons_list.at(i)->name);
-            check->setChecked(set->contains(system->weapons_list.at(i)->id));
-            this->ui->verticalLayout->addWidget(check);
-        }
-    }
-    else if (type == RPGSystem::ARMORS)
-    {
-        for (int i = 0; i < system->armors_list.length(); i++)
-        {
-            QCheckBox *check = new QCheckBox;
-            check->setText(system->armors_list.at(i)->name);
-            check->setChecked(set->contains(system->armors_list.at(i)->id));
-            this->ui->verticalLayout->addWidget(check);
-        }
-    }
-    else if (type == RPGSystem::STATES)
-    {
-        for (int i = 0; i < system->states_list.length(); i++)
-        {
-            QCheckBox *check = new QCheckBox;
-            check->setText(system->states_list.at(i)->name);
-            check->setChecked(set->contains(system->states_list.at(i)->id));
-            this->ui->verticalLayout->addWidget(check);
-        }
-    }
-    else //Elements
-    {
-        //Elements starts counting at 1
-        for (int i = 1; i < system->elements.length(); i++)
-        {
-            QCheckBox *check = new QCheckBox;
-            check->setText(system->elements.at(i));
-            check->setChecked(set->contains(i));
-            this->ui->verticalLayout->addWidget(check);
-        }
-    }
+    QCheckBox *check = new QCheckBox(name);
+    check->setChecked(is_checked);
+    this->ui->verticalLayout->addWidget(check);
+    connect(check, &QCheckBox::toggled, this, [=]() { emit values_changed(); });
 }
 
-void CheckBoxList::getValues(QList<int> *set)
+QJsonArray CheckBoxList::get_result()
 {
-    set->clear();
-
+    QJsonArray list;
     for (int i = 0; i < this->ui->verticalLayout->count(); i++)
     {
         if (((QCheckBox*)this->ui->verticalLayout->itemAt(i)->widget())->isChecked())
-            set->append(i+1); //should be always the id
+            list.append(i+1); //should always be the id
     }
+    return list;
 }
+
 
 void CheckBoxList::clear()
 {

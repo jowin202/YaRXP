@@ -1,20 +1,20 @@
 #include "imagedialog.h"
 #include "ui_imagedialog.h"
 
-#include "RXIO/RXObjects/rpgsystem.h"
+#include "RXIO2/rpgdb.h"
 
-ImageDialog::ImageDialog(RPGSystem *system, int mode, QString current_image_file, QWidget *parent) :
+ImageDialog::ImageDialog(RPGDB *db, int mode, QString current_image_file, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::ImageDialog)
 {
     ui->setupUi(this);
 
-    this->system = system;
+    this->db = db;
     this->mode = mode;
     this->current = current_image_file;
 
     QPalette palette = this->ui->label_display->palette();
-    palette.setColor(QPalette::Window, system->purple);
+    palette.setColor(QPalette::Window, db->transparent);
     this->ui->label_display->setPalette(palette);
 
 
@@ -137,7 +137,7 @@ void ImageDialog::update_image_list()
     if (mode == EVENTPAGE)
         this->ui->list->addItem("(Tileset)");
 
-    QDir pics_dir(this->system->graphics_dir + folder_name);
+    QDir pics_dir(this->db->project_dir + "Graphics" + QDir::separator() + folder_name);
 
     QStringList entries = pics_dir.entryList(QDir::Filter::NoFilter, QDir::SortFlag::Name);
     for (QString entry : entries)
@@ -201,7 +201,7 @@ void ImageDialog::on_button_cancel_clicked()
 
 void ImageDialog::on_list_currentRowChanged(int currentRow)
 {
-    this->current_img = QImage(system->graphics_dir + this->folder_name + QDir::separator() + this->ui->list->item(currentRow)->text()).convertToFormat(QImage::Format_ARGB32);
+    this->current_img = QImage(db->project_dir + "Graphics" + QDir::separator() + this->folder_name + QDir::separator() + this->ui->list->item(currentRow)->text()).convertToFormat(QImage::Format_ARGB32);
     this->update_image();
 }
 

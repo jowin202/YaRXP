@@ -48,7 +48,7 @@ void EditEnemies::set_enemy(int n)
 
     this->setTreasure(current_enemy->item_id,current_enemy->weapon_id,current_enemy->armor_id, current_enemy->treasure_prob);
 
-    this->ui->label_battler_img->set_data(system, ImageDialog::BATTLERS, current_enemy->battler_name, current_enemy->battler_hue);
+    //this->ui->label_battler_img->set_data(system, ImageDialog::BATTLERS, current_enemy->battler_name, current_enemy->battler_hue);
 
     this->ui->element_widget->setElements(system, &current_enemy->element_ranks);
     this->ui->state_widget->setStates(system, &current_enemy->state_ranks);

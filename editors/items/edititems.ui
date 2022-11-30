@@ -377,7 +377,7 @@
      <item row="0" column="1">
       <widget class="QLabel" name="label_2">
        <property name="text">
-        <string>Consumable:</string>
+        <string/>
        </property>
       </widget>
      </item>
@@ -445,20 +445,6 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="1">
-      <widget class="QComboBox" name="combo_consumable">
-       <item>
-        <property name="text">
-         <string>Yes</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>No</string>
-        </property>
-       </item>
-      </widget>
-     </item>
      <item row="1" column="2">
       <widget class="QComboBox" name="combo_parameter">
        <item>
@@ -500,8 +486,18 @@
      </item>
      <item row="1" column="3">
       <widget class="QSpinBox" name="spin_param">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="maximum">
         <number>9999</number>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QCheckBox" name="check_consumable">
+       <property name="text">
+        <string>Consumable</string>
        </property>
       </widget>
      </item>
@@ -536,7 +532,6 @@
   <tabstop>button_se</tabstop>
   <tabstop>combo_common</tabstop>
   <tabstop>spin_price</tabstop>
-  <tabstop>combo_consumable</tabstop>
   <tabstop>combo_parameter</tabstop>
   <tabstop>spin_param</tabstop>
   <tabstop>spin_rcvr_hp_rate</tabstop>

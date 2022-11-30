@@ -24,6 +24,8 @@ void EditArmors::setEC(RPGEditorController *ec)
     this->ec = ec;
     this->ec->connect_string_to_text_field(RPGDB::ARMORS, "@name", this->ui->line_name);
     this->ec->connect_string_to_text_field(RPGDB::ARMORS, "@description", this->ui->line_description);
+    this->ec->connect_string_to_text_field(RPGDB::ARMORS, "@icon_name", this->ui->line_icon);
+
 
     this->ec->connect_int_to_combo_box(RPGDB::ARMORS, "@kind", this->ui->combo_kind);
 
@@ -38,6 +40,9 @@ void EditArmors::setEC(RPGEditorController *ec)
     this->ec->connect_int_to_spin_box(RPGDB::ARMORS, "@dex_plus", this->ui->spin_dex);
     this->ec->connect_int_to_spin_box(RPGDB::ARMORS, "@agi_plus", this->ui->spin_agi);
     this->ec->connect_int_to_spin_box(RPGDB::ARMORS, "@int_plus", this->ui->spin_int);
+
+    this->ec->connect_array_to_checkbox_list(RPGDB::ARMORS, "@guard_element_set", this->ui->element_widget, RPGDB::ELEMENTS);
+    this->ec->connect_array_to_checkbox_list(RPGDB::ARMORS, "@guard_state_set", this->ui->state_widget, RPGDB::STATES);
 }
 
 void EditArmors::set_armor(int n)

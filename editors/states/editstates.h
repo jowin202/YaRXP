@@ -8,7 +8,7 @@ namespace Ui {
 class EditStates;
 }
 
-class RPGSystem;
+class RPGEditorController;
 
 class EditStates : public QWidget
 {
@@ -19,15 +19,14 @@ public:
     ~EditStates();
 
 
-    void setSystem(RPGSystem *system)
-    {this->system = system;}
+    void setEC(RPGEditorController *ec);
 
     void set_state(int n);
     void save();
 
 private:
     Ui::EditStates *ui;
-    RPGSystem *system;
+    RPGEditorController *ec;
     int current;
 };
 

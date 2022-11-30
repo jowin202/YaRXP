@@ -28,17 +28,19 @@ void DataEditor::setSystem(RPGSystem *system, RPGDB *db)
 
     this->system = system;
     this->ui->page_actors->setEC(ec);
-    this->ui->page_classes->setSystem(system);
-    this->ui->page_skills->setSystem(system);
-    this->ui->page_items->setSystem(system);
-    this->ui->page_weapons->setSystem(system);
+    this->ui->page_classes->setEC(ec);
+    this->ui->page_skills->setEC(ec);
+
+    this->ui->page_items->setEC(ec);
+
+    this->ui->page_weapons->setEC(ec);
 
     this->ui->page_armors->setEC(ec);
 
 
     this->ui->page_enemies->setSystem(system);
     this->ui->page_troops->setSystem(system);
-    this->ui->page_states->setSystem(system);
+    this->ui->page_states->setEC(ec);
     this->ui->page_animations->setSystem(system);
     this->ui->page_tilesets->setSystem(system);
     this->ui->page_commonevents->setSystem(system);

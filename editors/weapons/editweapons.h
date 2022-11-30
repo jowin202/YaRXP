@@ -7,7 +7,7 @@ namespace Ui {
 class EditWeapons;
 }
 
-class RPGSystem;
+class RPGEditorController;
 
 class EditWeapons : public QWidget
 {
@@ -18,8 +18,7 @@ public:
     ~EditWeapons();
 
 
-    void setSystem(RPGSystem *system)
-    {this->system = system;}
+    void setEC(RPGEditorController *ec);
 
     void set_weapon(int n);
     void save();
@@ -31,7 +30,7 @@ private slots:
 
 private:
     Ui::EditWeapons *ui;
-    RPGSystem *system;
+    RPGEditorController *ec;
     int current;
 
 };

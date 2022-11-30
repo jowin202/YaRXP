@@ -3,13 +3,12 @@
 
 #include <QWidget>
 
-#include "RXIO/RXObjects/rpgaudiofile.h"
 
 namespace Ui {
 class EditItems;
 }
 
-class RPGSystem;
+class RPGEditorController;
 
 class EditItems : public QWidget
 {
@@ -19,8 +18,7 @@ public:
     explicit EditItems(QWidget *parent = nullptr);
     ~EditItems();
 
-    void setSystem(RPGSystem *system)
-    {this->system = system;}
+    void setEC(RPGEditorController *ec);
 
     void set_item(int n);
     void save();
@@ -36,10 +34,7 @@ private slots:
 
 private:
     Ui::EditItems *ui;
-    RPGSystem *system;
-    RPGAudioFile menu_se;
-
-    int current;
+    RPGEditorController *ec;
 };
 
 #endif // EDITITEMS_H

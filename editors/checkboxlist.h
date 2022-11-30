@@ -2,6 +2,7 @@
 #define CHECKBOXLIST_H
 
 #include <QWidget>
+#include <QJsonArray>
 
 namespace Ui {
 class CheckBoxList;
@@ -17,10 +18,16 @@ public:
     explicit CheckBoxList(QWidget *parent = nullptr);
     ~CheckBoxList();
 
-    void setValues(RPGSystem *system, QList<int> *set, int type);
-    void getValues(QList<int> *set);
+    //void setValues(RPGSystem *system, QList<int> *set, int type);
+    //void getValues(QList<int> *set);
+
+    void add_checkbox(QString name, bool is_checked);
+    QJsonArray get_result();
 
     void clear();
+
+signals:
+    void values_changed();
 
 private:
     Ui::CheckBoxList *ui;
