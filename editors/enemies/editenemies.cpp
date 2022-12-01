@@ -1,7 +1,8 @@
 #include "editenemies.h"
 #include "ui_editenemies.h"
 
-#include "RXIO/RXObjects/rpgsystem.h"
+#include "RXIO2/rpgdb.h"
+#include "RXIO2/rpgeditorcontroller.h"
 
 #include "dialogs/imagedialog.h"
 #include "enemyactiondialog.h"
@@ -24,6 +25,7 @@ EditEnemies::~EditEnemies()
 
 void EditEnemies::set_enemy(int n)
 {
+    /*
     if (this->system->enemies_list.length() <= n) return;
     RPGEnemy *current_enemy = this->system->enemies_list.at(n);
     this->current = n;
@@ -50,8 +52,8 @@ void EditEnemies::set_enemy(int n)
 
     //this->ui->label_battler_img->set_data(system, ImageDialog::BATTLERS, current_enemy->battler_name, current_enemy->battler_hue);
 
-    this->ui->element_widget->setElements(system, &current_enemy->element_ranks);
-    this->ui->state_widget->setStates(system, &current_enemy->state_ranks);
+    //this->ui->element_widget->setElements(system, &current_enemy->element_ranks);
+    //this->ui->state_widget->setStates(system, &current_enemy->state_ranks);
 
 
     this->ui->table_action->clearContents();
@@ -80,11 +82,12 @@ void EditEnemies::set_enemy(int n)
     }
 
     this->ui->table_action->resizeColumnsToContents();
-
+    */
 }
 
 void EditEnemies::save()
 {
+    /*
     int n = this->current;
     if (this->system->enemies_list.length() <= n) return;
     RPGEnemy *current_enemy = this->system->enemies_list.at(n);
@@ -115,8 +118,8 @@ void EditEnemies::save()
     current_enemy->battler_name = this->ui->label_battler_img->current_file;
     current_enemy->battler_hue = this->ui->label_battler_img->hue;
 
-    this->ui->element_widget->getValues(&current_enemy->element_ranks);
-    this->ui->state_widget->getValues(&current_enemy->state_ranks);
+    //this->ui->element_widget->getValues(&current_enemy->element_ranks);
+    //this->ui->state_widget->getValues(&current_enemy->state_ranks);
 
     for (int i = 0; i < current_enemy->action.length(); i++)
         delete current_enemy->action.at(i);
@@ -139,11 +142,45 @@ void EditEnemies::save()
 
         current_enemy->action.append(current_action);
     }
+    */
+}
+
+void EditEnemies::setEC(RPGEditorController *ec)
+{
+    this->ec = ec;
+
+    this->ec->connect_string_to_text_field(RPGDB::ENEMIES, "@name", this->ui->line_name);
+
+    this->ec->connect_int_to_spin_box(RPGDB::ENEMIES, "@maxhp", this->ui->spin_maxhp);
+    this->ec->connect_int_to_spin_box(RPGDB::ENEMIES, "@maxsp", this->ui->spin_maxsp);
+
+    this->ec->connect_int_to_spin_box(RPGDB::ENEMIES, "@str", this->ui->spin_str);
+    this->ec->connect_int_to_spin_box(RPGDB::ENEMIES, "@dex", this->ui->spin_dex);
+    this->ec->connect_int_to_spin_box(RPGDB::ENEMIES, "@agi", this->ui->spin_agi);
+    this->ec->connect_int_to_spin_box(RPGDB::ENEMIES, "@int", this->ui->spin_int);
+
+    this->ec->connect_int_to_spin_box(RPGDB::ENEMIES, "@atk", this->ui->spin_atk);
+    this->ec->connect_int_to_spin_box(RPGDB::ENEMIES, "@pdef", this->ui->spin_pdef);
+    this->ec->connect_int_to_spin_box(RPGDB::ENEMIES, "@mdef", this->ui->spin_mdef);
+    this->ec->connect_int_to_spin_box(RPGDB::ENEMIES, "@eva", this->ui->spin_eva);
+
+    this->ec->connect_int_to_data_combo_box(RPGDB::ENEMIES, "@animation1_id", this->ui->combo_attacker, RPGDB::ANIMATIONS, true, 3, true);
+    this->ec->connect_int_to_data_combo_box(RPGDB::ENEMIES, "@animation2_id", this->ui->combo_target, RPGDB::ANIMATIONS, true, 3, true);
+
+    this->ec->connect_int_to_spin_box(RPGDB::ENEMIES, "@exp", this->ui->spin_exp);
+    this->ec->connect_int_to_spin_box(RPGDB::ENEMIES, "@gold", this->ui->spin_gold);
+
+    this->ec->connect_table_to_abc_list(RPGDB::ENEMIES, "@element_ranks", this->ui->element_widget, RPGDB::ELEMENTS);
+    this->ec->connect_table_to_abc_list(RPGDB::ENEMIES, "@state_ranks", this->ui->state_widget, RPGDB::STATES);
+
+
+    this->ec->connect_image_display_widget(RPGDB::ENEMIES, ImageDialog::BATTLERS, "@battler_name", "@battler_hue", this->ui->label_battler_img);
 
 }
 
 void EditEnemies::setTreasure(int item_id, int weapon_id, int armor_id, int prob)
 {
+    /*
     QString treasure_name;
     QString percent = QString("%1\% ").arg(prob);
 
@@ -162,10 +199,12 @@ void EditEnemies::setTreasure(int item_id, int weapon_id, int armor_id, int prob
         treasure_name = "(None)";
 
     this->ui->line_treasure->setText(treasure_name);
+    */
 }
 
 void EditEnemies::change_action(int row, int turn_a, int turn_b, int hp, int level, int switch_id, int kind, int skill, int rating, int basic)
 {
+    /*
     RPGEnemyAction action;
     action.condition_turn_a = turn_a;
     action.condition_turn_b = turn_b;
@@ -209,11 +248,12 @@ void EditEnemies::change_action(int row, int turn_a, int turn_b, int hp, int lev
         this->ui->table_action->item(row,9)->setText(QString::number(rating));
         this->ui->table_action->item(row,10)->setText(QString::number(basic));
     }
-
+    */
 }
 
 void EditEnemies::on_table_action_itemDoubleClicked(QTableWidgetItem *item)
 {
+    /*
     int turn_a = this->ui->table_action->item(item->row(),2)->text().toInt();
     int turn_b = this->ui->table_action->item(item->row(),3)->text().toInt();
     int hp = this->ui->table_action->item(item->row(),4)->text().toInt();
@@ -226,23 +266,26 @@ void EditEnemies::on_table_action_itemDoubleClicked(QTableWidgetItem *item)
     EnemyActionDialog *dialog = new EnemyActionDialog(system, item->row(), turn_a, turn_b, hp, level, switch_id,kind,skill,rating,basic);
     connect(dialog, SIGNAL(ok_clicked(int,int,int,int,int,int,int,int,int,int)), this, SLOT(change_action(int,int,int,int,int,int,int,int,int,int)));
     dialog->show();
+    */
 }
 
 void EditEnemies::on_button_action_del_clicked()
 {
-    this->ui->table_action->removeRow(this->ui->table_action->currentRow());
+    //this->ui->table_action->removeRow(this->ui->table_action->currentRow());
 }
 
 void EditEnemies::on_button_action_add_clicked()
 {
+    /*
     EnemyActionDialog *dialog = new EnemyActionDialog(system, -1, 0, 1, 100, 1, 0,0,1,5,0);
     connect(dialog, SIGNAL(ok_clicked(int,int,int,int,int,int,int,int,int,int)), this, SLOT(change_action(int,int,int,int,int,int,int,int,int,int)));
     dialog->show();
+    */
 }
 
 void EditEnemies::on_button_change_treasure_clicked()
 {
-    TreasureDialog *dialog = new TreasureDialog(system,current_item_id,current_weapon_id,current_armor_id,current_prob);
+    TreasureDialog *dialog = new TreasureDialog(this->ec);
     connect(dialog,SIGNAL(ok_clicked(int,int,int,int)), this, SLOT(setTreasure(int,int,int,int)));
     dialog->show();
 }

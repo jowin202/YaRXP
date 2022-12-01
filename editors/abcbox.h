@@ -17,6 +17,13 @@ public:
 
     int getValue();
 
+
+signals:
+    void value_changed();
+
+private slots:
+    void on_comboBox_currentIndexChanged(int index);
+
 private:
     Ui::ABCBox *ui;
 };

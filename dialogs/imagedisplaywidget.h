@@ -26,6 +26,10 @@ public:
     int hue = 0;
     int tile_id;
 
+
+signals:
+    void image_changed();
+
 public slots:
     void set_current(QString file)
     { this->current_file = file; this->update_image(); }

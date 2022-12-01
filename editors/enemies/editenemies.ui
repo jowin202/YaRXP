@@ -440,6 +440,9 @@
           <property name="text">
            <string/>
           </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
          </widget>
         </item>
        </layout>
@@ -466,7 +469,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QComboBox" name="comb_attacker"/>
+      <widget class="QComboBox" name="combo_attacker"/>
      </item>
     </layout>
    </item>
@@ -528,7 +531,7 @@
   <tabstop>spin_pdef</tabstop>
   <tabstop>spin_mdef</tabstop>
   <tabstop>spin_eva</tabstop>
-  <tabstop>comb_attacker</tabstop>
+  <tabstop>combo_attacker</tabstop>
   <tabstop>combo_target</tabstop>
   <tabstop>spin_exp</tabstop>
   <tabstop>spin_gold</tabstop>

@@ -24,14 +24,15 @@ void ImageDisplayWidget::update_image()
     /*
     if (mode == ImageDialog::EVENTPAGE && this->page != 0)
         pic = page->get_page_graphic(system);
-    else if (mode == ImageDialog::CHARACTERS)
+    else
+    */
+    if (mode == ImageDialog::CHARACTERS)
     {
-        QImage tmp(system->characters_dir + current_file);
+        QImage tmp(db->project_dir + "Graphics" + QDir::separator() + "Characters" + QDir::separator() + current_file);
         pic = tmp.copy(0,0,tmp.width()/4, tmp.height()/4);
     }
     else if (mode == ImageDialog::BATTLERS)
-        pic = QImage(system->battlers_dir + current_file);
-
+        pic = QImage(db->project_dir + "Graphics" + QDir::separator() + "Battlers" + QDir::separator() + current_file);
     pic = pic.convertToFormat(QImage::Format_ARGB32);
 
     for (int y = 0; y < pic.height(); y++)
@@ -44,7 +45,6 @@ void ImageDisplayWidget::update_image()
             pic.setPixelColor(x,y,col);
         }
     }
-    */
 
     this->setPixmap(QPixmap::fromImage(pic));
 }
@@ -65,6 +65,7 @@ void ImageDisplayWidget::set_data(RPGDB *db, int mode, QString current_file, int
     this->mode = mode;
     this->current_file = current_file;
     this->hue = hue;
+
 
     this->set_background_color();
     this->update_image();

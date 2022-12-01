@@ -19,3 +19,10 @@ int ABCBox::getValue()
 {
     return this->ui->comboBox->currentIndex()+1; //TODO Check this
 }
+
+void ABCBox::on_comboBox_currentIndexChanged(int index)
+{
+    Q_UNUSED(index);
+    emit value_changed();
+}
+

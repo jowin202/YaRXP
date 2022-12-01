@@ -8,13 +8,13 @@ namespace Ui {
 class TreasureDialog;
 }
 
-class RPGSystem;
+class RPGEditorController;
 class TreasureDialog : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit TreasureDialog(RPGSystem *system, int item_id, int weapon_id, int armor_id, int prob, QWidget *parent = nullptr);
+    explicit TreasureDialog(RPGEditorController *ec, QWidget *parent = nullptr);
     ~TreasureDialog();
 
     void keyPressEvent(QKeyEvent *e) {

@@ -43,7 +43,6 @@ void RPGDB::load_project(QString dir)
         }
     }
 
-
     /*
     QFile tmp("/tmp/actor.json");
     tmp.open(QIODevice::WriteOnly);

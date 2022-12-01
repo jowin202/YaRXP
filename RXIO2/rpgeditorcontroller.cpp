@@ -61,97 +61,49 @@ void RPGEditorController::connect_array_to_checkbox_list(int object_type, QStrin
     });
 }
 
+void RPGEditorController::connect_table_to_abc_list(int object_type, QString key, ABCList *list, int content_type)
+{
+    connect(list, &ABCList::values_changed, this, [=]() {
+        QJsonObject table = this->obj_get_jsonvalue(object_type, key).toObject();
+        QJsonArray array = ((ABCList*)sender())->get_result();
+        table.insert("values", array);
+        this->obj_set_jsonvalue(object_type, key, table);
+
+    });
+    connect(this, this->obj_changed_signals[object_type], list, [=]()
+    {
+        list->clear();
+        QStringList name_list = this->obj_get_name_list(content_type);
+        QJsonObject table = this->obj_get_jsonvalue(object_type, key).toObject();
+        QJsonArray array = table.value("values").toArray();
+
+        for (int i = 0; i < name_list.length(); i++)
+        {
+            list->add_box(name_list.at(i), array.at(i+1).toInt());
+        }
+    });
+}
+
+void RPGEditorController::connect_image_display_widget(int object_type, int image_type, QString key, QString key_hue, ImageDisplayWidget *widget)
+{
+    connect(widget, &ImageDisplayWidget::image_changed, this, [=]() {
+
+    });
+    connect(this, this->obj_changed_signals[object_type], widget, [=]()
+    {
+        if (key_hue == "")
+            widget->set_data(this->get_db(), image_type, this->obj_get_jsonvalue(object_type, key).toString());
+        else
+            widget->set_data(this->get_db(), image_type, this->obj_get_jsonvalue(object_type, key).toString(), this->obj_get_jsonvalue(object_type, key_hue).toInt());
+    });
+
+}
+
 
 void RPGEditorController::set_current_object(int object_type, int object_value)
 {
-    if (object_type == RPGDB::ACTORS)
-    {
-        this->current_actor = object_value;
-        this->block_writing = true;
-        emit current_actor_changed();
-        emit current_actor_exp_curve(actor_file.array().at(current_actor).toObject().value("@exp_basis").toInt(),
-                                     actor_file.array().at(current_actor).toObject().value("@exp_inflation").toInt());
-
-        emit current_actor_parameters(actor_file.array().at(current_actor).toObject().value("@parameters").toObject());
-        this->block_writing = false;
-    }
-    else if (object_type == RPGDB::ANIMATIONS)
-    {
-        this->current_animation = object_value;
-        this->block_writing = true;
-        emit current_animation_changed();
-        this->block_writing = false;
-    }
-    else if (object_type == RPGDB::ARMORS)
-    {
-        this->current_armor = object_value;
-        this->block_writing = true;
-        emit current_armor_changed();
-        this->block_writing = false;
-    }
-    else if (object_type == RPGDB::CLASSES)
-    {
-        this->current_class = object_value;
-        this->block_writing = true;
-        emit current_class_changed();
-        this->block_writing = false;
-    }
-    else if (object_type == RPGDB::COMMONEVENTS)
-    {
-        this->current_common_event = object_value;
-        this->block_writing = true;
-        emit current_common_event_changed();
-        this->block_writing = false;
-    }
-    else if (object_type == RPGDB::ENEMIES)
-    {
-        this->current_enemy = object_value;
-        this->block_writing = true;
-        emit current_enemy_changed();
-        this->block_writing = false;
-    }
-    else if (object_type == RPGDB::ITEMS)
-    {
-        this->current_item = object_value;
-        this->block_writing = true;
-        emit current_item_changed();
-        this->block_writing = false;
-    }
-    else if (object_type == RPGDB::SKILLS)
-    {
-        this->current_skill = object_value;
-        this->block_writing = true;
-        emit current_skill_changed();
-        this->block_writing = false;
-    }
-    else if (object_type == RPGDB::STATES)
-    {
-        this->current_state = object_value;
-        this->block_writing = true;
-        emit current_state_changed();
-        this->block_writing = false;
-    }
-    else if (object_type == RPGDB::TILESETS)
-    {
-        this->current_tileset = object_value;
-        this->block_writing = true;
-        emit current_tileset_changed();
-        this->block_writing = false;
-    }
-    else if (object_type == RPGDB::TROOPS)
-    {
-        this->current_troop = object_value;
-        this->block_writing = true;
-        emit current_troop_changed();
-        this->block_writing = false;
-    }
-    else if (object_type == RPGDB::WEAPONS)
-    {
-        this->current_weapon = object_value;
-        this->block_writing = true;
-        emit current_weapon_changed();
-        this->block_writing = false;
-    }
+    *this->current_instance_variables[object_type] = object_value;
+    this->refresh(object_type);
 }
 
 QJsonValue RPGEditorController::obj_get_jsonvalue(int obj_type, QString key)
@@ -423,8 +375,83 @@ void RPGEditorController::current_actor_set_parameters(QJsonArray params)
     arr.insert(current_actor, obj);
     actor_file.setArray(arr);
 
-
     QJsonArray obj_table_values = obj_table.value("values").toArray();
+}
 
+void RPGEditorController::refresh(int object_type)
+{
+
+    if (object_type == RPGDB::ACTORS)
+    {
+        this->block_writing = true;
+        emit current_actor_changed();
+        this->block_writing = false;
+    }
+    else if (object_type == RPGDB::ANIMATIONS)
+    {
+        this->block_writing = true;
+        emit current_animation_changed();
+        this->block_writing = false;
+    }
+    else if (object_type == RPGDB::ARMORS)
+    {
+        this->block_writing = true;
+        emit current_armor_changed();
+        this->block_writing = false;
+    }
+    else if (object_type == RPGDB::CLASSES)
+    {
+        this->block_writing = true;
+        emit current_class_changed();
+        this->block_writing = false;
+    }
+    else if (object_type == RPGDB::COMMONEVENTS)
+    {
+        this->block_writing = true;
+        emit current_common_event_changed();
+        this->block_writing = false;
+    }
+    else if (object_type == RPGDB::ENEMIES)
+    {
+        this->block_writing = true;
+        emit current_enemy_changed();
+        this->block_writing = false;
+    }
+    else if (object_type == RPGDB::ITEMS)
+    {
+        this->block_writing = true;
+        emit current_item_changed();
+        this->block_writing = false;
+    }
+    else if (object_type == RPGDB::SKILLS)
+    {
+        this->block_writing = true;
+        emit current_skill_changed();
+        this->block_writing = false;
+    }
+    else if (object_type == RPGDB::STATES)
+    {
+        this->block_writing = true;
+        emit current_state_changed();
+        this->block_writing = false;
+    }
+    else if (object_type == RPGDB::TILESETS)
+    {
+        this->block_writing = true;
+        emit current_tileset_changed();
+        this->block_writing = false;
+    }
+    else if (object_type == RPGDB::TROOPS)
+    {
+        this->block_writing = true;
+        emit current_troop_changed();
+        this->block_writing = false;
+    }
+    else if (object_type == RPGDB::WEAPONS)
+    {
+        this->block_writing = true;
+        emit current_weapon_changed();
+        this->block_writing = false;
+    }
 }
 

@@ -25,23 +25,16 @@ void EditActors::setEC(RPGEditorController *ec)
 {
     this->ec = ec;
 
-    /*
-    this->ui->label_character_graphic->set_data(ec->get_db(), ImageDialog::CHARACTERS, current_actor->character_name, current_actor->character_hue);
-    this->ui->label_battler_graphic->set_data(ec->get_db(), ImageDialog::BATTLERS, current_actor->battler_name, current_actor->battler_hue);
-    */
-
     this->ec->connect_string_to_text_field(RPGDB::ACTORS, "@name", this->ui->line_name);
     this->ec->connect_int_to_spin_box(RPGDB::ACTORS, "@initial_level", this->ui->spin_initial);
     this->ec->connect_int_to_spin_box(RPGDB::ACTORS, "@final_level", this->ui->spin_final);
 
-    connect(this->ec, SIGNAL(current_actor_exp_curve(int,int)), this, SLOT(set_exp_curve(int,int)));
-    connect(this->ec, SIGNAL(current_actor_parameters(QJsonObject)), this, SLOT(import_params(QJsonObject)));
-    connect(this->ec, SIGNAL(current_actor_parameters(QJsonObject)), this, SLOT(update_params()));
+    connect(this->ec, SIGNAL(current_actor_changed()), this, SLOT(set_exp_curve()));
+    connect(this->ec, SIGNAL(current_actor_changed()), this, SLOT(import_params()));
 
     this->ec->connect_int_to_data_combo_box(RPGDB::ACTORS, "@class_id", this->ui->combo_class, RPGDB::CLASSES, true, 3, false);
 
-    //TODO: refresh
-    //connect(this->ui->combo_class, &QComboBox::currentIndexChanged, this, [=]() {  } );
+    //connect(this->ui->combo_class, &QComboBox::currentIndexChanged, ec, [=]() { ec->refresh(RPGDB::ACTORS);  } );
 
     this->ec->connect_int_to_data_combo_box(RPGDB::ACTORS, "@weapon_id", this->ui->combo_weapon, RPGDB::CLASSES_WEAPONS, true, 3, true);
     this->ec->connect_int_to_data_combo_box(RPGDB::ACTORS, "@armor1_id", this->ui->combo_shield, RPGDB::CLASSES_SHIELD, true, 3, true);
@@ -55,6 +48,8 @@ void EditActors::setEC(RPGEditorController *ec)
     this->ec->connect_bool_to_check_box(RPGDB::ACTORS, "@armor3_fix", this->ui->check_body);
     this->ec->connect_bool_to_check_box(RPGDB::ACTORS, "@armor4_fix", this->ui->check_accessory);
 
+    this->ec->connect_image_display_widget(RPGDB::ACTORS, ImageDialog::CHARACTERS, "@character_name", "@character_hue", this->ui->label_character_graphic);
+    this->ec->connect_image_display_widget(RPGDB::ACTORS, ImageDialog::BATTLERS, "@battler_name", "@battler_hue", this->ui->label_battler_graphic);
 
 }
 
@@ -123,20 +118,16 @@ QImage EditActors::get_image_from_param(int param, int *values, bool big)
 
 
 
-void EditActors::set_exp_curve(int basis, int inflation)
+void EditActors::set_exp_curve()
 {
-    this->exp_basis = basis;
-    this->exp_inflation = inflation;
-    this->ui->line_exp_curve->setText(QString("Basis: %1, Inflation: %2").arg(basis).arg(inflation));
-
-    this->ec->obj_set_jsonvalue(RPGDB::ACTORS, "@exp_basis", basis);
-    this->ec->obj_set_jsonvalue(RPGDB::ACTORS, "@exp_inflation", inflation);
-
+    this->exp_basis = this->ec->obj_get_jsonvalue(RPGDB::ACTORS, "@exp_basis").toInt();
+    this->exp_inflation = this->ec->obj_get_jsonvalue(RPGDB::ACTORS, "@exp_inflation").toInt();
+    this->ui->line_exp_curve->setText(QString("Basis: %1, Inflation: %2").arg(this->exp_basis).arg(this->exp_inflation));
 }
 
-void EditActors::import_params(QJsonObject params)
+void EditActors::import_params()
 {
-    QJsonArray arr = params.value("values").toArray();
+    QJsonArray arr = this->ec->obj_get_jsonvalue(RPGDB::ACTORS, "@parameters").toObject().value("values").toArray();
 
     for (int i = 0; i < arr.size(); i++)
     {
@@ -153,6 +144,7 @@ void EditActors::import_params(QJsonObject params)
         else if (i%6 == 5)
             this->int_var[i/6] = arr.at(i).toInt();
     }
+    this->update_params();
 }
 
 void EditActors::update_params()
@@ -193,7 +185,12 @@ void EditActors::on_button_exp_curve_clicked()
 {
     EditExpCurve *dialog = new EditExpCurve;
     dialog->set_values(this->exp_basis,this->exp_inflation);
-    connect(dialog,SIGNAL(exp_curve_set(int,int)),this, SLOT(set_exp_curve(int,int)));
+    connect(dialog, &EditExpCurve::exp_curve_set, this->ec, [=](int b, int i)
+    {
+        this->ec->obj_set_jsonvalue(RPGDB::ACTORS, "@exp_basis", b);
+        this->ec->obj_set_jsonvalue(RPGDB::ACTORS, "@exp_inflation", i);
+    });
+    connect(dialog, SIGNAL(exp_curve_set(int,int)), this, SLOT(set_exp_curve()));
     dialog->show();
 
 }

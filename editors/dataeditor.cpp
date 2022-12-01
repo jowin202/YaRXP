@@ -37,8 +37,7 @@ void DataEditor::setSystem(RPGSystem *system, RPGDB *db)
 
     this->ui->page_armors->setEC(ec);
 
-
-    this->ui->page_enemies->setSystem(system);
+    this->ui->page_enemies->setEC(ec);
     this->ui->page_troops->setSystem(system);
     this->ui->page_states->setEC(ec);
     this->ui->page_animations->setSystem(system);
@@ -127,43 +126,5 @@ void DataEditor::on_central_menu_currentRowChanged(int currentRow)
 
 void DataEditor::on_button_apply_clicked()
 {
-    if (this->ui->central_menu->currentRow() == ACTORS)
-    {
-        this->ui->page_actors->save();
-    }
-    else if (this->ui->central_menu->currentRow() == CLASSES)
-    {
-        this->ui->page_classes->save();
-    }
-    else if (this->ui->central_menu->currentRow() == SKILLS)
-    {
-        this->ui->page_skills->save();
-    }
-    else if (this->ui->central_menu->currentRow() == ITEMS)
-    {
-        this->ui->page_items->save();
-    }
-    else if (this->ui->central_menu->currentRow() == WEAPONS)
-    {
-        this->ui->page_weapons->save();
-    }
-    else if (this->ui->central_menu->currentRow() == ARMORS)
-    {
-        this->ui->page_armors->save();
-    }
-    else if (this->ui->central_menu->currentRow() == ENEMIES)
-    {
-        this->ui->page_enemies->save();
-    }
-    //TODO: TROOPS
-    else if (this->ui->central_menu->currentRow() == STATES)
-    {
-        this->ui->page_states->save();
-    }
-    //TODO: ANIMATIONS
-    else if (this->ui->central_menu->currentRow() == TILESETS)
-    {
-        this->ui->page_tilesets->save();
-    }
 
 }

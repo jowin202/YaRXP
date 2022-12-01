@@ -18,6 +18,27 @@ ABCList::~ABCList()
     delete ui;
 }
 
+void ABCList::add_box(QString name, int value)
+{
+    ABCBox *box = new ABCBox(value, name);
+    this->ui->verticalLayout->addWidget(box);
+    connect(box, &ABCBox::value_changed, this, [=]() { emit values_changed(); });
+}
+
+QJsonArray ABCList::get_result()
+{
+    QJsonArray result;
+    result.append(0); //first element is zero
+    for (int i = 0; i < this->ui->verticalLayout->count(); i++)
+    {
+        result.append(QJsonValue( ((ABCBox*)this->ui->verticalLayout->itemAt(i)->widget())->getValue()));
+    }
+
+    return result;
+}
+
+
+/*
 void ABCList::setStates(RPGSystem *system, QList<int> *ranks)
 {
     this->clear();
@@ -56,6 +77,7 @@ void ABCList::getValues(QList<int> *ranks)
         ranks->append(0);
     }
 }
+*/
 
 void ABCList::clear()
 {

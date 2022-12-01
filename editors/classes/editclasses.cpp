@@ -29,6 +29,9 @@ void EditClasses::setEC(RPGEditorController *ec)
 
     this->ec->connect_array_to_checkbox_list(RPGDB::CLASSES, "@weapon_set", this->ui->weapon_widget, RPGDB::WEAPONS);
     this->ec->connect_array_to_checkbox_list(RPGDB::CLASSES, "@armor_set", this->ui->armor_widget, RPGDB::ARMORS);
+
+    this->ec->connect_table_to_abc_list(RPGDB::CLASSES, "@element_ranks", this->ui->element_widget, RPGDB::ELEMENTS);
+    this->ec->connect_table_to_abc_list(RPGDB::CLASSES, "@state_ranks", this->ui->state_widget, RPGDB::STATES);
 }
 
 void EditClasses::set_class(int n)

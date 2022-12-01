@@ -154,9 +154,7 @@ void EditSkills::on_button_se_clicked()
 
 void EditSkills::on_button_icon_clicked()
 {
-    /*
-    ImageDialog *dialog = new ImageDialog(system, ImageDialog::ICONS, this->ui->line_icon->text());
+    ImageDialog *dialog = new ImageDialog(ec->get_db(), ImageDialog::ICONS, this->ui->line_icon->text());
     connect(dialog, SIGNAL(ok_clicked(QString)), this->ui->line_icon, SLOT(setText(QString)));
     dialog->show();
-    */
 }

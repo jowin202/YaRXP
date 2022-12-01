@@ -13,6 +13,9 @@
 #include <QJsonObject>
 
 #include "editors/checkboxlist.h"
+#include "editors/abclist.h"
+
+#include "dialogs/imagedisplaywidget.h"
 
 #include <QDebug>
 #include <QMetaMethod>
@@ -35,10 +38,13 @@ public:
     void connect_int_to_combo_box(int object_type, QString key, QComboBox *combo);
     void connect_int_to_data_combo_box(int object_type, QString key, QComboBox *combo, int content_type, bool shownum, int chars, bool allow_none);
     void connect_array_to_checkbox_list(int object_type, QString key, CheckBoxList *list, int content_type);
+    void connect_table_to_abc_list(int object_type, QString key, ABCList *list, int content_type);
 
+    void connect_image_display_widget(int object_type, int image_type, QString key, QString key_hue, ImageDisplayWidget *widget);
 
 
     void set_current_object(int object_type, int object_value);
+
 
     QJsonValue obj_get_jsonvalue(int obj_type, QString key);
     QStringList obj_get_name_list(int obj_type);
@@ -81,9 +87,8 @@ public:
 
 public slots:
     void obj_set_jsonvalue(int obj_type, QString key, QJsonValue value);
-    //void obj_set_value(int obj_type, QString key, QVariant value);
-    //void obj_set_array(int obj_type, QString key, QJsonArray value);
     void current_actor_set_parameters(QJsonArray params);
+    void refresh(int object_type);
 
 
 signals:
@@ -101,8 +106,6 @@ signals:
     void current_troop_changed();
     void current_weapon_changed();
 
-    void current_actor_exp_curve(int,int);
-    void current_actor_parameters(QJsonObject);
 
 
 
@@ -141,8 +144,21 @@ private:
             &RPGEditorController::current_tileset_changed,
             &RPGEditorController::current_common_event_changed,
             &RPGEditorController::current_system_changed,
-
                                                                };
+
+    int *current_instance_variables[12] = { &current_actor,
+                                         &current_class,
+                                         &current_skill,
+                                         &current_item,
+                                         &current_weapon,
+                                         &current_armor,
+                                         &current_enemy,
+                                         &current_troop,
+                                         &current_state,
+                                         &current_animation,
+                                         &current_tileset,
+                                         &current_common_event};
+
 };
 
 #endif // RPGEDITORCONTROLLER_H

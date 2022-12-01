@@ -8,7 +8,8 @@ namespace Ui {
 class EditEnemies;
 }
 
-class RPGSystem;
+class RPGEditorController;
+
 class EditEnemies : public QWidget
 {
     Q_OBJECT
@@ -22,8 +23,7 @@ public:
     void save();
 
 
-    void setSystem(RPGSystem *system)
-    {this->system = system;}
+    void setEC(RPGEditorController *ec);
 
     void set_readonly(QTableWidgetItem *item)
     { item->setFlags(item->flags() & ~Qt::ItemIsEditable); }
@@ -48,13 +48,8 @@ private slots:
 
 private:
     Ui::EditEnemies *ui;
-    RPGSystem *system;
-    int current;
+    RPGEditorController *ec;
 
-    int current_item_id;
-    int current_weapon_id;
-    int current_armor_id;
-    int current_prob;
 };
 
 #endif // EDITENEMIES_H

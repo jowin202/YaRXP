@@ -41,8 +41,8 @@ public:
 
 
 public slots:
-    void set_exp_curve(int basis, int inflation);
-    void import_params(QJsonObject params);
+    void set_exp_curve();
+    void import_params();
     void update_params(); //view
     void export_params();
     void on_button_exp_curve_clicked();

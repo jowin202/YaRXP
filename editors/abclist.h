@@ -17,11 +17,13 @@ public:
     explicit ABCList(QWidget *parent = nullptr);
     ~ABCList();
 
-    void setStates(RPGSystem *system, QList<int> *ranks);
-    void setElements(RPGSystem *system, QList<int> *ranks);
-
-    void getValues(QList<int> *ranks);
+    void add_box(QString name, int value);
+    QJsonArray get_result();
     void clear();
+
+
+signals:
+    void values_changed();
 
 private:
     Ui::ABCList *ui;
