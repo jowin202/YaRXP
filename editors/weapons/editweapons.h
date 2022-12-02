@@ -20,10 +20,6 @@ public:
 
     void setEC(RPGEditorController *ec);
 
-    void set_weapon(int n);
-    void save();
-
-
 private slots:
 
     void on_button_icon_clicked();

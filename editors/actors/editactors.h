@@ -47,8 +47,6 @@ public slots:
     void export_params();
     void on_button_exp_curve_clicked();
 
-    void set_actor(int n);
-    void save();
 
 private slots:
 

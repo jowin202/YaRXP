@@ -22,9 +22,6 @@ public:
 
     void setEC(RPGEditorController *ec);
 
-    void set_armor(int n);
-    void save();
-
 
 public slots:
 

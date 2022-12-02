@@ -52,5 +52,5 @@ void PlusMinusBox::on_toolButton_clicked()
     else if (this->ui->toolButton->text() == "-")
         this->ui->toolButton->setText("");
 
-
+    emit value_changed();
 }

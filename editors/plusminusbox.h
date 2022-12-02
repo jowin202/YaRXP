@@ -24,6 +24,8 @@ public:
 
     int value();
 
+signals:
+    void value_changed();
 
 private slots:
     void on_toolButton_clicked();

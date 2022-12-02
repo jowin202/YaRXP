@@ -66,6 +66,7 @@ SOURCES += \
     RXIO/iotroopfile.cpp \
     RXIO/ioweaponfile.cpp \
     RXIO/testcases.cpp \
+    RXIO2/factory.cpp \
     RXIO2/parser.cpp \
     RXIO2/rpgdb.cpp \
     RXIO2/rpgeditorcontroller.cpp \
@@ -96,12 +97,12 @@ SOURCES += \
     editors/dataeditor.cpp \
     editors/enemies/editenemies.cpp \
     editors/enemies/enemyactiondialog.cpp \
-    editors/enemies/treasuredialog.cpp \
     editors/items/edititems.cpp \
     editors/plusminusbox.cpp \
     editors/plusminuslist.cpp \
     editors/skills/editskills.cpp \
     editors/states/editstates.cpp \
+    editors/system/editsystem.cpp \
     editors/tilesets/edittilesets.cpp \
     editors/tilesets/tile.cpp \
     editors/tilesets/tileseteditwidget.cpp \
@@ -180,6 +181,7 @@ HEADERS += \
     RXIO/iotroopfile.h \
     RXIO/ioweaponfile.h \
     RXIO/testcases.h \
+    RXIO2/factory.h \
     RXIO2/parser.h \
     RXIO2/rpgdb.h \
     RXIO2/rpgeditorcontroller.h \
@@ -210,12 +212,12 @@ HEADERS += \
     editors/dataeditor.h \
     editors/enemies/editenemies.h \
     editors/enemies/enemyactiondialog.h \
-    editors/enemies/treasuredialog.h \
     editors/items/edititems.h \
     editors/plusminusbox.h \
     editors/plusminuslist.h \
     editors/skills/editskills.h \
     editors/states/editstates.h \
+    editors/system/editsystem.h \
     editors/tilesets/edittilesets.h \
     editors/tilesets/tile.h \
     editors/tilesets/tileseteditwidget.h \
@@ -265,12 +267,12 @@ FORMS += \
     editors/dataeditor.ui \
     editors/enemies/editenemies.ui \
     editors/enemies/enemyactiondialog.ui \
-    editors/enemies/treasuredialog.ui \
     editors/items/edititems.ui \
     editors/plusminusbox.ui \
     editors/plusminuslist.ui \
     editors/skills/editskills.ui \
     editors/states/editstates.ui \
+    editors/system/editsystem.ui \
     editors/tilesets/edittilesets.ui \
     editors/troops/edittroops.ui \
     editors/troops/troopeventpage.ui \

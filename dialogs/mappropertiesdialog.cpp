@@ -92,16 +92,16 @@ void MapPropertiesDialog::on_button_cancel_clicked()
 
 void MapPropertiesDialog::on_button_bgm_clicked()
 {
-    AudioDialog *dialog = new AudioDialog(system, &this->bgm, AudioDialog::BGM);
-    connect(dialog, SIGNAL(ok_clicked(QString)), this->ui->line_bgm, SLOT(setText(QString)));
-    dialog->show();
+    //AudioDialog *dialog = new AudioDialog(system, &this->bgm, AudioDialog::BGM);
+    //connect(dialog, SIGNAL(ok_clicked(QString)), this->ui->line_bgm, SLOT(setText(QString)));
+    //dialog->show();
 }
 
 void MapPropertiesDialog::on_button_bgs_clicked()
 {
-    AudioDialog *dialog = new AudioDialog(system, &this->bgs, AudioDialog::BGS);
-    connect(dialog, SIGNAL(ok_clicked(QString)), this->ui->line_bgs, SLOT(setText(QString)));
-    dialog->show();
+    //AudioDialog *dialog = new AudioDialog(system, &this->bgs, AudioDialog::BGS);
+    //connect(dialog, SIGNAL(ok_clicked(QString)), this->ui->line_bgs, SLOT(setText(QString)));
+    //dialog->show();
 }
 
 

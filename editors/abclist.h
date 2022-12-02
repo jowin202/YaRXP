@@ -2,12 +2,11 @@
 #define ABCLIST_H
 
 #include <QWidget>
+#include <QJsonArray>
 
 namespace Ui {
 class ABCList;
 }
-
-class RPGSystem;
 
 class ABCList : public QWidget
 {

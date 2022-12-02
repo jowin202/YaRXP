@@ -8,7 +8,7 @@ namespace Ui {
 class EditTilesets;
 }
 
-class RPGSystem;
+class RPGEditorController;
 class EditTilesets : public QWidget
 {
     Q_OBJECT
@@ -17,7 +17,7 @@ public:
     explicit EditTilesets(QWidget *parent = nullptr);
     ~EditTilesets();
 
-    void setSystem(RPGSystem *system);
+    void setEC(RPGEditorController *ec);
 
     void set_tileset(int n);
     void save();
@@ -54,7 +54,7 @@ private slots:
 
 private:
     Ui::EditTilesets *ui;
-    RPGSystem *system;
+    RPGEditorController *ec;
     int current;
 
     int panorama_hue = 0;

@@ -19,9 +19,6 @@ public:
     ~EditEnemies();
 
 
-    void set_enemy(int n);
-    void save();
-
 
     void setEC(RPGEditorController *ec);
 
@@ -30,20 +27,19 @@ public:
 
 
 public slots:
+    void update_actions_from_file();
+
     void change_action(int row, int turn_a, int turn_b, int hp,
                        int level, int switch_id, int kind,
                        int skill, int rating, int basic);
-    void setTreasure(int item_id, int weapon_id, int armor_id, int prob);
+
 
 private slots:
     void on_table_action_itemDoubleClicked(QTableWidgetItem *item);
-
     void on_button_action_del_clicked();
-
     void on_button_action_add_clicked();
 
 
-    void on_button_change_treasure_clicked();
 
 
 private:

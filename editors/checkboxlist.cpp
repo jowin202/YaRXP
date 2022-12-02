@@ -9,7 +9,6 @@
 #include <iostream>
 
 #include "RXIO2/rpgeditorcontroller.h"
-//#include "RXIO/RXObjects/rpgsystem.h"
 
 
 CheckBoxList::CheckBoxList(QWidget *parent) :

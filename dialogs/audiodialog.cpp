@@ -1,20 +1,21 @@
 #include "audiodialog.h"
 #include "ui_audiodialog.h"
 
-#include "RXIO/RXObjects/rpgsystem.h"
+#include "RXIO2/rpgdb.h"
 
-AudioDialog::AudioDialog(RPGSystem *system, RPGAudioFile *audiofile, int mode, QWidget *parent) :
+AudioDialog::AudioDialog(RPGDB *db, QString name, int volume, int pitch, int mode, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::AudioDialog)
 {
     ui->setupUi(this);
 
-    this->system = system;
-    this->audiofile = audiofile;
+    this->db = db;
     this->mode = mode;
 
-    this->ui->slider_volume->setValue(this->audiofile->volume);
-    this->ui->slider_pitch->setValue(this->audiofile->pitch);
+    this->name = name;
+
+    this->ui->slider_volume->setValue(volume);
+    this->ui->slider_pitch->setValue(pitch);
 
 
     switch(mode)
@@ -38,7 +39,7 @@ void AudioDialog::update_audio_list()
 {
     this->ui->list->clear();
     this->ui->list->addItem("(None)");
-    QDir music_dir(this->system->audio_dir + music_type);
+    QDir music_dir(this->db->project_dir + "Audio" + QDir::separator() + music_type);
 
 
     QStringList entries = music_dir.entryList(QDir::Filter::NoFilter, QDir::SortFlag::Name);
@@ -46,7 +47,7 @@ void AudioDialog::update_audio_list()
     {
         if (entry == "." || entry == "..") continue;
         this->ui->list->addItem(entry);
-        if (this->audiofile->name == entry.chopped(4))
+        if (this->name == entry.chopped(4))
         {
             this->ui->list->setCurrentItem(this->ui->list->item(this->ui->list->count()-1));
         }
@@ -58,14 +59,8 @@ void AudioDialog::on_button_ok_clicked()
     if (this->ui->list->currentItem() == 0)
         return; // do nothing
 
-    if (this->ui->list->currentRow() == 0)
-        this->audiofile->name = RPGString(""); //choose none
-    else
-        this->audiofile->name = this->ui->list->currentItem()->text().chopped(4);
-    this->audiofile->volume = this->ui->slider_volume->value();
-    this->audiofile->pitch = this->ui->slider_pitch->value();
-
-    emit ok_clicked(this->audiofile->name);
+    if (this->ui->list->currentItem()!= 0)
+        emit ok_clicked(this->ui->list->currentItem()->text().chopped(4),this->ui->slider_volume->value(), this->ui->slider_pitch->value());
     this->close();
 }
 
@@ -77,7 +72,7 @@ void AudioDialog::on_button_cancel_clicked()
 void AudioDialog::on_button_play_clicked()
 {
     QSoundEffect effect;
-    effect.setSource(QUrl::fromLocalFile(system->audio_dir + music_type + QDir::separator() + this->ui->list->currentItem()->text()));
+    effect.setSource(QUrl::fromLocalFile(db->project_dir + "Audio" + QDir::separator() +  music_type + QDir::separator() + this->ui->list->currentItem()->text()));
     effect.play();
 }
 
@@ -101,7 +96,7 @@ void AudioDialog::on_button_import_clicked()
     {
         if (QFile::exists(files.at(i)))
         {
-            QFile::copy(files.at(i), system->audio_dir + music_type + QDir::separator());
+            QFile::copy(files.at(i), db->project_dir + "Audio" + QDir::separator() + music_type + QDir::separator());
         }
     }
 

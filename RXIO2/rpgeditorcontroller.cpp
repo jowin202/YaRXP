@@ -84,6 +84,32 @@ void RPGEditorController::connect_table_to_abc_list(int object_type, QString key
     });
 }
 
+void RPGEditorController::connect_plus_minus_box(int object_type, QString key_plus, QString key_minus, PlusMinusList *list, int content_type)
+{
+    connect(list, &PlusMinusList::values_changed, this, [=]() {
+        QJsonArray array_plus = ((PlusMinusList*)sender())->get_plus();
+        QJsonArray array_minus = ((PlusMinusList*)sender())->get_minus();
+        this->obj_set_jsonvalue(object_type, key_plus, array_plus);
+        this->obj_set_jsonvalue(object_type, key_minus, array_minus);
+    });
+    connect(this, this->obj_changed_signals[object_type], list, [=]()
+    {
+        list->clear();
+        QStringList name_list = this->obj_get_name_list(content_type);
+
+        QJsonArray plus_ranks = this->obj_get_jsonvalue(object_type, key_plus).toArray();
+        QJsonArray minus_ranks = this->obj_get_jsonvalue(object_type, key_minus).toArray();
+
+        for (int i = 0; i < name_list.length(); i++)
+        {
+            int v = 0;
+            if (plus_ranks.contains(i+1)) v = 1;
+            else if (minus_ranks.contains(i+1)) v = 2;
+            list->add_box(name_list.at(i), v);
+        }
+    });
+}
+
 void RPGEditorController::connect_image_display_widget(int object_type, int image_type, QString key, QString key_hue, ImageDisplayWidget *widget)
 {
     connect(widget, &ImageDisplayWidget::image_changed, this, [=]() {

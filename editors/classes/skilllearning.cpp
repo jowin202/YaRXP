@@ -1,15 +1,26 @@
-#include "RXIO/RXObjects/rpgsystem.h"
 #include "skilllearning.h"
 #include "ui_skilllearning.h"
 
-SkillLearning::SkillLearning(RPGSystem *system, int row, int level, int skill, QWidget *parent) :
+#include "RXIO2/rpgdb.h"
+#include "RXIO2/rpgeditorcontroller.h"
+
+SkillLearning::SkillLearning(RPGEditorController *ec, int row, int level, int skill, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::SkillLearning)
 {
     ui->setupUi(this);
-    this->system = system;
+    this->ec = ec;
 
-    this->system->datasource.fill_combo(this->ui->combo_skill, RPGSystem::SKILLS, true, 3, skill, false);
+    this->ec->fill_combo(this->ui->combo_skill, RPGDB::SKILLS, true, 3, false);
+    for (int i = 0; i < this->ui->combo_skill->count(); i++)
+    {
+        if (this->ui->combo_skill->itemData(i).toInt() == skill)
+        {
+            this->ui->combo_skill->setCurrentIndex(i);
+            break;
+        }
+    }
+
     this->ui->spin_level->setValue(level);
     this->row = row;
 }

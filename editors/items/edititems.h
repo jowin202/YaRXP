@@ -27,10 +27,13 @@ public:
 private slots:
     void on_combo_parameter_currentIndexChanged(int index);
 
-
     void on_button_se_clicked();
-
     void on_button_icon_clicked();
+
+
+    void get_menu_se();
+    void set_menu_se(QString name, int volume, int pitch);
+
 
 private:
     Ui::EditItems *ui;

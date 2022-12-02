@@ -21,9 +21,6 @@ public:
 
     void setEC(RPGEditorController *ec);
 
-    void set_state(int n);
-    void save();
-
 private:
     Ui::EditStates *ui;
     RPGEditorController *ec;

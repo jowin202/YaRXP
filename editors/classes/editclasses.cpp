@@ -3,6 +3,7 @@
 
 #include "skilllearning.h"
 
+#include "RXIO2/factory.h"
 #include "RXIO2/rpgdb.h"
 #include "RXIO2/rpgeditorcontroller.h"
 
@@ -14,6 +15,8 @@ EditClasses::EditClasses(QWidget *parent) :
 
     this->ui->table_skills->hideColumn(2);
     this->ui->table_skills->hideColumn(3);
+
+    this->ui->table_skills->verticalHeader()->setVisible(false);
 }
 
 EditClasses::~EditClasses()
@@ -32,139 +35,69 @@ void EditClasses::setEC(RPGEditorController *ec)
 
     this->ec->connect_table_to_abc_list(RPGDB::CLASSES, "@element_ranks", this->ui->element_widget, RPGDB::ELEMENTS);
     this->ec->connect_table_to_abc_list(RPGDB::CLASSES, "@state_ranks", this->ui->state_widget, RPGDB::STATES);
-}
 
-void EditClasses::set_class(int n)
-{
-    /*
-    if (this->system->classes_list.length() <= n) return;
-    RPGClass *current_class = system->classes_list.at(n);
-    this->current = n;
-
-    this->ui->line_name->setText(current_class->name);
-    this->ui->combo_pos->setCurrentIndex(current_class->position);
-
-
-    //this->ui->weapon_widget->setValues(system, &current_class->weapon_set, RPGSystem::WEAPONS);
-    //this->ui->armor_widget->setValues(system, &current_class->armor_set, RPGSystem::ARMORS);
-
-    this->ui->state_widget->setStates(system, &current_class->state_ranks);
-    this->ui->element_widget->setElements(system, &current_class->element_ranks);
-
-
-
-    this->ui->table_skills->clearContents();
-    this->ui->table_skills->setRowCount(0);
-    for (int i = 0; i < current_class->learnings_level.length(); i++)
-    {
-        int level = current_class->learnings_level.at(i);
-        int skill_id = current_class->learnings_skill_id.at(i);
-        QString skill_name = system->datasource.get_obj_name_by_id(skill_id, RPGSystem::SKILLS, true, 3, false);
-
-        QTableWidgetItem *item;
-
-        this->ui->table_skills->setRowCount(this->ui->table_skills->rowCount()+1);
-        this->ui->table_skills->setItem(i,0, item = new QTableWidgetItem("Lv. " + QString::number(level)));
-        this->set_readonly(item);
-        this->ui->table_skills->setItem(i,1, item = new QTableWidgetItem(skill_name));
-        this->set_readonly(item);
-        this->ui->table_skills->setItem(i,2, new QTableWidgetItem(QString::number(level)));
-        this->ui->table_skills->setItem(i,3, new QTableWidgetItem(QString::number(skill_id)));
-    }
-
-    this->ui->table_skills->resizeColumnsToContents();
-
-    //qDebug() << current_class->to_hash();
-    */
-}
-
-void EditClasses::save()
-{
-    /*
-    int n = this->current;
-    if (this->system->classes_list.length() <= n) return;
-    RPGClass *current_class = this->system->classes_list.at(n);
-
-    current_class->name = this->ui->line_name->text();
-    current_class->position = this->ui->combo_pos->currentIndex();
-
-    //this->ui->weapon_widget->getValues(&current_class->weapon_set);
-    //this->ui->armor_widget->getValues(&current_class->armor_set);
-
-    this->ui->state_widget->getValues(&current_class->state_ranks);
-    this->ui->element_widget->getValues(&current_class->element_ranks);
-
-
-    current_class->learnings_level.clear();
-    current_class->learnings_skill_id.clear();
-
-    for (int i = 0; i < this->ui->table_skills->rowCount(); i++)
-    {
-        int level = this->ui->table_skills->item(i,2)->text().toInt();
-        int skill_id = this->ui->table_skills->item(i,3)->text().toInt();
-
-        current_class->learnings_level.append(level);
-        current_class->learnings_skill_id.append(skill_id);
-    }
-
-
-    //qDebug() << current_class->to_hash();
-    */
+    connect(this->ec, SIGNAL(current_class_changed()), this, SLOT(update_skill_from_file()));
 }
 
 void EditClasses::set_skill_from_dialog(int row, int level, int skill)
 {
-    /*
-    QString skill_name = system->datasource.get_obj_name_by_id(skill, RPGSystem::SKILLS, true, 3, false);
+    QJsonArray learnings = this->ec->obj_get_jsonvalue(RPGDB::CLASSES, "@learnings").toArray();
+    learnings.removeAt(row);
+    learnings.insert(row, Factory().create_learnings(level,skill));
+    this->ec->obj_set_jsonvalue(RPGDB::CLASSES, "@learnings", learnings);
 
-    if (row == -1)
+    this->update_skill_from_file();
+}
+
+void EditClasses::update_skill_from_file()
+{
+    this->ui->table_skills->clearContents();
+    QJsonArray learnings = this->ec->obj_get_jsonvalue(RPGDB::CLASSES, "@learnings").toArray();
+    QStringList skill_names = this->ec->obj_get_name_list(RPGDB::SKILLS);
+    int rowCount = learnings.count();
+    this->ui->table_skills->setRowCount(rowCount);
+
+
+    for (int row = 0; row < rowCount; row++)
     {
-        int row = this->ui->table_skills->rowCount();
-        this->ui->table_skills->setRowCount(row+1);
+        int level = learnings.at(row).toObject().value("@level").toInt();
+        int skill_id = learnings.at(row).toObject().value("@skill_id").toInt();
 
+        QString skill_name = skill_id <= skill_names.count() ? skill_names.at(skill_id-1) : "";
 
-        QTableWidgetItem *item;
-        this->ui->table_skills->setItem(row,0, item = new QTableWidgetItem("Lv. " + QString::number(level)));
-        this->set_readonly(item);
-        this->ui->table_skills->setItem(row,1, item = new QTableWidgetItem(skill_name));
-        this->set_readonly(item);
-        this->ui->table_skills->setItem(row,2, new QTableWidgetItem(QString::number(level)));
-        this->ui->table_skills->setItem(row,3, new QTableWidgetItem(QString::number(skill)));
-
+        this->ui->table_skills->setItem(row,0,new QTableWidgetItem("Lv. " + QString::number(level)));
+        this->ui->table_skills->setItem(row,1,new QTableWidgetItem(QString("%1: %2").arg(skill_id,3,10,QChar('0')).arg(skill_name)));
+        this->ui->table_skills->setItem(row,2,new QTableWidgetItem(QString::number(level)));
+        this->ui->table_skills->setItem(row,3,new QTableWidgetItem(QString::number(skill_id)));
     }
-    else
-    {
-        this->ui->table_skills->item(row,0)->setText("Lv. " + QString::number(level));
-        this->ui->table_skills->item(row,1)->setText(skill_name);
-        this->ui->table_skills->item(row,2)->setText(QString::number(level));
-        this->ui->table_skills->item(row,3)->setText(QString::number(skill));
-    }
-    */
+
+    this->ui->table_skills->resizeColumnsToContents();
 }
 
 void EditClasses::on_table_skills_itemDoubleClicked(QTableWidgetItem *item)
 {
-    /*
     int level = this->ui->table_skills->item(item->row(), 2)->text().toInt();
     int skill = this->ui->table_skills->item(item->row(), 3)->text().toInt();
 
-    SkillLearning *dialog = new SkillLearning(system,item->row(),level,skill, 0);
+    SkillLearning *dialog = new SkillLearning(ec,item->row(),level,skill, 0);
     connect(dialog, SIGNAL(ok_clicked(int,int,int)), this, SLOT(set_skill_from_dialog(int,int,int)));
     dialog->show();
-    */
 }
 
 
 void EditClasses::on_button_skill_add_clicked()
 {
-    /*
-    SkillLearning *dialog = new SkillLearning(system, -1 , 1, 1, 0);
+    SkillLearning *dialog = new SkillLearning(ec, this->ui->table_skills->rowCount(), 1, 1, 0);
     connect(dialog, SIGNAL(ok_clicked(int,int,int)), this, SLOT(set_skill_from_dialog(int,int,int)));
     dialog->show();
-    */
 }
 
 void EditClasses::on_button_skill_del_clicked()
 {
-    //this->ui->table_skills->removeRow(this->ui->table_skills->currentRow());
+    int row = this->ui->table_skills->currentRow();
+    QJsonArray learnings = this->ec->obj_get_jsonvalue(RPGDB::CLASSES, "@learnings").toArray();
+    learnings.removeAt(row);
+    this->ec->obj_set_jsonvalue(RPGDB::CLASSES, "@learnings", learnings);
+
+    this->update_skill_from_file();
 }

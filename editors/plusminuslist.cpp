@@ -3,7 +3,6 @@
 
 #include "plusminusbox.h"
 
-#include "RXIO/RXObjects/rpgsystem.h"
 
 PlusMinusList::PlusMinusList(QWidget *parent) :
     QWidget(parent),
@@ -19,33 +18,44 @@ PlusMinusList::~PlusMinusList()
     delete ui;
 }
 
-void PlusMinusList::setStates(RPGSystem *system, QList<int> *plus_states, QList<int> *minus_states)
+void PlusMinusList::add_box(QString name, int val)
+{
+    PlusMinusBox *box = new PlusMinusBox(name);
+    if (val == 1)
+        box->setPlus();
+    else if (val == 2)
+        box->setMinus();
+    this->ui->verticalLayout->addWidget(box);
+    connect(box, &PlusMinusBox::value_changed, this, [=]() { emit values_changed(); });
+
+}
+
+QJsonArray PlusMinusList::get_plus()
+{
+    QJsonArray array;
+    for (int i = 0; i < this->ui->verticalLayout->count(); i++)
+    {
+        int v = ((PlusMinusBox*)this->ui->verticalLayout->itemAt(i)->widget())->value();
+        if (v==1) array.append(i+1);
+    }
+    return array;
+}
+
+QJsonArray PlusMinusList::get_minus()
+{
+    QJsonArray array;
+    for (int i = 0; i < this->ui->verticalLayout->count(); i++)
+    {
+        int v = ((PlusMinusBox*)this->ui->verticalLayout->itemAt(i)->widget())->value();
+        if (v==2) array.append(i+1);
+    }
+    return array;
+}
+
+void PlusMinusList::clear()
 {
     QLayoutItem *item;
     while ( (item = this->ui->verticalLayout->takeAt(0)) != 0)
         delete item->widget();
-
-    //state starts counting at 0
-    for (int i = 0; i < system->states_list.length(); i++)
-    {
-        PlusMinusBox *checkbox = new PlusMinusBox(system->states_list.at(i)->name);
-        if (plus_states->contains(i+1))
-            checkbox->setPlus();
-        else if (minus_states->contains(i+1))
-            checkbox->setMinus();
-        this->ui->verticalLayout->addWidget(checkbox);
-    }
 }
 
-void PlusMinusList::getStates(QList<int> *plus_states, QList<int> *minus_states)
-{
-    plus_states->clear();
-    minus_states->clear();
-
-    for (int i = 0; i < this->ui->verticalLayout->count(); i++)
-    {
-        int v = ((PlusMinusBox*)this->ui->verticalLayout->itemAt(i)->widget())->value();
-        if (v==1) plus_states->append(i+1);
-        else if (v==2) minus_states->append(i+1);
-    }
-}

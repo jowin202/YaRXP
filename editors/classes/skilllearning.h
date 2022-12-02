@@ -8,14 +8,14 @@ namespace Ui {
 class SkillLearning;
 }
 
-class RPGSystem;
+class RPGEditorController;
 
 class SkillLearning : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit SkillLearning(RPGSystem *system, int row, int level, int skill, QWidget *parent = nullptr);
+    explicit SkillLearning(RPGEditorController *ec, int row, int level, int skill, QWidget *parent = nullptr);
     ~SkillLearning();
 
     void keyPressEvent(QKeyEvent *e) {
@@ -35,7 +35,7 @@ private slots:
 
 private:
     Ui::SkillLearning *ui;
-    RPGSystem *system;
+    RPGEditorController *ec;
 
     int row;
 };

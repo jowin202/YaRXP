@@ -8,8 +8,6 @@ namespace Ui {
 class CheckBoxList;
 }
 
-class RPGSystem;
-
 class CheckBoxList : public QWidget
 {
     Q_OBJECT
@@ -17,9 +15,6 @@ class CheckBoxList : public QWidget
 public:
     explicit CheckBoxList(QWidget *parent = nullptr);
     ~CheckBoxList();
-
-    //void setValues(RPGSystem *system, QList<int> *set, int type);
-    //void getValues(QList<int> *set);
 
     void add_checkbox(QString name, bool is_checked);
     QJsonArray get_result();

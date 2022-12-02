@@ -8,20 +8,20 @@
 #include <QDir>
 #include <QDirIterator>
 #include <QSoundEffect>
-#include "RXIO/RXObjects/rpgaudiofile.h"
+
 
 namespace Ui {
 class AudioDialog;
 }
 
-class RPGSystem;
+class RPGDB;
 
 class AudioDialog : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit AudioDialog(RPGSystem *system, RPGAudioFile *audiofile, int mode, QWidget *parent = nullptr);
+    explicit AudioDialog(RPGDB *db, QString name, int volume, int pitch, int mode, QWidget *parent = nullptr);
     ~AudioDialog();
     enum {BGM, BGS, ME, SE};
 
@@ -37,6 +37,7 @@ public:
 
 signals:
     void ok_clicked(QString name);
+    void ok_clicked(QString name, int volume, int pitch);
 
 private slots:
     void on_button_ok_clicked();
@@ -50,8 +51,8 @@ private slots:
 
 private:
     Ui::AudioDialog *ui;
-    RPGAudioFile *audiofile;
-    RPGSystem *system;
+    RPGDB *db;
+    QString name;
     int mode = -1;
     QString music_type;
 };

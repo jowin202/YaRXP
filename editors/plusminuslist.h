@@ -2,12 +2,12 @@
 #define PLUSMINUSLIST_H
 
 #include <QWidget>
+#include <QJsonArray>
 
 namespace Ui {
 class PlusMinusList;
 }
 
-class RPGSystem;
 
 class PlusMinusList : public QWidget
 {
@@ -17,8 +17,17 @@ public:
     explicit PlusMinusList(QWidget *parent = nullptr);
     ~PlusMinusList();
 
-    void setStates(RPGSystem *system, QList<int> *plus_states, QList<int> *minus_states);
-    void getStates(QList<int> *plus_states, QList<int> *minus_states);
+
+    void add_box(QString name, int val);
+    QJsonArray get_plus();
+    QJsonArray get_minus();
+
+    void clear();
+
+
+signals:
+    void values_changed();
+
 private:
     Ui::PlusMinusList *ui;
 };

@@ -26,9 +26,8 @@ public:
 
 
 public slots:
-    void set_class(int n);
-    void save();
     void set_skill_from_dialog(int row, int level, int skill);
+    void update_skill_from_file();
 
 private slots:
     void on_table_skills_itemDoubleClicked(QTableWidgetItem *item);

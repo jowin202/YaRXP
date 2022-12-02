@@ -34,6 +34,7 @@ void EditActors::setEC(RPGEditorController *ec)
 
     this->ec->connect_int_to_data_combo_box(RPGDB::ACTORS, "@class_id", this->ui->combo_class, RPGDB::CLASSES, true, 3, false);
 
+    //TODO refresh
     //connect(this->ui->combo_class, &QComboBox::currentIndexChanged, ec, [=]() { ec->refresh(RPGDB::ACTORS);  } );
 
     this->ec->connect_int_to_data_combo_box(RPGDB::ACTORS, "@weapon_id", this->ui->combo_weapon, RPGDB::CLASSES_WEAPONS, true, 3, true);
@@ -194,110 +195,6 @@ void EditActors::on_button_exp_curve_clicked()
     dialog->show();
 
 }
-
-void EditActors::set_actor(int n)
-{
-
-    /*
-    this->ui->line_name->setText(current_actor->name);
-    this->ui->spin_initial->setValue(current_actor->initial_level);
-    this->ui->spin_final->setValue(current_actor->final_level);
-
-    system->datasource.fill_combo(this->ui->combo_class,RPGSystem::CLASSES,true, 3, current_actor->class_id, false);
-
-    system->datasource.fill_combo_weapon_by_class(this->ui->combo_weapon, current_actor->class_id, true, 3, current_actor->weapon_id);
-    system->datasource.fill_combo_shield_by_class(this->ui->combo_shield, current_actor->class_id, true, 3, current_actor->armor1_id);
-    system->datasource.fill_combo_helmet_by_class(this->ui->combo_helmet, current_actor->class_id, true, 3, current_actor->armor2_id);
-    system->datasource.fill_combo_body_by_class(this->ui->combo_body, current_actor->class_id, true, 3, current_actor->armor3_id);
-    system->datasource.fill_combo_accessory_by_class(this->ui->combo_accessory, current_actor->class_id, true, 3, current_actor->armor4_id);
-
-    this->set_exp_curve(current_actor->exp_basis, current_actor->exp_inflation);
-
-
-    this->ui->label_character_graphic->set_data(system, ImageDialog::CHARACTERS, current_actor->character_name, current_actor->character_hue);
-    this->ui->label_battler_graphic->set_data(system, ImageDialog::BATTLERS, current_actor->battler_name, current_actor->battler_hue);
-
-    //copy params from actor
-    for (int i = 0; i < 100; i++) //TODO: check if start from 1 or 0
-    {
-        this->maxhp[i] = current_actor->maxhp.at(i);
-        this->maxsp[i] = current_actor->maxsp.at(i);
-        this->str[i] = current_actor->str.at(i);
-        this->dex[i] = current_actor->dex.at(i);
-        this->agi[i] = current_actor->agi.at(i);
-        this->int_var[i] = current_actor->int_var.at(i);
-    }
-    this->update_params();
-
-    this->ui->check_weapon->setChecked(current_actor->weapon_fix);
-    this->ui->check_shield->setChecked(current_actor->armor1_fix);
-    this->ui->check_helmet->setChecked(current_actor->armor2_fix);
-    this->ui->check_body->setChecked(current_actor->armor3_fix);
-    this->ui->check_accessory->setChecked(current_actor->armor4_fix);
-    */
-
-}
-
-void EditActors::save()
-{
-    /*
-    int n = this->current;
-    if (this->system->actor_list.length() <= n) return;
-    RPGActor *current_actor = this->system->actor_list.at(n);
-
-
-    current_actor->name = this->ui->line_name->text();
-    current_actor->initial_level = this->ui->spin_initial->value();
-    current_actor->final_level = this->ui->spin_final->value();
-
-    current_actor->class_id = this->ui->combo_class->currentData().toInt();
-
-    current_actor->weapon_id = this->ui->combo_weapon->currentData().toInt();
-    current_actor->armor1_id = this->ui->combo_shield->currentData().toInt();
-    current_actor->armor2_id = this->ui->combo_helmet->currentData().toInt();
-    current_actor->armor3_id = this->ui->combo_body->currentData().toInt();
-    current_actor->armor4_id = this->ui->combo_accessory->currentData().toInt();
-
-    current_actor->exp_basis = this->exp_basis;
-    current_actor->exp_inflation = this->exp_inflation;
-
-    current_actor->character_name = this->ui->label_character_graphic->current_file;
-    current_actor->character_hue = this->ui->label_character_graphic->hue;
-
-    current_actor->battler_name = this->ui->label_battler_graphic->current_file;
-    current_actor->battler_hue = this->ui->label_battler_graphic->hue;
-
-    current_actor->maxhp.clear();
-    current_actor->maxsp.clear();
-    current_actor->str.clear();
-    current_actor->dex.clear();
-    current_actor->agi.clear();
-    current_actor->int_var.clear();
-    for (int i = 0; i < 100; i++)
-    {
-        current_actor->maxhp.append(this->maxhp[i]);
-        current_actor->maxsp.append(this->maxsp[i]);
-        current_actor->str.append(this->str[i]);
-        current_actor->dex.append(this->dex[i]);
-        current_actor->agi.append(this->agi[i]);
-        current_actor->int_var.append(this->int_var[i]);
-    }
-
-    current_actor->weapon_fix = this->ui->check_weapon->isChecked();
-    current_actor->armor1_fix = this->ui->check_shield->isChecked();
-    current_actor->armor2_fix = this->ui->check_helmet->isChecked();
-    current_actor->armor3_fix = this->ui->check_body->isChecked();
-    current_actor->armor4_fix = this->ui->check_accessory->isChecked();
-
-
-    qDebug() << current_actor->to_hash();
-    QFile test("/tmp/saved.json");
-    test.open(QIODevice::WriteOnly);
-    test.write(current_actor->to_json());
-    test.close();
-    */
-}
-
 
 void EditActors::on_button_param_maxhp_clicked()
 {
