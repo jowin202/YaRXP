@@ -69,6 +69,9 @@ void EditClasses::update_skill_from_file()
         this->ui->table_skills->setItem(row,1,new QTableWidgetItem(QString("%1: %2").arg(skill_id,3,10,QChar('0')).arg(skill_name)));
         this->ui->table_skills->setItem(row,2,new QTableWidgetItem(QString::number(level)));
         this->ui->table_skills->setItem(row,3,new QTableWidgetItem(QString::number(skill_id)));
+
+        this->set_readonly(this->ui->table_skills->item(row,0));
+        this->set_readonly(this->ui->table_skills->item(row,1));
     }
 
     this->ui->table_skills->resizeColumnsToContents();

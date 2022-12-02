@@ -2,6 +2,7 @@
 #include "ui_editenemies.h"
 
 #include "RXIO2/rpgdb.h"
+#include "RXIO2/factory.h"
 #include "RXIO2/rpgeditorcontroller.h"
 
 #include "dialogs/imagedialog.h"
@@ -13,10 +14,7 @@ EditEnemies::EditEnemies(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    /*
-    for (int i = 5; i <= 10; i++)
-        this->ui->table_action->hideColumn(i);
-        */
+    this->ui->table_action->verticalHeader()->setVisible(false);
 }
 
 EditEnemies::~EditEnemies()
@@ -82,9 +80,10 @@ void EditEnemies::update_actions_from_file()
         int condition_switch_id = actions.at(row).toObject().value("@condition_switch_id").toInt();
 
         int kind = actions.at(row).toObject().value("@kind").toInt();
-        int rating = actions.at(row).toObject().value("@rating").toInt();
+        //int rating = actions.at(row).toObject().value("@rating").toInt();
         int skill_id = actions.at(row).toObject().value("@skill_id").toInt();
         int basic = actions.at(row).toObject().value("@basic").toInt();
+
 
         QString condition_turns = "";
         if (condition_turn_a == 0 && condition_turn_b == 1) condition_turns = "";
@@ -94,27 +93,28 @@ void EditEnemies::update_actions_from_file()
         else condition_turns = QString("Turn %1+%2X").arg(condition_turn_a).arg(condition_turn_b);
 
 
+        if (kind == 0) //Basic
+            this->ui->table_action->setItem(row,0,new QTableWidgetItem(this->basic_actions.at(basic)));
+        else if (kind == 1) //Skill
+        {
+            QStringList skill_names = ec->obj_get_name_list(RPGDB::SKILLS);
+            if (skill_id <= skill_names.length())
+                this->ui->table_action->setItem(row,0,new QTableWidgetItem(skill_names.at(skill_id-1)));
+        }
+        else this->ui->table_action->setItem(row,0,new QTableWidgetItem());
+        this->set_readonly(this->ui->table_action->item(row,0));
+
         this->ui->table_action->setItem(row,1,new QTableWidgetItem(condition_turns));
-        if (condition_hp < 100)
-            this->ui->table_action->setItem(row,2,new QTableWidgetItem(QString("%1\% HP or below").arg(condition_hp)));
+        this->set_readonly(this->ui->table_action->item(row,0));
 
-        if (condition_level > 1)
-            this->ui->table_action->setItem(row,3,new QTableWidgetItem(QString("Level %1 or above").arg(condition_level)));
+        this->ui->table_action->setItem(row,2,new QTableWidgetItem(condition_hp < 100 ? QString("%1\% HP or below").arg(condition_hp) : ""));
+        this->set_readonly(this->ui->table_action->item(row,2));
 
-        if (condition_switch_id > 0)
-            this->ui->table_action->setItem(row,4,new QTableWidgetItem(QString("Switch [%1] is ON").arg(condition_switch_id,4,10,QChar('0'))));
+        this->ui->table_action->setItem(row,3,new QTableWidgetItem(condition_level > 1 ? QString("Level %1 or above").arg(condition_level) : ""));
+        this->set_readonly(this->ui->table_action->item(row,3));
 
-
-        this->ui->table_action->setItem(row,5,new QTableWidgetItem(QString::number(condition_turn_a)));
-        this->ui->table_action->setItem(row,6,new QTableWidgetItem(QString::number(condition_turn_b)));
-        this->ui->table_action->setItem(row,7,new QTableWidgetItem(QString::number(condition_hp)));
-        this->ui->table_action->setItem(row,8,new QTableWidgetItem(QString::number(condition_level)));
-        this->ui->table_action->setItem(row,9,new QTableWidgetItem(QString::number(condition_switch_id)));
-        this->ui->table_action->setItem(row,10,new QTableWidgetItem(QString::number(kind)));
-        this->ui->table_action->setItem(row,11,new QTableWidgetItem(QString::number(skill_id)));
-        this->ui->table_action->setItem(row,12,new QTableWidgetItem(QString::number(rating)));
-        this->ui->table_action->setItem(row,13,new QTableWidgetItem(QString::number(basic)));
-
+        this->ui->table_action->setItem(row,4,new QTableWidgetItem(condition_switch_id > 0 ? QString("Switch [%1] is ON").arg(condition_switch_id,4,10,QChar('0')) : ""));
+        this->set_readonly(this->ui->table_action->item(row,4));
 
     }
 
@@ -124,82 +124,53 @@ void EditEnemies::update_actions_from_file()
 
 void EditEnemies::change_action(int row, int turn_a, int turn_b, int hp, int level, int switch_id, int kind, int skill, int rating, int basic)
 {
-    /*
-    RPGEnemyAction action;
-    action.condition_turn_a = turn_a;
-    action.condition_turn_b = turn_b;
-    action.condition_hp = hp;
-    action.condition_level = level;
-    action.condition_switch_id = switch_id;
-    action.kind = kind;
-    action.skill_id = skill;
-    action.basic = basic;
+    QJsonArray actions = this->ec->obj_get_jsonvalue(RPGDB::ENEMIES, "@actions").toArray();
+    QJsonObject new_action = Factory().create_enemy_action(turn_a, turn_b,hp,level,switch_id,kind,skill,rating,basic);
+    actions.removeAt(row);
+    actions.insert(row,new_action);
+    this->ec->obj_set_jsonvalue(RPGDB::ENEMIES, "@actions", actions);
 
-    if (row == -1)
-    {
-        row = this->ui->table_action->rowCount();
-        this->ui->table_action->setRowCount(row+1);
-        QTableWidgetItem *item;
-        this->ui->table_action->setItem(row,0, item = new QTableWidgetItem(action.get_action_as_string(system)));
-        this->set_readonly(item);
-        this->ui->table_action->setItem(row,1, item = new QTableWidgetItem(action.get_condition_as_string()));
-        this->set_readonly(item);
-        this->ui->table_action->setItem(row,2, new QTableWidgetItem(QString::number(turn_a)));
-        this->ui->table_action->setItem(row,3, new QTableWidgetItem(QString::number(turn_b)));
-        this->ui->table_action->setItem(row,4, new QTableWidgetItem(QString::number(hp)));
-        this->ui->table_action->setItem(row,5, new QTableWidgetItem(QString::number(level)));
-        this->ui->table_action->setItem(row,6, new QTableWidgetItem(QString::number(switch_id)));
-        this->ui->table_action->setItem(row,7, new QTableWidgetItem(QString::number(kind)));
-        this->ui->table_action->setItem(row,8, new QTableWidgetItem(QString::number(skill)));
-        this->ui->table_action->setItem(row,9, new QTableWidgetItem(QString::number(rating)));
-        this->ui->table_action->setItem(row,10, new QTableWidgetItem(QString::number(basic)));
-    }
-    else
-    {
-        this->ui->table_action->item(row,0)->setText(action.get_action_as_string(system));
-        this->ui->table_action->item(row,1)->setText(action.get_condition_as_string());
-        this->ui->table_action->item(row,2)->setText(QString::number(turn_a));
-        this->ui->table_action->item(row,3)->setText(QString::number(turn_b));
-        this->ui->table_action->item(row,4)->setText(QString::number(hp));
-        this->ui->table_action->item(row,5)->setText(QString::number(level));
-        this->ui->table_action->item(row,6)->setText(QString::number(switch_id));
-        this->ui->table_action->item(row,7)->setText(QString::number(kind));
-        this->ui->table_action->item(row,8)->setText(QString::number(skill));
-        this->ui->table_action->item(row,9)->setText(QString::number(rating));
-        this->ui->table_action->item(row,10)->setText(QString::number(basic));
-    }
-    */
+    this->update_actions_from_file();
 }
 
 void EditEnemies::on_table_action_itemDoubleClicked(QTableWidgetItem *item)
 {
-    /*
-    int turn_a = this->ui->table_action->item(item->row(),2)->text().toInt();
-    int turn_b = this->ui->table_action->item(item->row(),3)->text().toInt();
-    int hp = this->ui->table_action->item(item->row(),4)->text().toInt();
-    int level = this->ui->table_action->item(item->row(),5)->text().toInt();
-    int switch_id  = this->ui->table_action->item(item->row(),6)->text().toInt();
-    int kind = this->ui->table_action->item(item->row(),7)->text().toInt();
-    int skill = this->ui->table_action->item(item->row(),8)->text().toInt();
-    int rating = this->ui->table_action->item(item->row(),9)->text().toInt();
-    int basic = this->ui->table_action->item(item->row(),10)->text().toInt();
-    EnemyActionDialog *dialog = new EnemyActionDialog(system, item->row(), turn_a, turn_b, hp, level, switch_id,kind,skill,rating,basic);
+    QJsonArray actions = this->ec->obj_get_jsonvalue(RPGDB::ENEMIES, "@actions").toArray();
+    int row = this->ui->table_action->currentRow();
+
+    int condition_turn_a = actions.at(row).toObject().value("@condition_turn_a").toInt();
+    int condition_turn_b = actions.at(row).toObject().value("@condition_turn_b").toInt();
+    int condition_hp = actions.at(row).toObject().value("@condition_hp").toInt();
+    int condition_level = actions.at(row).toObject().value("@condition_level").toInt();
+    int condition_switch_id = actions.at(row).toObject().value("@condition_switch_id").toInt();
+    int kind = actions.at(row).toObject().value("@kind").toInt();
+    int rating = actions.at(row).toObject().value("@rating").toInt();
+    int skill_id = actions.at(row).toObject().value("@skill_id").toInt();
+    int basic = actions.at(row).toObject().value("@basic").toInt();
+
+
+    EnemyActionDialog *dialog = new EnemyActionDialog(ec, item->row(), condition_turn_a, condition_turn_b, condition_hp, condition_level, condition_switch_id
+                                                      ,kind,rating,skill_id,basic);
     connect(dialog, SIGNAL(ok_clicked(int,int,int,int,int,int,int,int,int,int)), this, SLOT(change_action(int,int,int,int,int,int,int,int,int,int)));
     dialog->show();
-    */
+
 }
 
 void EditEnemies::on_button_action_del_clicked()
 {
-    //this->ui->table_action->removeRow(this->ui->table_action->currentRow());
+    int row = this->ui->table_action->currentRow();
+    QJsonArray actions = this->ec->obj_get_jsonvalue(RPGDB::ENEMIES, "@actions").toArray();
+    actions.removeAt(row);
+    this->ec->obj_set_jsonvalue(RPGDB::ENEMIES, "@actions", actions);
+
+
+    this->update_actions_from_file();
 }
 
 void EditEnemies::on_button_action_add_clicked()
 {
-    /*
-    EnemyActionDialog *dialog = new EnemyActionDialog(system, -1, 0, 1, 100, 1, 0,0,1,5,0);
+    EnemyActionDialog *dialog = new EnemyActionDialog(ec, this->ui->table_action->rowCount(),0,1,100, 1,0,0,1,5,0);
     connect(dialog, SIGNAL(ok_clicked(int,int,int,int,int,int,int,int,int,int)), this, SLOT(change_action(int,int,int,int,int,int,int,int,int,int)));
     dialog->show();
-    */
 }
 

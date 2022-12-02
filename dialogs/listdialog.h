@@ -10,14 +10,14 @@ namespace Ui {
 class ListDialog;
 }
 
-class RPGSystem;
+class RPGDB;
 
 class ListDialog : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit ListDialog(RPGSystem *system, QWidget *parent = nullptr);
+    explicit ListDialog(RPGDB *db, QWidget *parent = nullptr);
     ~ListDialog();
 
     void switch_dialog();
@@ -46,7 +46,7 @@ private slots:
 
 private:
     Ui::ListDialog *ui;
-    RPGSystem *system;
+    RPGDB *db;
 
     bool switch_is_set = false;
     bool variable_is_set = false;

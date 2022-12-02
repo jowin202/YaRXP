@@ -1,7 +1,7 @@
 #include "switchvariablewidget.h"
 #include "ui_switchvariablewidget.h"
 
-#include "RXIO/RXObjects/rpgsystem.h"
+#include "RXIO2/rpgdb.h"
 
 #include "listdialog.h"
 
@@ -17,25 +17,25 @@ SwitchVariableWidget::~SwitchVariableWidget()
     delete ui;
 }
 
-void SwitchVariableWidget::setSwitchWidget(RPGSystem *system)
+void SwitchVariableWidget::setSwitchWidget(RPGDB *db)
 {
-    this->system = system;
+    this->db = db;
     this->switch_widget = true;
     this->ui->comboBox->clear();
-    for (int i = 0; i < system->switches_names.length(); i++)
+    for (int i = 1; i < db->get_switch_names().count(); i++)
     {
-        this->ui->comboBox->addItem(QString("%1: %2").arg(i+1,4,10,QChar('0')).arg(system->switches_names.at(i)));
+        this->ui->comboBox->addItem(QString("%1: %2").arg(i,4,10,QChar('0')).arg(db->get_switch_names().at(i).toString()));
     }
 }
 
-void SwitchVariableWidget::setVariableWidget(RPGSystem *system)
+void SwitchVariableWidget::setVariableWidget(RPGDB *db)
 {
-    this->system = system;
+    this->db = db;
     this->variable_widget = true;
     this->ui->comboBox->clear();
-    for (int i = 0; i < system->variable_names.length(); i++)
+    for (int i = 1; i < db->get_variable_names().count(); i++)
     {
-        this->ui->comboBox->addItem(QString("%1: %2").arg(i+1,4,10,QChar('0')).arg(system->variable_names.at(i)));
+        this->ui->comboBox->addItem(QString("%1: %2").arg(i,4,10,QChar('0')).arg(db->get_variable_names().at(i).toString()));
     }
 }
 
@@ -46,7 +46,7 @@ int SwitchVariableWidget::getValue()
 
 void SwitchVariableWidget::on_toolButton_clicked()
 {
-    ListDialog *dialog = new ListDialog(system,0);
+    ListDialog *dialog = new ListDialog(db,0);
     if (switch_widget) dialog->switch_dialog();
     else if (variable_widget) dialog->variable_dialog();
     //else ... normal dialog without switch or variable
@@ -58,8 +58,8 @@ void SwitchVariableWidget::on_toolButton_clicked()
 
 void SwitchVariableWidget::setValue_from_dialog(int value)
 {
-    if (this->switch_widget) this->setSwitchWidget(system); //update combo
-    else if (this->variable_widget) this->setVariableWidget(system); //update combo
+    if (this->switch_widget) this->setSwitchWidget(db); //update combo
+    else if (this->variable_widget) this->setVariableWidget(db); //update combo
     //no else
     this->ui->comboBox->setCurrentIndex(value);
 }

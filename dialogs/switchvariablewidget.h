@@ -8,7 +8,7 @@ namespace Ui {
 class SwitchVariableWidget;
 }
 
-class RPGSystem;
+class RPGDB;
 class SwitchVariableWidget : public QWidget
 {
     Q_OBJECT
@@ -17,8 +17,8 @@ public:
     explicit SwitchVariableWidget(QWidget *parent = nullptr);
     ~SwitchVariableWidget();
 
-    void setSwitchWidget(RPGSystem *system);
-    void setVariableWidget(RPGSystem *system);
+    void setSwitchWidget(RPGDB *db);
+    void setVariableWidget(RPGDB *db);
 
 
 public slots:
@@ -31,7 +31,7 @@ private slots:
 
 private:
     Ui::SwitchVariableWidget *ui;
-    RPGSystem *system;
+    RPGDB *db;
 
     bool switch_widget = false;
     bool variable_widget = false;

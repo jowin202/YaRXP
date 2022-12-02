@@ -18,7 +18,7 @@ EditCommonEvents::~EditCommonEvents()
 void EditCommonEvents::setSystem(RPGSystem *system)
 {
     this->system = system;
-    this->ui->switch_widget->setSwitchWidget(system);
+    //this->ui->switch_widget->setSwitchWidget(system);
 }
 
 void EditCommonEvents::set_commonevent(int n)

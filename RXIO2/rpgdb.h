@@ -30,6 +30,16 @@ public:
     RPGEditorController *prepare_data_editor();
     void data_editor_data_saved();
 
+
+    //switches and variables
+    QJsonArray get_switch_names();
+    QJsonArray get_variable_names();
+    void change_switch_name(int i, QString name);
+    void change_variable_name(int i, QString name);
+    void set_max_switches(int n);
+    void set_max_variables(int n);
+
+
     QColor transparent = QColor(0x8a,0x16,0xa0);
     QString project_dir;
 

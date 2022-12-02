@@ -4,19 +4,19 @@
 #include <QWidget>
 #include <QKeyEvent>
 
-#include "RXIO/RXObjects/rpgenemyaction.h"
 
 namespace Ui {
 class EnemyActionDialog;
 }
 
-class RPGSystem;
+class RPGEditorController;
+
 class EnemyActionDialog : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit EnemyActionDialog(RPGSystem *system, int row, int turn_a, int turn_b, int hp, int level, int switch_id, int kind, int skill, int rating, int basic, QWidget *parent = nullptr);
+    explicit EnemyActionDialog(RPGEditorController *ec, int row, int turn_a, int turn_b, int hp, int level, int switch_id, int kind, int rating, int skill, int basic, QWidget *parent = nullptr);
     ~EnemyActionDialog();
 
 
@@ -37,7 +37,7 @@ private slots:
 
 private:
     Ui::EnemyActionDialog *ui;
-    RPGSystem *system;
+    RPGEditorController *ec;
     int row;
 };
 

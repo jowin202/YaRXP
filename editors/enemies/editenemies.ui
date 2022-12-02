@@ -382,51 +382,6 @@
        <string>Switch</string>
       </property>
      </column>
-     <column>
-      <property name="text">
-       <string>turn_a</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
-       <string>turn_b</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
-       <string>hp</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
-       <string>level</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
-       <string>switch</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
-       <string>kind</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
-       <string>skill</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
-       <string>rating</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
-       <string>basic</string>
-      </property>
-     </column>
     </widget>
    </item>
    <item row="0" column="0">

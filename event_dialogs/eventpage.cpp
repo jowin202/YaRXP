@@ -15,9 +15,9 @@ EventPage::EventPage(QWidget *parent, RPGEventPage *page, RPGSystem *system) :
     this->condition_param_order = page->param_order;
     this->graphic_param_order = page->graphic_param_order;
 
-    this->ui->widget_switch1->setSwitchWidget(system);
-    this->ui->widget_switch2->setSwitchWidget(system);
-    this->ui->widget_variable->setVariableWidget(system);
+    //this->ui->widget_switch1->setSwitchWidget(system);
+    //this->ui->widget_switch2->setSwitchWidget(system);
+    //this->ui->widget_variable->setVariableWidget(system);
 
     if (page != 0)
     {

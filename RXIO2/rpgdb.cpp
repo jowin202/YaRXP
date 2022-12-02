@@ -109,3 +109,59 @@ void RPGDB::data_editor_data_saved()
 {
 
 }
+
+QJsonArray RPGDB::get_switch_names()
+{
+    return system_file.object().value("@switches").toArray();
+}
+
+QJsonArray RPGDB::get_variable_names()
+{
+    return system_file.object().value("@variables").toArray();
+}
+
+void RPGDB::change_switch_name(int i, QString name)
+{
+    QJsonArray array = system_file.object().value("@switches").toArray();
+    array.removeAt(i);
+    array.insert(i,name);
+
+    QJsonObject system_obj = system_file.object();
+    system_obj.insert("@switches", array);
+    system_file.setObject(system_obj);
+}
+
+void RPGDB::change_variable_name(int i, QString name)
+{
+    QJsonArray array = system_file.object().value("@variables").toArray();
+    array.removeAt(i);
+    array.insert(i,name);
+
+    QJsonObject system_obj = system_file.object();
+    system_obj.insert("@variables", array);
+    system_file.setObject(system_obj);
+}
+
+void RPGDB::set_max_switches(int n)
+{
+    QJsonArray array = system_file.object().value("@switches").toArray();
+
+    while (array.count() > n+1) { array.removeLast(); }
+    while (array.count() < n+1) { array.append(""); }
+
+    QJsonObject system_obj = system_file.object();
+    system_obj.insert("@switches", array);
+    system_file.setObject(system_obj);
+}
+
+void RPGDB::set_max_variables(int n)
+{
+    QJsonArray array = system_file.object().value("@variables").toArray();
+
+    while (array.count() > n+1) { array.removeLast(); }
+    while (array.count() < n+1) { array.append(""); }
+
+    QJsonObject system_obj = system_file.object();
+    system_obj.insert("@variables", array);
+    system_file.setObject(system_obj);
+}

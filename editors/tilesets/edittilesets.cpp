@@ -23,6 +23,8 @@ EditTilesets::~EditTilesets()
 void EditTilesets::setEC(RPGEditorController *ec)
 {
     this->ec = ec;
+    this->ec->connect_string_to_text_field(RPGDB::TILESETS, "@name", this->ui->line_name);
+    this->ec->connect_string_to_text_field(RPGDB::TILESETS, "@tileset_name", this->ui->line_tileset_name);
     //this->ui->tileset_widget->setSystem(system);
 
 }
@@ -110,9 +112,9 @@ void EditTilesets::save()
 
 void EditTilesets::on_button_choose_tileset_clicked()
 {
-    ImageDialog *dialog = new ImageDialog(ec->get_db(), ImageDialog::TILESETS, this->ui->line_tileset_graphic->text());
+    ImageDialog *dialog = new ImageDialog(ec->get_db(), ImageDialog::TILESETS, this->ui->line_tileset_name->text());
     dialog->show();
-    connect(dialog, SIGNAL(ok_clicked(QString)), this->ui->line_tileset_graphic, SLOT(setText(QString)));
+    connect(dialog, SIGNAL(ok_clicked(QString)), this->ui->line_tileset_name, SLOT(setText(QString)));
     connect(dialog, SIGNAL(ok_clicked(QString)), this->ui->tileset_widget, SLOT(set_tileset(QString)));
 
 }

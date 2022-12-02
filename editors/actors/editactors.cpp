@@ -34,8 +34,18 @@ void EditActors::setEC(RPGEditorController *ec)
 
     this->ec->connect_int_to_data_combo_box(RPGDB::ACTORS, "@class_id", this->ui->combo_class, RPGDB::CLASSES, true, 3, false);
 
-    //TODO refresh
-    //connect(this->ui->combo_class, &QComboBox::currentIndexChanged, ec, [=]() { ec->refresh(RPGDB::ACTORS);  } );
+    //refresh custom combos
+    connect(this->ui->combo_class, &QComboBox::currentIndexChanged, ec, [=]() {
+        if (!ec->block_writing) //only refresh when not reloading page otherwise infinite loop
+        {
+            ec->refresh(RPGDB::ACTORS);
+            this->ec->obj_set_jsonvalue(RPGDB::ACTORS, "@weapon_id", this->ui->combo_weapon->currentData().toInt());
+            this->ec->obj_set_jsonvalue(RPGDB::ACTORS, "@armor1_id", this->ui->combo_shield->currentData().toInt());
+            this->ec->obj_set_jsonvalue(RPGDB::ACTORS, "@armor2_id", this->ui->combo_helmet->currentData().toInt());
+            this->ec->obj_set_jsonvalue(RPGDB::ACTORS, "@armor3_id", this->ui->combo_body->currentData().toInt());
+            this->ec->obj_set_jsonvalue(RPGDB::ACTORS, "@armor4_id", this->ui->combo_accessory->currentData().toInt());
+        }
+    } );
 
     this->ec->connect_int_to_data_combo_box(RPGDB::ACTORS, "@weapon_id", this->ui->combo_weapon, RPGDB::CLASSES_WEAPONS, true, 3, true);
     this->ec->connect_int_to_data_combo_box(RPGDB::ACTORS, "@armor1_id", this->ui->combo_shield, RPGDB::CLASSES_SHIELD, true, 3, true);

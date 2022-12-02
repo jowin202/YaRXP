@@ -12,7 +12,7 @@ TroopPageConditionDialog::TroopPageConditionDialog(RPGSystem *system, QWidget *p
     ui->setupUi(this);
 
     this->system = system;
-    this->ui->widget_switch->setSwitchWidget(system);
+    //this->ui->widget_switch->setSwitchWidget(system);
 }
 
 TroopPageConditionDialog::~TroopPageConditionDialog()

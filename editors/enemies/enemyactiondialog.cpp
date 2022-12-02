@@ -1,19 +1,22 @@
-#include "RXIO/RXObjects/rpgsystem.h"
+#include "RXIO2/rpgdb.h"
+#include "RXIO2/rpgeditorcontroller.h"
 
 #include "enemyactiondialog.h"
 #include "ui_enemyactiondialog.h"
 
-EnemyActionDialog::EnemyActionDialog(RPGSystem *system, int row,
+EnemyActionDialog::EnemyActionDialog(RPGEditorController *ec, int row,
                                      int turn_a, int turn_b, int hp,
                                      int level, int switch_id, int kind,
-                                     int skill, int rating, int basic, QWidget *parent) :
+                                     int rating, int skill, int basic, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::EnemyActionDialog)
 {
     ui->setupUi(this);
-    this->system = system;
-    this->ui->switch_widget->setSwitchWidget(system);
+    this->ec = ec;
+
+    this->ui->switch_widget->setSwitchWidget(ec->get_db());
     this->ui->switch_widget->setValue(switch_id);
+
     this->row = row;
 
     if (turn_a != 0 || turn_b != 1)
@@ -44,7 +47,15 @@ EnemyActionDialog::EnemyActionDialog(RPGSystem *system, int row,
     this->ui->combo_basic->setCurrentIndex(basic);
 
     this->ui->radio_skill->setChecked(kind == 1);
-    system->datasource.fill_combo(this->ui->combo_skill, RPGSystem::SKILLS, true, 3, skill, false);
+    this->ec->fill_combo(this->ui->combo_skill, RPGDB::SKILLS, true, 3, false);
+    for (int i = 0; i < this->ui->combo_skill->count(); i++)
+    {
+        if (this->ui->combo_skill->itemData(i).toInt() == skill)
+        {
+            this->ui->combo_skill->setCurrentIndex(i);
+            break;
+        }
+    }
 
     this->ui->spin_rating->setValue(rating);
 }

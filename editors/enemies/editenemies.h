@@ -45,6 +45,7 @@ private slots:
 private:
     Ui::EditEnemies *ui;
     RPGEditorController *ec;
+    QStringList basic_actions = { "Attack", "Defend", "Escape", "Do Nothing" };
 
 };
 
