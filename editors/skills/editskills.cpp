@@ -52,7 +52,7 @@ void EditSkills::setEC(RPGEditorController *ec)
     this->ec->connect_int_to_spin_box(RPGDB::SKILLS, "@variance", this->ui->spin_variance);
 
     this->ec->connect_array_to_checkbox_list(RPGDB::SKILLS, "@element_set", this->ui->element_widget, RPGDB::ELEMENTS);
-    this->ec->connect_plus_minus_box(RPGDB::SKILLS, "@plus_state_set", "@minus_state_set", this->ui->state_widget, RPGDB::STATES);
+    this->ec->connect_plus_minus_list(RPGDB::SKILLS, "@plus_state_set", "@minus_state_set", this->ui->state_widget, RPGDB::STATES);
 
     connect(this->ec, SIGNAL(current_skill_changed()), this, SLOT(get_menu_se()));
 }

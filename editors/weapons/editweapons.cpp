@@ -41,7 +41,7 @@ void EditWeapons::setEC(RPGEditorController *ec)
     this->ec->connect_int_to_spin_box(RPGDB::WEAPONS, "@int_plus", this->ui->spin_int);
 
     this->ec->connect_array_to_checkbox_list(RPGDB::WEAPONS, "@element_set", this->ui->element_widget, RPGDB::ELEMENTS);
-    this->ec->connect_plus_minus_box(RPGDB::WEAPONS, "@plus_state_set", "@minus_state_set", this->ui->state_widget, RPGDB::STATES);
+    this->ec->connect_plus_minus_list(RPGDB::WEAPONS, "@plus_state_set", "@minus_state_set", this->ui->state_widget, RPGDB::STATES);
 }
 
 void EditWeapons::on_button_icon_clicked()

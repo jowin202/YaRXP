@@ -7,7 +7,7 @@ namespace Ui {
 class EditTroops;
 }
 
-class RPGSystem;
+class RPGEditorController;
 class EditTroops : public QWidget
 {
     Q_OBJECT
@@ -16,10 +16,9 @@ public:
     explicit EditTroops(QWidget *parent = nullptr);
     ~EditTroops();
 
-    void setSystem(RPGSystem *system)
-    {this->system = system;}
+    void setEC(RPGEditorController *ec);
 
-    void set_troop(int n);
+    //void set_troop(int n);
 
 private slots:
     void on_button_arrange_clicked();
@@ -31,9 +30,16 @@ private slots:
 
     void on_button_add_clicked();
 
+
+    void on_button_autoname_clicked();
+
+    void on_button_edit_battleback_clicked();
+
+    void set_new_battleback(QString battleback_name);
+
 private:
     Ui::EditTroops *ui;
-    RPGSystem *system;
+    RPGEditorController *ec;
 };
 
 #endif // EDITTROOPS_H

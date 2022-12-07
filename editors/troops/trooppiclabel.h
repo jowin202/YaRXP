@@ -7,35 +7,38 @@
 #include <QPainter>
 #include <QDir>
 
-class RPGTroopMember;
-class RPGTroop;
-class RPGSystem;
+#include <QJsonArray>
+
+
+class RPGEditorController;
+
 class TroopPicLabel : public QLabel
 {
     Q_OBJECT
 public:
     TroopPicLabel(QWidget *parent);
 
+    void setEC(RPGEditorController *ec);
+
+
     void mousePressEvent(QMouseEvent *ev);
     void mouseReleaseEvent(QMouseEvent *ev);
     void mouseMoveEvent(QMouseEvent *ev);
 
-    void setData(RPGSystem *system, RPGTroop *troop);
-    void arrange();
-    void clear_troop();
+    //void arrange();
     void remove_current();
-    void add_member(int enemy_id);
 
-    int get_member_count();
-    QStringList get_enemies_list(); //max 8
 
+
+public slots:
     void redraw();
 
 private:
     bool left_clicked = false;
-    RPGSystem *system;
-    RPGTroop *troop;
-    QList<RPGTroopMember*> members;
+    RPGEditorController *ec;
+
+    QJsonArray members;
+    QRect bounding_rects[8];
 
     int marked_member = -1;
     QPoint rel_pos;

@@ -3,7 +3,7 @@
 
 #include <QWidget>
 
-class RPGSystem;
+class RPGEditorController;
 class RPGTroopPage;
 class TroopPicLabel;
 
@@ -19,7 +19,7 @@ public:
     explicit TroopEventPage(QWidget *parent = nullptr);
     ~TroopEventPage();
 
-    void setTroopPage(RPGSystem *system, RPGTroopPage *page, TroopPicLabel *label);
+    void setTroopPage(RPGEditorController *ec, int page_num);
 
 
 
@@ -28,10 +28,11 @@ private slots:
     void on_button_condition_clicked();
     void update_condition();
 
+    void on_combo_span_currentIndexChanged(int index);
+
 private:
     Ui::TroopEventPage *ui;
-    RPGSystem *system;
-    RPGTroopPage *page;
+    RPGEditorController *ec;
     TroopPicLabel *troop_pic_label;
 
     //condition

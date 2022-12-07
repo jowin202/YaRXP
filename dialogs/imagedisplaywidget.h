@@ -29,12 +29,13 @@ public:
 
 signals:
     void image_changed();
+    void hue_changed();
 
 public slots:
     void set_current(QString file)
-    { this->current_file = file; this->update_image(); }
+    { this->current_file = file; this->update_image(); emit image_changed(); }
     void set_hue(int hue)
-    { this->hue = hue; this->update_image(); }
+    { this->hue = hue; this->update_image(); emit hue_changed(); }
 
 private:
     RPGDB *db;

@@ -29,9 +29,9 @@ void EditTilesets::setEC(RPGEditorController *ec)
 
 }
 
+/*
 void EditTilesets::set_tileset(int n)
 {
-    /*
     if (this->system->tileset_list.length() <= n) return;
     RPGTileset *current_tileset = this->system->tileset_list.at(n);
     this->current = n;
@@ -71,12 +71,12 @@ void EditTilesets::set_tileset(int n)
 
     this->ui->tileset_widget->set_data(&current_tileset->passages, &current_tileset->priorities, &current_tileset->terrain_tag);
 
-    */
 }
+*/
 
+/*
 void EditTilesets::save()
 {
-    /*
     int n = this->current;
     if (this->system->tileset_list.length() <= n) return;
     RPGTileset *current_tileset = this->system->tileset_list.at(n);
@@ -107,8 +107,8 @@ void EditTilesets::save()
 
 
     current_tileset->battleback_name = this->ui->line_battleback->text();
-    */
 }
+*/
 
 void EditTilesets::on_button_choose_tileset_clicked()
 {

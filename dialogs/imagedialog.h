@@ -5,6 +5,7 @@
 #include <QDir>
 #include <QDirIterator>
 #include <QKeyEvent>
+#include <QListWidgetItem>
 
 namespace Ui {
 class ImageDialog;
@@ -49,6 +50,8 @@ private slots:
     void on_list_currentRowChanged(int currentRow);
 
     void on_slider_hue_valueChanged(int value);
+
+    void on_list_itemDoubleClicked(QListWidgetItem *item);
 
 private:
     Ui::ImageDialog *ui;

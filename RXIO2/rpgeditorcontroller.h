@@ -30,6 +30,7 @@ public:
 
 
     void fill_combo(QComboBox *combo, int type, bool shownum, int chars, bool allow_none);
+    void fill_list(QListWidget *list, int type, bool shownum, int chars, bool allow_none);
 
 
     //standard fields
@@ -40,7 +41,7 @@ public:
     void connect_int_to_data_combo_box(int object_type, QString key, QComboBox *combo, int content_type, bool shownum, int chars, bool allow_none);
     void connect_array_to_checkbox_list(int object_type, QString key, CheckBoxList *list, int content_type);
     void connect_table_to_abc_list(int object_type, QString key, ABCList *list, int content_type);
-    void connect_plus_minus_box(int object_type, QString key_plus, QString key_minus, PlusMinusList *list, int content_type);
+    void connect_plus_minus_list(int object_type, QString key_plus, QString key_minus, PlusMinusList *list, int content_type);
 
     void connect_image_display_widget(int object_type, int image_type, QString key, QString key_hue, ImageDisplayWidget *widget);
 
@@ -50,6 +51,7 @@ public:
 
     QJsonValue obj_get_jsonvalue(int obj_type, QString key);
     QStringList obj_get_name_list(int obj_type);
+    QJsonObject get_object_by_id(int obj_type, int id);
 
 
     void set_files(

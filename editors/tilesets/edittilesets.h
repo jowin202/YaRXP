@@ -19,9 +19,6 @@ public:
 
     void setEC(RPGEditorController *ec);
 
-    void set_tileset(int n);
-    void save();
-
 
 private slots:
     void on_button_choose_tileset_clicked();

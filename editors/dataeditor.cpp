@@ -38,7 +38,7 @@ void DataEditor::setSystem(RPGSystem *system, RPGDB *db)
     this->ui->page_armors->setEC(ec);
 
     this->ui->page_enemies->setEC(ec);
-    this->ui->page_troops->setSystem(system);
+    this->ui->page_troops->setEC(ec);
     this->ui->page_states->setEC(ec);
     this->ui->page_animations->setSystem(system);
     this->ui->page_tilesets->setEC(ec);
@@ -52,24 +52,6 @@ void DataEditor::on_object_list_currentRowChanged(int currentRow)
     if (currentRow < 0) return;
 
     this->ec->set_current_object(this->ui->central_menu->currentRow(), currentRow+1);
-
-
-    if (this->ui->central_menu->currentRow() == TROOPS)
-    {
-        this->ui->page_troops->set_troop(currentRow);
-    }
-    else if (this->ui->central_menu->currentRow() == ANIMATIONS)
-    {
-        this->ui->page_animations->set_animation(currentRow);
-    }
-    else if (this->ui->central_menu->currentRow() == TILESETS)
-    {
-        this->ui->page_tilesets->set_tileset(currentRow);
-    }
-    else if (this->ui->central_menu->currentRow() == COMMONEVENTS)
-    {
-        this->ui->page_commonevents->set_commonevent(currentRow);
-    }
 }
 
 void DataEditor::on_button_cancel_clicked()

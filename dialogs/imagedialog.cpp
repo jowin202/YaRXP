@@ -210,3 +210,10 @@ void ImageDialog::on_slider_hue_valueChanged(int value)
     this->hue = value;
     this->update_image();
 }
+
+void ImageDialog::on_list_itemDoubleClicked(QListWidgetItem *item)
+{
+    Q_UNUSED(item);
+    this->on_button_ok_clicked();
+}
+

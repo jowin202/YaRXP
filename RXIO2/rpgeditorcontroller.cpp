@@ -84,7 +84,7 @@ void RPGEditorController::connect_table_to_abc_list(int object_type, QString key
     });
 }
 
-void RPGEditorController::connect_plus_minus_box(int object_type, QString key_plus, QString key_minus, PlusMinusList *list, int content_type)
+void RPGEditorController::connect_plus_minus_list(int object_type, QString key_plus, QString key_minus, PlusMinusList *list, int content_type)
 {
     connect(list, &PlusMinusList::values_changed, this, [=]() {
         QJsonArray array_plus = ((PlusMinusList*)sender())->get_plus();
@@ -113,7 +113,11 @@ void RPGEditorController::connect_plus_minus_box(int object_type, QString key_pl
 void RPGEditorController::connect_image_display_widget(int object_type, int image_type, QString key, QString key_hue, ImageDisplayWidget *widget)
 {
     connect(widget, &ImageDisplayWidget::image_changed, this, [=]() {
-
+        this->obj_set_jsonvalue(object_type, key, ((ImageDisplayWidget*)sender())->current_file);
+    });
+    connect(widget, &ImageDisplayWidget::hue_changed, this, [=]() {
+        if (key_hue.startsWith("@"))
+            this->obj_set_jsonvalue(object_type, key_hue, ((ImageDisplayWidget*)sender())->hue);
     });
     connect(this, this->obj_changed_signals[object_type], widget, [=]()
     {
@@ -172,6 +176,9 @@ QJsonValue RPGEditorController::obj_get_jsonvalue(int obj_type, QString key)
     else if (obj_type == RPGDB::COMMONEVENTS)
         return common_event_file.array().at(current_common_event).toObject().value(key);
 
+    if (obj_type == RPGDB::SYSTEM)
+        return system_file.object().value(key);
+
     return QJsonValue();
 }
 
@@ -222,6 +229,40 @@ QStringList RPGEditorController::obj_get_name_list(int obj_type)
         list << doc.array().at(i).toObject().value("@name").toString();
     }
     return list;
+}
+
+QJsonObject RPGEditorController::get_object_by_id(int obj_type, int id)
+{
+    QJsonDocument doc;
+
+    if (obj_type == RPGDB::ACTORS)
+        doc = QJsonDocument(actor_file);
+    else if (obj_type == RPGDB::CLASSES)
+        doc = QJsonDocument(class_file);
+    else if (obj_type == RPGDB::SKILLS)
+        doc = QJsonDocument(skill_file);
+    else if (obj_type == RPGDB::ITEMS)
+        doc = QJsonDocument(item_file);
+    else if (obj_type == RPGDB::WEAPONS)
+        doc = QJsonDocument(weapon_file);
+    else if (obj_type == RPGDB::ARMORS)
+        doc = QJsonDocument(armor_file);
+    else if (obj_type == RPGDB::ENEMIES)
+        doc = QJsonDocument(enemy_file);
+    else if (obj_type == RPGDB::TROOPS)
+        doc = QJsonDocument(troop_file);
+    else if (obj_type == RPGDB::STATES)
+        doc = QJsonDocument(state_file);
+    else if (obj_type == RPGDB::ANIMATIONS)
+        doc = QJsonDocument(animation_file);
+    else if (obj_type == RPGDB::TILESETS)
+        doc = QJsonDocument(tileset_file);
+    else if (obj_type == RPGDB::COMMONEVENTS)
+        doc = QJsonDocument(common_event_file);
+
+    if (doc.array().count() <= id) return QJsonObject();
+
+    return doc.array().at(id).toObject();
 }
 
 
@@ -287,6 +328,24 @@ void RPGEditorController::fill_combo(QComboBox *combo, int type, bool shownum, i
             combo->addItem(shownum ? QString("%1: " + doc.array().at(key).toObject().value("@name").toString()).arg(key,chars,10,QChar('0')) :
                                      doc.array().at(key).toObject().value("@name").toString(), QVariant(key));
         }
+    }
+}
+
+void RPGEditorController::fill_list(QListWidget *list, int type, bool shownum, int chars, bool allow_none)
+{
+    list->clear();
+
+    if (allow_none)
+        list->addItem("(None)");
+
+    QJsonDocument doc;
+
+        QStringList obj_name_list = this->obj_get_name_list(type);
+
+    for (int i = 0; i < obj_name_list.size(); i++)
+    {
+        list->addItem(shownum ? QString("%1: " + obj_name_list.at(i)).arg(i+1,chars,10,QChar('0')) :
+                                 doc.array().at(i).toObject().value("@name").toString());
     }
 }
 
@@ -374,6 +433,14 @@ void RPGEditorController::obj_set_jsonvalue(int obj_type, QString key, QJsonValu
     {
         doc = &weapon_file;
         current = this->current_weapon;
+    }
+    else if (obj_type == RPGDB::SYSTEM)
+    {
+        //no array for system, therefore extra handling
+        QJsonObject system_object = system_file.object();
+        system_object[key] = value;
+        system_file.setObject(system_object);
+        return;
     }
         else return;
 

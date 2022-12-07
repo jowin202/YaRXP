@@ -54,3 +54,20 @@ QJsonObject Factory::create_enemy_action(int turn_a, int turn_b, int hp, int lev
     obj.insert("RXClass", "RPG::Enemy::Action");
     return obj;
 }
+
+QJsonObject Factory::create_troop_member()
+{
+    return create_troop_member(1,false, false, 0,0);
+}
+
+QJsonObject Factory::create_troop_member(int enemy_id, bool hidden, bool immortal, int x, int y)
+{
+    QJsonObject obj;
+    obj.insert("@enemy_id", enemy_id);
+    obj.insert("@hidden", hidden);
+    obj.insert("@immortal", immortal);
+    obj.insert("@x", x);
+    obj.insert("@y", y);
+    obj.insert("RXClass", "RPG::Troop::Member");
+    return obj;
+}

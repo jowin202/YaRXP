@@ -53,5 +53,6 @@ void EditStates::setEC(RPGEditorController *ec)
     this->ec->connect_int_to_spin_box(RPGDB::STATES, "@shock_release_prob", this->ui->spin_prob2);
 
     this->ec->connect_array_to_checkbox_list(RPGDB::STATES, "@guard_element_set", this->ui->element_widget, RPGDB::ELEMENTS);
+    this->ec->connect_plus_minus_list(RPGDB::STATES, "@plus_state_set", "@minus_state_set",this->ui->state_widget, RPGDB::STATES);
 }
 

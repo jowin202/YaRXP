@@ -5,22 +5,23 @@
 #include <QWidget>
 #include <QKeyEvent>
 
-class RPGSystem;
+class RPGEditorController;
 
 namespace Ui {
 class TroopPageConditionDialog;
 }
 
 class RPGTroopPage;
+
 class TroopPageConditionDialog : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit TroopPageConditionDialog(RPGSystem *system, QWidget *parent = nullptr);
+    explicit TroopPageConditionDialog(RPGEditorController *ec, QWidget *parent = nullptr);
     ~TroopPageConditionDialog();
 
-    void setPage(RPGTroopPage *page, QStringList enemy_list);
+    void setPage(int page_num, QStringList enemy_list);
 
 
     void keyPressEvent(QKeyEvent *e) {
@@ -37,7 +38,7 @@ private slots:
 
 private:
     Ui::TroopPageConditionDialog *ui;
-    RPGSystem *system;
+    RPGEditorController *ec;
 };
 
 #endif // TROOPPAGECONDITIONDIALOG_H
