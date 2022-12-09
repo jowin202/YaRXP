@@ -21,7 +21,7 @@ public:
     explicit TroopPageConditionDialog(RPGEditorController *ec, QWidget *parent = nullptr);
     ~TroopPageConditionDialog();
 
-    void setPage(int page_num, QStringList enemy_list);
+    void setPage(int page_num);
 
 
     void keyPressEvent(QKeyEvent *e) {

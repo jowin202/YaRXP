@@ -4,8 +4,6 @@
 #include <QWidget>
 
 class RPGEditorController;
-class RPGTroopPage;
-class TroopPicLabel;
 
 namespace Ui {
 class TroopEventPage;
@@ -33,7 +31,7 @@ private slots:
 private:
     Ui::TroopEventPage *ui;
     RPGEditorController *ec;
-    TroopPicLabel *troop_pic_label;
+    int page_num;
 
     //condition
     bool enemy_valid;

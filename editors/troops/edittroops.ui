@@ -113,14 +113,14 @@
    <item row="2" column="0" colspan="4">
     <layout class="QGridLayout" name="gridLayout_5">
      <item row="3" column="0">
-      <widget class="QPushButton" name="pushButton_7">
+      <widget class="QPushButton" name="button_delete_page">
        <property name="text">
         <string>Delete Event Page</string>
        </property>
       </widget>
      </item>
      <item row="4" column="0">
-      <widget class="QPushButton" name="pushButton_8">
+      <widget class="QPushButton" name="button_clear_page">
        <property name="text">
         <string>Clear Event Page</string>
        </property>
@@ -134,21 +134,21 @@
       </widget>
      </item>
      <item row="1" column="0">
-      <widget class="QPushButton" name="pushButton_4">
+      <widget class="QPushButton" name="button_copy_page">
        <property name="text">
         <string>Copy Event Page</string>
        </property>
       </widget>
      </item>
      <item row="2" column="0">
-      <widget class="QPushButton" name="pushButton_6">
+      <widget class="QPushButton" name="button_paste_page">
        <property name="text">
         <string>Paste Event Page</string>
        </property>
       </widget>
      </item>
      <item row="0" column="0">
-      <widget class="QPushButton" name="pushButton_5">
+      <widget class="QPushButton" name="button_new_page">
        <property name="text">
         <string>New Event Page</string>
        </property>

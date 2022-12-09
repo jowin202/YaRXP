@@ -74,17 +74,20 @@ void ListDialog::on_button_change_max_clicked()
 void ListDialog::on_list_doubleClicked(const QModelIndex &index)
 {
     int n = index.row();
+    bool ok;
 
     if (switch_is_set)
     {
-        QString name = QInputDialog::getText(this, "Rename Switch", "Rename Switch", QLineEdit::Normal, db->get_switch_names().at(n+1).toString());
-        db->change_switch_name(n+1, name);
+        QString name = QInputDialog::getText(this, "Rename Switch", "Rename Switch", QLineEdit::Normal, db->get_switch_names().at(n+1).toString(), &ok);
+        if (ok)
+            db->change_switch_name(n+1, name);
         this->switch_dialog();
     }
     else if (variable_is_set)
     {
-        QString name = QInputDialog::getText(this, "Rename Variable", "Rename Variable", QLineEdit::Normal, db->get_switch_names().at(n+1).toString());
-        db->change_variable_name(n+1, name);
+        QString name = QInputDialog::getText(this, "Rename Variable", "Rename Variable", QLineEdit::Normal, db->get_switch_names().at(n+1).toString(), &ok);
+        if (ok)
+            db->change_variable_name(n+1, name);
         this->variable_dialog();
     }
     this->ui->list->setCurrentRow(n);

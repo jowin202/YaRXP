@@ -20,38 +20,39 @@ TroopPageConditionDialog::~TroopPageConditionDialog()
     delete ui;
 }
 
-void TroopPageConditionDialog::setPage(int page_num, QStringList enemy_list)
+void TroopPageConditionDialog::setPage(int page_num)
 {
-    qDebug() << ec->get_object_by_id(RPGDB::TROOPS,5);
-    //QJsonObject page_object = ec->obj_get_jsonvalue(RPGDB::TROOPS, )
-    /*
-    this->ui->check_turn->setChecked(n->turn_valid);
-    this->ui->check_enemy->setChecked(n->enemy_valid);
-    this->ui->check_actor->setChecked(n->actor_valid);
-    this->ui->check_switch->setChecked(n->switch_valid);
+    QJsonArray members = ec->obj_get_jsonvalue(RPGDB::TROOPS, "@members").toArray();
 
-    this->ui->spin_turn_a->setValue(n->turn_a);
-    this->ui->spin_turn_b->setValue(n->turn_b);
+    QJsonObject page_object = ec->obj_get_jsonvalue(RPGDB::TROOPS, "@pages").toArray().at(page_num).toObject().value("@condition").toObject();
 
-    this->ui->spin_enemy->setValue(n->enemy_hp);
-    this->ui->spin_actor->setValue(n->actor_hp);
+    this->ui->check_turn->setChecked(page_object.value("@turn_valid").toBool());
+    this->ui->check_enemy->setChecked(page_object.value("@enemy_valid").toBool());
+    this->ui->check_actor->setChecked(page_object.value("@actor_valid").toBool());
+    this->ui->check_switch->setChecked(page_object.value("@switch_valid").toBool());
 
-    system->datasource.fill_combo(this->ui->combo_actor, RPGSystem::ACTORS, true, 3, n->actor_id, false);
-    */
+    this->ui->spin_turn_a->setValue(page_object.value("@turn_a").toInt());
+    this->ui->spin_turn_b->setValue(page_object.value("@turn_b").toInt());
+
+    this->ui->spin_enemy->setValue(page_object.value("@enemy_hp").toInt());
+    this->ui->spin_actor->setValue(page_object.value("@actor_hp").toInt());
+
+    ec->fill_combo(this->ui->combo_actor, RPGDB::ACTORS, true, 3, false);
+    int index = this->ui->combo_actor->findData(page_object.value("@actor_id").toInt());
+    if (index != -1)
+        this->ui->combo_actor->setCurrentIndex(index);
+
+
     //enemy list is different, max 8, troop members
-    for (int i = 0; i < enemy_list.length(); i++)
+    for (int i = 0; i < members.count(); i++)
     {
-        this->ui->combo_enemy->addItem(QString::number(i+1) + ": " + enemy_list.at(i));
+        QJsonObject enemy = ec->get_object_by_id(RPGDB::ENEMIES,members.at(i).toObject().value("@enemy_id").toInt());
+        this->ui->combo_enemy->addItem(QString::number(i+1) + ": " + enemy.value("@name").toString());
     }
-
     while(this->ui->combo_enemy->count() < 8)
         this->ui->combo_enemy->addItem(QString::number(this->ui->combo_enemy->count()+1) + ": ");
-
-    //this->ui->combo_enemy->setCurrentIndex(n->enemy_index);
-
-
-    //this->ui->widget_switch->setValue(n->switch_id);
-
+    this->ui->combo_enemy->setCurrentIndex(page_object.value("@enemy_index").toInt());
+    this->ui->widget_switch->setValue(page_object.value("@switch_id").toInt());
 }
 
 void TroopPageConditionDialog::on_button_ok_clicked()

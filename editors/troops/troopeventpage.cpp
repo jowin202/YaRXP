@@ -22,6 +22,7 @@ TroopEventPage::~TroopEventPage()
 void TroopEventPage::setTroopPage(RPGEditorController *ec, int page_num)
 {
     this->ec = ec;
+    this->page_num = page_num;
 
     //TODO: avoid using troop pic label here
     //this->troop_pic_label = label; //for enemies
@@ -34,6 +35,7 @@ void TroopEventPage::setTroopPage(RPGEditorController *ec, int page_num)
     QJsonObject condition = page.value("@condition").toObject();
 
 
+    //handle changes individually (see below)
     this->ui->combo_span->setCurrentIndex(page.value("@span").toInt());
 
     //condition
@@ -57,9 +59,9 @@ void TroopEventPage::setTroopPage(RPGEditorController *ec, int page_num)
 
 void TroopEventPage::on_button_condition_clicked()
 {
-    //TroopPageConditionDialog *dialog = new TroopPageConditionDialog(ec);
-    //dialog->setPage(page, this->troop_pic_label->get_enemies_list());
-    //dialog->show();
+    TroopPageConditionDialog *dialog = new TroopPageConditionDialog(ec);
+    dialog->setPage(this->page_num);
+    dialog->show();
 }
 
 void TroopEventPage::update_condition()
@@ -109,6 +111,11 @@ void TroopEventPage::update_condition()
 
 void TroopEventPage::on_combo_span_currentIndexChanged(int index)
 {
-
+    QJsonArray page_array = ec->obj_get_jsonvalue(RPGDB::TROOPS, "@pages").toArray();
+    QJsonObject current_page = page_array.at(page_num).toObject();
+    current_page.insert("@span", index);
+    page_array.removeAt(page_num);
+    page_array.insert(page_num,current_page);
+    ec->obj_set_jsonvalue(RPGDB::TROOPS, "@pages", page_array);
 }
 

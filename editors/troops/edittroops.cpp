@@ -44,26 +44,6 @@ void EditTroops::setEC(RPGEditorController *ec)
 
 }
 
-/*
-void EditTroops::set_troop(int n)
-{
-    if (this->system->troops_list.length() <= n) return;
-    RPGTroop *current_troop = this->system->troops_list.at(n);
-
-    this->ui->line_name->setText(current_troop->name);
-    system->datasource.fill_list(this->ui->list_enemies, RPGSystem::ENEMIES, true, 3);
-
-    this->ui->tab_pages->clear();
-    for (int i = 0; i < current_troop->pages.length(); i++)
-    {
-        TroopEventPage *page = new TroopEventPage;
-        page->setTroopPage(system,current_troop->pages.at(i), this->ui->label_troop_pic);
-        this->ui->tab_pages->addTab(page, QString::number(i+1));
-    }
-
-    this->ui->label_troop_pic->setData(system, current_troop);
-}
-*/
 
 void EditTroops::on_button_arrange_clicked()
 {
@@ -147,5 +127,14 @@ void EditTroops::set_new_battleback(QString battleback_name)
 {
     ec->obj_set_jsonvalue(RPGDB::SYSTEM, "@battleback_name", battleback_name);
     this->ui->label_troop_pic->redraw();
+}
+
+
+void EditTroops::on_button_delete_page_clicked()
+{
+    QJsonArray page_array = ec->obj_get_jsonvalue(RPGDB::TROOPS, "@pages").toArray();
+    page_array.removeAt(this->ui->tab_pages->currentIndex());
+    ec->obj_set_jsonvalue(RPGDB::TROOPS, "@pages", page_array);
+    ec->refresh(RPGDB::TROOPS);
 }
 

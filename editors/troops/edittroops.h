@@ -37,6 +37,8 @@ private slots:
 
     void set_new_battleback(QString battleback_name);
 
+    void on_button_delete_page_clicked();
+
 private:
     Ui::EditTroops *ui;
     RPGEditorController *ec;
