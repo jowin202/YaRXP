@@ -7,6 +7,16 @@
 TroopPicLabel::TroopPicLabel(QWidget *parent) : QLabel(parent)
 {
     this->setMouseTracking(true);
+    this->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(this, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(open_context_menu(QPoint)));
+
+    this->halfway = new QAction("Appear halfway");
+    this->halfway->setCheckable(true);
+    this->immortal = new QAction("Immortal");
+    this->immortal->setCheckable(true);
+
+    connect(this->halfway, SIGNAL(triggered()), this, SLOT(toggle_halfway()));
+    connect(this->immortal, SIGNAL(triggered()), this, SLOT(toggle_immortal()));
 }
 
 void TroopPicLabel::setEC(RPGEditorController *ec)
@@ -20,22 +30,24 @@ void TroopPicLabel::mousePressEvent(QMouseEvent *ev)
 {
     if (ev->button() == Qt::LeftButton)
     {
-        bool clicked_at_object = false;
-        this->left_clicked = true;
-        for (int i = 0; i < this->members.count(); i++)
-        {
-            if (this->bounding_rects[i].contains(ev->pos()))
-            {
-                this->marked_member = i;
-                clicked_at_object = true;
-                this->rel_pos = ev->pos() - (this->bounding_rects[i].topLeft() + QPoint(this->bounding_rects[i].width()/2, this->bounding_rects[i].height()));
-                break;
-            }
-        }
-        if (!clicked_at_object)
-            this->marked_member = -1;
-        this->redraw();
+        this->left_clicked = true; //for moving
     }
+
+
+    bool clicked_at_object = false;
+    for (int i = 0; i < this->members.count(); i++)
+    {
+        if (this->bounding_rects[i].contains(ev->pos()))
+        {
+            this->marked_member = i;
+            clicked_at_object = true;
+            this->rel_pos = ev->pos() - (this->bounding_rects[i].topLeft() + QPoint(this->bounding_rects[i].width()/2, this->bounding_rects[i].height()));
+            break;
+        }
+    }
+    if (!clicked_at_object)
+        this->marked_member = -1;
+    this->redraw();
 }
 
 void TroopPicLabel::mouseReleaseEvent(QMouseEvent *ev)
@@ -64,26 +76,6 @@ void TroopPicLabel::mouseMoveEvent(QMouseEvent *ev)
     }
 }
 
-/*
-void TroopPicLabel::setData(RPGSystem *system, RPGTroop *troop)
-{
-    this->system = system;
-    this->troop = troop;
-    this->marked_member = -1;
-
-    this->clear_troop();    //Delete old troop members if exists
-
-    //qDebug() << "";
-    for (RPGTroopMember *member : troop->members)
-    {
-        RPGTroopMember *m = new RPGTroopMember;
-        member->copy_to(m);
-        this->members.append(m);
-        //qDebug() << member->x << member->y;
-    }
-    this->redraw();
-}
-*/
 
 /*
 void TroopPicLabel::arrange()
@@ -154,13 +146,6 @@ void TroopPicLabel::redraw()
         QJsonObject member = this->members.at(i).toObject();
         int x = member.value("@x").toInt();
         int y = member.value("@y").toInt();
-        //qDebug() << member->enemy_id << member->x << member->y << member->hidden;
-        /*
-         * //TODO
-        if (this->members.at(i)->enemy_id > system->enemies_list.length())
-            continue;
-            */
-
 
         if (member.value("@hidden").toBool()) painter.setOpacity(0.4);
         else painter.setOpacity(1);
@@ -191,5 +176,42 @@ void TroopPicLabel::redraw()
     painter.end();
 
     this->setPixmap(QPixmap::fromImage(img));
+}
+
+void TroopPicLabel::open_context_menu(QPoint pos)
+{
+    if (marked_member < 0 || marked_member > 8) return;
+
+    QMenu menu;
+    halfway->setChecked(this->members.at(marked_member).toObject().value("@hidden").toBool());
+    immortal->setChecked(this->members.at(marked_member).toObject().value("@immortal").toBool());
+    menu.addAction(halfway);
+    menu.addAction(immortal);
+
+    menu.exec(this->mapToGlobal(pos));
+}
+
+void TroopPicLabel::toggle_halfway()
+{
+    if (marked_member < 0 || marked_member > 8) return;
+    QJsonObject tmp_member = this->members.at(marked_member).toObject();
+    tmp_member.insert("@hidden", !tmp_member.value("@hidden").toBool());
+    this->members.removeAt(marked_member);
+    this->members.insert(marked_member,tmp_member);
+
+    ec->obj_set_jsonvalue(RPGDB::TROOPS, "@members", this->members);
+    this->redraw();
+}
+
+void TroopPicLabel::toggle_immortal()
+{
+    if (marked_member < 0 || marked_member > 8) return;
+    QJsonObject tmp_member = this->members.at(marked_member).toObject();
+    tmp_member.insert("@immortal", !tmp_member.value("@immortal").toBool());
+    this->members.removeAt(marked_member);
+    this->members.insert(marked_member,tmp_member);
+
+    ec->obj_set_jsonvalue(RPGDB::TROOPS, "@members", this->members);
+    this->redraw();
 }
 

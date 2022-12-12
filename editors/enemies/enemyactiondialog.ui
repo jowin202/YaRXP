@@ -228,6 +228,9 @@
              <property name="maximum">
               <number>10</number>
              </property>
+             <property name="pageStep">
+              <number>1</number>
+             </property>
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
              </property>
@@ -398,7 +401,7 @@
   </connection>
   <connection>
    <sender>slider_rating</sender>
-   <signal>sliderMoved(int)</signal>
+   <signal>valueChanged(int)</signal>
    <receiver>spin_rating</receiver>
    <slot>setValue(int)</slot>
    <hints>

@@ -245,7 +245,6 @@ void EditEnemies::item_paste()
     actions.insert(row,doc.object());
     this->ec->obj_set_jsonvalue(RPGDB::ENEMIES, "@actions", actions);
 
-    qDebug() << json;
     this->update_actions_from_file();
     this->ui->table_action->selectRow(row); //TODO Check this
 }

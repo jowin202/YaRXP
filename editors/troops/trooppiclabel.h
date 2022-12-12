@@ -6,8 +6,11 @@
 #include <QMouseEvent>
 #include <QPainter>
 #include <QDir>
+#include <QMenu>
+#include <QAction>
 
 #include <QJsonArray>
+
 
 
 class RPGEditorController;
@@ -25,13 +28,15 @@ public:
     void mouseReleaseEvent(QMouseEvent *ev);
     void mouseMoveEvent(QMouseEvent *ev);
 
-    //void arrange();
     void remove_current();
 
 
 
 public slots:
     void redraw();
+    void open_context_menu(QPoint pos);
+    void toggle_halfway();
+    void toggle_immortal();
 
 private:
     bool left_clicked = false;
@@ -42,6 +47,9 @@ private:
 
     int marked_member = -1;
     QPoint rel_pos;
+
+    QAction *halfway;
+    QAction *immortal;
 
 };
 
