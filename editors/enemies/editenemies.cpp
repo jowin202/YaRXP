@@ -15,6 +15,33 @@ EditEnemies::EditEnemies(QWidget *parent) :
     ui->setupUi(this);
 
     this->ui->table_action->verticalHeader()->setVisible(false);
+
+    action_add = new QAction("Add");
+    action_add->setShortcut(Qt::Key_Return);
+    connect(action_add, SIGNAL(triggered()), this, SLOT(item_add()));
+    this->ui->table_action->addAction(action_add);
+
+    action_edit = new QAction("Edit");
+    action_edit->setShortcut(Qt::Key_Space);
+    connect(action_edit, SIGNAL(triggered()), this, SLOT(item_edit()));
+    this->ui->table_action->addAction(action_edit);
+
+    action_delete = new QAction("Delete");
+    action_delete->setShortcut(Qt::Key_Delete);
+    connect(action_delete, SIGNAL(triggered()), this, SLOT(item_delete()));
+    this->ui->table_action->addAction(action_delete);
+
+    action_copy = new QAction("Copy");
+    action_copy->setShortcut(QKeySequence(tr("Ctrl+C")));
+    connect(action_copy, SIGNAL(triggered()), this, SLOT(item_copy()));
+    this->ui->table_action->addAction(action_copy);
+
+
+    action_paste = new QAction("Paste");
+    action_paste->setShortcut(QKeySequence(tr("Ctrl+V")));
+    connect(action_paste, SIGNAL(triggered()), this, SLOT(item_paste()));
+    this->ui->table_action->addAction(action_paste);
+
 }
 
 EditEnemies::~EditEnemies()
@@ -131,12 +158,38 @@ void EditEnemies::change_action(int row, int turn_a, int turn_b, int hp, int lev
     this->ec->obj_set_jsonvalue(RPGDB::ENEMIES, "@actions", actions);
 
     this->update_actions_from_file();
+    this->ui->table_action->selectRow(row); //TODO Check this
 }
 
 void EditEnemies::on_table_action_itemDoubleClicked(QTableWidgetItem *item)
 {
-    QJsonArray actions = this->ec->obj_get_jsonvalue(RPGDB::ENEMIES, "@actions").toArray();
+    Q_UNUSED(item);
+    this->item_edit();
+}
+
+void EditEnemies::on_button_action_del_clicked()
+{
+    this->item_delete();
+}
+
+void EditEnemies::on_button_action_add_clicked()
+{
+    this->item_add();
+}
+
+void EditEnemies::item_add()
+{
+    EnemyActionDialog *dialog = new EnemyActionDialog(ec, this->ui->table_action->rowCount(),0,1,100, 1,0,0,1,5,0);
+    connect(dialog, SIGNAL(ok_clicked(int,int,int,int,int,int,int,int,int,int)), this, SLOT(change_action(int,int,int,int,int,int,int,int,int,int)));
+    dialog->show();
+}
+
+void EditEnemies::item_edit()
+{
     int row = this->ui->table_action->currentRow();
+    if (row < 0) return;
+
+    QJsonArray actions = this->ec->obj_get_jsonvalue(RPGDB::ENEMIES, "@actions").toArray();
 
     int condition_turn_a = actions.at(row).toObject().value("@condition_turn_a").toInt();
     int condition_turn_b = actions.at(row).toObject().value("@condition_turn_b").toInt();
@@ -149,28 +202,68 @@ void EditEnemies::on_table_action_itemDoubleClicked(QTableWidgetItem *item)
     int basic = actions.at(row).toObject().value("@basic").toInt();
 
 
-    EnemyActionDialog *dialog = new EnemyActionDialog(ec, item->row(), condition_turn_a, condition_turn_b, condition_hp, condition_level, condition_switch_id
+    EnemyActionDialog *dialog = new EnemyActionDialog(ec, row, condition_turn_a, condition_turn_b, condition_hp, condition_level, condition_switch_id
                                                       ,kind,rating,skill_id,basic);
     connect(dialog, SIGNAL(ok_clicked(int,int,int,int,int,int,int,int,int,int)), this, SLOT(change_action(int,int,int,int,int,int,int,int,int,int)));
     dialog->show();
-
 }
 
-void EditEnemies::on_button_action_del_clicked()
+void EditEnemies::item_delete()
 {
     int row = this->ui->table_action->currentRow();
     QJsonArray actions = this->ec->obj_get_jsonvalue(RPGDB::ENEMIES, "@actions").toArray();
     actions.removeAt(row);
     this->ec->obj_set_jsonvalue(RPGDB::ENEMIES, "@actions", actions);
 
-
     this->update_actions_from_file();
 }
 
-void EditEnemies::on_button_action_add_clicked()
+void EditEnemies::item_copy()
 {
-    EnemyActionDialog *dialog = new EnemyActionDialog(ec, this->ui->table_action->rowCount(),0,1,100, 1,0,0,1,5,0);
-    connect(dialog, SIGNAL(ok_clicked(int,int,int,int,int,int,int,int,int,int)), this, SLOT(change_action(int,int,int,int,int,int,int,int,int,int)));
-    dialog->show();
+    int row = this->ui->table_action->currentRow();
+    QJsonObject action = this->ec->obj_get_jsonvalue(RPGDB::ENEMIES, "@actions").toArray().at(row).toObject();
+    QJsonDocument doc(action);
+
+    QSettings settings;
+    settings.setValue("copied_item_enemy_action", doc.toJson(QJsonDocument::Compact));
+}
+
+void EditEnemies::item_paste()
+{
+    int row = this->ui->table_action->currentRow();
+    if (row < 0) row = 0;
+
+
+    QSettings settings;
+    QByteArray json = settings.value("copied_item_enemy_action").toByteArray();
+
+    QJsonParseError err;
+    QJsonDocument doc = QJsonDocument::fromJson(json, &err);
+    if (err.error != QJsonParseError::NoError) return;
+
+    QJsonArray actions = this->ec->obj_get_jsonvalue(RPGDB::ENEMIES, "@actions").toArray();
+    actions.insert(row,doc.object());
+    this->ec->obj_set_jsonvalue(RPGDB::ENEMIES, "@actions", actions);
+
+    qDebug() << json;
+    this->update_actions_from_file();
+    this->ui->table_action->selectRow(row); //TODO Check this
+}
+
+
+void EditEnemies::on_table_action_customContextMenuRequested(const QPoint &pos)
+{
+    QTableWidgetItem *item = this->ui->table_action->itemAt(pos);
+    if (item) {
+        QMenu menu;
+        menu.addAction(action_add);
+        menu.addAction(action_edit);
+        menu.addAction(action_delete);
+        menu.addSeparator();
+        menu.addAction(action_copy);
+        menu.addAction(action_paste);
+
+        menu.exec(this->ui->table_action->mapToGlobal(pos));
+    }
 }
 

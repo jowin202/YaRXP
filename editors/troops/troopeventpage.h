@@ -33,19 +33,6 @@ private:
     RPGEditorController *ec;
     int page_num;
 
-    //condition
-    bool enemy_valid;
-    bool switch_valid;
-    bool turn_valid;
-    bool actor_valid;
-    int switch_id;
-    int turn_a;
-    int turn_b;
-    int enemy_index;
-    int enemy_hp;
-    int actor_hp;
-    int actor_id;
-
 
 };
 

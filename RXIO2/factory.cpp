@@ -71,3 +71,33 @@ QJsonObject Factory::create_troop_member(int enemy_id, bool hidden, bool immorta
     obj.insert("RXClass", "RPG::Troop::Member");
     return obj;
 }
+
+QJsonObject Factory::create_empty_event_list()
+{
+    QJsonObject obj;
+    obj.insert("@code", 0);
+    obj.insert("@indent", 0);
+    obj.insert("@parameters", QJsonArray());
+    obj.insert("RXClass", "RPG::EventCommand");
+    return obj;
+}
+
+QJsonObject Factory::create_troop_page_condition()
+{
+    QJsonObject obj;
+    obj.insert("@actor_hp", 50);
+    obj.insert("@actor_id", 1);
+    obj.insert("@actor_valid", false);
+    obj.insert("@enemy_hp", 50);
+    obj.insert("@enemy_index", 0);
+    obj.insert("@enemy_valid", false);
+    obj.insert("@switch_id", 1);
+    obj.insert("@switch_valid", false);
+    obj.insert("@turn_a", 0);
+    obj.insert("@turn_b", 0);
+    obj.insert("@turn_valid", false);
+    obj.insert("RXClass", "RPG::Troop::Page::Condition");
+    return obj;
+}
+
+

@@ -354,6 +354,9 @@
    </item>
    <item row="4" column="0" colspan="4">
     <widget class="QTableWidget" name="table_action">
+     <property name="contextMenuPolicy">
+      <enum>Qt::CustomContextMenu</enum>
+     </property>
      <property name="selectionBehavior">
       <enum>QAbstractItemView::SelectRows</enum>
      </property>

@@ -33,12 +33,16 @@ public:
 
 private slots:
     void on_button_ok_clicked();
-
     void on_button_cancel_clicked();
+
+
+signals:
+    void values_changed();
 
 private:
     Ui::TroopPageConditionDialog *ui;
     RPGEditorController *ec;
+    int page_num;
 };
 
 #endif // TROOPPAGECONDITIONDIALOG_H

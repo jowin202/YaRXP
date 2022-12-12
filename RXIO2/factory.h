@@ -2,6 +2,7 @@
 #define FACTORY_H
 
 #include <QJsonObject>
+#include <QJsonArray>
 
 class Factory
 {
@@ -19,6 +20,10 @@ public:
 
     QJsonObject create_troop_member();
     QJsonObject create_troop_member(int enemy_id, bool hidden, bool immortal, int x, int y);
+
+
+    QJsonObject create_empty_event_list();
+    QJsonObject create_troop_page_condition();
 };
 
 #endif // FACTORY_H

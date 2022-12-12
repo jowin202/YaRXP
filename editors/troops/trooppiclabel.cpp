@@ -12,6 +12,7 @@ TroopPicLabel::TroopPicLabel(QWidget *parent) : QLabel(parent)
 void TroopPicLabel::setEC(RPGEditorController *ec)
 {
     this->ec = ec;
+    connect(ec, &RPGEditorController::current_troop_changed, this, [=]() { this->marked_member = -1; }); //no marked element when change the troop
     connect(ec, SIGNAL(current_troop_changed()), this, SLOT(redraw()));
 }
 

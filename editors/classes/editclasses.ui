@@ -122,6 +122,9 @@
          <layout class="QGridLayout" name="gridLayout_8">
           <item row="0" column="0" colspan="3">
            <widget class="QTableWidget" name="table_skills">
+            <property name="contextMenuPolicy">
+             <enum>Qt::CustomContextMenu</enum>
+            </property>
             <property name="selectionMode">
              <enum>QAbstractItemView::SingleSelection</enum>
             </property>

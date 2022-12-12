@@ -17,6 +17,32 @@ EditClasses::EditClasses(QWidget *parent) :
     this->ui->table_skills->hideColumn(3);
 
     this->ui->table_skills->verticalHeader()->setVisible(false);
+
+    action_add = new QAction("Add");
+    action_add->setShortcut(Qt::Key_Return);
+    connect(action_add, SIGNAL(triggered()), this, SLOT(item_add()));
+    this->ui->table_skills->addAction(action_add);
+
+    action_edit = new QAction("Edit");
+    action_edit->setShortcut(Qt::Key_Space);
+    connect(action_edit, SIGNAL(triggered()), this, SLOT(item_edit()));
+    this->ui->table_skills->addAction(action_edit);
+
+    action_delete = new QAction("Delete");
+    action_delete->setShortcut(Qt::Key_Delete);
+    connect(action_delete, SIGNAL(triggered()), this, SLOT(item_delete()));
+    this->ui->table_skills->addAction(action_delete);
+
+    action_copy = new QAction("Copy");
+    action_copy->setShortcut(QKeySequence(tr("Ctrl+C")));
+    connect(action_copy, SIGNAL(triggered()), this, SLOT(item_copy()));
+    this->ui->table_skills->addAction(action_copy);
+
+
+    action_paste = new QAction("Paste");
+    action_paste->setShortcut(QKeySequence(tr("Ctrl+V")));
+    connect(action_paste, SIGNAL(triggered()), this, SLOT(item_paste()));
+    this->ui->table_skills->addAction(action_paste);
 }
 
 EditClasses::~EditClasses()
@@ -47,6 +73,7 @@ void EditClasses::set_skill_from_dialog(int row, int level, int skill)
     this->ec->obj_set_jsonvalue(RPGDB::CLASSES, "@learnings", learnings);
 
     this->update_skill_from_file();
+    this->ui->table_skills->selectRow(row); //TODO Check this
 }
 
 void EditClasses::update_skill_from_file()
@@ -79,23 +106,29 @@ void EditClasses::update_skill_from_file()
 
 void EditClasses::on_table_skills_itemDoubleClicked(QTableWidgetItem *item)
 {
-    int level = this->ui->table_skills->item(item->row(), 2)->text().toInt();
-    int skill = this->ui->table_skills->item(item->row(), 3)->text().toInt();
-
-    SkillLearning *dialog = new SkillLearning(ec,item->row(),level,skill, 0);
-    connect(dialog, SIGNAL(ok_clicked(int,int,int)), this, SLOT(set_skill_from_dialog(int,int,int)));
-    dialog->show();
+    Q_UNUSED(item);
+    this->item_edit();
 }
 
 
 void EditClasses::on_button_skill_add_clicked()
+{
+    this->item_add();
+}
+
+void EditClasses::on_button_skill_del_clicked()
+{
+    this->item_delete();
+}
+
+void EditClasses::item_add()
 {
     SkillLearning *dialog = new SkillLearning(ec, this->ui->table_skills->rowCount(), 1, 1, 0);
     connect(dialog, SIGNAL(ok_clicked(int,int,int)), this, SLOT(set_skill_from_dialog(int,int,int)));
     dialog->show();
 }
 
-void EditClasses::on_button_skill_del_clicked()
+void EditClasses::item_delete()
 {
     int row = this->ui->table_skills->currentRow();
     QJsonArray learnings = this->ec->obj_get_jsonvalue(RPGDB::CLASSES, "@learnings").toArray();
@@ -104,3 +137,62 @@ void EditClasses::on_button_skill_del_clicked()
 
     this->update_skill_from_file();
 }
+
+void EditClasses::item_copy()
+{
+    int row = this->ui->table_skills->currentRow();
+    QJsonObject learning = this->ec->obj_get_jsonvalue(RPGDB::CLASSES, "@learnings").toArray().at(row).toObject();
+    QJsonDocument doc(learning);
+
+    QSettings settings;
+    settings.setValue("copied_item_skill_learning", doc.toJson(QJsonDocument::Compact));
+}
+
+void EditClasses::item_paste()
+{
+    int row = this->ui->table_skills->currentRow();
+    if (row < 0) row = 0;
+
+    QSettings settings;
+    QByteArray json = settings.value("copied_item_skill_learning").toByteArray();
+
+    QJsonParseError err;
+    QJsonDocument doc = QJsonDocument::fromJson(json, &err);
+    if (err.error != QJsonParseError::NoError) return;
+
+    QJsonArray learnings = this->ec->obj_get_jsonvalue(RPGDB::CLASSES, "@learnings").toArray();
+    learnings.insert(row,doc.object());
+    this->ec->obj_set_jsonvalue(RPGDB::CLASSES, "@learnings", learnings);
+
+    this->update_skill_from_file();
+    this->ui->table_skills->selectRow(row); //TODO Check this
+}
+
+void EditClasses::item_edit()
+{
+    int row = this->ui->table_skills->currentRow();
+
+    int level = this->ui->table_skills->item(row, 2)->text().toInt();
+    int skill = this->ui->table_skills->item(row, 3)->text().toInt();
+
+    SkillLearning *dialog = new SkillLearning(ec,row,level,skill, 0);
+    connect(dialog, SIGNAL(ok_clicked(int,int,int)), this, SLOT(set_skill_from_dialog(int,int,int)));
+    dialog->show();
+}
+
+void EditClasses::on_table_skills_customContextMenuRequested(const QPoint &pos)
+{
+    QTableWidgetItem *item = this->ui->table_skills->itemAt(pos);
+    if (item) {
+        QMenu menu;
+        menu.addAction(action_add);
+        menu.addAction(action_edit);
+        menu.addAction(action_delete);
+        menu.addSeparator();
+        menu.addAction(action_copy);
+        menu.addAction(action_paste);
+
+        menu.exec(this->ui->table_skills->mapToGlobal(pos));
+    }
+}
+

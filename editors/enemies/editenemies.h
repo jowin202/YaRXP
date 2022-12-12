@@ -3,6 +3,10 @@
 
 #include <QWidget>
 #include <QTableWidgetItem>
+#include <QAction>
+#include <QMenu>
+#include <QSettings>
+
 
 namespace Ui {
 class EditEnemies;
@@ -39,13 +43,28 @@ private slots:
     void on_button_action_del_clicked();
     void on_button_action_add_clicked();
 
+    void item_add();
+    void item_edit();
+    void item_delete();
+    void item_copy();
+    void item_paste();
 
 
+
+
+    void on_table_action_customContextMenuRequested(const QPoint &pos);
 
 private:
     Ui::EditEnemies *ui;
     RPGEditorController *ec;
     QStringList basic_actions = { "Attack", "Defend", "Escape", "Do Nothing" };
+
+
+    QAction *action_add;
+    QAction *action_edit;
+    QAction *action_delete;
+    QAction *action_copy;
+    QAction *action_paste;
 
 };
 

@@ -24,33 +24,9 @@ void TroopEventPage::setTroopPage(RPGEditorController *ec, int page_num)
     this->ec = ec;
     this->page_num = page_num;
 
-    //TODO: avoid using troop pic label here
-    //this->troop_pic_label = label; //for enemies
-
     //TODO: event list
     //this->ui->list->set_data(ec, &page->list);
     //this->ui->list->import_list();
-
-    QJsonObject page = ec->obj_get_jsonvalue(RPGDB::TROOPS, "@pages").toArray().at(page_num).toObject();
-    QJsonObject condition = page.value("@condition").toObject();
-
-
-    //handle changes individually (see below)
-    this->ui->combo_span->setCurrentIndex(page.value("@span").toInt());
-
-    //condition
-    this->enemy_valid = condition.value("@enemy_valid").toBool();
-    this->switch_valid = condition.value("@switch_valid").toBool();
-    this->turn_valid = condition.value("@turn_valid").toBool();
-    this->actor_valid = condition.value("@actor_valid").toBool();
-    this->switch_id = condition.value("@switch_id").toInt();
-    this->turn_a = condition.value("@turn_a").toInt();
-    this->turn_b = condition.value("@turn_b").toInt();
-    this->enemy_index = condition.value("@enemy_index").toInt();
-    this->enemy_hp = condition.value("@enemy_hp").toInt();
-    this->actor_hp = condition.value("@actor_hp").toInt();
-    this->actor_id = condition.value("@actor_id").toInt();
-
 
     //first load the condition, then generate string
     this->update_condition();
@@ -61,14 +37,36 @@ void TroopEventPage::on_button_condition_clicked()
 {
     TroopPageConditionDialog *dialog = new TroopPageConditionDialog(ec);
     dialog->setPage(this->page_num);
+    connect(dialog, SIGNAL(values_changed()), this, SLOT(update_condition()));
     dialog->show();
 }
 
 void TroopEventPage::update_condition()
 {
+    QJsonObject page = ec->obj_get_jsonvalue(RPGDB::TROOPS, "@pages").toArray().at(page_num).toObject();
+    QJsonObject condition_object = page.value("@condition").toObject();
+
+
+    //handle changes individually (see below)
+    this->ui->combo_span->setCurrentIndex(page.value("@span").toInt());
+
+    //condition
+
+    bool enemy_valid = condition_object.value("@enemy_valid").toBool();
+    bool switch_valid = condition_object.value("@switch_valid").toBool();
+    bool turn_valid = condition_object.value("@turn_valid").toBool();
+    bool actor_valid = condition_object.value("@actor_valid").toBool();
+    int switch_id = condition_object.value("@switch_id").toInt();
+    int turn_a = condition_object.value("@turn_a").toInt();
+    int turn_b = condition_object.value("@turn_b").toInt();
+    int enemy_index = condition_object.value("@enemy_index").toInt();
+    int enemy_hp = condition_object.value("@enemy_hp").toInt();
+    int actor_hp = condition_object.value("@actor_hp").toInt();
+    int actor_id = condition_object.value("@actor_id").toInt();
+
     QString condition;
 
-    if (this->turn_valid)
+    if (turn_valid)
     {
         condition += "Turn ";
         if (turn_a == 0 && turn_b == 0)
@@ -85,7 +83,7 @@ void TroopEventPage::update_condition()
     if (enemy_valid)
     {
         if (condition != "") condition += " & ";
-        QJsonObject member = ec->obj_get_jsonvalue(RPGDB::TROOPS, "@members").toArray().at(enemy_index-1).toObject();
+        QJsonObject member = ec->obj_get_jsonvalue(RPGDB::TROOPS, "@members").toArray().at(enemy_index).toObject();
         QString enemy_name = ec->obj_get_name_list(RPGDB::ENEMIES).at(member.value("@enemy_id").toInt());
         condition += QString("Enemy [%1. %2]'s HP %3\% or below")
                 .arg(enemy_index+1).arg(enemy_name).arg(enemy_hp);
@@ -106,6 +104,8 @@ void TroopEventPage::update_condition()
         condition += QString("Switch [%1: %2] is ON").arg(switch_id,4,10,QChar('0')).arg(ec->get_db()->get_switch_names().at(switch_id).toString());
     }
 
+    if (condition == "")
+        condition = "Don't run";
     this->ui->line_condition->setText(condition);
 }
 
