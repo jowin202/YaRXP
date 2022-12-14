@@ -46,13 +46,13 @@ void MapSelectRectangle::paint(QPainter *painter, const QStyleOptionGraphicsItem
     pen.setWidth(4);
     pen.setColor(Qt::black);
     painter->setPen(pen);
-    painter->drawRect(0,0,32*w,32*h);
+    painter->drawRect(2,2,32*w-4,32*h-4);
 
     pen.setWidth(2);
     pen.setColor(Qt::white);
     pen.setStyle(Qt::PenStyle::DashLine);
     painter->setPen(pen);
-    painter->drawRect(0,0,32*w,32*h);
+    painter->drawRect(2,2,32*w-4,32*h-4);
 
 }
 

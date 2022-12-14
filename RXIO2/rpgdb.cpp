@@ -16,6 +16,8 @@ void RPGDB::load_project(QString dir)
     }
     this->project_dir = dir;
 
+
+
     Parser actor_parser(&actor_file, &param_oders, dir + "Data" + QDir::separator() + "Actors.rxdata");
     Parser animation_parser(&animation_file, &param_oders, dir + "Data" + QDir::separator() + "Animations.rxdata");
     Parser armor_parser(&armor_file, &param_oders, dir + "Data" + QDir::separator() + "Armors.rxdata");

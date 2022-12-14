@@ -43,6 +43,8 @@ void DataEditor::setSystem(RPGSystem *system, RPGDB *db)
     this->ui->page_animations->setSystem(system);
     this->ui->page_tilesets->setEC(ec);
     this->ui->page_commonevents->setSystem(system);
+
+    this->ui->page_system->setEC(ec);
 }
 
 
@@ -69,6 +71,12 @@ void DataEditor::on_central_menu_currentRowChanged(int currentRow)
         this->ui->stackedWidget->setCurrentIndex(currentRow);
 
     system->datasource.fill_list(this->ui->object_list, this->ui->central_menu->currentRow(), true, 3);
+
+
+    if (currentRow == 12)
+    {
+        this->ec->refresh(RPGDB::SYSTEM);
+    }
 
     if (this->ui->object_list->count() > 0)
         this->ui->object_list->setCurrentRow(0);

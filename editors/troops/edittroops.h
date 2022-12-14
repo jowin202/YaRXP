@@ -2,6 +2,7 @@
 #define EDITTROOPS_H
 
 #include <QWidget>
+#include <QSettings>
 
 namespace Ui {
 class EditTroops;
@@ -22,12 +23,8 @@ public:
 
 private slots:
     void on_button_arrange_clicked();
-
-
     void on_button_clear_clicked();
-
     void on_button_remove_clicked();
-
     void on_button_add_clicked();
 
 
@@ -38,6 +35,8 @@ private slots:
     void set_new_battleback(QString battleback_name);
 
     void on_button_delete_page_clicked();
+    void on_button_copy_page_clicked();
+    void on_button_paste_page_clicked();
 
 private:
     Ui::EditTroops *ui;

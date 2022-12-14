@@ -138,3 +138,35 @@ void EditTroops::on_button_delete_page_clicked()
     ec->refresh(RPGDB::TROOPS);
 }
 
+
+void EditTroops::on_button_copy_page_clicked()
+{
+    int p = this->ui->tab_pages->currentIndex();
+    QJsonObject page = this->ec->obj_get_jsonvalue(RPGDB::TROOPS, "@pages").toArray().at(p).toObject();
+    QJsonDocument doc(page);
+
+    QSettings settings;
+    settings.setValue("copied_troop_page", doc.toJson(QJsonDocument::Compact));
+}
+
+
+void EditTroops::on_button_paste_page_clicked()
+{
+    int p = this->ui->tab_pages->currentIndex();
+
+    QSettings settings;
+    QByteArray json = settings.value("copied_troop_page").toByteArray();
+
+    QJsonParseError err;
+    QJsonDocument doc = QJsonDocument::fromJson(json, &err);
+    if (err.error != QJsonParseError::NoError) return;
+
+
+    QJsonArray pages = this->ec->obj_get_jsonvalue(RPGDB::TROOPS, "@pages").toArray();
+    pages.insert(p+1,doc.object()); //insert after
+    this->ec->obj_set_jsonvalue(RPGDB::TROOPS, "@pages", pages);
+
+    ec->refresh(RPGDB::TROOPS);
+    this->ui->tab_pages->setCurrentIndex(p);
+}
+

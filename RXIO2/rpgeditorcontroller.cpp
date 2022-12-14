@@ -528,6 +528,12 @@ void RPGEditorController::refresh(int object_type)
         emit current_state_changed();
         this->block_writing = false;
     }
+    else if (object_type == RPGDB::SYSTEM)
+    {
+        this->block_writing = true;
+        emit current_system_changed();
+        this->block_writing = false;
+    }
     else if (object_type == RPGDB::TILESETS)
     {
         this->block_writing = true;

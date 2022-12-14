@@ -22,6 +22,8 @@ public:
 
 private slots:
     void on_button_choose_tileset_clicked();
+    void fill_autotile_names();
+    void save_changed_autotile_names();
 
     void on_button_autotile_1_clicked();
     void on_button_autotile_2_clicked();
@@ -35,8 +37,6 @@ private slots:
     void on_button_fog_clicked();
     void on_button_battleback_clicked();
 
-    void set_panorama_hue(int hue) {this->panorama_hue = hue; }
-    void set_fog_hue(int hue) {this->fog_hue = hue; }
     void set_fog_options(int fog_sx, int fog_sy, int fog_opacity, int fog_zoom, int fog_blend_type)
     {this->fog_sx = fog_sx; this->fog_sy = fog_sy; this->fog_opacity = fog_opacity; this->fog_zoom = fog_zoom; this->fog_blend_type = fog_blend_type; }
 
@@ -54,11 +54,11 @@ private:
     RPGEditorController *ec;
     int current;
 
-    int panorama_hue = 0;
+    //int panorama_hue = 0;
 
     int fog_sx = 0;
     int fog_sy = 0;
-    int fog_hue = 0;
+    //int fog_hue = 0;
     int fog_opacity = 0;
     int fog_zoom = 0;
     int fog_blend_type = 0;

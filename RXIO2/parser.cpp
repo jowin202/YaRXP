@@ -90,11 +90,18 @@ QJsonValue Parser::parse_token()
     }
     else if (byte == 0x49) //I" string coded differently
     {
-        qDebug() << "get strings with encoding right" << f.pos();
-        exit(1234);
+        this->read_one_byte(); //skip " character
         int len = this->read_fixnum();
         QJsonValue str(QString(this->f.read(len)));
         this->reference_table.insert(++object_count, str);
+
+        int params = this->read_fixnum(); //should be always 1
+        for (int i = 0; i < params; i++)
+        {
+            this->read_symbol_or_link(); // "E" for encoding
+            this->parse_token(); //should be always boolean, for encoding=true, dismiss it
+        }
+
         return str;
     }
     else if (byte == 0x69) //i integer

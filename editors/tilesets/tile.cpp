@@ -1,12 +1,13 @@
 #include "tile.h"
 
-Tile::Tile(tile_options *opt, int tile_n, QList<int> *passages, QList<int> *priorities, QList<int> *terrain)
+Tile::Tile(tile_options *opt, int tile_num, int passage, int priority, int terrain)
 {
     this->opt = opt;
-    this->passages = passages;
-    this->priorities = priorities;
+    this->tile_num = tile_num;
+
+    this->passage = passage;
+    this->priority = priority;
     this->terrain = terrain;
-    this->tile_num = tile_n;
 }
 
 QRectF Tile::boundingRect() const
@@ -28,7 +29,7 @@ void Tile::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     if (opt->mode == PASSAGES)
     {
 
-        if ((passages->at(tile_num) & 0xF) == 0xF)
+        if ((passage & 0xF) == 0xF)
         {
             //X
             QPen pen;
@@ -71,11 +72,11 @@ void Tile::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
         font.setPixelSize(20);
         painter->setOpacity(1);
         painter->setFont(font);
-        painter->drawText(QRect(0,0,32,32), Qt::AlignHCenter | Qt::AlignVCenter, QString::number(priorities->at(tile_num)));
+        painter->drawText(QRect(0,0,32,32), Qt::AlignHCenter | Qt::AlignVCenter, QString::number(priority));
     }
     else if (opt->mode == BUSH)
     {
-        if ((passages->at(tile_num) & 0x40) != 0)
+        if ((passage & 0x40) != 0)
         {
             QPen pen;
             pen.setColor(Qt::white);
@@ -89,7 +90,7 @@ void Tile::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     }
     else if (opt->mode == COUNTER)
     {
-        if ((passages->at(tile_num) & 0x80) != 0)
+        if ((passage & 0x80) != 0)
         {
             QPolygon polygon;
             polygon.append(QPoint(15,4));
@@ -110,18 +111,20 @@ void Tile::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
         font.setPixelSize(20);
         painter->setFont(font);
         painter->setOpacity(1);
-        painter->drawText(QRect(0,0,32,32), Qt::AlignHCenter | Qt::AlignVCenter, QString::number(terrain->at(tile_num)));
+        painter->drawText(QRect(0,0,32,32), Qt::AlignHCenter | Qt::AlignVCenter, QString::number(terrain));
     }
 
 }
 
+
 void Tile::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
+/*
     if (event->button() == Qt::RightButton) return;
 
     if (opt->mode == PASSAGES)
     {
-        int val = passages->at(tile_num);
+        int val = passage);
         if (val == 0xF)
             passages->replace(tile_num, val & 0xFFFFF0); //32 bit integer assumed
         else
@@ -155,5 +158,6 @@ void Tile::mousePressEvent(QGraphicsSceneMouseEvent *event)
         else val++;
         terrain->replace(tile_num, val);
     }
+*/
     this->update();
 }

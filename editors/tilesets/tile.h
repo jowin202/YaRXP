@@ -15,7 +15,7 @@ struct tile_options
 class Tile : public QGraphicsItem
 {
 public:
-    Tile(tile_options *opt, int tile_n, QList<int> *passages, QList<int> *priorities, QList<int> *terrain);
+    Tile(tile_options *opt, int tile_num, int passage, int priority, int terrain);
 
     QRectF boundingRect() const override;
 
@@ -27,10 +27,10 @@ public:
 
 private:
     tile_options *opt;
-    QList<int> *passages;
-    QList<int> *priorities;
-    QList<int> *terrain;
     int tile_num;
+    int passage;
+    int priority;
+    int terrain;
 
 };
 
