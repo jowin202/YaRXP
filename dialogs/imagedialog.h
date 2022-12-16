@@ -24,7 +24,7 @@ public:
     void set_hue(int hue);
     void set_fog_options(int fog_sx, int fog_sy, int fog_opacity, int fog_zoom, int fog_blend_type);
 
-    enum { EVENTPAGE, ANIMATIONS, AUTOTILES, BATTLEBACKS, BATTLERS, CHARACTERS, FOGS, ICONS, PANOMRAMAS, PICTURES, TILESETS, TITLES, TRANSITIONS, WINDOWSKINS};
+    enum { EVENTPAGE, ANIMATIONS, AUTOTILES, BATTLEBACKS, BATTLERS, CHARACTERS, FOGS, ICONS, PANOMRAMAS, PICTURES, TILESETS, TITLES, TRANSITIONS, WINDOWSKINS, GAMEOVERS};
 
     void keyPressEvent(QKeyEvent *e) {
         if(e->key() == Qt::Key_Escape)

@@ -554,3 +554,8 @@ void RPGEditorController::refresh(int object_type)
     }
 }
 
+void RPGEditorController::save_edited_data()
+{
+    this->db->set_files(actor_file,animation_file,armor_file,class_file,common_event_file,enemy_file,item_file,skill_file,state_file,system_file,tileset_file,troop_file,weapon_file);
+}
+

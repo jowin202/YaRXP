@@ -86,6 +86,10 @@ ImageDialog::ImageDialog(RPGDB *db, int mode, QString current_image_file, QWidge
         title = "Windowskin Graphic";
         folder_name = "Windowskins";
         break;
+    case GAMEOVERS:
+        title = "Gameover Graphic";
+        folder_name = "Gameovers";
+        break;
     }
 
     this->setWindowTitle(title);

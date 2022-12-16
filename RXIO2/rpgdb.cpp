@@ -45,7 +45,6 @@ void RPGDB::load_project(QString dir)
         }
     }
 
-
     /*
     QFile tmp("/tmp/actor.json");
     tmp.open(QIODevice::WriteOnly);
@@ -166,4 +165,21 @@ void RPGDB::set_max_variables(int n)
     QJsonObject system_obj = system_file.object();
     system_obj.insert("@variables", array);
     system_file.setObject(system_obj);
+}
+
+void RPGDB::set_files(QJsonDocument actor_file, QJsonDocument animation_file, QJsonDocument armor_file, QJsonDocument class_file, QJsonDocument common_event_file, QJsonDocument enemy_file, QJsonDocument item_file, QJsonDocument skill_file, QJsonDocument state_file, QJsonDocument system_file, QJsonDocument tileset_file, QJsonDocument troop_file, QJsonDocument weapon_file)
+{
+    this->actor_file = actor_file;
+    this->animation_file = animation_file;
+    this->armor_file = armor_file;
+    this->class_file = class_file;
+    this->common_event_file = common_event_file;
+    this->enemy_file = enemy_file;
+    this->item_file = item_file;
+    this->skill_file = skill_file;
+    this->state_file = state_file;
+    this->system_file = system_file;
+    this->tileset_file = tileset_file;
+    this->troop_file = troop_file;
+    this->weapon_file = weapon_file;
 }

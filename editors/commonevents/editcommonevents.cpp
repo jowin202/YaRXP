@@ -1,7 +1,8 @@
 #include "editcommonevents.h"
 #include "ui_editcommonevents.h"
 
-#include "RXIO/RXObjects/rpgsystem.h"
+#include "RXIO2/rpgdb.h"
+#include "RXIO2/rpgeditorcontroller.h"
 
 EditCommonEvents::EditCommonEvents(QWidget *parent) :
     QWidget(parent),
@@ -15,25 +16,20 @@ EditCommonEvents::~EditCommonEvents()
     delete ui;
 }
 
-void EditCommonEvents::setSystem(RPGSystem *system)
+void EditCommonEvents::setEC(RPGEditorController *ec)
 {
-    this->system = system;
-    //this->ui->switch_widget->setSwitchWidget(system);
+    this->ec = ec;
+    this->ec->connect_string_to_text_field(RPGDB::COMMONEVENTS, "@name", this->ui->line_name);
+    this->ec->connect_int_to_combo_box(RPGDB::COMMONEVENTS, "@trigger", this->ui->combo_trigger);
+
+    this->ui->switch_widget->setSwitchWidget(ec->get_db());
+
+    connect(this->ec, &RPGEditorController::current_common_event_changed, this, [=]() { this->ui->switch_widget->setValue(this->ec->obj_get_jsonvalue(RPGDB::COMMONEVENTS,"@switch_id").toInt());});
+    connect(this->ui->switch_widget->get_combo(), &QComboBox::currentIndexChanged, this, [=](int val){ this->ec->obj_set_jsonvalue(RPGDB::COMMONEVENTS, "@switch_id", val+1);});
+
 }
 
-void EditCommonEvents::set_commonevent(int n)
-{
-    this->ui->list->clear();
-    if (this->system->common_events_list.length() <= n) return;
-    RPGCommonEvent *current_common_event = this->system->common_events_list.at(n);
 
-    this->ui->line_name->setText(current_common_event->name);
-    this->ui->combo_trigger->setCurrentIndex(current_common_event->trigger);
-    this->ui->switch_widget->setValue(current_common_event->switch_id);
-
-    this->ui->list->set_data(system, &current_common_event->list);
-    this->ui->list->import_list();
-}
 
 void EditCommonEvents::on_combo_trigger_currentIndexChanged(int index)
 {

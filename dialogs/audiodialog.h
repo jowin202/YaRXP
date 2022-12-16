@@ -36,7 +36,6 @@ public:
     void update_audio_list();
 
 signals:
-    void ok_clicked(QString name);
     void ok_clicked(QString name, int volume, int pitch);
 
 private slots:

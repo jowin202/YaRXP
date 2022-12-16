@@ -30,14 +30,14 @@
          </widget>
         </item>
         <item row="3" column="1">
-         <widget class="QToolButton" name="toolButton_3">
+         <widget class="QToolButton" name="button_title_graphic">
           <property name="text">
            <string>...</string>
           </property>
          </widget>
         </item>
         <item row="3" column="2">
-         <widget class="QLineEdit" name="lineEdit_4">
+         <widget class="QLineEdit" name="line_buzzer_se">
           <property name="readOnly">
            <bool>true</bool>
           </property>
@@ -51,28 +51,28 @@
          </widget>
         </item>
         <item row="8" column="3">
-         <widget class="QToolButton" name="toolButton_7">
+         <widget class="QToolButton" name="button_shop_se">
           <property name="text">
            <string>...</string>
           </property>
          </widget>
         </item>
         <item row="6" column="3">
-         <widget class="QToolButton" name="toolButton_6">
+         <widget class="QToolButton" name="button_equip_se">
           <property name="text">
            <string>...</string>
           </property>
          </widget>
         </item>
         <item row="12" column="1">
-         <widget class="QToolButton" name="toolButton_12">
+         <widget class="QToolButton" name="button_battle_bgm">
           <property name="text">
            <string>...</string>
           </property>
          </widget>
         </item>
         <item row="10" column="3">
-         <widget class="QToolButton" name="toolButton_10">
+         <widget class="QToolButton" name="button_save_se">
           <property name="text">
            <string>...</string>
           </property>
@@ -86,7 +86,7 @@
          </widget>
         </item>
         <item row="1" column="2">
-         <widget class="QLineEdit" name="lineEdit_2">
+         <widget class="QLineEdit" name="line_cancel_se">
           <property name="readOnly">
            <bool>true</bool>
           </property>
@@ -107,7 +107,7 @@
          </widget>
         </item>
         <item row="10" column="1">
-         <widget class="QToolButton" name="toolButton_9">
+         <widget class="QToolButton" name="button_title_bgm">
           <property name="text">
            <string>...</string>
           </property>
@@ -121,7 +121,7 @@
          </widget>
         </item>
         <item row="14" column="3">
-         <widget class="QToolButton" name="toolButton_13">
+         <widget class="QToolButton" name="button_battle_start_se">
           <property name="text">
            <string>...</string>
           </property>
@@ -170,14 +170,14 @@
          </widget>
         </item>
         <item row="12" column="3">
-         <widget class="QToolButton" name="toolButton_11">
+         <widget class="QToolButton" name="button_load_se">
           <property name="text">
            <string>...</string>
           </property>
          </widget>
         </item>
         <item row="1" column="1">
-         <widget class="QToolButton" name="toolButton">
+         <widget class="QToolButton" name="button_windowskin">
           <property name="text">
            <string>...</string>
           </property>
@@ -191,7 +191,7 @@
          </widget>
         </item>
         <item row="14" column="1">
-         <widget class="QToolButton" name="toolButton_14">
+         <widget class="QToolButton" name="button_battle_end_me">
           <property name="text">
            <string>...</string>
           </property>
@@ -205,14 +205,14 @@
          </widget>
         </item>
         <item row="12" column="2">
-         <widget class="QLineEdit" name="lineEdit_12">
+         <widget class="QLineEdit" name="line_load_se">
           <property name="readOnly">
            <bool>true</bool>
           </property>
          </widget>
         </item>
         <item row="6" column="2">
-         <widget class="QLineEdit" name="lineEdit_6">
+         <widget class="QLineEdit" name="line_equip_se">
           <property name="readOnly">
            <bool>true</bool>
           </property>
@@ -233,42 +233,42 @@
          </widget>
         </item>
         <item row="8" column="1">
-         <widget class="QToolButton" name="toolButton_8">
+         <widget class="QToolButton" name="button_battle_transistion">
           <property name="text">
            <string>...</string>
           </property>
          </widget>
         </item>
         <item row="3" column="3">
-         <widget class="QToolButton" name="toolButton_4">
+         <widget class="QToolButton" name="button_buzzer_se">
           <property name="text">
            <string>...</string>
           </property>
          </widget>
         </item>
         <item row="1" column="3">
-         <widget class="QToolButton" name="toolButton_2">
+         <widget class="QToolButton" name="button_cancel_se">
           <property name="text">
            <string>...</string>
           </property>
          </widget>
         </item>
         <item row="18" column="2">
-         <widget class="QLineEdit" name="lineEdit_18">
+         <widget class="QLineEdit" name="line_actor_collapse_se">
           <property name="readOnly">
            <bool>true</bool>
           </property>
          </widget>
         </item>
         <item row="10" column="2">
-         <widget class="QLineEdit" name="lineEdit_10">
+         <widget class="QLineEdit" name="line_save_se">
           <property name="readOnly">
            <bool>true</bool>
           </property>
          </widget>
         </item>
         <item row="8" column="2">
-         <widget class="QLineEdit" name="lineEdit_8">
+         <widget class="QLineEdit" name="line_shop_se">
           <property name="readOnly">
            <bool>true</bool>
           </property>
@@ -289,7 +289,7 @@
          </widget>
         </item>
         <item row="14" column="2">
-         <widget class="QLineEdit" name="lineEdit_14">
+         <widget class="QLineEdit" name="line_battle_start_se">
           <property name="readOnly">
            <bool>true</bool>
           </property>
@@ -324,7 +324,7 @@
          </widget>
         </item>
         <item row="6" column="1">
-         <widget class="QToolButton" name="toolButton_5">
+         <widget class="QToolButton" name="button_gameover_graphic">
           <property name="text">
            <string>...</string>
           </property>
@@ -338,7 +338,7 @@
          </widget>
         </item>
         <item row="16" column="2">
-         <widget class="QLineEdit" name="lineEdit_16">
+         <widget class="QLineEdit" name="line_escape_se">
           <property name="readOnly">
            <bool>true</bool>
           </property>
@@ -352,14 +352,14 @@
          </widget>
         </item>
         <item row="20" column="2">
-         <widget class="QLineEdit" name="lineEdit_20">
+         <widget class="QLineEdit" name="line_enemy_collapse_se">
           <property name="readOnly">
            <bool>true</bool>
           </property>
          </widget>
         </item>
         <item row="16" column="1">
-         <widget class="QToolButton" name="toolButton_15">
+         <widget class="QToolButton" name="button_gameover_me">
           <property name="text">
            <string>...</string>
           </property>
@@ -380,7 +380,7 @@
          </widget>
         </item>
         <item row="16" column="3">
-         <widget class="QToolButton" name="toolButton_16">
+         <widget class="QToolButton" name="button_escape_se">
           <property name="text">
            <string>...</string>
           </property>
@@ -401,14 +401,14 @@
          </widget>
         </item>
         <item row="18" column="3">
-         <widget class="QToolButton" name="toolButton_17">
+         <widget class="QToolButton" name="button_actor_collapse_se">
           <property name="text">
            <string>...</string>
           </property>
          </widget>
         </item>
         <item row="18" column="1">
-         <widget class="QToolButton" name="toolButton_18">
+         <widget class="QToolButton" name="button_cursor_se">
           <property name="text">
            <string>...</string>
           </property>
@@ -429,14 +429,14 @@
          </widget>
         </item>
         <item row="20" column="3">
-         <widget class="QToolButton" name="toolButton_19">
+         <widget class="QToolButton" name="button_enemy_collapse_se">
           <property name="text">
            <string>...</string>
           </property>
          </widget>
         </item>
         <item row="20" column="1">
-         <widget class="QToolButton" name="toolButton_20">
+         <widget class="QToolButton" name="button_decision_se">
           <property name="text">
            <string>...</string>
           </property>
@@ -596,64 +596,64 @@
          </widget>
         </item>
         <item row="1" column="0" colspan="2">
-         <widget class="QLineEdit" name="lineEdit_28"/>
+         <widget class="QLineEdit" name="line_currency"/>
         </item>
         <item row="3" column="0" colspan="2">
-         <widget class="QLineEdit" name="lineEdit_37"/>
+         <widget class="QLineEdit" name="line_hp"/>
         </item>
         <item row="1" column="2" colspan="2">
-         <widget class="QLineEdit" name="lineEdit_24"/>
+         <widget class="QLineEdit" name="line_weapon"/>
         </item>
         <item row="3" column="2" colspan="2">
-         <widget class="QLineEdit" name="lineEdit_21"/>
+         <widget class="QLineEdit" name="line_shield"/>
         </item>
         <item row="6" column="2" colspan="2">
-         <widget class="QLineEdit" name="lineEdit_30"/>
+         <widget class="QLineEdit" name="line_helmet"/>
         </item>
         <item row="8" column="2" colspan="2">
-         <widget class="QLineEdit" name="lineEdit_34"/>
+         <widget class="QLineEdit" name="line_armor"/>
         </item>
         <item row="10" column="2" colspan="2">
-         <widget class="QLineEdit" name="lineEdit_33"/>
+         <widget class="QLineEdit" name="line_accessory"/>
         </item>
         <item row="12" column="2" colspan="2">
-         <widget class="QLineEdit" name="lineEdit_29"/>
+         <widget class="QLineEdit" name="line_attack"/>
         </item>
         <item row="14" column="2" colspan="2">
-         <widget class="QLineEdit" name="lineEdit_36"/>
+         <widget class="QLineEdit" name="line_skill"/>
         </item>
         <item row="6" column="0" colspan="2">
-         <widget class="QLineEdit" name="lineEdit_25"/>
+         <widget class="QLineEdit" name="line_sp"/>
         </item>
         <item row="8" column="0" colspan="2">
-         <widget class="QLineEdit" name="lineEdit_26"/>
+         <widget class="QLineEdit" name="line_str"/>
         </item>
         <item row="10" column="0" colspan="2">
-         <widget class="QLineEdit" name="lineEdit_23"/>
+         <widget class="QLineEdit" name="line_dex"/>
         </item>
         <item row="12" column="0" colspan="2">
-         <widget class="QLineEdit" name="lineEdit_35"/>
+         <widget class="QLineEdit" name="line_agi"/>
         </item>
         <item row="14" column="0" colspan="2">
-         <widget class="QLineEdit" name="lineEdit_22"/>
+         <widget class="QLineEdit" name="line_int"/>
         </item>
         <item row="16" column="0" colspan="2">
-         <widget class="QLineEdit" name="lineEdit_31"/>
+         <widget class="QLineEdit" name="line_atk"/>
         </item>
         <item row="18" column="0" colspan="2">
-         <widget class="QLineEdit" name="lineEdit_27"/>
+         <widget class="QLineEdit" name="line_pdef"/>
         </item>
         <item row="20" column="0" colspan="2">
-         <widget class="QLineEdit" name="lineEdit_39"/>
+         <widget class="QLineEdit" name="line_mdef"/>
         </item>
         <item row="16" column="2" colspan="2">
-         <widget class="QLineEdit" name="lineEdit_38"/>
+         <widget class="QLineEdit" name="line_defend"/>
         </item>
         <item row="18" column="2" colspan="2">
-         <widget class="QLineEdit" name="lineEdit_32"/>
+         <widget class="QLineEdit" name="line_item"/>
         </item>
         <item row="20" column="2" colspan="2">
-         <widget class="QLineEdit" name="lineEdit_40"/>
+         <widget class="QLineEdit" name="line_equip"/>
         </item>
        </layout>
       </item>
@@ -662,6 +662,68 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>line_windowskin_graphic</tabstop>
+  <tabstop>button_windowskin</tabstop>
+  <tabstop>line_cancel_se</tabstop>
+  <tabstop>button_cancel_se</tabstop>
+  <tabstop>line_title_graphic</tabstop>
+  <tabstop>button_title_graphic</tabstop>
+  <tabstop>line_buzzer_se</tabstop>
+  <tabstop>button_buzzer_se</tabstop>
+  <tabstop>line_gameover_graphic</tabstop>
+  <tabstop>button_gameover_graphic</tabstop>
+  <tabstop>line_equip_se</tabstop>
+  <tabstop>button_equip_se</tabstop>
+  <tabstop>line_battle_transition_graphic</tabstop>
+  <tabstop>button_battle_transistion</tabstop>
+  <tabstop>line_shop_se</tabstop>
+  <tabstop>button_shop_se</tabstop>
+  <tabstop>line_title_bgm</tabstop>
+  <tabstop>button_title_bgm</tabstop>
+  <tabstop>line_save_se</tabstop>
+  <tabstop>button_save_se</tabstop>
+  <tabstop>line_battle_bgm</tabstop>
+  <tabstop>button_battle_bgm</tabstop>
+  <tabstop>line_load_se</tabstop>
+  <tabstop>button_load_se</tabstop>
+  <tabstop>line_battle_end_me</tabstop>
+  <tabstop>button_battle_end_me</tabstop>
+  <tabstop>line_battle_start_se</tabstop>
+  <tabstop>button_battle_start_se</tabstop>
+  <tabstop>line_gameover_me</tabstop>
+  <tabstop>button_gameover_me</tabstop>
+  <tabstop>line_escape_se</tabstop>
+  <tabstop>button_escape_se</tabstop>
+  <tabstop>line_cursor_se</tabstop>
+  <tabstop>button_cursor_se</tabstop>
+  <tabstop>line_actor_collapse_se</tabstop>
+  <tabstop>button_actor_collapse_se</tabstop>
+  <tabstop>line_decision_se</tabstop>
+  <tabstop>button_decision_se</tabstop>
+  <tabstop>line_enemy_collapse_se</tabstop>
+  <tabstop>button_enemy_collapse_se</tabstop>
+  <tabstop>line_currency</tabstop>
+  <tabstop>line_weapon</tabstop>
+  <tabstop>line_hp</tabstop>
+  <tabstop>line_shield</tabstop>
+  <tabstop>line_sp</tabstop>
+  <tabstop>line_helmet</tabstop>
+  <tabstop>line_str</tabstop>
+  <tabstop>line_armor</tabstop>
+  <tabstop>line_dex</tabstop>
+  <tabstop>line_accessory</tabstop>
+  <tabstop>line_agi</tabstop>
+  <tabstop>line_attack</tabstop>
+  <tabstop>line_int</tabstop>
+  <tabstop>line_skill</tabstop>
+  <tabstop>line_atk</tabstop>
+  <tabstop>line_defend</tabstop>
+  <tabstop>line_pdef</tabstop>
+  <tabstop>line_item</tabstop>
+  <tabstop>line_mdef</tabstop>
+  <tabstop>line_equip</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

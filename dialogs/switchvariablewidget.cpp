@@ -44,6 +44,11 @@ int SwitchVariableWidget::getValue()
     return this->ui->comboBox->currentIndex()+1;
 }
 
+QComboBox *SwitchVariableWidget::get_combo()
+{
+    return this->ui->comboBox;
+}
+
 void SwitchVariableWidget::on_toolButton_clicked()
 {
     ListDialog *dialog = new ListDialog(db,0);

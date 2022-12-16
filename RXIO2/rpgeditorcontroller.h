@@ -89,10 +89,12 @@ public:
     RPGDB *get_db(){return db;}
 
 
+
 public slots:
     void obj_set_jsonvalue(int obj_type, QString key, QJsonValue value);
     void current_actor_set_parameters(QJsonArray params);
     void refresh(int object_type);
+    void save_edited_data();
 
 
 signals:

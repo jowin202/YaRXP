@@ -7,7 +7,9 @@ namespace Ui {
 class EditCommonEvents;
 }
 
-class RPGSystem;
+class RPGDB;
+class RPGEditorController;
+
 class EditCommonEvents : public QWidget
 {
     Q_OBJECT
@@ -16,10 +18,9 @@ public:
     explicit EditCommonEvents(QWidget *parent = nullptr);
     ~EditCommonEvents();
 
-    void setSystem(RPGSystem *system);
+    void setEC(RPGEditorController *ec);
 
 
-    void set_commonevent(int n);
 
 private slots:
 
@@ -27,7 +28,7 @@ private slots:
 
 private:
     Ui::EditCommonEvents *ui;
-    RPGSystem *system;
+    RPGEditorController *ec;
 };
 
 #endif // EDITCOMMONEVENTS_H

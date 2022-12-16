@@ -44,6 +44,23 @@ public:
     QString project_dir;
 
 
+    void set_files(
+            QJsonDocument actor_file,
+            QJsonDocument animation_file,
+            QJsonDocument armor_file,
+            QJsonDocument class_file,
+            QJsonDocument common_event_file,
+            QJsonDocument enemy_file,
+            QJsonDocument item_file,
+            QJsonDocument skill_file,
+            QJsonDocument state_file,
+            QJsonDocument system_file,
+            QJsonDocument tileset_file,
+            QJsonDocument troop_file,
+            QJsonDocument weapon_file);
+
+
+
 private:
     QJsonDocument actor_file;
     QJsonDocument animation_file;

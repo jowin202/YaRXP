@@ -14,6 +14,7 @@ DataEditor::DataEditor(QWidget *parent) :
 DataEditor::~DataEditor()
 {
     delete ui;
+    delete ec;
 }
 
 void DataEditor::set_widget(int widget)
@@ -40,9 +41,9 @@ void DataEditor::setSystem(RPGSystem *system, RPGDB *db)
     this->ui->page_enemies->setEC(ec);
     this->ui->page_troops->setEC(ec);
     this->ui->page_states->setEC(ec);
-    this->ui->page_animations->setSystem(system);
+    //this->ui->page_animations->setSystem(system);
     this->ui->page_tilesets->setEC(ec);
-    this->ui->page_commonevents->setSystem(system);
+    this->ui->page_commonevents->setEC(ec);
 
     this->ui->page_system->setEC(ec);
 }
@@ -85,5 +86,12 @@ void DataEditor::on_central_menu_currentRowChanged(int currentRow)
 
 void DataEditor::on_button_apply_clicked()
 {
-
+    this->ec->save_edited_data();
 }
+
+void DataEditor::on_button_ok_clicked()
+{
+    this->on_button_apply_clicked();
+    this->close();
+}
+

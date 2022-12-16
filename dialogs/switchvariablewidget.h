@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QDebug>
+#include <QComboBox>
 
 namespace Ui {
 class SwitchVariableWidget;
@@ -25,6 +26,7 @@ public slots:
     void setValue_from_dialog(int value);
     void setValue(int value);
     int getValue();
+    QComboBox *get_combo();
 
 private slots:
     void on_toolButton_clicked();

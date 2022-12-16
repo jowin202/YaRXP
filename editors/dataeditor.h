@@ -37,6 +37,8 @@ private slots:
 
     void on_button_apply_clicked();
 
+    void on_button_ok_clicked();
+
 private:
     Ui::DataEditor *ui;
     RPGSystem *system;
