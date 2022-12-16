@@ -32,6 +32,7 @@ void EditTilesets::setEC(RPGEditorController *ec)
     this->ec->connect_string_to_text_field(RPGDB::TILESETS, "@name", this->ui->line_name);
     this->ec->connect_string_to_text_field(RPGDB::TILESETS, "@tileset_name", this->ui->line_tileset_name);
     this->ui->tileset_widget->setEC(ec);
+    this->ui->tileset_widget->set_mode(Tile::PASSAGES); //do this otherwise segmentation fault
 
     connect(this->ec, SIGNAL(current_tileset_changed()), this, SLOT(fill_autotile_names()));
     connect(this->ec, SIGNAL(current_tileset_changed()), this->ui->tileset_widget, SLOT(update_tileset()));

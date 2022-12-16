@@ -1,4 +1,5 @@
 #include "tile.h"
+#include "tileseteditwidget.h"
 
 Tile::Tile(tile_options *opt, int tile_num, int passage, int priority, int terrain)
 {
@@ -119,16 +120,17 @@ void Tile::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 
 void Tile::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-/*
+
     if (event->button() == Qt::RightButton) return;
 
     if (opt->mode == PASSAGES)
     {
-        int val = passage);
+        int val = passage & 0xF;
         if (val == 0xF)
-            passages->replace(tile_num, val & 0xFFFFF0); //32 bit integer assumed
+            passage = val & 0xFFFFF0;
         else
-            passages->replace(tile_num, val | 0xF);
+            passage = val | 0xF;
+        opt->parent->change_passage(tile_num, passage);
     }
     else if (opt->mode == PASSAGES4)
     {
@@ -136,28 +138,29 @@ void Tile::mousePressEvent(QGraphicsSceneMouseEvent *event)
     }
     else if (opt->mode == PRIORITY)
     {
-        int val = priorities->at(tile_num);
-        if (val == 5) val = 0;
-        else val++;
-        priorities->replace(tile_num, val);
+        if (priority == 5)
+            priority = 0;
+        else
+            priority++;
+        opt->parent->change_priority(tile_num, priority);
     }
     else if (opt->mode == BUSH)
     {
-        int val = passages->at(tile_num);
-        passages->replace(tile_num, val ^ 0x40);
+        passage = passage ^ 0x40;
+        opt->parent->change_passage(tile_num, passage);
     }
     else if (opt->mode == COUNTER)
     {
-        int val = passages->at(tile_num);
-        passages->replace(tile_num, val ^ 0x80);
+        passage = passage ^ 0x80;
+        opt->parent->change_passage(tile_num, passage);
     }
     else if (opt->mode == TERRAIN)
     {
-        int val = terrain->at(tile_num);
-        if (val == 31) val = 0;
-        else val++;
-        terrain->replace(tile_num, val);
+        if (terrain == 31)
+            terrain = 0;
+        else
+            terrain++;
+        opt->parent->change_terrain(tile_num, terrain);
     }
-*/
     this->update();
 }

@@ -6,10 +6,14 @@
 #include <QPainter>
 #include <QDebug>
 
+class TilesetEditWidget;
+
+
 
 struct tile_options
 {
     int mode;
+    TilesetEditWidget *parent;
 };
 
 class Tile : public QGraphicsItem

@@ -27,6 +27,7 @@ TilesetEditWidget::TilesetEditWidget(QWidget *parent) : QGraphicsView(parent)
 void TilesetEditWidget::set_mode(int mode)
 {
     this->opt.mode = mode;
+    this->opt.parent = this; //change callbacks
     this->update();
     this->scene()->update();
 }
@@ -45,7 +46,7 @@ void TilesetEditWidget::update_tileset()
     QImage tileset_img(ec->get_db()->project_dir + "Graphics" + QDir::separator() + "Tilesets" + QDir::separator() + tileset_image);
 
     int tiles_x = 8; //tileset_img.width()/32; //assuming that is divisible
-    int tiles_y = qCeil(tileset_img.height()/32.0);
+    int tiles_y = qFloor(tileset_img.height()/32.0);
     //assert tiles_x == 8
 
     tiles_num = tiles_x  * (tiles_y-1) + 48*8;
@@ -81,5 +82,78 @@ void TilesetEditWidget::update_tileset()
             this->scene()->addItem(tile);
         }
     }
+}
+
+void TilesetEditWidget::change_passage(int pos, int val)
+{
+    QJsonObject passages_obj = ec->obj_get_jsonvalue(RPGDB::TILESETS, "@passages").toObject();
+    QJsonArray passages = passages_obj.value("values").toArray();
+
+    if (pos < 8)
+    {
+        for (int i = 0; i < 48; i++)
+        {
+            passages.removeAt(48*pos + i);
+            passages.insert(48*pos + i, val);
+        }
+    }
+    else
+    {
+        pos -= 8;
+        pos += 8*48;
+        passages.removeAt(pos);
+        passages.insert(pos, val);
+    }
+
+    passages_obj.insert("values", passages);
+    ec->obj_set_jsonvalue(RPGDB::TILESETS, "@passages", passages_obj);
+}
+
+void TilesetEditWidget::change_priority(int pos, int val)
+{
+    QJsonObject priorities_obj = ec->obj_get_jsonvalue(RPGDB::TILESETS, "@priorities").toObject();
+    QJsonArray priorities = priorities_obj.value("values").toArray();
+
+    if (pos < 8)
+    {
+        for (int i = 0; i < 48; i++)
+        {
+            priorities.removeAt(48*pos + i);
+            priorities.insert(48*pos + i, val);
+        }
+    }
+    else
+    {
+        pos -= 8;
+        pos += 8*48;
+        priorities.removeAt(pos);
+        priorities.insert(pos, val);
+    }
+    priorities_obj.insert("values", priorities);
+    ec->obj_set_jsonvalue(RPGDB::TILESETS, "@priorities", priorities_obj);
+}
+
+void TilesetEditWidget::change_terrain(int pos, int val)
+{
+    QJsonObject terrain_tags_obj = ec->obj_get_jsonvalue(RPGDB::TILESETS, "@terrain_tags").toObject();
+    QJsonArray terrain_tags = terrain_tags_obj.value("values").toArray();
+
+    if (pos < 8)
+    {
+        for (int i = 0; i < 48; i++)
+        {
+            terrain_tags.removeAt(48*pos + i);
+            terrain_tags.insert(48*pos + i, val);
+        }
+    }
+    else
+    {
+        pos -= 8;
+        pos += 8*48;
+        terrain_tags.removeAt(pos);
+        terrain_tags.insert(pos, val);
+    }
+    terrain_tags_obj.insert("values", terrain_tags);
+    ec->obj_set_jsonvalue(RPGDB::TILESETS, "@terrain_tags", terrain_tags_obj);
 }
 

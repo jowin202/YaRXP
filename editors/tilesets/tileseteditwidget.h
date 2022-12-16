@@ -22,8 +22,16 @@ public:
     void setEC(RPGEditorController *ec) {this->ec = ec; }
     void set_mode(int mode);
 
+    void change_priority(int pos, int val);
+    void change_passage(int pos, int val);
+    void change_terrain(int pos, int val);
+
+
+
 public slots:
     void update_tileset();
+
+
 
 private:
     RPGEditorController *ec;
