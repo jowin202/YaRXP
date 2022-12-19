@@ -89,6 +89,8 @@ SOURCES += \
     editors/actors/editoractorparameters.cpp \
     editors/actors/generatecurvedialog.cpp \
     editors/animations/editanimations.cpp \
+    editors/animations/flashsedialog.cpp \
+    editors/animations/tweeningdialog.cpp \
     editors/armors/editarmors.cpp \
     editors/checkboxlist.cpp \
     editors/classes/editclasses.cpp \
@@ -204,6 +206,8 @@ HEADERS += \
     editors/actors/editoractorparameters.h \
     editors/actors/generatecurvedialog.h \
     editors/animations/editanimations.h \
+    editors/animations/flashsedialog.h \
+    editors/animations/tweeningdialog.h \
     editors/armors/editarmors.h \
     editors/checkboxlist.h \
     editors/classes/editclasses.h \
@@ -259,6 +263,8 @@ FORMS += \
     editors/actors/editoractorparameters.ui \
     editors/actors/generatecurvedialog.ui \
     editors/animations/editanimations.ui \
+    editors/animations/flashsedialog.ui \
+    editors/animations/tweeningdialog.ui \
     editors/armors/editarmors.ui \
     editors/checkboxlist.ui \
     editors/classes/editclasses.ui \
