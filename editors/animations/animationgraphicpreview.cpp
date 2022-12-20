@@ -22,6 +22,7 @@ void AnimationGraphicPreview::update()
     QImage img(this->db->project_dir + "Graphics" + QDir::separator() + "Animations" + QDir::separator() + filename);
     if (img.isNull()) return;
     img = img.scaled(img.width()/2, img.height()/2);
+    img.convertTo(QImage::Format_ARGB32_Premultiplied);
     for (int y = 0; y < img.height(); y++)
     {
         for (int x = 0; x < img.width(); x++)

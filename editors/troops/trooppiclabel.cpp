@@ -158,6 +158,7 @@ void TroopPicLabel::redraw()
         battler = battler.scaled(battler.width()/2, battler.height()/2);
 
         //adjust hue
+        battler.convertTo(QImage::Format_ARGB32_Premultiplied);
         int hue = enemy.value("@battler_hue").toInt();
         for (int y = 0; y < battler.height(); y++)
         {

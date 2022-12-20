@@ -2,6 +2,9 @@
 <ui version="4.0">
  <class>FlashSEDialog</class>
  <widget class="QWidget" name="FlashSEDialog">
+  <property name="windowModality">
+   <enum>Qt::ApplicationModal</enum>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -104,7 +107,10 @@
          </widget>
         </item>
         <item row="3" column="1">
-         <widget class="QSpinBox" name="spinBox_4">
+         <widget class="QSpinBox" name="spin_blue">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="maximum">
            <number>255</number>
           </property>
@@ -113,7 +119,7 @@
         <item row="0" column="0" colspan="3">
          <layout class="QHBoxLayout" name="horizontalLayout_3">
           <item>
-           <widget class="QRadioButton" name="radioButton_2">
+           <widget class="QRadioButton" name="radio_none">
             <property name="text">
              <string>None</string>
             </property>
@@ -123,21 +129,21 @@
            </widget>
           </item>
           <item>
-           <widget class="QRadioButton" name="radioButton_4">
+           <widget class="QRadioButton" name="radio_target">
             <property name="text">
              <string>Target</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QRadioButton" name="radioButton_3">
+           <widget class="QRadioButton" name="radio_screen">
             <property name="text">
              <string>Screen</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QRadioButton" name="radioButton">
+           <widget class="QRadioButton" name="radio_hide">
             <property name="text">
              <string>Hide Target</string>
             </property>
@@ -181,35 +187,47 @@
          </widget>
         </item>
         <item row="1" column="1">
-         <widget class="QSpinBox" name="spinBox_2">
+         <widget class="QSpinBox" name="spin_red">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="maximum">
            <number>255</number>
           </property>
          </widget>
         </item>
         <item row="2" column="1">
-         <widget class="QSpinBox" name="spinBox_3">
+         <widget class="QSpinBox" name="spin_green">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="maximum">
            <number>255</number>
           </property>
          </widget>
         </item>
         <item row="6" column="1">
-         <widget class="QSpinBox" name="spinBox_6">
+         <widget class="QSpinBox" name="spin_duration">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="maximum">
            <number>200</number>
           </property>
          </widget>
         </item>
         <item row="5" column="1">
-         <widget class="QSpinBox" name="spinBox_5">
+         <widget class="QSpinBox" name="spin_strength">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="maximum">
            <number>255</number>
           </property>
          </widget>
         </item>
         <item row="1" column="2" rowspan="5">
-         <widget class="QLabel" name="label_9">
+         <widget class="QLabel" name="label_color">
           <property name="text">
            <string/>
           </property>
@@ -243,14 +261,14 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton">
+      <widget class="QPushButton" name="button_ok">
        <property name="text">
         <string>Ok</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_2">
+      <widget class="QPushButton" name="button_cancel">
        <property name="text">
         <string>Cancel</string>
        </property>
@@ -261,5 +279,166 @@
   </layout>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>radio_none</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>spin_red</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>72</x>
+     <y>124</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>256</x>
+     <y>166</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radio_none</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>spin_green</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>63</x>
+     <y>126</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>225</x>
+     <y>196</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radio_none</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>spin_blue</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>47</x>
+     <y>128</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>223</x>
+     <y>236</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radio_none</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>spin_strength</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>33</x>
+     <y>124</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>216</x>
+     <y>284</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radio_none</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>spin_duration</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>26</x>
+     <y>123</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>208</x>
+     <y>326</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radio_hide</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>spin_red</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>475</x>
+     <y>126</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>371</x>
+     <y>161</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radio_hide</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>spin_green</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>518</x>
+     <y>128</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>382</x>
+     <y>197</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radio_hide</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>spin_blue</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>541</x>
+     <y>128</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>377</x>
+     <y>234</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radio_hide</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>spin_strength</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>560</x>
+     <y>122</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>369</x>
+     <y>290</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radio_hide</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>spin_duration</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>516</x>
+     <y>119</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>376</x>
+     <y>312</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>
