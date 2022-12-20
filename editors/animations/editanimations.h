@@ -2,12 +2,15 @@
 #define EDITANIMATIONS_H
 
 #include <QWidget>
+#include <QInputDialog>
 
 namespace Ui {
 class EditAnimations;
 }
 
-class RPGSystem;
+class RPGDB;
+class RPGEditorController;
+
 class EditAnimations : public QWidget
 {
     Q_OBJECT
@@ -16,18 +19,19 @@ public:
     explicit EditAnimations(QWidget *parent = nullptr);
     ~EditAnimations();
 
-    void setSystem(RPGSystem *system)
-    {this->system = system;}
+    void setEC(RPGEditorController *ec);
 
     void set_animation(int n);
 
 
 private slots:
     void on_button_animation_clicked();
+    void on_button_set_frames_clicked();
+    void update_frame_list();
 
 private:
     Ui::EditAnimations *ui;
-    RPGSystem *system;
+    RPGEditorController *ec;
 };
 
 #endif // EDITANIMATIONS_H

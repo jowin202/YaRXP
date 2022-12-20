@@ -21,9 +21,32 @@ public:
     QJsonObject create_troop_member();
     QJsonObject create_troop_member(int enemy_id, bool hidden, bool immortal, int x, int y);
 
-
     QJsonObject create_empty_event_list();
+
+    QJsonObject create_troop_page_condition(int actor_hp, int actor_id, bool actor_valid, int enemy_hp, int enemy_index, bool enemy_valid, int switch_id, bool switch_valid, int turn_a, int turn_b, bool turn_valid);
     QJsonObject create_troop_page_condition();
+
+    QJsonObject create_troop_page();
+
+
+
+
+    //New Objects
+    QJsonObject create_new_actor(int id);
+    QJsonObject create_new_class(int id, int element_num, int state_num);
+    QJsonObject create_new_skill(int id);
+    QJsonObject create_new_item(int id);
+    QJsonObject create_new_weapon(int id);
+    QJsonObject create_new_armor(int id);
+    QJsonObject create_new_enemy(int id, int element_num, int state_num);
+    QJsonObject create_new_troop(int id);
+    QJsonObject create_new_state(int id);
+    QJsonObject create_new_animation(int id);
+    QJsonObject create_new_tileset(int id);
+    QJsonObject create_new_commonevent(int id);
+
+
+
 };
 
 #endif // FACTORY_H

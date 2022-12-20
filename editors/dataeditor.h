@@ -3,8 +3,7 @@
 
 #include <QWidget>
 #include <QDebug>
-
-#include "../RXIO/RXObjects/rpgsystem.h"
+#include <QInputDialog>
 
 class RPGDB;
 class RPGEditorController;
@@ -24,24 +23,35 @@ public:
 
     enum {ACTORS, CLASSES, SKILLS, ITEMS, WEAPONS, ARMORS, ENEMIES, TROOPS, STATES, ANIMATIONS, TILESETS, COMMONEVENTS, SYSTEM};
     void set_widget(int widget);
-    void setSystem(RPGSystem *system, RPGDB *db);
+    void setDB(RPGDB *db);
 
 
 private slots:
-    void on_object_list_currentRowChanged(int currentRow);
-    void on_central_menu_currentRowChanged(int currentRow);
-
-
     void on_button_cancel_clicked();
-
-
     void on_button_apply_clicked();
-
     void on_button_ok_clicked();
+
+
+    void on_tabWidget_currentChanged(int index);
+
+    void on_button_actor_max_clicked();
+    void on_button_classes_max_clicked();
+    void on_button_skills_max_clicked();
+    void on_button_items_max_clicked();
+    void on_button_weapons_max_clicked();
+    void on_button_armors_max_clicked();
+    void on_button_enemies_max_clicked();
+    void on_button_troops_max_clicked();
+    void on_button_states_max_clicked();
+    void on_button_animations_max_clicked();
+    void on_button_tilesets_max_clicked();
+    void on_button_common_events_max_clicked();
+
+
+    void set_maximum(int obj_type);
 
 private:
     Ui::DataEditor *ui;
-    RPGSystem *system;
     RPGDB *db;
     RPGEditorController *ec;
 

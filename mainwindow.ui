@@ -155,9 +155,6 @@
     <property name="title">
      <string>Editors</string>
     </property>
-    <addaction name="actionScripting_Editor"/>
-    <addaction name="actionSystem"/>
-    <addaction name="separator"/>
     <addaction name="actionActors"/>
     <addaction name="actionClasses"/>
     <addaction name="actionSkills"/>
@@ -170,6 +167,8 @@
     <addaction name="actionAnimations"/>
     <addaction name="actionTileset_Editor"/>
     <addaction name="actionCommon_Scripts"/>
+    <addaction name="actionSystem"/>
+    <addaction name="actionScripting_Editor"/>
    </widget>
    <widget class="QMenu" name="menuMap">
     <property name="title">
@@ -574,7 +573,7 @@
   </action>
   <action name="actionScripting_Editor">
    <property name="text">
-    <string>Scripting Editor</string>
+    <string>Scripts</string>
    </property>
   </action>
   <action name="actionShift_left">

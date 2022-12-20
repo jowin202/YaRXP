@@ -54,6 +54,14 @@ public:
     QJsonObject get_object_by_id(int obj_type, int id);
 
 
+
+
+    //max object and count
+    int count_objects(int obj_type);
+    void set_max(int obj_type, int count);
+
+
+
     void set_files(
             QJsonDocument actor_file,
             QJsonDocument animation_file,
@@ -85,6 +93,7 @@ public:
     int current_weapon = -1;
 
     bool block_writing = true;
+    bool block_changing_objects = false;
 
     RPGDB *get_db(){return db;}
 
@@ -152,18 +161,8 @@ private:
             &RPGEditorController::current_system_changed,
                                                                };
 
-    int *current_instance_variables[12] = { &current_actor,
-                                         &current_class,
-                                         &current_skill,
-                                         &current_item,
-                                         &current_weapon,
-                                         &current_armor,
-                                         &current_enemy,
-                                         &current_troop,
-                                         &current_state,
-                                         &current_animation,
-                                         &current_tileset,
-                                         &current_common_event};
+    int *current_instance_variables[12] = { &current_actor, &current_class, &current_skill, &current_item, &current_weapon, &current_armor, &current_enemy, &current_troop, &current_state, &current_animation, &current_tileset, &current_common_event};
+    QJsonDocument *files[13] = {&actor_file, &class_file, &skill_file, &item_file, &weapon_file, &armor_file, &enemy_file, &troop_file, &state_file, &animation_file, &tileset_file, &common_event_file, &system_file };
 
 };
 

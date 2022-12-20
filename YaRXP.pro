@@ -88,6 +88,8 @@ SOURCES += \
     editors/actors/editoractorparameterpage.cpp \
     editors/actors/editoractorparameters.cpp \
     editors/actors/generatecurvedialog.cpp \
+    editors/animations/animationgraphicpreview.cpp \
+    editors/animations/animationlabel.cpp \
     editors/animations/editanimations.cpp \
     editors/animations/flashsedialog.cpp \
     editors/animations/tweeningdialog.cpp \
@@ -205,6 +207,8 @@ HEADERS += \
     editors/actors/editoractorparameterpage.h \
     editors/actors/editoractorparameters.h \
     editors/actors/generatecurvedialog.h \
+    editors/animations/animationgraphicpreview.h \
+    editors/animations/animationlabel.h \
     editors/animations/editanimations.h \
     editors/animations/flashsedialog.h \
     editors/animations/tweeningdialog.h \

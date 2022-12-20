@@ -1,5 +1,6 @@
 #include "rpgeditorcontroller.h"
 #include "rpgdb.h"
+#include "factory.h"
 
 RPGEditorController::RPGEditorController(RPGDB *db)
     : QObject()
@@ -132,88 +133,34 @@ void RPGEditorController::connect_image_display_widget(int object_type, int imag
 
 void RPGEditorController::set_current_object(int object_type, int object_value)
 {
+    if (block_changing_objects)
+    {
+        qDebug() << "not changed object";
+        return; //need this for item list reload
+    }
+
     *this->current_instance_variables[object_type] = object_value;
     this->refresh(object_type);
 }
 
 QJsonValue RPGEditorController::obj_get_jsonvalue(int obj_type, QString key)
 {
-    if (obj_type == RPGDB::ACTORS && current_actor < 0) return QJsonValue();
-    else if (obj_type == RPGDB::ANIMATIONS && current_animation < 0) return QJsonValue();
-    else if (obj_type == RPGDB::ARMORS && current_armor < 0) return QJsonValue();
-    else if (obj_type == RPGDB::CLASSES && current_class < 0) return QJsonValue();
-    else if (obj_type == RPGDB::COMMONEVENTS && current_common_event < 0) return QJsonValue();
-    else if (obj_type == RPGDB::ENEMIES && current_enemy < 0) return QJsonValue();
-    else if (obj_type == RPGDB::ITEMS && current_item < 0) return QJsonValue();
-    else if (obj_type == RPGDB::SKILLS && current_skill < 0) return QJsonValue();
-    else if (obj_type == RPGDB::STATES && current_state < 0) return QJsonValue();
-    else if (obj_type == RPGDB::TILESETS && current_tileset < 0) return QJsonValue();
-    else if (obj_type == RPGDB::TROOPS && current_troop < 0) return QJsonValue();
-    else if (obj_type == RPGDB::WEAPONS && current_weapon < 0) return QJsonValue();
-
-    if (obj_type == RPGDB::ACTORS)
-        return actor_file.array().at(current_actor).toObject().value(key);
-    else if (obj_type == RPGDB::CLASSES)
-        return class_file.array().at(current_class).toObject().value(key);
-    else if (obj_type == RPGDB::SKILLS)
-        return skill_file.array().at(current_skill).toObject().value(key);
-    else if (obj_type == RPGDB::ITEMS)
-        return item_file.array().at(current_item).toObject().value(key);
-    else if (obj_type == RPGDB::WEAPONS)
-        return weapon_file.array().at(current_weapon).toObject().value(key);
-    else if (obj_type == RPGDB::ARMORS)
-        return armor_file.array().at(current_armor).toObject().value(key);
-    else if (obj_type == RPGDB::ENEMIES)
-        return enemy_file.array().at(current_enemy).toObject().value(key);
-    else if (obj_type == RPGDB::TROOPS)
-        return troop_file.array().at(current_troop).toObject().value(key);
-    else if (obj_type == RPGDB::STATES)
-        return state_file.array().at(current_state).toObject().value(key);
-    else if (obj_type == RPGDB::ANIMATIONS)
-        return animation_file.array().at(current_animation).toObject().value(key);
-    else if (obj_type == RPGDB::TILESETS)
-        return tileset_file.array().at(current_tileset).toObject().value(key);
-    else if (obj_type == RPGDB::COMMONEVENTS)
-        return common_event_file.array().at(current_common_event).toObject().value(key);
-
+    if (*this->current_instance_variables[obj_type] < 0) return QJsonValue();
     if (obj_type == RPGDB::SYSTEM)
-        return system_file.object().value(key);
+    {
+        return files[obj_type]->object().value(key);
+    }
+    else
+        return files[obj_type]->array().at(*current_instance_variables[obj_type]).toObject().value(key);
 
     return QJsonValue();
 }
 
 QStringList RPGEditorController::obj_get_name_list(int obj_type)
 {
-    QJsonDocument doc;
-
-    if (obj_type == RPGDB::ACTORS)
-        doc = QJsonDocument(actor_file);
-    else if (obj_type == RPGDB::CLASSES)
-        doc = QJsonDocument(class_file);
-    else if (obj_type == RPGDB::SKILLS)
-        doc = QJsonDocument(skill_file);
-    else if (obj_type == RPGDB::ITEMS)
-        doc = QJsonDocument(item_file);
-    else if (obj_type == RPGDB::WEAPONS)
-        doc = QJsonDocument(weapon_file);
-    else if (obj_type == RPGDB::ARMORS)
-        doc = QJsonDocument(armor_file);
-    else if (obj_type == RPGDB::ENEMIES)
-        doc = QJsonDocument(enemy_file);
-    else if (obj_type == RPGDB::TROOPS)
-        doc = QJsonDocument(troop_file);
-    else if (obj_type == RPGDB::STATES)
-        doc = QJsonDocument(state_file);
-    else if (obj_type == RPGDB::ANIMATIONS)
-        doc = QJsonDocument(animation_file);
-    else if (obj_type == RPGDB::TILESETS)
-        doc = QJsonDocument(tileset_file);
-    else if (obj_type == RPGDB::COMMONEVENTS)
-        doc = QJsonDocument(common_event_file);
-    else if (obj_type == RPGDB::ELEMENTS)
+    if (obj_type == RPGDB::ELEMENTS)
     {
-        doc = QJsonDocument(system_file);
-        QJsonArray arr = doc.object().value("@elements").toArray();
+        QJsonArray arr = system_file.object().value("@elements").toArray();
 
         QStringList list;
         for (int i = 1; i < arr.count(); i++)
@@ -224,45 +171,34 @@ QStringList RPGEditorController::obj_get_name_list(int obj_type)
     }
 
     QStringList list;
-    for (int i = 1; i < doc.array().count(); i++)
+    for (int i = 1; i < files[obj_type]->array().count(); i++)
     {
-        list << doc.array().at(i).toObject().value("@name").toString();
+        list << files[obj_type]->array().at(i).toObject().value("@name").toString();
     }
     return list;
 }
 
 QJsonObject RPGEditorController::get_object_by_id(int obj_type, int id)
 {
-    QJsonDocument doc;
+    if (files[obj_type]->array().count() <= id) return QJsonObject();
 
-    if (obj_type == RPGDB::ACTORS)
-        doc = QJsonDocument(actor_file);
-    else if (obj_type == RPGDB::CLASSES)
-        doc = QJsonDocument(class_file);
-    else if (obj_type == RPGDB::SKILLS)
-        doc = QJsonDocument(skill_file);
-    else if (obj_type == RPGDB::ITEMS)
-        doc = QJsonDocument(item_file);
-    else if (obj_type == RPGDB::WEAPONS)
-        doc = QJsonDocument(weapon_file);
-    else if (obj_type == RPGDB::ARMORS)
-        doc = QJsonDocument(armor_file);
-    else if (obj_type == RPGDB::ENEMIES)
-        doc = QJsonDocument(enemy_file);
-    else if (obj_type == RPGDB::TROOPS)
-        doc = QJsonDocument(troop_file);
-    else if (obj_type == RPGDB::STATES)
-        doc = QJsonDocument(state_file);
-    else if (obj_type == RPGDB::ANIMATIONS)
-        doc = QJsonDocument(animation_file);
-    else if (obj_type == RPGDB::TILESETS)
-        doc = QJsonDocument(tileset_file);
-    else if (obj_type == RPGDB::COMMONEVENTS)
-        doc = QJsonDocument(common_event_file);
+    return files[obj_type]->array().at(id).toObject();
+}
 
-    if (doc.array().count() <= id) return QJsonObject();
+int RPGEditorController::count_objects(int obj_type)
+{
 
-    return doc.array().at(id).toObject();
+    return files[obj_type]->array().count()-1; //zero at beginning
+}
+
+void RPGEditorController::set_max(int obj_type, int count)
+{
+    count++;
+
+    QJsonArray array = files[obj_type]->array();
+    while (array.count() > count) array.pop_back();
+    while (array.count() < count) array.append(Factory().create_new_actor(array.count()));
+    files[obj_type]->setArray(array);
 }
 
 
@@ -333,6 +269,7 @@ void RPGEditorController::fill_combo(QComboBox *combo, int type, bool shownum, i
 
 void RPGEditorController::fill_list(QListWidget *list, int type, bool shownum, int chars, bool allow_none)
 {
+    int current_val = list->currentRow();
     list->clear();
 
     if (allow_none)
@@ -340,13 +277,14 @@ void RPGEditorController::fill_list(QListWidget *list, int type, bool shownum, i
 
     QJsonDocument doc;
 
-        QStringList obj_name_list = this->obj_get_name_list(type);
+    QStringList obj_name_list = this->obj_get_name_list(type);
 
     for (int i = 0; i < obj_name_list.size(); i++)
     {
         list->addItem(shownum ? QString("%1: " + obj_name_list.at(i)).arg(i+1,chars,10,QChar('0')) :
                                  doc.array().at(i).toObject().value("@name").toString());
     }
+    list->setCurrentRow(current_val);
 }
 
 void RPGEditorController::set_files(QJsonDocument actor_file, QJsonDocument animation_file, QJsonDocument armor_file, QJsonDocument class_file, QJsonDocument common_event_file, QJsonDocument enemy_file, QJsonDocument item_file, QJsonDocument skill_file, QJsonDocument state_file, QJsonDocument system_file, QJsonDocument tileset_file, QJsonDocument troop_file, QJsonDocument weapon_file)

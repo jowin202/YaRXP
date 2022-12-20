@@ -156,6 +156,20 @@ void TroopPicLabel::redraw()
 
         if (battler.isNull()) continue;
         battler = battler.scaled(battler.width()/2, battler.height()/2);
+
+        //adjust hue
+        int hue = enemy.value("@battler_hue").toInt();
+        for (int y = 0; y < battler.height(); y++)
+        {
+            for (int x = 0; x < battler.width(); x++)
+            {
+                QColor col = battler.pixelColor(x,y);
+                if (col.alpha() == 0) continue;
+                col.setHsv(col.hsvHue() + hue,col.saturation(), col.value());
+                battler.setPixelColor(x,y,col);
+            }
+        }
+
         painter.drawImage(x/2-battler.width()/2,y/2 - battler.height(), battler);
         this->bounding_rects[i].setRect(x/2-battler.width()/2, y/2 - battler.height(),battler.width(), battler.height());
 

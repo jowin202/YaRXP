@@ -2,6 +2,7 @@
 #include "parser.h"
 #include "writer.h"
 #include "rpgeditorcontroller.h"
+#include "factory.h"
 
 RPGDB::RPGDB(QObject *parent)
     : QObject(parent)
@@ -44,6 +45,22 @@ void RPGDB::load_project(QString dir)
             map_files.insert(i,doc);
         }
     }
+
+
+    /*
+    qDebug() << (actor_file.array().last().toObject() == Factory().create_new_actor(actor_file.array().last().toObject().value("@id").toInt()));
+    qDebug() << (class_file.array().last().toObject() == Factory().create_new_class(class_file.array().last().toObject().value("@id").toInt(), system_file.object().value("@elements").toArray().count(), state_file.array().count()) );
+    qDebug() << (skill_file.array().last().toObject() == Factory().create_new_skill(skill_file.array().last().toObject().value("@id").toInt()));
+    qDebug() << (item_file.array().last().toObject() == Factory().create_new_item(item_file.array().last().toObject().value("@id").toInt()));
+    qDebug() << (weapon_file.array().last().toObject() == Factory().create_new_weapon(weapon_file.array().last().toObject().value("@id").toInt()));
+    qDebug() << (armor_file.array().last().toObject() == Factory().create_new_armor(armor_file.array().last().toObject().value("@id").toInt()));
+    qDebug() << (enemy_file.array().last().toObject() == Factory().create_new_enemy(enemy_file.array().last().toObject().value("@id").toInt(), system_file.object().value("@elements").toArray().count(), state_file.array().count()) );
+    qDebug() << (troop_file.array().last().toObject() == Factory().create_new_troop(troop_file.array().last().toObject().value("@id").toInt()) );
+    qDebug() << (state_file.array().last().toObject() == Factory().create_new_state(state_file.array().last().toObject().value("@id").toInt()) );
+    qDebug() << (animation_file.array().last().toObject() == Factory().create_new_animation(animation_file.array().last().toObject().value("@id").toInt()) );
+    qDebug() << (tileset_file.array().last().toObject() == Factory().create_new_tileset(tileset_file.array().last().toObject().value("@id").toInt()) );
+    qDebug() << (common_event_file.array().last().toObject() == Factory().create_new_commonevent(common_event_file.array().last().toObject().value("@id").toInt()) );
+    */
 
     /*
     QFile tmp("/tmp/actor.json");
