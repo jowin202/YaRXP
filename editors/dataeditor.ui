@@ -58,7 +58,7 @@
    <item row="0" column="0">
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>12</number>
+      <number>10</number>
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
@@ -1827,7 +1827,7 @@
         </widget>
        </item>
        <item row="0" column="1" rowspan="2">
-        <widget class="EditStates" name="tilesets_widget" native="true"/>
+        <widget class="EditTilesets" name="tilesets_widget" native="true"/>
        </item>
       </layout>
      </widget>
@@ -2082,6 +2082,12 @@
    <class>EditSystem</class>
    <extends>QWidget</extends>
    <header>editors/system/editsystem.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>EditTilesets</class>
+   <extends>QWidget</extends>
+   <header>editors/tilesets/edittilesets.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

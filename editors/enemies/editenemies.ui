@@ -353,13 +353,19 @@
     </spacer>
    </item>
    <item row="4" column="0" colspan="4">
-    <widget class="QTableWidget" name="table_action">
+    <widget class="EnemyActionTable" name="table_action">
      <property name="contextMenuPolicy">
       <enum>Qt::CustomContextMenu</enum>
+     </property>
+     <property name="selectionMode">
+      <enum>QAbstractItemView::SingleSelection</enum>
      </property>
      <property name="selectionBehavior">
       <enum>QAbstractItemView::SelectRows</enum>
      </property>
+     <attribute name="verticalHeaderVisible">
+      <bool>false</bool>
+     </attribute>
      <column>
       <property name="text">
        <string>Action</string>
@@ -523,6 +529,11 @@
    <extends>QLabel</extends>
    <header>dialogs/imagedisplaywidget.h</header>
   </customwidget>
+  <customwidget>
+   <class>EnemyActionTable</class>
+   <extends>QTableWidget</extends>
+   <header>editors/enemies/enemyactiontable.h</header>
+  </customwidget>
  </customwidgets>
  <tabstops>
   <tabstop>line_name</tabstop>
@@ -537,11 +548,16 @@
   <tabstop>spin_mdef</tabstop>
   <tabstop>spin_eva</tabstop>
   <tabstop>combo_attacker</tabstop>
+  <tabstop>combo_target</tabstop>
   <tabstop>spin_exp</tabstop>
   <tabstop>spin_gold</tabstop>
-  <tabstop>table_action</tabstop>
   <tabstop>scrollArea_3</tabstop>
   <tabstop>scrollArea_4</tabstop>
+  <tabstop>combo_item</tabstop>
+  <tabstop>combo_weapon</tabstop>
+  <tabstop>combo_armor</tabstop>
+  <tabstop>spin_prob</tabstop>
+  <tabstop>table_action</tabstop>
   <tabstop>button_action_add</tabstop>
   <tabstop>button_action_del</tabstop>
  </tabstops>

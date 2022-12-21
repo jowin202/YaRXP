@@ -27,7 +27,6 @@ public:
     void change_terrain(int pos, int val);
 
 
-
 public slots:
     void update_tileset();
 

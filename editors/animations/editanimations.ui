@@ -172,13 +172,16 @@
    <item row="0" column="1" colspan="2">
     <layout class="QGridLayout" name="gridLayout_2">
      <item row="1" column="1">
-      <widget class="QTableWidget" name="table_timings">
+      <widget class="TimingTable" name="table_timings">
        <property name="contextMenuPolicy">
         <enum>Qt::CustomContextMenu</enum>
        </property>
        <property name="selectionBehavior">
         <enum>QAbstractItemView::SelectRows</enum>
        </property>
+       <attribute name="verticalHeaderVisible">
+        <bool>false</bool>
+       </attribute>
        <column>
         <property name="text">
          <string>Frm</string>
@@ -420,6 +423,11 @@
    <class>AnimationGraphicPreview</class>
    <extends>QLabel</extends>
    <header>editors/animations/animationgraphicpreview.h</header>
+  </customwidget>
+  <customwidget>
+   <class>TimingTable</class>
+   <extends>QTableWidget</extends>
+   <header>editors/animations/timingtable.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

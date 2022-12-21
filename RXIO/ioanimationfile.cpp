@@ -103,8 +103,6 @@ IOAnimationFile::IOAnimationFile(QString path, QList<RPGAnimation *> *animation_
         }
         animation_list->append(current_animation);
     }
-
-    this->file.close();
 }
 
 void IOAnimationFile::write_to_file(QString path, QList<RPGAnimation *> *animation_list)

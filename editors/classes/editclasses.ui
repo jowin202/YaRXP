@@ -121,7 +121,7 @@
          </property>
          <layout class="QGridLayout" name="gridLayout_8">
           <item row="0" column="0" colspan="3">
-           <widget class="QTableWidget" name="table_skills">
+           <widget class="TableSkillLearning" name="table_skills">
             <property name="contextMenuPolicy">
              <enum>Qt::CustomContextMenu</enum>
             </property>
@@ -131,6 +131,9 @@
             <property name="selectionBehavior">
              <enum>QAbstractItemView::SelectRows</enum>
             </property>
+            <attribute name="verticalHeaderVisible">
+             <bool>false</bool>
+            </attribute>
             <column>
              <property name="text">
               <string>Level</string>
@@ -139,16 +142,6 @@
             <column>
              <property name="text">
               <string>Skill</string>
-             </property>
-            </column>
-            <column>
-             <property name="text">
-              <string>lvl_intern</string>
-             </property>
-            </column>
-            <column>
-             <property name="text">
-              <string>skill_intern</string>
              </property>
             </column>
            </widget>
@@ -344,6 +337,11 @@
    <extends>QWidget</extends>
    <header>editors/abclist.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>TableSkillLearning</class>
+   <extends>QTableWidget</extends>
+   <header>editors/classes/tableskilllearning.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>

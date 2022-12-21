@@ -48,7 +48,7 @@ void EditTilesets::on_button_choose_tileset_clicked()
     ImageDialog *dialog = new ImageDialog(ec->get_db(), ImageDialog::TILESETS, this->ui->line_tileset_name->text());
     dialog->show();
     connect(dialog, SIGNAL(ok_clicked(QString)), this->ui->line_tileset_name, SLOT(setText(QString)));
-    connect(dialog, SIGNAL(ok_clicked(QString)), this->ui->tileset_widget, SLOT(set_tileset(QString)));
+    connect(dialog, SIGNAL(ok_clicked(QString)), this->ui->tileset_widget, SLOT(update_tileset()));
 
 }
 

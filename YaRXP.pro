@@ -92,15 +92,18 @@ SOURCES += \
     editors/animations/animationlabel.cpp \
     editors/animations/editanimations.cpp \
     editors/animations/flashsedialog.cpp \
+    editors/animations/timingtable.cpp \
     editors/animations/tweeningdialog.cpp \
     editors/armors/editarmors.cpp \
     editors/checkboxlist.cpp \
     editors/classes/editclasses.cpp \
     editors/classes/skilllearning.cpp \
+    editors/classes/tableskilllearning.cpp \
     editors/commonevents/editcommonevents.cpp \
     editors/dataeditor.cpp \
     editors/enemies/editenemies.cpp \
     editors/enemies/enemyactiondialog.cpp \
+    editors/enemies/enemyactiontable.cpp \
     editors/items/edititems.cpp \
     editors/plusminusbox.cpp \
     editors/plusminuslist.cpp \
@@ -211,15 +214,18 @@ HEADERS += \
     editors/animations/animationlabel.h \
     editors/animations/editanimations.h \
     editors/animations/flashsedialog.h \
+    editors/animations/timingtable.h \
     editors/animations/tweeningdialog.h \
     editors/armors/editarmors.h \
     editors/checkboxlist.h \
     editors/classes/editclasses.h \
     editors/classes/skilllearning.h \
+    editors/classes/tableskilllearning.h \
     editors/commonevents/editcommonevents.h \
     editors/dataeditor.h \
     editors/enemies/editenemies.h \
     editors/enemies/enemyactiondialog.h \
+    editors/enemies/enemyactiontable.h \
     editors/items/edititems.h \
     editors/plusminusbox.h \
     editors/plusminuslist.h \
