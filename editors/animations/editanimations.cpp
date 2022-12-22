@@ -22,6 +22,7 @@ EditAnimations::~EditAnimations()
 void EditAnimations::setEC(RPGEditorController *ec)
 {
     this->ec = ec;
+    this->ui->animation_label->setEC(ec);
     this->ui->table_timings->setEC(ec);
     this->ui->graphic_preview_label->setDB(ec->get_db());
 
@@ -29,9 +30,12 @@ void EditAnimations::setEC(RPGEditorController *ec)
     this->ec->connect_string_to_text_field(RPGDB::ANIMATIONS, "@animation_name", this->ui->line_animation);
     this->ec->connect_int_to_combo_box(RPGDB::ANIMATIONS, "@position", this->ui->combo_pos);
 
+    connect(this->ui->combo_pos, &QComboBox::currentIndexChanged, this, [=]() { this->ui->animation_label->update(this->ui->frame_list->currentRow()); });
+
     connect(this->ec, &RPGEditorController::current_animation_changed, this, [=]() {
         this->ui->line_max_frames->setText(QString::number(this->ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray().count()));
         this->update_frame_list();
+        this->ui->animation_label->update(0);
         this->ui->table_timings->update_timings();
         this->ui->graphic_preview_label->set_image(this->ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@animation_name").toString(), this->ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@animation_hue").toInt());
         //qDebug() << this->ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@timings");
@@ -90,6 +94,21 @@ void EditAnimations::on_frame_list_currentRowChanged(int currentRow)
     QJsonArray frames = this->ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray();
     QJsonObject frame = frames.at(currentRow).toObject();
 
-    qDebug() << frame;
+    this->ui->animation_label->update(currentRow);
+    //qDebug() << frame;
+}
+
+
+void EditAnimations::on_button_edit_battler_clicked()
+{
+    QString battler_name = this->ec->obj_get_jsonvalue(RPGDB::SYSTEM, "@battler_name").toString();
+    int battler_hue = this->ec->obj_get_jsonvalue(RPGDB::SYSTEM, "@battler_hue").toInt();
+
+    ImageDialog *imdialog = new ImageDialog(ec->get_db(),ImageDialog::BATTLERS, battler_name);
+    imdialog->set_hue(battler_hue);
+    connect(imdialog, &ImageDialog::ok_clicked, this, [=](QString battler_name){ this->ec->obj_set_jsonvalue(RPGDB::SYSTEM, "@battler_name", battler_name); });
+    connect(imdialog, &ImageDialog::ok_clicked_with_hue, this, [=](int battler_hue ){ this->ec->obj_set_jsonvalue(RPGDB::SYSTEM, "@battler_hue", battler_hue); });
+    connect(imdialog, &ImageDialog::ok_clicked, this, [=](){ this->ui->animation_label->update(this->ui->frame_list->currentRow()); });
+    imdialog->show();
 }
 

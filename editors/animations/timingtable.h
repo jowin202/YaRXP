@@ -11,6 +11,9 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
+#include <QSettings>
+
+
 class RPGDB;
 class RPGEditorController;
 

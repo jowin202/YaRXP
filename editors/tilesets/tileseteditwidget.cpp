@@ -51,7 +51,7 @@ void TilesetEditWidget::update_tileset()
 
     tiles_num = tiles_x  * (tiles_y-1) + 48*8;
 
-
+    this->scene()->setSceneRect(0,0,256,tileset_img.height()+32);
     QGraphicsPixmapItem *background = new QGraphicsPixmapItem(QPixmap::fromImage(tileset_img));
     //this->max_height = this->current_tileset->tileset.height()+32;
     background->setPos(0,32);

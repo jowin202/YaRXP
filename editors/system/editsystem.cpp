@@ -81,6 +81,8 @@ void EditSystem::setEC(RPGEditorController *ec)
         this->ui->line_escape_se->setText(this->ec->obj_get_jsonvalue(RPGDB::SYSTEM, "@escape_se").toObject().value("@name").toString());
         this->ui->line_actor_collapse_se->setText(this->ec->obj_get_jsonvalue(RPGDB::SYSTEM, "@actor_collapse_se").toObject().value("@name").toString());
         this->ui->line_enemy_collapse_se->setText(this->ec->obj_get_jsonvalue(RPGDB::SYSTEM, "@enemy_collapse_se").toObject().value("@name").toString());
+
+        this->ec->fill_list(this->ui->element_list, RPGDB::ELEMENTS, true, 3, false);
     });
 
     connect(this->ui->line_currency, &QLineEdit::textChanged, this, [=](QString val){ QJsonObject value = this->ec->obj_get_jsonvalue(RPGDB::SYSTEM, "@words").toObject(); value.insert("@gold", val); this->ec->obj_set_jsonvalue(RPGDB::SYSTEM, "@words", value);});

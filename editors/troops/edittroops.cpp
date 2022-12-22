@@ -81,36 +81,45 @@ void EditTroops::on_button_add_clicked()
 
 void EditTroops::on_button_autoname_clicked()
 {
-    QStringList name_list;
-    QStringList counted_name_list;
+    QHash<int,int> id_count;
+    QHash<int,QString> name_db;
+
+    QList<int> already_used;
+
     QJsonArray members = ec->obj_get_jsonvalue(RPGDB::TROOPS, "@members").toArray();
     for (int i = 0; i < members.count(); i++)
     {
         QJsonObject enemy = ec->get_object_by_id(RPGDB::ENEMIES, members.at(i).toObject().value("@enemy_id").toInt());
-        name_list << enemy.value("@name").toString();
+        int id = enemy.value("@id").toInt();
+
+        QString name = enemy.value("@name").toString();
+        name_db.insert(id, name);
+
+        if (!id_count.contains(id))
+            id_count.insert(id,1);
+        else
+            id_count.insert(id,id_count.value(id)+1);
     }
 
-    QString result = "";
-    for (int i = 0; i < name_list.length(); i++)
+    QString autoname;
+    for (int i = 0; i < members.count(); i++)
     {
-        QString current = name_list.first();
-        int cnt = 0;
-        for (int j = 0; j < name_list.length(); j++)
-        {
-            if (current == name_list.at(j))
-            {
-                cnt++;
-                name_list.removeAt(j);
-                j--;
-            }
-        }
-        if (cnt > 1)
-            current = current + "*" + QString::number(cnt);
+        QJsonObject enemy = ec->get_object_by_id(RPGDB::ENEMIES, members.at(i).toObject().value("@enemy_id").toInt());
+        int id = enemy.value("@id").toInt();
 
-        counted_name_list.append(current);
+        if (already_used.contains(id))
+            continue;
+        already_used.append(id);
 
+        if (i != 0) autoname.append(", ");
+
+
+        autoname.append(name_db.value(id));
+        int count = id_count.value(id);
+        if (count > 1)
+            autoname.append(QString("*%1").arg(count));
     }
-    this->ui->line_name->setText(counted_name_list.join(", "));
+    this->ui->line_name->setText(autoname);
 }
 
 

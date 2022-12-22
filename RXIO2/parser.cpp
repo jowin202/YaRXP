@@ -138,7 +138,7 @@ QJsonValue Parser::parse_token()
 
             for (int i = 0; i < num_elements; i++)
             {
-                values.append(QJsonValue(this->read_16_bit()));
+                values.append(QJsonValue(this->read_16_bit_signed()));
             }
             table.insert("values", values);
 
@@ -266,6 +266,19 @@ int Parser::read_16_bit()
     int v = 0;
     v = this->read_one_byte();
     v |= (this->read_one_byte() << 8);
+
+    return v;
+}
+
+
+int Parser::read_16_bit_signed()
+{
+    int v = 0;
+    v = this->read_one_byte();
+    v |= (this->read_one_byte() << 8);
+
+    if ( (v >> 15) > 0) v = -1-(0xFFFF ^ v);
+
 
     return v;
 }

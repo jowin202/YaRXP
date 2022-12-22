@@ -22,6 +22,7 @@ public:
     int read_one_byte();
     int read_fixnum();
     int read_16_bit();
+    int read_16_bit_signed();
     int read_32_bit();
     QString read_symbol_or_link(bool save_symbol = true);
 

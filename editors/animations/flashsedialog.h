@@ -6,6 +6,9 @@
 #include <QJsonValue>
 #include <QKeyEvent>
 
+
+class RPGEditorController;
+
 namespace Ui {
 class FlashSEDialog;
 }
@@ -15,7 +18,7 @@ class FlashSEDialog : public QWidget
     Q_OBJECT
 
 public:
-    explicit FlashSEDialog(QJsonObject timing, QWidget *parent = nullptr);
+    explicit FlashSEDialog(RPGEditorController *ec, QJsonObject timing, QWidget *parent = nullptr);
     ~FlashSEDialog();
 
     void keyPressEvent(QKeyEvent *e) {
@@ -36,8 +39,12 @@ private slots:
 
     void on_button_cancel_clicked();
 
+    void on_button_se_clicked();
+
 private:
     Ui::FlashSEDialog *ui;
+    RPGEditorController *ec;
+    QJsonObject timing;
 };
 
 #endif // FLASHSEDIALOG_H

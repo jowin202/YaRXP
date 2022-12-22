@@ -6,6 +6,7 @@
 #include <QAction>
 #include <QTableWidgetItem>
 #include <QInputDialog>
+#include <QComboBox>
 
 namespace Ui {
 class EditAnimations;
@@ -36,6 +37,8 @@ private slots:
     void on_table_timings_itemDoubleClicked(QTableWidgetItem *item);
 
     void on_frame_list_currentRowChanged(int currentRow);
+
+    void on_button_edit_battler_clicked();
 
 private:
     Ui::EditAnimations *ui;

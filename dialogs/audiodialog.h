@@ -9,6 +9,8 @@
 #include <QDirIterator>
 #include <QSoundEffect>
 
+#include <QMediaPlayer>
+
 
 namespace Ui {
 class AudioDialog;

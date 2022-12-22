@@ -71,9 +71,11 @@ void AudioDialog::on_button_cancel_clicked()
 
 void AudioDialog::on_button_play_clicked()
 {
-    QSoundEffect effect;
-    effect.setSource(QUrl::fromLocalFile(db->project_dir + "Audio" + QDir::separator() +  music_type + QDir::separator() + this->ui->list->currentItem()->text()));
-    effect.play();
+    QMediaPlayer *player = new QMediaPlayer(this);
+    connect(player, &QMediaPlayer::errorOccurred, this, [=](QMediaPlayer::Error error, const QString &errorString){ qDebug() << error << errorString; });
+
+    player->setSource(QUrl::fromLocalFile(db->project_dir + "Audio" + QDir::separator() +  music_type + QDir::separator() + this->ui->list->currentItem()->text()));
+    player->play();
 }
 
 void AudioDialog::on_button_stop_clicked()

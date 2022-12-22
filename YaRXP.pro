@@ -90,6 +90,7 @@ SOURCES += \
     editors/actors/generatecurvedialog.cpp \
     editors/animations/animationgraphicpreview.cpp \
     editors/animations/animationlabel.cpp \
+    editors/animations/cellpropertiesdialog.cpp \
     editors/animations/editanimations.cpp \
     editors/animations/flashsedialog.cpp \
     editors/animations/timingtable.cpp \
@@ -212,6 +213,7 @@ HEADERS += \
     editors/actors/generatecurvedialog.h \
     editors/animations/animationgraphicpreview.h \
     editors/animations/animationlabel.h \
+    editors/animations/cellpropertiesdialog.h \
     editors/animations/editanimations.h \
     editors/animations/flashsedialog.h \
     editors/animations/timingtable.h \
@@ -272,6 +274,7 @@ FORMS += \
     editors/actors/editoractorparameterpage.ui \
     editors/actors/editoractorparameters.ui \
     editors/actors/generatecurvedialog.ui \
+    editors/animations/cellpropertiesdialog.ui \
     editors/animations/editanimations.ui \
     editors/animations/flashsedialog.ui \
     editors/animations/tweeningdialog.ui \

@@ -429,7 +429,9 @@ void MainWindow::on_actionSave_triggered()
     //this->ui->map_label->do_save();
     //this->ui->map_label->set_map_changed(false);
 
-    this->ui->map_tree_widget->do_save();
+    this->db.save_project();
+
+    //this->ui->map_tree_widget->do_save();
 }
 
 void MainWindow::on_actionshift_up_triggered()

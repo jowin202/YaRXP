@@ -145,14 +145,16 @@ void RPGEditorController::set_current_object(int object_type, int object_value)
 
 QJsonValue RPGEditorController::obj_get_jsonvalue(int obj_type, QString key)
 {
-    if (*this->current_instance_variables[obj_type] < 0) return QJsonValue();
     if (obj_type == RPGDB::SYSTEM)
     {
         return files[obj_type]->object().value(key);
     }
     else
+    {
+        if (*this->current_instance_variables[obj_type] < 0)//this does not work for system !!!!!
+            return QJsonValue();
         return files[obj_type]->array().at(*current_instance_variables[obj_type]).toObject().value(key);
-
+    }
     return QJsonValue();
 }
 

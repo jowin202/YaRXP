@@ -93,18 +93,39 @@ void TimingTable::add_timing()
 
 void TimingTable::edit_timing()
 {
-    FlashSEDialog *dialog = new FlashSEDialog(this->ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@timings").toArray().at(this->currentRow()).toObject());
+    FlashSEDialog *dialog = new FlashSEDialog(this->ec,this->ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@timings").toArray().at(this->currentRow()).toObject());
     dialog->show();
 }
 
 void TimingTable::copy_timing()
 {
+    int row = this->currentRow();
+    QJsonObject timing = this->ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@timings").toArray().at(row).toObject();
+    QJsonDocument doc(timing);
+
+    QSettings settings;
+    settings.setValue("copied_animation_timing", doc.toJson(QJsonDocument::Compact));
 
 }
 
 void TimingTable::paste_timing()
 {
+    int row = this->currentRow();
+    if (row < 0) row = 0;
 
+    QSettings settings;
+    QByteArray json = settings.value("copied_animation_timing").toByteArray();
+
+    QJsonParseError err;
+    QJsonDocument doc = QJsonDocument::fromJson(json, &err);
+    if (err.error != QJsonParseError::NoError) return;
+
+    QJsonArray timings = this->ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@timings").toArray();
+    timings.insert(row,doc.object());
+    this->ec->obj_set_jsonvalue(RPGDB::ANIMATIONS, "@timings", timings);
+
+    this->update_timings();
+    this->selectRow(row); //TODO Check this
 }
 
 void TimingTable::delete_timing()
@@ -112,7 +133,7 @@ void TimingTable::delete_timing()
     QJsonArray array = this->ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@timings").toArray();
     array.removeAt(this->currentRow());
     this->ec->obj_set_jsonvalue(RPGDB::ANIMATIONS, "@timings", array);
-    this->ec->refresh(RPGDB::ANIMATIONS); //update view
+    this->update_timings();
 }
 
 
