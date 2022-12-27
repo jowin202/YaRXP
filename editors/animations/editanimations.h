@@ -40,6 +40,8 @@ private slots:
 
     void on_button_edit_battler_clicked();
 
+    void on_button_clear_frames_clicked();
+
 private:
     Ui::EditAnimations *ui;
     RPGEditorController *ec;

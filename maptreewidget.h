@@ -7,6 +7,10 @@
 #include <QDir>
 #include <QMessageBox>
 #include <QErrorMessage>
+
+#include "RXIO2/rpgdb.h"
+
+
 #include "RXIO/RXObjects/rpgmapinfo.h"
 #include "RXIO/RXObjects/rpgtileset.h"
 #include "RXIO/RXObjects/parserexception.h"

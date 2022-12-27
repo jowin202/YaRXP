@@ -112,3 +112,9 @@ void EditAnimations::on_button_edit_battler_clicked()
     imdialog->show();
 }
 
+
+void EditAnimations::on_button_clear_frames_clicked()
+{
+
+}
+

@@ -71,6 +71,30 @@ void AnimationLabel::update(int frame)
     if (ec != 0)
     {
         QJsonArray frames = this->ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray();
+
+        //previous frame blue border
+        if (frame >= 1 && frame < frames.count())
+        {
+            QJsonObject prev_frame = frames.at(frame-1).toObject();
+            QJsonObject cell_data = prev_frame.value("@cell_data").toObject();
+            int cell_max = prev_frame.value("@cell_max").toInt();
+            QJsonArray values = cell_data.value("values").toArray();
+
+            painter.setPen(QColor(0,0x4d,0x80));
+            for (int i = 0; i < cell_max; i++)
+            {
+                int pattern = values.at(i).toInt();
+                if (pattern < 0) continue;
+                int x = values.at(cell_max+i).toInt()/2;
+                int y = values.at(2*cell_max+i).toInt()/2;
+                int zoom = values.at(3*cell_max+i).toInt();
+
+                int size = qRound(96*zoom/100.0);
+                painter.drawRect(img.width()/2-size/2+x,img.height()/2-size/2+y,size-1,size-1);
+            }
+        }
+
+        //current frame red border
         if (frame >= 0 && frame < frames.count())
         {
             QJsonObject current_frame = frames.at(frame).toObject();
@@ -82,6 +106,7 @@ void AnimationLabel::update(int frame)
             for (int i = 0; i < cell_max; i++)
             {
                 int pattern = values.at(i).toInt();
+                if (pattern < 0) continue;
                 int x = values.at(cell_max+i).toInt()/2;
                 int y = values.at(2*cell_max+i).toInt()/2;
                 int zoom = values.at(3*cell_max+i).toInt();
