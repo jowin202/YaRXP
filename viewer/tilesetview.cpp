@@ -1,5 +1,4 @@
-#include "RXIO/RXObjects/rpgtileset.h"
-#include "RXIO/RXObjects/rpgsystem.h"
+#include "RXIO2/rpgdb.h"
 
 #include <QScrollBar>
 
@@ -19,17 +18,18 @@ TilesetView::TilesetView(QWidget *parent) : QGraphicsView(parent)
 
 void TilesetView::set_tileset(int id)
 {
-    if (!this->system->tileset_hash.contains(id))
+    QJsonObject current = db->get_tileset_by_id(id);
+    QImage tileset_image(db->project_dir + "Graphics" + QDir::separator() + "Tilesets" + QDir::separator() + current.value("@tileset_name").toString());
+    this->max_height = tileset_image.height()+32;
+    QJsonArray autotiles = current.value("@autotile_names").toArray();
+    if (tileset_image.isNull())
         return;
 
-    this->current_tileset = this->system->tileset_hash.value(id);
-    if (this->current_tileset->tileset.isNull())
-        return;
 
     this->scene()->clear();
+    this->setBackgroundBrush(db->transparent);
 
-    QGraphicsPixmapItem *background = new QGraphicsPixmapItem(QPixmap::fromImage(this->current_tileset->tileset));
-    this->max_height = this->current_tileset->tileset.height()+32;
+    QGraphicsPixmapItem *background = new QGraphicsPixmapItem(QPixmap::fromImage(tileset_image));
     background->setPos(0,32);
     this->scene()->addItem(background);
     this->scene()->setSceneRect(0,0,256,max_height);
@@ -37,7 +37,8 @@ void TilesetView::set_tileset(int id)
 
     for (int i = 0; i < 7; i++)
     {
-        QGraphicsPixmapItem *autotile = new QGraphicsPixmapItem(QPixmap::fromImage(current_tileset->autotiles.at(i).thumb));
+        QImage autotile_img(db->project_dir + "Graphics" + QDir::separator() + "Autotiles" + QDir::separator() + autotiles.at(i).toString());
+        QGraphicsPixmapItem *autotile = new QGraphicsPixmapItem(QPixmap::fromImage(autotile_img.copy(0,0,32,32)));
         autotile->setPos((i+1)*32,0);
         this->scene()->addItem(autotile);
     }

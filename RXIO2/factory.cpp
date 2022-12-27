@@ -119,6 +119,32 @@ QJsonObject Factory::create_troop_page()
     return obj;
 }
 
+QJsonObject Factory::create_animation_timing()
+{
+    return this->create_animation_timing(1, this->create_audiofile(),0,0,0,0,0,0,0);
+}
+
+QJsonObject Factory::create_animation_timing(int frame, QJsonObject audiofile, int condition, int flash_scope, int r, int g, int b, int strength, int duration)
+{
+    QJsonObject obj;
+    obj.insert("@condition", condition);
+
+    QJsonObject flash_color;
+    flash_color.insert("RXClass", "Color");
+    flash_color.insert("alpha_gray", strength);
+    flash_color.insert("r", r);
+    flash_color.insert("g", g);
+    flash_color.insert("b", b);
+    obj.insert("@flash_color", flash_color);
+
+    obj.insert("@flash_duration", duration);
+    obj.insert("@flash_scope", flash_scope);
+    obj.insert("@frame", frame);
+    obj.insert("@se", audiofile);
+    obj.insert("RXClass", "RPG::Animation::Timing");
+    return obj;
+}
+
 
 QJsonObject Factory::create_new_actor(int id)
 {

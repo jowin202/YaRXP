@@ -1,5 +1,6 @@
 #include "maptreewidget.h"
 
+#include "RXIO2/rpgdb.h"
 #include "RXIO/iomapinfofile.h"
 
 MapTreeWidget::MapTreeWidget(QWidget *parent) : QTreeWidget(parent)

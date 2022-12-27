@@ -123,9 +123,9 @@ RPGEditorController* RPGDB::prepare_data_editor()
     return ec;
 }
 
-void RPGDB::data_editor_data_saved()
+QJsonObject RPGDB::get_tileset_by_id(int id)
 {
-
+    return this->tileset_file.array().at(id).toObject();
 }
 
 QJsonArray RPGDB::get_switch_names()

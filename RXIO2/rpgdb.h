@@ -28,7 +28,9 @@ public:
 
     //input output for data editor
     RPGEditorController *prepare_data_editor();
-    void data_editor_data_saved();
+
+    //tileset_readonly
+    QJsonObject get_tileset_by_id(int id);
 
 
     //switches and variables

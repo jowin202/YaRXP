@@ -88,13 +88,28 @@ void TimingTable::update_timings()
 
 void TimingTable::add_timing()
 {
-
+    FlashSEDialog *dialog = new FlashSEDialog(this->ec,this->rowCount(), Factory().create_animation_timing());
+    dialog->show();
+    connect(dialog, &FlashSEDialog::ok_clicked, [=](QJsonObject obj, int row){
+        QJsonArray timings = this->ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@timings").toArray();
+        //timings.removeAt(row);
+        timings.insert(row,obj);
+        this->ec->obj_set_jsonvalue(RPGDB::ANIMATIONS, "@timings", timings);
+        this->update_timings();
+    });
 }
 
 void TimingTable::edit_timing()
 {
-    FlashSEDialog *dialog = new FlashSEDialog(this->ec,this->ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@timings").toArray().at(this->currentRow()).toObject());
+    FlashSEDialog *dialog = new FlashSEDialog(this->ec,this->currentRow(),this->ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@timings").toArray().at(this->currentRow()).toObject());
     dialog->show();
+    connect(dialog, &FlashSEDialog::ok_clicked, [=](QJsonObject obj, int row){
+        QJsonArray timings = this->ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@timings").toArray();
+        timings.removeAt(row);
+        timings.insert(row,obj);
+        this->ec->obj_set_jsonvalue(RPGDB::ANIMATIONS, "@timings", timings);
+        this->update_timings();
+    });
 }
 
 void TimingTable::copy_timing()

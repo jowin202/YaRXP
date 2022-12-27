@@ -28,6 +28,8 @@ public:
 
     QJsonObject create_troop_page();
 
+    QJsonObject create_animation_timing();
+    QJsonObject create_animation_timing(int frame, QJsonObject audiofile, int condition, int flash_scope, int r, int g, int b, int strength, int duration);
 
 
 

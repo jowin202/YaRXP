@@ -126,10 +126,12 @@ void MapView::mouseMoveEvent(QMouseEvent *event)
     else if (opt.mode == SELECT)
     {
         if (this->select_rectangle == 0) return;
+        /*
         if ((pos+select_rectangle_offset).x() < 0)  pos.setX(-select_rectangle_offset.x());
         if ((pos+select_rectangle_offset).y() < 0)  pos.setY(-select_rectangle_offset.y());
         if ((pos+select_rectangle_offset).x()+select_rectangle->width() >= map->width )  pos.setX(map->width-select_rectangle_offset.x()-select_rectangle->width());
         if ((pos+select_rectangle_offset).y()+select_rectangle->height()>= map->height)  pos.setY(map->height-select_rectangle_offset.y()-select_rectangle->height());
+        */
 
         if (pos != select_click && !is_moving && this->select_mouse_button_pressed)
         {

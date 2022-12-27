@@ -7,9 +7,8 @@
 #include <QGraphicsPixmapItem>
 #include <QMouseEvent>
 
+class RPGDB;
 
-class RPGSystem;
-class RPGTileset;
 class TilesetRectangle;
 
 class TilesetView : public QGraphicsView
@@ -20,10 +19,8 @@ public:
 
 
 
-    RPGSystem *system;
-    void setSystem(RPGSystem *system) {this->system = system;}
+    void setDB(RPGDB *db) {this->db = db; }
 
-    RPGTileset *current_tileset;
     void set_tileset(int id);
 
 
@@ -44,6 +41,9 @@ public slots:
 
 signals:
     void selection_changed(QList<int>);
+
+private:
+    RPGDB *db;
 
 };
 

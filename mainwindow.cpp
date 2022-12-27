@@ -45,7 +45,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(this->ui->mapView, SIGNAL(one_tile_selected(int)), this->ui->tilesetView, SLOT(select_tile(int)));
     connect(this->ui->mapView, SIGNAL(mouse_over_coordinates(int,int)), this, SLOT(show_current_coordinates(int,int)));
 
-    this->ui->tilesetView->setSystem(&this->system);
+    this->ui->tilesetView->setDB(&this->db);
     connect(this->ui->tilesetView, SIGNAL(selection_changed(QList<int>)), this->ui->mapView, SLOT(set_brush(QList<int>)));
 
     this->ui->splitter->setSizes(QList<int>({3, 3}));

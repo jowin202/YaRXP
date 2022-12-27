@@ -18,7 +18,7 @@ class FlashSEDialog : public QWidget
     Q_OBJECT
 
 public:
-    explicit FlashSEDialog(RPGEditorController *ec, QJsonObject timing, QWidget *parent = nullptr);
+    explicit FlashSEDialog(RPGEditorController *ec, int row, QJsonObject timing, QWidget *parent = nullptr);
     ~FlashSEDialog();
 
     void keyPressEvent(QKeyEvent *e) {
@@ -28,23 +28,27 @@ public:
             this->on_button_ok_clicked();
     }
 
+signals:
+    void ok_clicked(QJsonObject,int);
+
 private slots:
     void on_spin_red_valueChanged(int arg1);
-
     void on_spin_green_valueChanged(int arg1);
-
     void on_spin_blue_valueChanged(int arg1);
-
     void on_button_ok_clicked();
-
     void on_button_cancel_clicked();
-
     void on_button_se_clicked();
+
+    void set_audiofile(QString name, int volume, int pitch);
 
 private:
     Ui::FlashSEDialog *ui;
     RPGEditorController *ec;
     QJsonObject timing;
+    int row;
+
+    int audiofile_volume;
+    int audiofile_pitch;
 };
 
 #endif // FLASHSEDIALOG_H
