@@ -6,12 +6,14 @@
 #include "RXIO/ioclassfile.h"
 #include "RXIO/ioskillfile.h"
 #include "RXIO/ioitemfile.h"
+#include "RXIO/iotilesetfile.h"
 #include "RXIO/ioweaponfile.h"
 #include "RXIO/ioarmorfile.h"
 #include "RXIO/ioenemyfile.h"
 #include "RXIO/iotroopfile.h"
 #include "RXIO/iostatefile.h"
 #include "RXIO/ioanimationfile.h"
+#include "RXIO/iomapinfofile.h"
 
 #include "RXIO/iocommoneventfile.h"
 #include "RXIO/RXObjects/rpgmap.h"
@@ -37,7 +39,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    this->ui->map_tree_widget->setSystem(&this->system);
+    this->ui->map_tree_widget->setDB(&this->db);
 
     this->ui->mapView->setSystem(&this->system);
     connect(this->ui->mapView, SIGNAL(zoom_in()), this, SLOT(zoom_in()));
@@ -75,8 +77,8 @@ MainWindow::MainWindow(QWidget *parent)
     this->ui->actionAll_Layers->setChecked(true);
 
     //Must be here as columns are set in QtCreator->MainWindow file.
-    this->ui->map_tree_widget->hideColumn(1);
-    this->ui->map_tree_widget->hideColumn(2);
+    //this->ui->map_tree_widget->hideColumn(1);
+    //this->ui->map_tree_widget->hideColumn(2);
 }
 
 MainWindow::~MainWindow()
@@ -139,8 +141,8 @@ void MainWindow::open_project(QString project_path)
         }
         catch(ParserException *ex)
         {
-            qDebug() << "exception when reading files";
-            this->ui->map_tree_widget->handleParserException(ex);
+            qDebug() << "Parser Exception: " << ex->error_data;
+            exit(123);
         }
     }
 
@@ -152,41 +154,6 @@ void MainWindow::change_map(int id)
     this->ui->mapView->set_map(id);
     this->system.current_map_id = id;
     this->ui->tilesetView->set_tileset(this->system.map_info_list.at(id)->map->tileset_id);
-
-
-    //TODO: restore this
-    /*
-    if (this->ui->map_label->has_map_changed())
-    {
-        QMessageBox msgbox;
-        msgbox.setText("There are unsaved changes in this map! Save to file?");
-        QPushButton *save = msgbox.addButton("Save to File", QMessageBox::YesRole);
-        QPushButton *withdraw = msgbox.addButton("Withdraw Changes", QMessageBox::NoRole);
-        QPushButton *cancel = msgbox.addButton("Cancel", QMessageBox::AcceptRole);
-
-        msgbox.exec(); //ignore return
-
-        if (msgbox.clickedButton() == (QAbstractButton*)save)
-        {
-            //this->ui->map_label->do_save();
-        }
-        else if (msgbox.clickedButton() == (QAbstractButton*)withdraw)
-        {
-            //withdraw chances
-            //this->ui->map_label->do_withdraw();
-        }
-        else if (msgbox.clickedButton() == (QAbstractButton*)cancel)
-        {
-            //cancel
-            return; // dont change anything
-        }
-    }
-    //this->ui->map_label->set_map(id);
-    this->system.current_map_id = id;
-    this->ui->autotiles_label->change_tileset(this->system.map_info_list.at(id)->map->tileset_id);
-    this->ui->tileset_label->change_tileset(this->system.map_info_list.at(id)->map->tileset_id);
-    this->ui->tileset_label_2->change_tileset(this->system.map_info_list.at(id)->map->tileset_id);
-    */
 }
 
 void MainWindow::on_actionLayer1_triggered()
@@ -294,20 +261,12 @@ void MainWindow::on_actionImport_RGSSAD_triggered()
         }
         catch(ParserException *ex)
         {
-            this->ui->map_tree_widget->handleParserException(ex);
+            qDebug() << "Parser Exception: " << ex->error_data;
+            exit(123);
         }
     }
 
     this->open_project(name);
-}
-
-void MainWindow::on_actionRun_Testcases_triggered()
-{
-    Testcases testcases(&this->system);
-    if (testcases.ok)
-        QMessageBox::information(this, "Run Testcases","Testcases successfull");
-    else
-        QMessageBox::critical(this, "Run Testcases","Testcases failed! Please contact developer!");
 }
 
 void MainWindow::show_current_coordinates(int x, int y)
@@ -421,17 +380,15 @@ void MainWindow::on_actionSystem_triggered()
 
 void MainWindow::on_actionScripting_Editor_triggered()
 {
-
+    DataEditor *da = new DataEditor;
+    da->setDB(&this->db);
+    da->set_widget(DataEditor::SCRIPTS);
+    da->show();
 }
 
 void MainWindow::on_actionSave_triggered()
 {
-    //this->ui->map_label->do_save();
-    //this->ui->map_label->set_map_changed(false);
-
     this->db.save_project();
-
-    //this->ui->map_tree_widget->do_save();
 }
 
 void MainWindow::on_actionshift_up_triggered()
@@ -510,22 +467,6 @@ void MainWindow::on_actionOpen_Project_Folder_triggered()
 {
     QDesktopServices::openUrl( QUrl::fromLocalFile( system.current_project_dir ) );
 }
-
-void MainWindow::on_actionExport_Map_Images_triggered()
-{
-    QString dir = QFileDialog::getExistingDirectory(this, "Export Map Images", QDir::homePath());
-    if (dir != "")
-    {
-        for (int i = 0; i < system.map_info_list.length(); i++)
-        {
-            system.map_info_list.at(i)->load_map(&this->system);
-            QImage img = system.map_info_list.at(i)->map->create_map_image(RPGMap::ZOOM_100,false,true,2,
-                                                              system.tileset_list.at(system.map_info_list.at(i)->map->tileset_id-1));
-            img.save(dir + QDir::separator() + system.map_info_list.at(i)->name + ".png");
-        }
-    }
-}
-
 
 void MainWindow::on_slider_scale_valueChanged(int value)
 {

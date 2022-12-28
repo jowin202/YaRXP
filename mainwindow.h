@@ -57,7 +57,6 @@ public slots:
     void on_actionFlood_Fill_triggered();
     void on_actionAll_Layers_triggered();
     void on_actionCurrent_Layers_and_below_triggered();
-    void on_actionRun_Testcases_triggered();
 
 private slots:
     void show_current_coordinates(int x,int y);
@@ -92,7 +91,6 @@ private slots:
     void on_actionCrop_Down_triggered();
     void on_actionOpen_Project_Folder_triggered();
 
-    void on_actionExport_Map_Images_triggered();
 
     void on_slider_scale_valueChanged(int value);
     void zoom_in();

@@ -21,7 +21,7 @@ public:
     explicit DataEditor(QWidget *parent = nullptr);
     ~DataEditor();
 
-    enum {ACTORS, CLASSES, SKILLS, ITEMS, WEAPONS, ARMORS, ENEMIES, TROOPS, STATES, ANIMATIONS, TILESETS, COMMONEVENTS, SYSTEM};
+    enum {ACTORS, CLASSES, SKILLS, ITEMS, WEAPONS, ARMORS, ENEMIES, TROOPS, STATES, ANIMATIONS, TILESETS, COMMONEVENTS, SYSTEM, SCRIPTS};
     void set_widget(int widget);
     void setDB(RPGDB *db);
 

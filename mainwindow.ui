@@ -108,9 +108,6 @@
     <addaction name="separator"/>
     <addaction name="actionChange_Title"/>
     <addaction name="actionOpen_Project_Folder"/>
-    <addaction name="separator"/>
-    <addaction name="actionRun_Testcases"/>
-    <addaction name="actionExport_Map_Images"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">

@@ -5,24 +5,32 @@
 
 #include "objectcombodialog.h"
 
-MapPropertiesDialog::MapPropertiesDialog(RPGMapInfo *info, RPGSystem *system, QWidget *parent) :
+
+#include "RXIO2/rpgdb.h"
+#include "RXIO2/rpgmapinfocontroller.h"
+
+
+MapPropertiesDialog::MapPropertiesDialog(RPGMapInfoController *mic, int id, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::MapPropertiesDialog)
 {
     ui->setupUi(this);
-    this->mapinfo = info;
-    this->system = system;
 
-
-
-    if (info->map != 0) //TODO: load map automatically
+    if (!mic->id_is_valid(id))
     {
-        this->ui->spin_x->setValue(info->map->width);
-        this->ui->spin_y->setValue(info->map->height);
-        system->datasource.fill_combo(this->ui->combo_tileset, RPGSystem::TILESETS, true, 3, mapinfo->map->tileset_id, false);
-        this->ui->check_auto_change_bgm->setChecked(this->mapinfo->map->autoplay_bgm);
-        this->ui->check_auto_change_bgs->setChecked(this->mapinfo->map->autoplay_bgs);
-        this->ui->spin_steps->setValue(info->map->encounter_step);
+        this->close();
+        return;
+    }
+    //this->ui->spin_x->setValue(mic.get);
+    //this->ui->spin_y->setValue(info->map->height);
+
+    /*
+    system->datasource.fill_combo(this->ui->combo_tileset, RPGSystem::TILESETS, true, 3, mapinfo->map->tileset_id, false);
+    this->ui->check_auto_change_bgm->setChecked(this->mapinfo->map->autoplay_bgm);
+    this->ui->check_auto_change_bgs->setChecked(this->mapinfo->map->autoplay_bgs);
+    */
+    /*
+    this->ui->spin_steps->setValue(info->map->encounter_step);
 
         mapinfo->map->bgm.copy_to(&this->bgm);
         mapinfo->map->bgs.copy_to(&this->bgs);
@@ -41,6 +49,7 @@ MapPropertiesDialog::MapPropertiesDialog(RPGMapInfo *info, RPGSystem *system, QW
 
     this->ui->line_bgm->setText(this->bgm.name);
     this->ui->line_bgs->setText(this->bgs.name);
+    */
 
     this->ui->table_encounters->hideColumn(1);
     this->ui->table_encounters->resizeColumnsToContents();
@@ -53,6 +62,7 @@ MapPropertiesDialog::~MapPropertiesDialog()
 
 void MapPropertiesDialog::set_encounter_list_value(int row, int troop)
 {
+    /*
     QTableWidgetItem *item;
     this->ui->table_encounters->setItem(row,0, item = new QTableWidgetItem(
                                             system->datasource.get_obj_name_by_id(troop,
@@ -60,12 +70,14 @@ void MapPropertiesDialog::set_encounter_list_value(int row, int troop)
     this->set_readonly(item);
     this->ui->table_encounters->setItem(row,1, item = new QTableWidgetItem(QString::number(troop)));
     this->set_readonly(item);
+    */
 }
 
 
 
 void MapPropertiesDialog::on_button_ok_clicked()
 {
+    /*
     this->mapinfo->name = this->ui->line_name->text();
     this->mapinfo->map->tileset_id = this->ui->combo_tileset->currentData().toInt();
 
@@ -83,6 +95,7 @@ void MapPropertiesDialog::on_button_ok_clicked()
 
     emit ok_clicked();
     this->close();
+    */
 }
 
 void MapPropertiesDialog::on_button_cancel_clicked()
@@ -126,6 +139,7 @@ void MapPropertiesDialog::update_troop(int val)
 
 void MapPropertiesDialog::on_table_encounters_itemDoubleClicked(QTableWidgetItem *item)
 {
+    /*
     this->last_edited_troop_row = item->row();
     int current = this->ui->table_encounters->item(item->row(), 1)->text().toInt();
 
@@ -134,11 +148,13 @@ void MapPropertiesDialog::on_table_encounters_itemDoubleClicked(QTableWidgetItem
     dialog->fillCombo(system, RPGSystem::TROOPS, true, 3, current, false);
     connect(dialog, SIGNAL(ok_clicked(int)), this, SLOT(update_troop(int)));
     dialog->show();
+    */
 }
 
 
 void MapPropertiesDialog::on_button_add_clicked()
 {
+    /*
     this->last_edited_troop_row = -1;
     int current = -1;
 
@@ -147,6 +163,7 @@ void MapPropertiesDialog::on_button_add_clicked()
     dialog->fillCombo(system, RPGSystem::TROOPS, true, 3, current, false);
     connect(dialog, SIGNAL(ok_clicked(int)), this, SLOT(update_troop(int)));
     dialog->show();
+    */
 }
 
 void MapPropertiesDialog::on_button_del_clicked()

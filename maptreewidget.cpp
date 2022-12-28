@@ -1,7 +1,7 @@
 #include "maptreewidget.h"
 
 #include "RXIO2/rpgdb.h"
-#include "RXIO/iomapinfofile.h"
+#include "RXIO2/rpgmapinfocontroller.h"
 
 MapTreeWidget::MapTreeWidget(QWidget *parent) : QTreeWidget(parent)
 {
@@ -12,19 +12,26 @@ MapTreeWidget::MapTreeWidget(QWidget *parent) : QTreeWidget(parent)
 
     action1.setText("&Map properties");
     action1.setShortcut(QKeySequence(Qt::Key_Space));
+    action1.setShortcutContext(Qt::WidgetShortcut);
     connect(&action1, SIGNAL(triggered()), this, SLOT(show_map_properties_dialog()));
     action2.setText("&New Map");
     action2.setShortcut(QKeySequence(Qt::Key_Insert));
+    action2.setShortcutContext(Qt::WidgetShortcut);
     action3.setText("&Copy");
     action3.setShortcut(QKeySequence(tr("Ctrl+C")));
+    action3.setShortcutContext(Qt::WidgetShortcut);
     action4.setText("&Paste");
     action4.setShortcut(QKeySequence(tr("Ctrl+V")));
+    action4.setShortcutContext(Qt::WidgetShortcut);
     action5.setText("&Delete");
     action5.setShortcut(QKeySequence(Qt::Key_Delete));
+    action5.setShortcutContext(Qt::WidgetShortcut);
     action6.setText("&Shift");
     action6.setShortcut(QKeySequence(tr("Ctrl+T")));
+    action6.setShortcutContext(Qt::WidgetShortcut);
     action7.setText("&Extend");
     action7.setShortcut(QKeySequence(tr("Ctrl+E")));
+    action7.setShortcutContext(Qt::WidgetShortcut);
     action8.setText("&Import");
 
 
@@ -47,6 +54,38 @@ MapTreeWidget::MapTreeWidget(QWidget *parent) : QTreeWidget(parent)
     connect(this, SIGNAL(itemCollapsed(QTreeWidgetItem*)), this, SLOT(itemCollapsed(QTreeWidgetItem*)));
 }
 
+void MapTreeWidget::setDB(RPGDB *db)
+{
+    this->db = db;
+    this->mic = new RPGMapInfoController(db);
+}
+
+void MapTreeWidget::restore_after_move()
+{
+    int order = 1;
+    for (int i = 0; i < this->topLevelItemCount(); i++)
+    {
+        this->restore_order_and_parent(this->topLevelItem(i), &order);
+        int id = this->topLevelItem(i)->text(2).toInt();
+        this->mic->set_parent(id, 0); //toplevel item has parent 0
+    }
+    this->list_maps();
+}
+
+void MapTreeWidget::restore_order_and_parent(QTreeWidgetItem *item, int *current)
+{
+    int id = item->text(2).toInt();
+    //item->setText(1,QString("%1").arg((*current),3,10,QChar('0')));
+    mic->set_order(id, (*current)++);
+
+    for (int i = 0; i < item->childCount(); i++)
+    {
+        int child_id = item->child(i)->text(2).toInt();
+        this->mic->set_parent(child_id, id);
+        this->restore_order_and_parent(item->child(i), current);
+    }
+}
+
 void MapTreeWidget::list_maps()
 {
     int last_id = -1;
@@ -57,40 +96,51 @@ void MapTreeWidget::list_maps()
     QList<QTreeWidgetItem*> items_to_delete = this->findItems("", Qt::MatchContains, 0); //delete them later
 
 
-    do
+    QJsonArray toplevel_maps = this->mic->get_toplevel_maps();
+    QJsonArray non_toplevel_maps = this->mic->get_child_maps();
+
+    for (int i = 0; i < toplevel_maps.count(); i++)
     {
-        for (int i = 0; i < system->map_info_list.length(); i++)
+        QStringList columns;
+        columns << toplevel_maps.at(i).toObject().value("@name").toString();
+        columns << QString::number(toplevel_maps.at(i).toObject().value("@order").toInt()).rightJustified(3,'0');
+        columns << QString::number(toplevel_maps.at(i).toObject().value("id").toInt());
+        QTreeWidgetItem *item = new QTreeWidgetItem(columns);
+        this->addTopLevelItem(item);
+        this->id_map.insert(toplevel_maps.at(i).toObject().value("id").toInt(), item);
+        if (last_id == toplevel_maps.at(i).toObject().value("id").toInt())
+            this->setCurrentItem(item);
+        if (toplevel_maps.at(i).toObject().value("@expanded").toBool())
+            this->expandItem(item);
+    }
+
+
+    while(non_toplevel_maps.count() > 0)
+    {
+        int cnt1 = non_toplevel_maps.count();
+        for (int i = 0; i < non_toplevel_maps.count(); i++)
         {
-            QStringList columns;
-            columns << system->map_info_list.at(i)->name;
-            columns << QString::number(system->map_info_list.at(i)->order).rightJustified(3,'0');
-            columns << QString::number(i);
-
-            QTreeWidgetItem *item = new QTreeWidgetItem(columns);
-            if (system->map_info_list.at(i)->parent_id == 0 && this->id_map.value(system->map_info_list.at(i)->id, 0) == 0)
+            if (this->id_map.contains(non_toplevel_maps.at(i).toObject().value("@parent_id").toInt()))
             {
-                this->addTopLevelItem(item);
-                if (system->map_info_list.at(i)->expanded)
-                    this->expandItem(item);
-                this->id_map.insert(system->map_info_list.at(i)->id, item);
+                QStringList columns;
+                columns << non_toplevel_maps.at(i).toObject().value("@name").toString();
+                columns << QString::number(non_toplevel_maps.at(i).toObject().value("@order").toInt()).rightJustified(3,'0');
+                columns << QString::number(non_toplevel_maps.at(i).toObject().value("id").toInt());
+                QTreeWidgetItem *item = new QTreeWidgetItem(columns);
+                this->id_map.value(non_toplevel_maps.at(i).toObject().value("@parent_id").toInt())->addChild(item);
+                this->id_map.insert(non_toplevel_maps.at(i).toObject().value("id").toInt(), item);
 
-                if (item->text(2).toInt() == last_id)
+                if (last_id == non_toplevel_maps.at(i).toObject().value("id").toInt())
                     this->setCurrentItem(item);
-            }
-            else if (this->id_map.value(system->map_info_list.at(i)->parent_id, 0) != 0 && this->id_map.value(system->map_info_list.at(i)->id, 0) == 0)
-            {
-                this->id_map.insert(system->map_info_list.at(i)->id, item);
-                this->id_map.value(system->map_info_list.at(i)->parent_id, 0)->addChild(item);
-
-                if (system->map_info_list.at(i)->expanded)
+                if (non_toplevel_maps.at(i).toObject().value("@expanded").toBool())
                     this->expandItem(item);
-
-                if (item->text(2).toInt() == last_id)
-                    this->setCurrentItem(item);
+                non_toplevel_maps.removeAt(i--); //do this at the end
             }
         }
+        int cnt2 = non_toplevel_maps.count();
+        if (cnt1 == cnt2)
+            break; //break here if parent_id loop
     }
-    while(system->map_info_list.size() != id_map.size());
     this->sortItems(1,Qt::SortOrder::AscendingOrder);
 
 
@@ -113,19 +163,22 @@ void MapTreeWidget::prepare_context_menu( const QPoint & pos )
 
 void MapTreeWidget::show_map_properties_dialog()
 {
+    if (this->currentItem()->text(2).toInt() < 0) return;
     if (this->selectedItems().size() <= 0)
         return;
-    RPGMapInfo *mapinfo = system->map_info_list.at(this->selectedItems().at(0)->text(2).toInt());
-    MapPropertiesDialog *dialog = new MapPropertiesDialog(mapinfo, this->system, 0);
+    MapPropertiesDialog *dialog = new MapPropertiesDialog(this->mic, this->currentItem()->text(2).toInt(), 0);
     connect(dialog, SIGNAL(ok_clicked()), this, SLOT(list_maps()));
     dialog->show();
 }
 
-void MapTreeWidget::do_save()
+void MapTreeWidget::itemExpanded(QTreeWidgetItem *item)
 {
-    qDebug() << this->system->data_dir + "MapInfos.rxdata";
-    IOMapInfoFile mapinfo_file;
-    mapinfo_file.write_to_file(this->system->data_dir + "MapInfos.rxdata", &this->system->map_info_list);
+    mic->set_expanded(item->text(2).toInt(), true);
+}
+
+void MapTreeWidget::itemCollapsed(QTreeWidgetItem *item)
+{
+    mic->set_expanded(item->text(2).toInt(), false);
 }
 
 void MapTreeWidget::dropEvent(QDropEvent *event)
@@ -136,19 +189,5 @@ void MapTreeWidget::dropEvent(QDropEvent *event)
     this->restore_after_move();
 }
 
-void MapTreeWidget::handleParserException(ParserException *ex)
-{
-    if (ex->error_data.length() == 0)
-    {
-        QMessageBox::critical(this,"Error!", "Unkonwn error!");
-    }
-    else
-        QMessageBox::critical(this,"Error!", QString("Error parsing file: %1\nOffset: %2 (0x%3)\nIn Function: %4\n\n%5")
-                    .arg(ex->error_data.at(0).toString())
-                    .arg(ex->error_data.at(1).toInt())
-                    .arg(QString::number(ex->error_data.at(1).toInt(),16))
-                    .arg(ex->error_data.at(2).toString())
-                    .arg(ex->message)
-                              );
-}
+
 

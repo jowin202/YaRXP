@@ -7,9 +7,10 @@
 #include <QTableWidgetItem>
 #include <QInputDialog>
 
-#include "RXIO/RXObjects/rpgmap.h"
-#include "RXIO/RXObjects/rpgmapinfo.h"
-#include "RXIO/RXObjects/rpgsystem.h"
+#include <QJsonObject>
+#include <QJsonDocument>
+
+class RPGMapInfoController;
 
 namespace Ui {
 class MapPropertiesDialog;
@@ -20,7 +21,7 @@ class MapPropertiesDialog : public QWidget
     Q_OBJECT
 
 public:
-    explicit MapPropertiesDialog(RPGMapInfo* info, RPGSystem *system, QWidget *parent = nullptr);
+    explicit MapPropertiesDialog(RPGMapInfoController *mic, int id, QWidget *parent = nullptr);
     ~MapPropertiesDialog();
 
     void keyPressEvent(QKeyEvent *event)
@@ -60,9 +61,6 @@ signals:
 
 private:
     Ui::MapPropertiesDialog *ui;
-    RPGMapInfo *mapinfo;
-    RPGAudioFile bgm, bgs;
-    RPGSystem *system;
 
     int last_edited_troop_row;
 };

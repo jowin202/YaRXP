@@ -32,6 +32,9 @@ public:
     //tileset_readonly
     QJsonObject get_tileset_by_id(int id);
 
+    //mapinfo changeable
+    QJsonDocument *get_mapinfos() { return &this->mapinfo_file; }
+
 
     //switches and variables
     QJsonArray get_switch_names();
