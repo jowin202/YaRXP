@@ -8,7 +8,7 @@
 
 #include <QColor>
 #include <QDir>
-
+#include <QMap>
 
 class RPGEditorController;
 
@@ -34,6 +34,13 @@ public:
 
     //mapinfo changeable
     QJsonDocument *get_mapinfos() { return &this->mapinfo_file; }
+
+    //map files changeable
+    QJsonDocument *get_mapfile_by_id(int id) {
+        if (this->map_files.contains(id))
+            return this->map_files.value(id);
+        else return 0;
+    }
 
 
     //switches and variables
@@ -82,7 +89,7 @@ private:
     QJsonDocument weapon_file;
 
     QJsonDocument mapinfo_file;
-    QMap<int,QJsonDocument> map_files;
+    QMap<int,QJsonDocument*> map_files;
 
 
     QMap<QString, QStringList> param_oders;

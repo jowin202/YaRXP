@@ -32,7 +32,6 @@ void EditSystem::setEC(RPGEditorController *ec)
     this->ec->connect_string_to_text_field(RPGDB::SYSTEM, "@gameover_name", this->ui->line_gameover_graphic);
     this->ec->connect_string_to_text_field(RPGDB::SYSTEM, "@battle_transition", this->ui->line_battle_transition_graphic);
 
-
     connect(this->ec, &RPGEditorController::current_system_changed, this, [=]() {
         QJsonObject words = this->ec->obj_get_jsonvalue(RPGDB::SYSTEM, "@words").toObject();
         this->ui->line_currency->setText(words.value("@gold").toString());
@@ -83,6 +82,7 @@ void EditSystem::setEC(RPGEditorController *ec)
         this->ui->line_enemy_collapse_se->setText(this->ec->obj_get_jsonvalue(RPGDB::SYSTEM, "@enemy_collapse_se").toObject().value("@name").toString());
 
         this->ec->fill_list(this->ui->element_list, RPGDB::ELEMENTS, true, 3, false);
+        this->update_party_members();
     });
 
     connect(this->ui->line_currency, &QLineEdit::textChanged, this, [=](QString val){ QJsonObject value = this->ec->obj_get_jsonvalue(RPGDB::SYSTEM, "@words").toObject(); value.insert("@gold", val); this->ec->obj_set_jsonvalue(RPGDB::SYSTEM, "@words", value);});
@@ -114,8 +114,6 @@ void EditSystem::setEC(RPGEditorController *ec)
 
     connect(this->ui->line_mdef, &QLineEdit::textChanged, this, [=](QString val){ QJsonObject value = this->ec->obj_get_jsonvalue(RPGDB::SYSTEM, "@words").toObject(); value.insert("@mdef", val); this->ec->obj_set_jsonvalue(RPGDB::SYSTEM, "@words", value);});
     connect(this->ui->line_equip, &QLineEdit::textChanged, this, [=](QString val){ QJsonObject value = this->ec->obj_get_jsonvalue(RPGDB::SYSTEM, "@words").toObject(); value.insert("@equip", val); this->ec->obj_set_jsonvalue(RPGDB::SYSTEM, "@words", value);});
-
-
 }
 
 void EditSystem::on_button_windowskin_clicked()
@@ -292,5 +290,54 @@ void EditSystem::on_button_enemy_collapse_se_clicked()
     AudioDialog *dialog = new AudioDialog(ec->get_db(), audiofile.value("@name").toString(), audiofile.value("@volume").toInt(), audiofile.value("@pitch").toInt(), AudioDialog::SE);
     connect(dialog, &AudioDialog::ok_clicked, this, [=](QString n,int v,int p) { this->ec->obj_set_jsonvalue(RPGDB::SYSTEM, "@enemy_collapse_se",Factory().create_audiofile(n,v,p)); this->ec->refresh(RPGDB::SYSTEM); });
     dialog->show();
+}
+
+
+void EditSystem::on_element_list_itemDoubleClicked(QListWidgetItem *item)
+{
+    Q_UNUSED(item);
+    bool ok;
+    QJsonArray element_list = this->ec->obj_get_jsonvalue(RPGDB::SYSTEM, "@elements").toArray();
+    QString element_name = QInputDialog::getText(this, "Element Name", "New Element Name:", QLineEdit::Normal, element_list.at(this->ui->element_list->currentRow()+1).toString(), &ok);
+    if (ok)
+    {
+        element_list.removeAt(this->ui->element_list->currentRow()+1);
+        element_list.insert(this->ui->element_list->currentRow()+1, element_name);
+        this->ec->obj_set_jsonvalue(RPGDB::SYSTEM, "@elements", element_list);
+        this->ec->fill_list(this->ui->element_list, RPGDB::ELEMENTS, true, 3, false);
+    }
+}
+
+void EditSystem::update_party_members()
+{
+    QJsonArray party_members = this->ec->obj_get_jsonvalue(RPGDB::SYSTEM, "@party_members").toArray();
+    for (int i = 0; i < party_members.count(); i++)
+    {
+        this->ui->party_member_list->addItem(QString("%1: ").arg(party_members.at(i).toInt(),3,10, QChar('0')) + this->ec->get_object_by_id(RPGDB::ACTORS,party_members.at(i).toInt()).value("@name").toString());
+        //this->ui->test_battler_list->addItem()
+    }
+}
+
+void EditSystem::on_button_element_max_clicked()
+{
+    bool ok;
+    QJsonArray element_list = this->ec->obj_get_jsonvalue(RPGDB::SYSTEM, "@elements").toArray();
+    int max = QInputDialog::getInt(this, "Max. Elements", "Max. Elements:", element_list.count()-1,1,999,1,&ok);
+    if (ok)
+    {
+        while (element_list.count() > max+1)
+            element_list.pop_back();
+        while (element_list.count() <= max)
+            element_list.append("");
+        this->ec->obj_set_jsonvalue(RPGDB::SYSTEM, "@elements", element_list);
+        this->ec->fill_list(this->ui->element_list, RPGDB::ELEMENTS, true, 3, false);
+    }
+}
+
+
+
+void EditSystem::on_party_member_list_itemDoubleClicked(QListWidgetItem *item)
+{
+    Q_UNUSED(item);
 }
 

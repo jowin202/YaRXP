@@ -144,13 +144,7 @@ QImage RPGMap::create_map_image(int zoom, bool dim_other, bool show_current_and_
     painter.end();
 
 
-
-    if (zoom == ZOOM_50)
-        return result.scaled(result.width()/2, result.height()/2,Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-    else if (zoom == ZOOM_25)
-        return result.scaled(result.width()/4, result.height()/4,Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-    else
-        return result;
+    return result;
 }
 
 QList<int> RPGMap::get_elements_in_rectangle(QRect rect, int fromlayer, int tolayer)

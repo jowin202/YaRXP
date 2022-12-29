@@ -11,6 +11,7 @@
 #include "RXIO/RXObjects/rpgmap.h"
 #include "mapselectrectangle.h"
 
+#include "RXIO2/rpgmapcontroller.h"
 
 class MapSelectRectangle;
 class MapRectangle;
@@ -39,6 +40,7 @@ public:
 
     RPGSystem *system;
     void setSystem(RPGSystem *system) {this->system = system;}
+    void setDB(RPGDB *db) { this->db = db; this->mc.setDB(db); }
 
     void set_mode(int mode);
     void set_map(int id);
@@ -131,6 +133,8 @@ public slots:
 
 private:
     bool changes_made = false;
+    RPGDB *db;
+    RPGMapController mc;
     RPGMap *map;
     //int current_layer = 0;
     RPGTileset *tileset;

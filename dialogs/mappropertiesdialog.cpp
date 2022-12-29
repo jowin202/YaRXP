@@ -8,6 +8,7 @@
 
 #include "RXIO2/rpgdb.h"
 #include "RXIO2/rpgmapinfocontroller.h"
+#include "RXIO2/rpgmapcontroller.h"
 
 
 MapPropertiesDialog::MapPropertiesDialog(RPGMapInfoController *mic, int id, QWidget *parent) :
@@ -21,8 +22,22 @@ MapPropertiesDialog::MapPropertiesDialog(RPGMapInfoController *mic, int id, QWid
         this->close();
         return;
     }
-    //this->ui->spin_x->setValue(mic.get);
-    //this->ui->spin_y->setValue(info->map->height);
+
+    this->ui->line_name->setText(mic->get_name(id));
+    RPGMapController mc;
+    mc.setDB(mic->get_db());
+    mc.setMap(id);
+    this->ui->check_auto_change_bgm->setChecked(mc.get_jsonvalue("@autoplay_bgm").toBool());
+    this->ui->check_auto_change_bgs->setChecked(mc.get_jsonvalue("@autoplay_bgs").toBool());
+    this->ui->line_bgm->setText(mc.get_jsonvalue("@bgm").toObject().value("@name").toString());
+    this->ui->line_bgs->setText(mc.get_jsonvalue("@bgs").toObject().value("@name").toString());
+
+    this->ui->spin_steps->setValue(mc.get_jsonvalue("@encounter_step").toInt());
+
+
+    this->ui->spin_x->setValue(mc.get_width());
+    this->ui->spin_y->setValue(mc.get_height());
+
 
     /*
     system->datasource.fill_combo(this->ui->combo_tileset, RPGSystem::TILESETS, true, 3, mapinfo->map->tileset_id, false);

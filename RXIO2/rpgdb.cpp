@@ -18,7 +18,6 @@ void RPGDB::load_project(QString dir)
     this->project_dir = dir;
 
 
-
     Parser actor_parser(&actor_file, &param_oders, dir + "Data" + QDir::separator() + "Actors.rxdata");
     Parser animation_parser(&animation_file, &param_oders, dir + "Data" + QDir::separator() + "Animations.rxdata");
     Parser armor_parser(&armor_file, &param_oders, dir + "Data" + QDir::separator() + "Armors.rxdata");
@@ -40,8 +39,8 @@ void RPGDB::load_project(QString dir)
     {
         if (QFile(QString(dir + "Data" + QDir::separator() + "Map%1.rxdata").arg(i,3,10,QChar('0'))).exists())
         {
-            QJsonDocument doc;
-            Parser map_parser(&doc, &param_oders, QString(dir + "Data" + QDir::separator() + "Map%1.rxdata").arg(i,3,10,QChar('0')));
+            QJsonDocument *doc = new QJsonDocument;
+            Parser map_parser(doc, &param_oders, QString(dir + "Data" + QDir::separator() + "Map%1.rxdata").arg(i,3,10,QChar('0')));
             map_files.insert(i,doc);
         }
     }
@@ -60,18 +59,6 @@ void RPGDB::load_project(QString dir)
     qDebug() << (animation_file.array().last().toObject() == Factory().create_new_animation(animation_file.array().last().toObject().value("@id").toInt()) );
     qDebug() << (tileset_file.array().last().toObject() == Factory().create_new_tileset(tileset_file.array().last().toObject().value("@id").toInt()) );
     qDebug() << (common_event_file.array().last().toObject() == Factory().create_new_commonevent(common_event_file.array().last().toObject().value("@id").toInt()) );
-    */
-
-    /*
-    QFile tmp("/tmp/actor.json");
-    tmp.open(QIODevice::WriteOnly);
-    tmp.write(actor_file.toJson());
-    tmp.close();
-
-    QFile tmp("/tmp/animation.json");
-    tmp.open(QIODevice::WriteOnly);
-    tmp.write(animation_file.toJson());
-    tmp.close();
     */
 }
 
@@ -100,8 +87,8 @@ void RPGDB::save_project()
     {
         if (map_files.contains(i))
         {
-            QJsonDocument doc = map_files.value(i);
-            Writer map_writer(&doc, &param_oders, QString(dir + "Data" + QDir::separator() + "Map%1.rxdata").arg(i,3,10,QChar('0')));
+            QJsonDocument *doc = map_files.value(i);
+            Writer map_writer(doc, &param_oders, QString(dir + "Data" + QDir::separator() + "Map%1.rxdata").arg(i,3,10,QChar('0')));
         }
     }
 

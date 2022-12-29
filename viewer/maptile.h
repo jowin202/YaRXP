@@ -22,8 +22,6 @@ public:
     QRectF boundingRect() const override;
 
 
-
-
 private:
     RPGMap *map;
     RPGTileset *tileset;

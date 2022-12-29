@@ -2,6 +2,8 @@
 #define EDITSYSTEM_H
 
 #include <QWidget>
+#include <QInputDialog>
+#include <QListWidgetItem>
 
 namespace Ui {
 class EditSystem;
@@ -42,6 +44,11 @@ private slots:
     void on_button_escape_se_clicked();
     void on_button_actor_collapse_se_clicked();
     void on_button_enemy_collapse_se_clicked();
+
+    void on_element_list_itemDoubleClicked(QListWidgetItem *item);
+    void on_party_member_list_itemDoubleClicked(QListWidgetItem *item);
+    void on_button_element_max_clicked();
+    void update_party_members();
 
 private:
     Ui::EditSystem *ui;

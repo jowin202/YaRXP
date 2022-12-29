@@ -15,7 +15,6 @@ class RPGMap : public QObject
     Q_OBJECT
 public:
     explicit RPGMap(QObject *parent = nullptr);
-    enum {ZOOM_25, ZOOM_50, ZOOM_100};
 
     ~RPGMap();
 

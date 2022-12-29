@@ -42,6 +42,8 @@ MainWindow::MainWindow(QWidget *parent)
     this->ui->map_tree_widget->setDB(&this->db);
 
     this->ui->mapView->setSystem(&this->system);
+    this->ui->mapView->setDB(&this->db);
+
     connect(this->ui->mapView, SIGNAL(zoom_in()), this, SLOT(zoom_in()));
     connect(this->ui->mapView, SIGNAL(zoom_out()), this, SLOT(zoom_out()));
     connect(this->ui->mapView, SIGNAL(one_tile_selected(int)), this->ui->tilesetView, SLOT(select_tile(int)));
@@ -77,8 +79,8 @@ MainWindow::MainWindow(QWidget *parent)
     this->ui->actionAll_Layers->setChecked(true);
 
     //Must be here as columns are set in QtCreator->MainWindow file.
-    //this->ui->map_tree_widget->hideColumn(1);
-    //this->ui->map_tree_widget->hideColumn(2);
+    this->ui->map_tree_widget->hideColumn(1);
+    this->ui->map_tree_widget->hideColumn(2);
 }
 
 MainWindow::~MainWindow()

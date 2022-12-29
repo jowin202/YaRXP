@@ -29,6 +29,8 @@ public:
     QJsonArray get_toplevel_maps();
     QJsonArray get_child_maps();
 
+    RPGDB *get_db() {return this->db; }
+
 
 signals:
 

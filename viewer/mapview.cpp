@@ -9,6 +9,9 @@
 
 #include "event_dialogs/eventdialog.h"
 
+
+#include "RXIO2/rpgdb.h"
+
 MapView::MapView(QWidget *parent) : QGraphicsView(parent)
 {
     this->setScene(new QGraphicsScene);
@@ -46,6 +49,7 @@ void MapView::set_map(int id)
         qDebug() << ex->error_data << ex->message;
     }
     this->map = this->system->map_info_list.at(id)->map;
+    this->mc.setMap(id);
 
 
     if (this->system->tileset_hash.contains(map->tileset_id))
