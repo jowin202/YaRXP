@@ -72,11 +72,10 @@ MainWindow::MainWindow(QWidget *parent)
     this->modegroup->addAction(this->ui->actionCurrent_Layers_and_below);
     this->modegroup->addAction(this->ui->actionAll_Layers);
 
-
-
     this->ui->actionLayer1->setChecked(true);
     this->ui->actionPen->setChecked(true);
     this->ui->actionAll_Layers->setChecked(true);
+
 
     //Must be here as columns are set in QtCreator->MainWindow file.
     this->ui->map_tree_widget->hideColumn(1);
@@ -155,7 +154,7 @@ void MainWindow::change_map(int id)
 {
     this->ui->mapView->set_map(id);
     this->system.current_map_id = id;
-    this->ui->tilesetView->set_tileset(this->system.map_info_list.at(id)->map->tileset_id);
+    this->ui->tilesetView->set_tileset(this->db.get_mapfile_by_id(id)->object().value("@tileset_id").toInt());
 }
 
 void MainWindow::on_actionLayer1_triggered()

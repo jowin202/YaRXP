@@ -16,6 +16,8 @@ public:
     QImage create_tile(int n1, int n2, int n3, int n4);
     QImage getTile(int tile);
 
+    QImage get_full_tileset() { return this->tileset_full; }
+
 
 
     QImage tileset;

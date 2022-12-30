@@ -16,6 +16,8 @@ MapPropertiesDialog::MapPropertiesDialog(RPGMapInfoController *mic, int id, QWid
     ui(new Ui::MapPropertiesDialog)
 {
     ui->setupUi(this);
+    this->mic = mic;
+    this->id = id;
 
     if (!mic->id_is_valid(id))
     {
@@ -77,6 +79,8 @@ MapPropertiesDialog::~MapPropertiesDialog()
 
 void MapPropertiesDialog::set_encounter_list_value(int row, int troop)
 {
+    Q_UNUSED(troop);
+    Q_UNUSED(row);
     /*
     QTableWidgetItem *item;
     this->ui->table_encounters->setItem(row,0, item = new QTableWidgetItem(
@@ -92,6 +96,15 @@ void MapPropertiesDialog::set_encounter_list_value(int row, int troop)
 
 void MapPropertiesDialog::on_button_ok_clicked()
 {
+    mic->set_name(id, this->ui->line_name->text());
+
+
+    RPGMapController mc;
+    mc.setDB(mic->get_db());
+    mc.setMap(id);
+    mc.set_jsonvalue("@encounter_step", this->ui->spin_steps->value());
+
+
     /*
     this->mapinfo->name = this->ui->line_name->text();
     this->mapinfo->map->tileset_id = this->ui->combo_tileset->currentData().toInt();
@@ -108,9 +121,9 @@ void MapPropertiesDialog::on_button_ok_clicked()
     this->bgm.copy_to(&this->mapinfo->map->bgm);
     this->bgs.copy_to(&this->mapinfo->map->bgs);
 
+    */
     emit ok_clicked();
     this->close();
-    */
 }
 
 void MapPropertiesDialog::on_button_cancel_clicked()

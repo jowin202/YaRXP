@@ -8,23 +8,23 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QDebug>
 
+#include <QJsonObject>
 
-class RPGMap;
-class RPGTileset;
+
+class RPGMapController;
 struct tile_options;
 
 class MapTile : public QGraphicsItem
 {
 public:
-    MapTile(RPGMap *map, RPGTileset *tileset, QPoint pos, tile_options *options);
+    MapTile(RPGMapController *mc, QPoint pos, tile_options *options);
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) override;
     QRectF boundingRect() const override;
 
 
 private:
-    RPGMap *map;
-    RPGTileset *tileset;
+    RPGMapController *mc;
     QPoint pos;
     QColor purple = QColor(0x8a,0x16,0xa0);
     tile_options *opt;

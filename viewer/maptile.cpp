@@ -1,12 +1,12 @@
 #include "maptile.h"
 #include "RXIO/RXObjects/rpgmap.h"
+#include "RXIO2/rpgmapcontroller.h"
 #include "mapview.h"
 
-MapTile::MapTile(RPGMap *map, RPGTileset *tileset, QPoint pos, tile_options *options)
+MapTile::MapTile(RPGMapController *mc, QPoint pos, tile_options *options)
 {
-    this->map = map;
+    this->mc = mc;
     this->pos = pos;
-    this->tileset = tileset;
     this->opt = options;
 }
 
@@ -15,13 +15,9 @@ void MapTile::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, Q
     Q_UNUSED(widget);
     Q_UNUSED(option);
 
-    int id1 = map->get_tile_id_from_pos(this->pos, 0);
-    int id2 = map->get_tile_id_from_pos(this->pos, 1);
-    int id3 = map->get_tile_id_from_pos(this->pos, 2);
-
-    QImage img1 = this->tileset->getTile(id1);
-    QImage img2 = this->tileset->getTile(id2);
-    QImage img3 = this->tileset->getTile(id3);
+    QImage img1 = mc->get_tile_from_pos(this->pos, 0);
+    QImage img2 = mc->get_tile_from_pos(this->pos, 1);
+    QImage img3 = mc->get_tile_from_pos(this->pos, 2);
 
     painter->fillRect(0,0,32,32, purple);
 
@@ -47,13 +43,13 @@ void MapTile::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, Q
     if (opt->mode == MapView::EVENT)
     {
         painter->drawRect(0,0,32,32);
-        RPGEvent *event = map->event_on_pos(pos);
-        if (event != 0)
+        QJsonObject event = mc->event_on_pos(pos);
+        if (event.contains("RXClass"))
         {
             painter->setOpacity(0.5);
             painter->fillRect(0,0,32,32, Qt::white);
             painter->setOpacity(0.8);
-            painter->drawImage(QPoint(0,0),event->get_event_pic());
+            //painter->drawImage(QPoint(0,0),event->get_event_pic());
             painter->setOpacity(1);
 
             QPen pen;

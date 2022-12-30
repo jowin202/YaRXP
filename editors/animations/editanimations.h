@@ -40,7 +40,9 @@ private slots:
 
     void on_button_edit_battler_clicked();
 
-    void on_button_clear_frames_clicked();
+    void on_button_paste_last_clicked();
+
+    void on_button_clear_frame_clicked();
 
 private:
     Ui::EditAnimations *ui;

@@ -63,6 +63,9 @@ private:
     Ui::MapPropertiesDialog *ui;
 
     int last_edited_troop_row;
+
+    int id;
+    RPGMapInfoController *mic;
 };
 
 #endif // MAPPROPERTIESDIALOG_H

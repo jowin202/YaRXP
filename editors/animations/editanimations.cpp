@@ -35,7 +35,8 @@ void EditAnimations::setEC(RPGEditorController *ec)
     connect(this->ec, &RPGEditorController::current_animation_changed, this, [=]() {
         this->ui->line_max_frames->setText(QString::number(this->ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray().count()));
         this->update_frame_list();
-        this->ui->animation_label->update(0);
+        this->ui->frame_list->setCurrentRow(0);
+        //this->ui->animation_label->update(0);
         this->ui->table_timings->update_timings();
         this->ui->graphic_preview_label->set_image(this->ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@animation_name").toString(), this->ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@animation_hue").toInt());
         //qDebug() << this->ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@timings");
@@ -95,7 +96,7 @@ void EditAnimations::on_frame_list_currentRowChanged(int currentRow)
     QJsonObject frame = frames.at(currentRow).toObject();
 
     this->ui->animation_label->update(currentRow);
-    //qDebug() << frame;
+    qDebug() << frame;
 }
 
 
@@ -113,8 +114,32 @@ void EditAnimations::on_button_edit_battler_clicked()
 }
 
 
-void EditAnimations::on_button_clear_frames_clicked()
-{
 
+void EditAnimations::on_button_paste_last_clicked()
+{
+    int current_frame = this->ui->frame_list->currentRow();
+    if (current_frame <= 0) return; //cant paste previous frame
+
+    QJsonArray frames = this->ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray();
+    frames.removeAt(current_frame);
+    frames.insert(current_frame, frames.at(current_frame-1));
+    this->ec->obj_set_jsonvalue(RPGDB::ANIMATIONS, "@frames", frames);
+    this->ui->animation_label->update(current_frame);
+}
+
+
+void EditAnimations::on_button_clear_frame_clicked()
+{
+    //TODO
+    /*
+    int current_frame = this->ui->frame_list->currentRow();
+    if (current_frame < 0) return; //
+
+    QJsonArray frames = this->ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray();
+    frames.removeAt(current_frame);
+    frames.insert(current_frame, frames.at(current_frame-1));
+    this->ec->obj_set_jsonvalue(RPGDB::ANIMATIONS, "@frames", frames);
+    this->ui->animation_label->update(current_frame);
+    */
 }
 

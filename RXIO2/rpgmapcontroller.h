@@ -5,6 +5,7 @@
 #include <QDebug>
 #include <QPoint>
 #include <QPointF>
+#include <QImage>
 #include <QJsonDocument>
 
 class RPGDB;
@@ -20,8 +21,8 @@ public:
 
 
 
-    //int array_position(QPoint p, int layer)
-    //{return p.x() + p.y() * this->width + this->height * this->width * layer;}
+    int array_position(QPoint p, int layer)
+    {return p.x() + p.y() * this->get_width() + this->get_height() * this->get_width() * layer;}
 
     //QPoint pos_from_array_index(int index)
     //{ int x = index%this->width; int y = ((index-x)/this->width)%this->height; return QPoint(x,y); }
@@ -30,7 +31,7 @@ public:
     //{ return index / (this->height * this->width); }
 
 
-    int get_tile_id_from_pos(QPoint pos, int layer);
+    QImage get_tile_from_pos(QPoint pos, int layer);
 
 
     QJsonObject event_on_pos(QPoint pos);
@@ -63,6 +64,9 @@ public:
 private:
     RPGDB *db;
     QJsonDocument *doc;
+
+    QImage tileset_image;
+    QImage autotiles[7];
 
 };
 

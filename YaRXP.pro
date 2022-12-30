@@ -16,7 +16,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    RXIO/RXObjects/autotileset.cpp \
     RXIO/RXObjects/parserexception.cpp \
     RXIO/RXObjects/rpgactor.cpp \
     RXIO/RXObjects/rpganimation.cpp \
@@ -66,6 +65,7 @@ SOURCES += \
     RXIO/iotroopfile.cpp \
     RXIO/ioweaponfile.cpp \
     RXIO/testcases.cpp \
+    RXIO2/autotileset.cpp \
     RXIO2/factory.cpp \
     RXIO2/parser.cpp \
     RXIO2/rpgdb.cpp \
@@ -141,7 +141,6 @@ SOURCES += \
     viewer/tilesetview.cpp
 
 HEADERS += \
-    RXIO/RXObjects/autotileset.h \
     RXIO/RXObjects/parserexception.h \
     RXIO/RXObjects/rpgactor.h \
     RXIO/RXObjects/rpganimation.h \
@@ -191,6 +190,7 @@ HEADERS += \
     RXIO/iotroopfile.h \
     RXIO/ioweaponfile.h \
     RXIO/testcases.h \
+    RXIO2/autotileset.h \
     RXIO2/factory.h \
     RXIO2/parser.h \
     RXIO2/rpgdb.h \

@@ -1,5 +1,6 @@
 #include "rpgmapcontroller.h"
 #include "rpgdb.h"
+#include "autotileset.h"
 
 RPGMapController::RPGMapController(QObject *parent)
     : QObject{parent}
@@ -13,7 +14,40 @@ void RPGMapController::setMap(int id)
     if ( (doc = db->get_mapfile_by_id(id)) != 0)
     {
         this->doc = doc;
+        QJsonObject tileset = this->db->get_tileset_by_id(this->get_jsonvalue("@tileset_id").toInt());
+        this->tileset_image = QImage(this->db->project_dir + "Graphics" + QDir::separator() + "Tilesets" + QDir::separator() + tileset.value("@tileset_name").toString());
+
+        QJsonArray autotile_names = tileset.value("@autotile_names").toArray();
+        for (int i = 0; i < 7; i++)
+        {
+            this->autotiles[i] = Autotileset(QImage(this->db->project_dir + "Graphics" + QDir::separator() + "Autotiles" + QDir::separator() + autotile_names.at(i).toString())).get_full_tileset();
+        }
     }
+}
+
+QImage RPGMapController::get_tile_from_pos(QPoint pos, int layer)
+{
+    if (doc == 0 || this->tileset_image.isNull()) return QImage();
+    QJsonArray data = this->get_jsonvalue("@data").toObject().value("values").toArray();
+    int tile = data.at(this->array_position(pos,layer)).toInt();
+
+    if (tile > 0 && tile < 0x0180)
+    {
+        //autotiles
+        int autotileset_num = tile / 48 - 1;
+        int autotile_num = tile % 48;
+        return QImage(autotiles[autotileset_num].copy((autotile_num % 8)*32, (autotile_num / 8)*32,32,32));
+    }
+    //else
+
+    tile -= 0x0180; //remove offset
+    int x = tile % 8;
+    int y = tile / 8;
+
+    if (x < 0 || y < 0 || this->tileset_image.isNull())
+        return QImage();
+    return this->tileset_image.copy(32*x, 32*y, 32, 32);
+
 }
 
 QJsonObject RPGMapController::event_on_pos(QPoint pos)

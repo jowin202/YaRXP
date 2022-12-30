@@ -239,9 +239,9 @@
       </widget>
      </item>
      <item row="3" column="1">
-      <widget class="QPushButton" name="button_clear_frames">
+      <widget class="QPushButton" name="button_clear_frame">
        <property name="text">
-        <string>Clear Frames</string>
+        <string>Clear Current Frame</string>
        </property>
       </widget>
      </item>
@@ -274,7 +274,7 @@
       </widget>
      </item>
      <item row="1" column="1">
-      <widget class="QPushButton" name="pushButton_4">
+      <widget class="QPushButton" name="button_paste_last">
        <property name="text">
         <string>Paste Last</string>
        </property>
@@ -386,7 +386,7 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>452</width>
+        <width>429</width>
         <height>126</height>
        </rect>
       </property>
