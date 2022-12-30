@@ -84,7 +84,7 @@ void TroopEventPage::update_condition()
     {
         if (condition != "") condition += " & ";
         QJsonObject member = ec->obj_get_jsonvalue(RPGDB::TROOPS, "@members").toArray().at(enemy_index).toObject();
-        QString enemy_name = ec->obj_get_name_list(RPGDB::ENEMIES).at(member.value("@enemy_id").toInt());
+        QString enemy_name = ec->obj_get_name_list(RPGDB::ENEMIES).at(member.value("@enemy_id").toInt()-1);
         condition += QString("Enemy [%1. %2]'s HP %3\% or below")
                 .arg(enemy_index+1).arg(enemy_name).arg(enemy_hp);
     }
