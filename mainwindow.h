@@ -13,11 +13,6 @@
 
 #include "editors/dataeditor.h"
 
-#include "RXIO/RXObjects/rpgsystem.h"
-
-#include "RXIO/iosystemfile.h"
-#include "RXIO/iorgssad.h"
-
 
 #include "RXIO2/rpgdb.h"
 
@@ -107,7 +102,6 @@ private:
 
 
     RPGDB db;
-    RPGSystem system;
 
 };
 #endif // MAINWINDOW_H

@@ -1,31 +1,9 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include "RXIO/testcases.h"
-#include "RXIO/ioactorfile.h"
-#include "RXIO/ioclassfile.h"
-#include "RXIO/ioskillfile.h"
-#include "RXIO/ioitemfile.h"
-#include "RXIO/iotilesetfile.h"
-#include "RXIO/ioweaponfile.h"
-#include "RXIO/ioarmorfile.h"
-#include "RXIO/ioenemyfile.h"
-#include "RXIO/iotroopfile.h"
-#include "RXIO/iostatefile.h"
-#include "RXIO/ioanimationfile.h"
-#include "RXIO/iomapinfofile.h"
-
-#include "RXIO/iocommoneventfile.h"
-#include "RXIO/RXObjects/rpgmap.h"
-#include "RXIO/RXObjects/rpgmapinfo.h"
-
-#include "RXIO/ioscriptfile.h"
-
-
-
-
 #include "RXIO2/rpgdb.h"
 #include "RXIO2/rpgeditorcontroller.h"
+#include "RXIO2/iorgssad.h"
 
 
 #include <QDebug>
@@ -40,8 +18,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     this->ui->map_tree_widget->setDB(&this->db);
-
-    this->ui->mapView->setSystem(&this->system);
     this->ui->mapView->setDB(&this->db);
 
     connect(this->ui->mapView, SIGNAL(zoom_in()), this, SLOT(zoom_in()));
@@ -95,56 +71,6 @@ void MainWindow::open_project(QString project_path)
     {
         //RXIO2
         this->db.load_project(fi.absoluteDir().path());
-
-        //RXIO1
-        this->system.current_project_dir = fi.absoluteDir().path();
-        this->system.data_dir = this->system.current_project_dir + QDir::separator() + "Data" + QDir::separator();
-        this->system.graphics_dir = this->system.current_project_dir + QDir::separator() + "Graphics" + QDir::separator();
-        this->system.tileset_dir = this->system.current_project_dir + QDir::separator() + "Graphics" + QDir::separator() + "Tilesets" + QDir::separator();
-        this->system.autotiles_dir = this->system.current_project_dir + QDir::separator() + "Graphics" + QDir::separator() + "Autotiles" + QDir::separator();
-        this->system.characters_dir = this->system.current_project_dir + QDir::separator() + "Graphics" + QDir::separator() + "Characters" + QDir::separator();
-        this->system.battlers_dir = this->system.current_project_dir + QDir::separator() + "Graphics" + QDir::separator() + "Battlers" + QDir::separator();
-        this->system.audio_dir = this->system.current_project_dir + QDir::separator() + "Audio" + QDir::separator();
-
-        try{
-            IOSystemFile systemfile(this->system.data_dir + "System.rxdata", &this->system);
-            system.tileset_list.clear();
-            system.tileset_hash.clear();
-            IOTilesetFile tileset_file(this->system.data_dir + "Tilesets.rxdata", &this->system.tileset_hash, &this->system.tileset_list);
-            system.map_info_list.clear();
-            IOMapInfoFile mapinfo_file(this->system.data_dir + "MapInfos.rxdata", &system.map_info_list);
-            for (int i = 0; i < this->system.tileset_list.length(); i++)
-                this->system.tileset_list.at(i)->load_tileset_graphic(&this->system);
-
-            //maybe do all following files in a new try catch ... as they are not neccessary for map editing
-            system.actor_list.clear();
-            IOActorFile actor_file(this->system.data_dir + "Actors.rxdata", &this->system.actor_list);
-            system.classes_list.clear();
-            IOClassFile class_file(this->system.data_dir + "Classes.rxdata", &this->system.classes_list);
-            system.skills_list.clear();
-            IOSKillFile skill_file(this->system.data_dir + "Skills.rxdata", &this->system.skills_list);
-            system.items_list.clear();
-            IOItemFile item_file(this->system.data_dir + "Items.rxdata", &this->system.items_list);
-            system.weapons_list.clear();
-            IOWeaponFile weapon_file(this->system.data_dir + "Weapons.rxdata", &this->system.weapons_list);
-            system.armors_list.clear();
-            IOArmorFile armor_file(this->system.data_dir + "Armors.rxdata", &this->system.armors_list);
-            system.enemies_list.clear();
-            IOEnemyFile enemies_file(this->system.data_dir + "Enemies.rxdata", &this->system.enemies_list);
-            system.troops_list.clear();
-            IOTroopFile troops_file(this->system.data_dir + "Troops.rxdata", &this->system.troops_list);
-            system.states_list.clear();
-            IOStateFile states_file(this->system.data_dir + "States.rxdata", &this->system.states_list);
-
-            IOAnimationFile animation_file(this->system.data_dir + "Animations.rxdata", &this->system.animation_list);
-            IOCommonEventFile commonevents_file(this->system.data_dir + "CommonEvents.rxdata", &this->system.common_events_list);
-
-        }
-        catch(ParserException *ex)
-        {
-            qDebug() << "Parser Exception: " << ex->error_data;
-            exit(123);
-        }
     }
 
     this->ui->map_tree_widget->list_maps();
@@ -153,7 +79,6 @@ void MainWindow::open_project(QString project_path)
 void MainWindow::change_map(int id)
 {
     this->ui->mapView->set_map(id);
-    this->system.current_map_id = id;
     this->ui->tilesetView->set_tileset(this->db.get_mapfile_by_id(id)->object().value("@tileset_id").toInt());
 }
 
@@ -257,14 +182,8 @@ void MainWindow::on_actionImport_RGSSAD_triggered()
     {
         QString export_dir = fi.dir().absolutePath() + QDir::separator();
         QDir().mkdir(fi.dir().absolutePath() + QDir::separator() + "Data" + QDir::separator());
-        try{
-            IORGSSAD rgssad_file(name,export_dir);
-        }
-        catch(ParserException *ex)
-        {
-            qDebug() << "Parser Exception: " << ex->error_data;
-            exit(123);
-        }
+        IORGSSAD rgssad_file(name,export_dir);
+
     }
 
     this->open_project(name);
@@ -466,7 +385,7 @@ void MainWindow::on_actionCrop_Down_triggered()
 
 void MainWindow::on_actionOpen_Project_Folder_triggered()
 {
-    QDesktopServices::openUrl( QUrl::fromLocalFile( system.current_project_dir ) );
+    QDesktopServices::openUrl( QUrl::fromLocalFile( db.project_dir ) );
 }
 
 void MainWindow::on_slider_scale_valueChanged(int value)

@@ -3,22 +3,20 @@
 
 #include "eventpage.h"
 
-EventDialog::EventDialog(RPGEvent *event, RPGSystem *system, QWidget *parent) :
+EventDialog::EventDialog(QJsonObject event, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::EventDialog)
 {
     ui->setupUi(this);
 
-    this->event = event;
-    this->system = system;
 
     if (this->event != 0)
     {
-        qDebug() << event->pages.length();
-        this->ui->label_event_name->setText(event->name);
-        for (int i = 0; i < this->event->pages.size(); i++)
+        //qDebug() << event->pages.length();
+        //this->ui->label_event_name->setText(event->name);
+        //for (int i = 0; i < this->event->pages.size(); i++)
         {
-            this->ui->tab_widget->addTab(new EventPage(this->ui->tab_widget,this->event->pages.at(i),system), QString::number(i+1));
+            //this->ui->tab_widget->addTab(new EventPage(this->ui->tab_widget,this->event->pages.at(i),system), QString::number(i+1));
         }
     }
 
@@ -50,7 +48,7 @@ void EventDialog::do_numbers_of_tabs_right()
 
 void EventDialog::on_button_new_clicked()
 {
-    this->ui->tab_widget->addTab(new EventPage(nullptr, 0, system), "1");
+    //this->ui->tab_widget->addTab(new EventPage(nullptr, 0, system), "1");
     this->do_numbers_of_tabs_right();
 }
 

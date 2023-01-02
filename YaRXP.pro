@@ -56,7 +56,6 @@ SOURCES += \
     RXIO/ioitemfile.cpp \
     RXIO/iomapfile.cpp \
     RXIO/iomapinfofile.cpp \
-    RXIO/iorgssad.cpp \
     RXIO/ioscriptfile.cpp \
     RXIO/ioskillfile.cpp \
     RXIO/iostatefile.cpp \
@@ -67,6 +66,7 @@ SOURCES += \
     RXIO/testcases.cpp \
     RXIO2/autotileset.cpp \
     RXIO2/factory.cpp \
+    RXIO2/iorgssad.cpp \
     RXIO2/parser.cpp \
     RXIO2/rpgdb.cpp \
     RXIO2/rpgeditorcontroller.cpp \
@@ -181,7 +181,6 @@ HEADERS += \
     RXIO/ioitemfile.h \
     RXIO/iomapfile.h \
     RXIO/iomapinfofile.h \
-    RXIO/iorgssad.h \
     RXIO/ioscriptfile.h \
     RXIO/ioskillfile.h \
     RXIO/iostatefile.h \
@@ -192,6 +191,7 @@ HEADERS += \
     RXIO/testcases.h \
     RXIO2/autotileset.h \
     RXIO2/factory.h \
+    RXIO2/iorgssad.h \
     RXIO2/parser.h \
     RXIO2/rpgdb.h \
     RXIO2/rpgeditorcontroller.h \

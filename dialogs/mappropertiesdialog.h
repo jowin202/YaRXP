@@ -66,6 +66,7 @@ private:
 
     int id;
     RPGMapInfoController *mic;
+    QJsonDocument *map;
 };
 
 #endif // MAPPROPERTIESDIALOG_H

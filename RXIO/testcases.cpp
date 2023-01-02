@@ -15,7 +15,7 @@
 
 #include "iomapfile.h"
 
-#include "iorgssad.h"
+#include "iorgssad1.h"
 #include "RXObjects/parserexception.h"
 
 #include "testcases.h"

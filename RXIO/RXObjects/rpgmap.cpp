@@ -40,6 +40,7 @@ RPGEvent *RPGMap::event_by_id(int id)
 
 QImage RPGMap::create_map_image(int zoom, bool dim_other, bool show_current_and_below, int current_layer, RPGTileset *tileset)
 {
+    Q_UNUSED(zoom);
     bool events = false;
     int img_height = this->height * 32;
     int img_width = this->width * 32;
@@ -219,7 +220,6 @@ void RPGMap::put_elements_from_list(QPoint pos, QPoint rel_pos, QList<int> list,
             }
         }
     }
-
 }
 
 void RPGMap::move_map_part(QRect rect, QPoint pos)

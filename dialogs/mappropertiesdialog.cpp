@@ -25,20 +25,19 @@ MapPropertiesDialog::MapPropertiesDialog(RPGMapInfoController *mic, int id, QWid
         return;
     }
 
+    this->map = mic->get_db()->get_mapfile_by_id(id);
+
     this->ui->line_name->setText(mic->get_name(id));
-    RPGMapController mc;
-    mc.setDB(mic->get_db());
-    mc.setMap(id);
-    this->ui->check_auto_change_bgm->setChecked(mc.get_jsonvalue("@autoplay_bgm").toBool());
-    this->ui->check_auto_change_bgs->setChecked(mc.get_jsonvalue("@autoplay_bgs").toBool());
-    this->ui->line_bgm->setText(mc.get_jsonvalue("@bgm").toObject().value("@name").toString());
-    this->ui->line_bgs->setText(mc.get_jsonvalue("@bgs").toObject().value("@name").toString());
+    this->ui->check_auto_change_bgm->setChecked(map->object().value("@autoplay_bgm").toBool());
+    this->ui->check_auto_change_bgs->setChecked(map->object().value("@autoplay_bgs").toBool());
+    this->ui->line_bgm->setText(map->object().value("@bgm").toObject().value("@name").toString());
+    this->ui->line_bgs->setText(map->object().value("@bgs").toObject().value("@name").toString());
 
-    this->ui->spin_steps->setValue(mc.get_jsonvalue("@encounter_step").toInt());
+    this->ui->spin_steps->setValue(map->object().value("@encounter_step").toInt());
 
 
-    this->ui->spin_x->setValue(mc.get_width());
-    this->ui->spin_y->setValue(mc.get_height());
+    this->ui->spin_x->setValue(map->object().value("@width").toInt());
+    this->ui->spin_y->setValue(map->object().value("@height").toInt());
 
 
     /*
@@ -101,8 +100,9 @@ void MapPropertiesDialog::on_button_ok_clicked()
 
     RPGMapController mc;
     mc.setDB(mic->get_db());
-    mc.setMap(id);
+    mc.setMap(id, false);
     mc.set_jsonvalue("@encounter_step", this->ui->spin_steps->value());
+    mc.set_size(this->ui->spin_x->value(), this->ui->spin_y->value());
 
 
     /*
@@ -167,6 +167,7 @@ void MapPropertiesDialog::update_troop(int val)
 
 void MapPropertiesDialog::on_table_encounters_itemDoubleClicked(QTableWidgetItem *item)
 {
+    Q_UNUSED(item);
     /*
     this->last_edited_troop_row = item->row();
     int current = this->ui->table_encounters->item(item->row(), 1)->text().toInt();

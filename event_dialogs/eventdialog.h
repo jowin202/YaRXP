@@ -19,7 +19,7 @@ class EventDialog : public QWidget
     Q_OBJECT
 
 public:
-    explicit EventDialog(RPGEvent *event, RPGSystem *system, QWidget *parent = nullptr);
+    explicit EventDialog(QJsonObject event, QWidget *parent = nullptr);
     ~EventDialog();
     void closeEvent(QCloseEvent *event);
     void keyPressEvent(QKeyEvent *event)
@@ -43,7 +43,6 @@ private slots:
 private:
     Ui::EventDialog *ui;
     RPGEvent *event;
-    RPGSystem *system;
 };
 
 #endif // EVENTDIALOG_H

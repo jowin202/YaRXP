@@ -17,7 +17,7 @@ public:
     explicit RPGMapController(QObject *parent = nullptr);
 
     void setDB(RPGDB *db) {this->db = db; }
-    void setMap(int id);
+    void setMap(int id, bool load_images = true);
 
 
 
@@ -32,22 +32,25 @@ public:
 
 
     QImage get_tile_from_pos(QPoint pos, int layer);
+    QImage get_tile_from_id(int id);
 
 
     QJsonObject event_on_pos(QPoint pos);
 
     QJsonObject event_by_id(int id);
     void set_event_by_id(int id, QJsonObject event);
+    void remove_event_by_id(int id);
 
-    //QImage create_map_image(int zoom, bool dim_other, bool show_current_and_below, int current_layer, RPGTileset *tileset);
-    QJsonArray get_elements_in_rectangle(QRect rect, int fromlayer, int tolayer);
+    void move_event(QPoint from, QPoint to);
+
+    QList<int> get_elements_in_rectangle(QRect rect, int fromlayer, int tolayer);
     void delete_elements_in_rectangle(QRect rect, int fromlayer, int tolayer);
-    void put_elements_from_list(QPoint pos, QPoint rel_pos, QJsonArray list, int fromlayer, int tolayer);
+    void put_elements_from_list(QPoint pos, QPoint rel_pos, QList<int> list, int fromlayer, int tolayer);
     void move_map_part(QRect rect, QPoint pos);
 
 
-    void shift_map_x(int tiles);
-    void shift_map_y(int tiles);
+    void shift_map(int xtiles, int ytiles);
+    void set_size(int xtiles, int ytiles);
 
 
     int get_height();

@@ -1,5 +1,5 @@
-#ifndef IORGSSAD_H
-#define IORGSSAD_H
+#ifndef IORGSSAD1_H
+#define IORGSSAD1_H
 
 #include <QObject>
 #include <QDir>
@@ -26,4 +26,4 @@ private:
 
 };
 
-#endif // IORGSSAD_H
+#endif // IORGSSAD1_H

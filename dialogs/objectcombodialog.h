@@ -4,7 +4,6 @@
 #include <QWidget>
 #include <QKeyEvent>
 
-class RPGSystem;
 
 namespace Ui {
 class ObjectComboDialog;
@@ -28,7 +27,6 @@ public:
 
 
     void setText(QString text);
-    void fillCombo(RPGSystem *system, int type, bool shownum, int chars, int current, bool allow_none);
 
 
 signals:

@@ -7,15 +7,16 @@
 #include <QPen>
 #include <QPainter>
 #include <QDebug>
-#include "RXIO/RXObjects/rpgmap.h"
 
-class RPGTileset;
+
+class RPGMapController;
+
 struct tile_options;
 
 class MapSelectRectangle : public QGraphicsItem
 {
 public:
-    MapSelectRectangle(int w, int h);
+    MapSelectRectangle(RPGMapController *mc, int w, int h);
     ~MapSelectRectangle();
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) override;
@@ -31,22 +32,18 @@ public:
 
     QSize size() { return QSize(w,h); }
 
-    void set_brush(QList<int> brush, RPGTileset *tileset, tile_options *options);
+    void set_brush(QList<int> brush, tile_options *options);
     QList<int> get_brush() { return this->brush; }
 
-    void save_to_map(RPGMap *map)
-    {
-        QPoint topleft = QPoint(this->x()/32, this->y()/32);
-        map->put_elements_from_list(topleft, QPoint(0,0),this->get_brush(),0,2);
-    }
+    void save_to_map();
 
 
     QList<int> brush;
-    RPGTileset *tileset = 0;
     tile_options *opt = 0;
 
 private:
     int w,h;
+    RPGMapController *mc;
 
 };
 

@@ -1,11 +1,11 @@
 #include "mapselectrectangle.h"
-#include "RXIO/RXObjects/rpgtileset.h"
 #include "mapview.h"
 
-MapSelectRectangle::MapSelectRectangle(int w, int h)
+MapSelectRectangle::MapSelectRectangle(RPGMapController *mc,int w, int h)
 {
     this->w = w;
     this->h = h;
+    this->mc = mc;
 }
 
 MapSelectRectangle::~MapSelectRectangle()
@@ -21,7 +21,7 @@ void MapSelectRectangle::paint(QPainter *painter, const QStyleOptionGraphicsItem
         return; //not displayed if 0
 
 
-    if (tileset != 0 && opt != 0 && brush.length() == 3*w*h+2)
+    if (opt != 0 && brush.length() == 3*w*h+2)
     {
         for (int layer = 0; layer < 3; layer++)
         {
@@ -34,7 +34,7 @@ void MapSelectRectangle::paint(QPainter *painter, const QStyleOptionGraphicsItem
                 for (int x = 0; x < w; x++)
                 {
                     int id1 = this->brush.at(2 + layer*w*h + y*w + x);
-                    painter->drawImage(32*QPoint(x,y), this->tileset->getTile(id1));
+                    painter->drawImage(32*QPoint(x,y), this->mc->get_tile_from_id(id1));
                 }
             }
         }
@@ -71,9 +71,14 @@ bool MapSelectRectangle::pos_is_in_rectangle(QPoint pos)
     return true;
 }
 
-void MapSelectRectangle::set_brush(QList<int> brush, RPGTileset *tileset, tile_options *options)
+void MapSelectRectangle::set_brush(QList<int> brush, tile_options *options)
 {
     this->brush = brush;
-    this->tileset = tileset;
     this->opt = options;
+}
+
+void MapSelectRectangle::save_to_map()
+{
+    QPoint topleft = QPoint(this->x()/32, this->y()/32);
+    mc->put_elements_from_list(topleft, QPoint(0,0),this->get_brush(),0,2);
 }

@@ -1,6 +1,8 @@
 #include "iorgssad.h"
+#include "rxexception.h"
 
-IORGSSAD::IORGSSAD(QObject *parent) : FileParser(parent)
+
+IORGSSAD::IORGSSAD(QObject *parent)
 {
 
 }
@@ -15,7 +17,7 @@ IORGSSAD::IORGSSAD(QString path, QString output_dir)
 
     QByteArray header = file.read(8);
     if (header != QByteArray::fromHex("5247535341440001"))
-        throw getException("Invalid header");
+        throw new RXException("Invalid header");
 
     while (true)
     {
@@ -104,4 +106,14 @@ QString IORGSSAD::read_and_decrypt_string(int length)
     }
 
     return QString(array);
+}
+
+int IORGSSAD::read_one_byte()
+{
+    QByteArray one_byte = file.read(1);
+    if (one_byte.length() != 1)
+    {
+        throw RXException("Unexpected EOF");
+    }
+    return 0xFF & (one_byte.at(0));
 }

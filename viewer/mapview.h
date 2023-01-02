@@ -8,7 +8,6 @@
 #include <QWheelEvent>
 #include <QDebug>
 
-#include "RXIO/RXObjects/rpgmap.h"
 #include "mapselectrectangle.h"
 
 #include "RXIO2/rpgmapcontroller.h"
@@ -16,9 +15,6 @@
 class MapSelectRectangle;
 class MapRectangle;
 class MapTile;
-class RPGMap;
-class RPGSystem;
-class RPGTileset;
 
 
 struct tile_options {
@@ -37,9 +33,6 @@ public:
 
     enum modes { PEN, SELECT, EVENT };
 
-
-    RPGSystem *system;
-    void setSystem(RPGSystem *system) {this->system = system;}
     void setDB(RPGDB *db) { this->db = db; this->mc.setDB(db); }
 
     void set_mode(int mode);
@@ -61,26 +54,26 @@ public:
     void shift(int dir, int n)
     {
         this->changes_made = true;
-        if (dir == LEFT || dir == RIGHT) this->map->shift_map_x(dir==LEFT ? -n : n);
-        else if (dir == UP || dir == DOWN) this->map->shift_map_y(dir==UP ? -n : n);
+        if (dir == LEFT || dir == RIGHT) this->mc.shift_map(dir==LEFT ? -n : n,0);
+        else if (dir == UP || dir == DOWN) this->mc.shift_map(0,dir==UP ? -n : n);
         this->redraw();
     }
     void extend(int dir,int n)
     {
         this->changes_made = true;
-        if (dir == RIGHT) this->map->extend_or_crop_x(n);
-        else if (dir == DOWN) this->map->extend_or_crop_y(n);
-        else if (dir == LEFT) {this->map->extend_or_crop_x(n); this->map->shift_map_x(n);}
-        else if (dir == UP) {this->map->extend_or_crop_y(n);this-> map->shift_map_y(n);}
+        if (dir == RIGHT) this->mc.set_size(this->mc.get_width()+n,this->mc.get_height());
+        else if (dir == DOWN) this->mc.set_size(this->mc.get_width(),this->mc.get_height()+n);
+        else if (dir == LEFT) {this->mc.set_size(this->mc.get_width()+n,this->mc.get_height()); this->mc.shift_map(n,0);}
+        else if (dir == UP) {this->mc.set_size(this->mc.get_width(),this->mc.get_height()+n); this->mc.shift_map(0,n);}
         this->redraw();
     }
     void crop(int dir, int n)
     {
         this->changes_made = true;
-        if (dir == RIGHT) this->map->extend_or_crop_x(-n);
-        else if (dir == DOWN) this->map->extend_or_crop_y(-n);
-        else if (dir == LEFT) {this->map->shift_map_x(-n); this->map->extend_or_crop_x(-n);}
-        else if (dir == UP) {this->map->shift_map_y(-n); this->map->extend_or_crop_y(-n);}
+        if (dir == RIGHT) this->mc.set_size(this->mc.get_width()-n,this->mc.get_height());
+        else if (dir == DOWN) this->mc.set_size(this->mc.get_width(),this->mc.get_height()-n);
+        else if (dir == LEFT) {this->mc.shift_map(-n,0); this->mc.set_size(this->mc.get_width()-n,this->mc.get_height()); }
+        else if (dir == UP) {this->mc.shift_map(0,-n); this->mc.set_size(this->mc.get_width(),this->mc.get_height()-n);}
         this->redraw();
     }
 
@@ -108,13 +101,13 @@ public:
         if (opt.mode == SELECT && this->select_rectangle != 0)
         {
             //save current selection
-            this->select_rectangle->save_to_map(this->map);
+            this->select_rectangle->save_to_map();
             this->kill_select_rectangle();
         }
         this->set_mode(SELECT);
-        this->select_rectangle = new MapSelectRectangle(0,0);
+        this->select_rectangle = new MapSelectRectangle(&this->mc,0,0);
         this->select_rectangle->setSize(data.at(0),data.at(1));
-        this->select_rectangle->set_brush(data, tileset, &opt);
+        this->select_rectangle->set_brush(data, &opt);
         this->select_rectangle->setPos(32*this->last_pos);
         this->scene()->addItem(this->select_rectangle);
     }
@@ -135,10 +128,7 @@ private:
     bool changes_made = false;
     RPGDB *db;
     RPGMapController mc;
-    RPGMap *map;
     //int current_layer = 0;
-    RPGTileset *tileset;
-
 
 
     //draw rectangle
@@ -154,7 +144,7 @@ private:
 
 
     //event mode
-    RPGEvent *event_for_moving = 0;
+    QPoint event_moving_from_pos = QPoint(-1,-1);
     bool event_left_button_for_moving = false;
 
 

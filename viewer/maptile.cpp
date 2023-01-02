@@ -1,5 +1,4 @@
 #include "maptile.h"
-#include "RXIO/RXObjects/rpgmap.h"
 #include "RXIO2/rpgmapcontroller.h"
 #include "mapview.h"
 

@@ -2,10 +2,6 @@
 #include <QDebug>
 #include <QApplication>
 
-#include "editors/dataeditor.h"
-
-#include "RXIO/iotilesetfile.h"
-
 
 #include <QList>
 
@@ -18,9 +14,6 @@ int main(int argc, char *argv[])
 
     MainWindow w;
     w.showMaximized();
-
-
-
 
     return a.exec();
 
