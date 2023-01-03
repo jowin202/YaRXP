@@ -28,6 +28,44 @@ void RPGMapController::setMap(int id, bool load_images)
     }
 }
 
+int RPGMapController::get_autotile_nn(QPoint pos, int layer)
+{
+    if (doc == 0 || this->tileset_image.isNull()) return 0;
+    QJsonArray data = this->get_jsonvalue("@data").toObject().value("values").toArray();
+    int id = data.at(this->array_position(pos,layer)).toInt();
+
+    if (id >= 384) return 0;
+    int autotile_id = id/48;
+
+    int res = 0;
+
+    if (pos.x() == 0 || pos.y() == 0 || data.at(array_position(QPoint(pos.x()-1,pos.y()-1),layer)).toInt()/48 == autotile_id)
+        res |= 0x01;
+
+    if (pos.x() == this->get_width()-1 || pos.y() == 0 || data.at(array_position(QPoint(pos.x()+1,pos.y()-1),layer)).toInt()/48 == autotile_id)
+        res |= 0x02;
+
+    if (pos.x() == this->get_width()-1 || pos.y() == this->get_height()-1 || data.at(array_position(QPoint(pos.x()+1,pos.y()+1),layer)).toInt()/48 == autotile_id)
+        res |= 0x04;
+
+    if (pos.x() == 0 || pos.y() == this->get_height()-1 || data.at(array_position(QPoint(pos.x()-1,pos.y()+1),layer)).toInt()/48 == autotile_id)
+        res |= 0x08;
+
+    if (pos.x() == 0 || data.at(array_position(QPoint(pos.x()-1,pos.y()),layer)).toInt()/48 == autotile_id)
+        res |= 0x10;
+
+    if (pos.y() == 0 || data.at(array_position(QPoint(pos.x(),pos.y()-1),layer)).toInt()/48 == autotile_id)
+        res |= 0x20;
+
+    if (pos.x() == this->get_width()-1 || data.at(array_position(QPoint(pos.x()+1,pos.y()),layer)).toInt()/48 == autotile_id)
+        res |= 0x40;
+
+    if (pos.y() == this->get_height()+1 || data.at(array_position(QPoint(pos.x(),pos.y()+1),layer)).toInt()/48 == autotile_id)
+        res |= 0x80;
+
+    return res;
+}
+
 QImage RPGMapController::get_tile_from_pos(QPoint pos, int layer)
 {
     if (doc == 0 || this->tileset_image.isNull()) return QImage();
@@ -169,34 +207,62 @@ void RPGMapController::put_elements_from_list(QPoint pos, QPoint rel_pos, QList<
     int xr = rel_pos.x();
     int yr = rel_pos.y();
 
-    for (int i = 0; i < list.length(); i++)
+
+    for (int l = fromlayer; l <= tolayer; l++)
     {
-        for (int l = fromlayer; l <= tolayer; l++)
+        for (int y = 0; y < height; y++)
         {
-            for (int y = 0; y < height; y++)
+            for (int x = 0; x < width; x++)
             {
-                for (int x = 0; x < width; x++)
+                QPoint pos_on_map = pos + QPoint(x,y);
+                if (pos_on_map.x() >= this->get_width() || pos_on_map.x() < 0) continue;
+                if (pos_on_map.y() >= this->get_height() || pos_on_map.y() < 0) continue;
+                int pos_in_array = array_position(pos_on_map,l);
+
+                //thx to MW
+                int xe = (x+xr)%width;
+                int ye = (y+yr)%height;
+                if (xe < 0) xe += width;
+                if (ye < 0) ye += height;
+
+                values[pos_in_array] = list[ xe + width*ye + width*height*(l-fromlayer)];
+            }
+        }
+    }
+
+    QJsonObject obj = this->doc->object();
+    QJsonObject data_obj = this->doc->object().value("@data").toObject();
+    data_obj.insert("values", values);
+    obj.insert("@data", data_obj);
+    this->doc->setObject(obj);
+
+
+    //fix autotiles
+    for (int l = fromlayer; l <= tolayer; l++)
+    {
+        for (int y = -1; y <= height; y++)
+        {
+            for (int x = -1; x <= width; x++)
+            {
+                QPoint pos_on_map = pos + QPoint(x,y);
+                if (pos_on_map.x() >= this->get_width() || pos_on_map.x() < 0) continue;
+                if (pos_on_map.y() >= this->get_height() || pos_on_map.y() < 0) continue;
+                int pos_in_array = array_position(pos_on_map,l);
+
+                if (values[pos_in_array].toInt() >= 384 || values[pos_in_array].toInt() < 48)
+                    values[pos_in_array] = values[pos_in_array].toInt();
+                else
                 {
-                    QPoint pos_on_map = pos + QPoint(x,y);
-                    if (pos_on_map.x() >= this->get_width() || pos_on_map.x() < 0) continue;
-                    if (pos_on_map.y() >= this->get_height() || pos_on_map.y() < 0) continue;
-                    int pos_in_array = array_position(pos_on_map,l);
-
-                    //thx to MW
-                    int xe = (x+xr)%width;
-                    int ye = (y+yr)%height;
-                    if (xe < 0) xe += width;
-                    if (ye < 0) ye += height;
-
-                    values[pos_in_array] = list[ xe + width*ye + width*height*(l-fromlayer)];
+                    int autotile_correction = Autotileset().get_id_by_neighbourhood(this->get_autotile_nn(pos_on_map, l));
+                    values[pos_in_array]= values[pos_in_array].toInt()/48 * 48 + autotile_correction;
                 }
             }
         }
     }
 
 
-    QJsonObject obj = this->doc->object();
-    QJsonObject data_obj = this->doc->object().value("@data").toObject();
+    obj = this->doc->object();
+    data_obj = this->doc->object().value("@data").toObject();
     data_obj.insert("values", values);
     obj.insert("@data", data_obj);
     this->doc->setObject(obj);

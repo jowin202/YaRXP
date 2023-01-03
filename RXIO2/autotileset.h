@@ -18,6 +18,7 @@ public:
 
     QImage get_full_tileset() { return this->tileset_full; }
 
+    int get_id_by_neighbourhood(int n);
 
 
     QImage tileset;

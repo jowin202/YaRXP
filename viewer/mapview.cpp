@@ -98,7 +98,8 @@ void MapView::mouseMoveEvent(QMouseEvent *event)
         rectangle->setPos(32*(pos+rectangle_offset));
         rectangle->update();
         //updates old position of rectangle (for scrolling)
-        this->scene()->update(oldpos.x(), oldpos.y(),rectangle->boundingRect().width(), rectangle->boundingRect().height());
+        //-32 and +64 for autotiles (which updates tiles next to the current)
+        this->scene()->update(oldpos.x()-32, oldpos.y()-32,rectangle->boundingRect().width()+64, rectangle->boundingRect().height()+64);
     }
     else if (opt.mode == SELECT)
     {
@@ -127,10 +128,8 @@ void MapView::mousePressEvent(QMouseEvent *event)
     QPointF posf = mapToScene(event->pos());
     QPoint pos = QPoint((int)posf.x()/32, (int)posf.y()/32);
 
-
     if (opt.mode == PEN)
     {
-
         if (event->button() == Qt::LeftButton)
         {
             this->left_button_clicked = true;

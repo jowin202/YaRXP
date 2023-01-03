@@ -47,6 +47,10 @@ Autotileset::Autotileset(QImage tileset)
             for (int x = 0; x < 6; x++)
                 this->subimage_list.append(tileset.copy(QRect(16*x,32+16*y,16,16)));
 
+        this->subimage_list.append(tileset.copy(QRect(0,0,16,16)));
+        this->subimage_list.append(tileset.copy(QRect(16,0,16,16)));
+        this->subimage_list.append(tileset.copy(QRect(0,16,16,16)));
+        this->subimage_list.append(tileset.copy(QRect(16,16,16,16)));
 
 
 
@@ -112,11 +116,11 @@ Autotileset::Autotileset(QImage tileset)
 
             {28,33,34,39},
             {8,9,38,39},
-            {4,9,34,39}
-
+            {4,9,34,39},
+            {40,41,42,43} //47 = last one = preview pic
                      };
 
-        for (int i = 0; i < 47; i++)
+        for (int i = 0; i < 48; i++)
         {
             int x = (i % 8) * 32;
             int y = (i/8)*32;
@@ -151,4 +155,89 @@ QImage Autotileset::getTile(int tile)
         return QImage();
 
     return this->tileset_full.copy(x,y,32,32);
+}
+
+int Autotileset::get_id_by_neighbourhood(int n)
+{
+    if ((0xFF &(0xFF ^ n)) < 16)
+    {
+        return (0xFF &(0xFF ^ n));
+    }
+
+    if ((0xFF & (n >> 4)) == 0xE)
+    {
+        return 16 + (0x3 ^ ((n>>1)&0x3));
+    }
+
+    if ((0xFF & (n >> 4)) == 0xD)
+    {
+        return 20 + (0x3 ^ ((n>>2)&0x3));
+    }
+
+    if ((0xFF & (n >> 4)) == 0xB)
+    {
+        return 24 + (0x3 ^ ( (n&0x1)<<1 | ((n>>2&0x1)|(n>>3&0x1)) ));
+    }
+
+    if ((0xFF & (n >> 4)) == 0x7)
+    {
+        return 28 + (0x3 ^ (0x3 & n));
+    }
+
+    if ((0xFF & (n >> 4)) == 0xA)
+    {
+        return 32;
+    }
+
+    if ((0xFF & (n >> 4)) == 0x5)
+    {
+        return 33;
+    }
+
+    if ((0xFF & (n >> 4)) == 0xC)
+    {
+        return 34 + (0x1 & (0x1 ^ (n>>2)));
+    }
+
+    if ((0xFF & (n >> 4)) == 0x9)
+    {
+        return 36 + (0x1 & (0x1 ^ (n>>3)));
+    }
+
+    if ((0xFF & (n >> 4)) == 0x3)
+    {
+        return 38 + (0x1 & (0x1 ^ n));
+    }
+
+    if ((0xFF & (n >> 4)) == 0x6)
+    {
+        return 40 + (0x1 & (0x1 ^ (n>>1)));
+    }
+
+    if ((0xFF & (n >> 4)) == 0x8)
+    {
+        return 42;
+    }
+
+    if ((0xFF & (n >> 4)) == 0x4)
+    {
+        return 43;
+    }
+
+    if ((0xFF & (n >> 4)) == 0x2)
+    {
+        return 44;
+    }
+
+    if ((0xFF & (n >> 4)) == 0x1)
+    {
+        return 45;
+    }
+
+    if ((0xFF & (n >> 4)) == 0x0)
+    {
+        return 46;
+    }
+
+    return 0;
 }

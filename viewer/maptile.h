@@ -23,6 +23,7 @@ public:
     QRectF boundingRect() const override;
 
 
+
 private:
     RPGMapController *mc;
     QPoint pos;

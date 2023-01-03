@@ -31,6 +31,10 @@ public:
     //{ return index / (this->height * this->width); }
 
 
+    int get_autotile_nn(QPoint pos, int layer);
+
+
+
     QImage get_tile_from_pos(QPoint pos, int layer);
     QImage get_tile_from_id(int id);
 
