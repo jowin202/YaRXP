@@ -98,8 +98,6 @@ private:
     QActionGroup *modegroup;
     QActionGroup *viewgroup;
 
-    QList<int> clipboard; //only for copy paste at map (no events
-
 
     RPGDB db;
 

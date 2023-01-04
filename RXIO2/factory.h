@@ -3,7 +3,7 @@
 
 #include <QJsonObject>
 #include <QJsonArray>
-
+#include <QJsonDocument>
 class Factory
 {
 public:
@@ -47,6 +47,8 @@ public:
     QJsonObject create_new_tileset(int id);
     QJsonObject create_new_commonevent(int id);
 
+    QJsonDocument *create_new_map();
+    QJsonObject create_map_info(bool expanded, QString name, int order, int parent, int scroll_x, int scroll_y);
 
 
 };

@@ -6,6 +6,7 @@
 #include <QKeyEvent>
 #include <QTableWidgetItem>
 #include <QInputDialog>
+#include <QMessageBox>
 
 #include <QJsonObject>
 #include <QJsonDocument>
@@ -65,6 +66,7 @@ private:
     int last_edited_troop_row;
 
     int id;
+    bool create_new_map = false;
     RPGMapInfoController *mic;
     QJsonDocument *map;
 };

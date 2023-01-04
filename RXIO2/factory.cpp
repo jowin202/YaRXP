@@ -580,4 +580,57 @@ QJsonObject Factory::create_new_commonevent(int id)
     return obj;
 }
 
+QJsonDocument *Factory::create_new_map()
+{
+    QJsonObject obj;
+    obj.insert("@autoplay_bgm", false);
+    obj.insert("@autoplay_bgs", false);
+    obj.insert("@bgm", this->create_audiofile("",100,100));
+    obj.insert("@bgs", this->create_audiofile("",80,100));
+
+    QJsonObject data;
+    data.insert("RXClass", "Table");
+    data.insert("shitty_num", 3);
+
+    QJsonArray values;
+    for (int i = 0; i < 900; i++) //20 x 15 x 3
+        values.append(0);
+
+    data.insert("values", values);
+    data.insert("x", 20);
+    data.insert("y", 15);
+    data.insert("z", 3);
+    obj.insert("@data", data);
+
+    obj.insert("@encounter_list", QJsonArray());
+    obj.insert("@encounter_step", 30);
+
+    QJsonObject events;
+    events.insert("RXClass", "dictionary");
+    obj.insert("@events", events);
+
+    obj.insert("@height", 15);
+    obj.insert("@tileset_id",1);
+    obj.insert("@width", 20);
+
+    obj.insert("RXClass", "RPG::Map");
+    QJsonDocument *doc = new QJsonDocument;
+    doc->setObject(obj);
+    return doc;
+}
+
+QJsonObject Factory::create_map_info(bool expanded, QString name, int order, int parent, int scroll_x, int scroll_y)
+{
+    QJsonObject obj;
+    obj.insert("@expanded", expanded);
+    obj.insert("@name", name);
+    obj.insert("@order", order);
+    obj.insert("@parent", parent);
+    obj.insert("@scroll_x", scroll_x);
+    obj.insert("@scroll_y", scroll_y);
+
+    obj.insert("RXClass", "RPG::MapInfo");
+    return obj;
+}
+
 

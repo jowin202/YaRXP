@@ -13,6 +13,7 @@ public:
     explicit RPGMapInfoController(RPGDB *db);
 
     bool id_is_valid(int id);
+    int get_lowest_available_id();
 
     void set_expanded(int id, bool expanded);
     bool get_expanded(int id);
@@ -30,6 +31,8 @@ public:
     QJsonArray get_child_maps();
 
     RPGDB *get_db() {return this->db; }
+
+    bool create_map(int id);
 
 
 signals:

@@ -19,6 +19,8 @@
 #include <QAction>
 #include <QHash>
 
+#include <QSettings>
+
 class RPGDB;
 class RPGMapInfoController;
 
@@ -36,7 +38,13 @@ public slots:
     void list_maps();
     void clicked_at_item(QTreeWidgetItem *current_item);
     void prepare_context_menu(const QPoint & pos );
+
+    //context
     void show_map_properties_dialog();
+    void create_new_map();
+    void copy_map();
+    void paste_map();
+    void delete_map();
 
     void itemExpanded(QTreeWidgetItem *item);
     void itemCollapsed(QTreeWidgetItem *item);
@@ -56,8 +64,6 @@ private:
     QAction action4;
     QAction action5;
     QAction action6;
-    QAction action7;
-    QAction action8;
 
     RPGDB *db;
     RPGMapInfoController *mic;

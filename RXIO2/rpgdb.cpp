@@ -34,17 +34,21 @@ void RPGDB::load_project(QString dir)
 
     Parser mapinfo_parser(&mapinfo_file, &param_oders, dir + "Data" + QDir::separator() + "MapInfos.rxdata");
 
-
-    for (int i = 0; i < 999; i++)
+    foreach (const QString& key, mapinfo_file.object().keys())
     {
+        if (key == "RXClass") continue;
+        int i = key.toInt();
         if (QFile(QString(dir + "Data" + QDir::separator() + "Map%1.rxdata").arg(i,3,10,QChar('0'))).exists())
         {
             QJsonDocument *doc = new QJsonDocument;
             Parser map_parser(doc, &param_oders, QString(dir + "Data" + QDir::separator() + "Map%1.rxdata").arg(i,3,10,QChar('0')));
             map_files.insert(i,doc);
         }
+        else
+        {
+            qDebug() << QString(dir + "Data" + QDir::separator() + "Map%1.rxdata").arg(i,3,10,QChar('0')) << "does not exist";
+        }
     }
-
 
     /*
     qDebug() << (actor_file.array().last().toObject() == Factory().create_new_actor(actor_file.array().last().toObject().value("@id").toInt()));

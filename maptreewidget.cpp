@@ -17,22 +17,22 @@ MapTreeWidget::MapTreeWidget(QWidget *parent) : QTreeWidget(parent)
     action2.setText("&New Map");
     action2.setShortcut(QKeySequence(Qt::Key_Insert));
     action2.setShortcutContext(Qt::WidgetShortcut);
+    this->addAction(&action2);
+    connect(&action2, SIGNAL(triggered()), this, SLOT(create_new_map()));
     action3.setText("&Copy");
     action3.setShortcut(QKeySequence(tr("Ctrl+C")));
     action3.setShortcutContext(Qt::WidgetShortcut);
+    connect(&action3, SIGNAL(triggered()), this, SLOT(copy_map()));
     action4.setText("&Paste");
     action4.setShortcut(QKeySequence(tr("Ctrl+V")));
     action4.setShortcutContext(Qt::WidgetShortcut);
+    connect(&action4, SIGNAL(triggered()), this, SLOT(paste_map()));
     action5.setText("&Delete");
     action5.setShortcut(QKeySequence(Qt::Key_Delete));
     action5.setShortcutContext(Qt::WidgetShortcut);
-    action6.setText("&Shift");
-    action6.setShortcut(QKeySequence(tr("Ctrl+T")));
+    connect(&action5, SIGNAL(triggered()), this, SLOT(delete_map()));
+    action6.setText("&Import");
     action6.setShortcutContext(Qt::WidgetShortcut);
-    action7.setText("&Extend");
-    action7.setShortcut(QKeySequence(tr("Ctrl+E")));
-    action7.setShortcutContext(Qt::WidgetShortcut);
-    action8.setText("&Import");
 
 
     menu.addAction(&action1);
@@ -45,9 +45,6 @@ MapTreeWidget::MapTreeWidget(QWidget *parent) : QTreeWidget(parent)
     menu.addAction(&action5);
     menu.addSeparator();
     menu.addAction(&action6);
-    menu.addAction(&action7);
-    menu.addSeparator();
-    menu.addAction(&action8);
 
 
     connect(this, SIGNAL(itemExpanded(QTreeWidgetItem*)), this, SLOT(itemExpanded(QTreeWidgetItem*)));
@@ -169,6 +166,83 @@ void MapTreeWidget::show_map_properties_dialog()
     MapPropertiesDialog *dialog = new MapPropertiesDialog(this->mic, this->currentItem()->text(2).toInt(), 0);
     connect(dialog, SIGNAL(ok_clicked()), this, SLOT(list_maps()));
     dialog->show();
+}
+
+void MapTreeWidget::create_new_map()
+{
+    int current = 0;
+    if (this->currentItem()->text(2).toInt() > 0)
+    {
+        current = this->currentItem()->text(2).toInt();
+    }
+
+    int id = this->mic->get_lowest_available_id();
+    int parent = 0;
+    if (current > 0)
+        parent = this->mic->get_parent(current);
+
+    MapPropertiesDialog *dialog = new MapPropertiesDialog(this->mic, id, 0);
+    connect(dialog, &MapPropertiesDialog::ok_clicked, this, [=](){
+        this->mic->set_parent(id, parent); //parent is set after creation of the map
+        this->list_maps();
+    });
+    dialog->show();
+}
+
+void MapTreeWidget::copy_map()
+{
+    if (this->currentItem()->text(2).toInt() < 0) return;
+
+    QJsonDocument doc(mic->get_db()->get_mapfile_by_id(this->currentItem()->text(2).toInt())->object());
+    QSettings settings;
+    settings.setValue("copied_map", doc.toJson(QJsonDocument::Compact));
+    settings.setValue("copied_map_name", mic->get_name(this->currentItem()->text(2).toInt()));
+}
+
+void MapTreeWidget::paste_map()
+{
+    int current = 0;
+    if (this->currentItem()->text(2).toInt() > 0)
+    {
+        current = this->currentItem()->text(2).toInt();
+    }
+
+    int id = this->mic->get_lowest_available_id();
+    int parent = 0;
+    if (current > 0)
+        parent = this->mic->get_parent(current);
+
+
+    QSettings settings;
+    QJsonParseError err;
+    QJsonObject map_object = QJsonDocument::fromJson(settings.value("copied_map").toByteArray(), &err).object();
+    if (err.error != QJsonParseError::NoError) return;
+
+    if (this->mic->create_map(id))
+    {
+        //when map created
+        this->db->get_mapfile_by_id(id)->setObject(map_object);
+        this->mic->set_name(id, settings.value("copied_map_name").toString());
+        this->mic->set_parent(id,parent);
+        this->list_maps();
+    }
+}
+
+void MapTreeWidget::delete_map()
+{
+    if (this->currentItem()->text(2).toInt() < 0) return;
+    int id = this->currentItem()->text(2).toInt();
+    QString name = mic->get_name(id);
+
+    int res = QMessageBox::question(this, "Deleting Map", QString("Do you really want to delete %1?").arg(name));
+    if (res == QMessageBox::Button::Yes)
+    {
+        QJsonObject mapinfos = this->db->get_mapinfos()->object();
+        mapinfos.remove(QString::number(id));
+        this->db->get_mapinfos()->setObject(mapinfos);
+        this->db->remove_map_file_by_id(id);
+        this->list_maps();
+    }
 }
 
 void MapTreeWidget::itemExpanded(QTreeWidgetItem *item)

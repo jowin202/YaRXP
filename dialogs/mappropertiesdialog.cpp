@@ -7,6 +7,7 @@
 
 
 #include "RXIO2/rpgdb.h"
+#include "RXIO2/factory.h"
 #include "RXIO2/rpgmapinfocontroller.h"
 #include "RXIO2/rpgmapcontroller.h"
 
@@ -19,53 +20,29 @@ MapPropertiesDialog::MapPropertiesDialog(RPGMapInfoController *mic, int id, QWid
     this->mic = mic;
     this->id = id;
 
-    if (!mic->id_is_valid(id))
+    this->ui->line_id->setText(QString::number(id));
+
+    if (mic->id_is_valid(id))
     {
-        this->close();
-        return;
+        this->map = mic->get_db()->get_mapfile_by_id(id);
+        this->ui->line_name->setText(mic->get_name(id));
+        this->ui->check_auto_change_bgm->setChecked(map->object().value("@autoplay_bgm").toBool());
+        this->ui->check_auto_change_bgs->setChecked(map->object().value("@autoplay_bgs").toBool());
+        this->ui->line_bgm->setText(map->object().value("@bgm").toObject().value("@name").toString());
+        this->ui->line_bgs->setText(map->object().value("@bgs").toObject().value("@name").toString());
+
+        this->ui->spin_steps->setValue(map->object().value("@encounter_step").toInt());
+
+
+        this->ui->spin_x->setValue(map->object().value("@width").toInt());
+        this->ui->spin_y->setValue(map->object().value("@height").toInt());
     }
-
-    this->map = mic->get_db()->get_mapfile_by_id(id);
-
-    this->ui->line_name->setText(mic->get_name(id));
-    this->ui->check_auto_change_bgm->setChecked(map->object().value("@autoplay_bgm").toBool());
-    this->ui->check_auto_change_bgs->setChecked(map->object().value("@autoplay_bgs").toBool());
-    this->ui->line_bgm->setText(map->object().value("@bgm").toObject().value("@name").toString());
-    this->ui->line_bgs->setText(map->object().value("@bgs").toObject().value("@name").toString());
-
-    this->ui->spin_steps->setValue(map->object().value("@encounter_step").toInt());
-
-
-    this->ui->spin_x->setValue(map->object().value("@width").toInt());
-    this->ui->spin_y->setValue(map->object().value("@height").toInt());
-
-
-    /*
-    system->datasource.fill_combo(this->ui->combo_tileset, RPGSystem::TILESETS, true, 3, mapinfo->map->tileset_id, false);
-    this->ui->check_auto_change_bgm->setChecked(this->mapinfo->map->autoplay_bgm);
-    this->ui->check_auto_change_bgs->setChecked(this->mapinfo->map->autoplay_bgs);
-    */
-    /*
-    this->ui->spin_steps->setValue(info->map->encounter_step);
-
-        mapinfo->map->bgm.copy_to(&this->bgm);
-        mapinfo->map->bgs.copy_to(&this->bgs);
-    }
-    this->ui->line_id->setText(QString::number(this->mapinfo->id));
-    this->ui->line_name->setText(this->mapinfo->name);
-    this->setWindowTitle("Map Properties - ID: " + QString::number(this->mapinfo->id));
-
-    for (int i = 0; i < info->map->encounter_list.length(); i++)
+    else
     {
-        int rows = this->ui->table_encounters->rowCount();
-        this->ui->table_encounters->setRowCount(rows+1);
-
-        this->set_encounter_list_value(rows, info->map->encounter_list.at(i));
+        this->create_new_map = true;
+        //map is created when pressing ok
+        //dialog should have the default values
     }
-
-    this->ui->line_bgm->setText(this->bgm.name);
-    this->ui->line_bgs->setText(this->bgs.name);
-    */
 
     this->ui->table_encounters->hideColumn(1);
     this->ui->table_encounters->resizeColumnsToContents();
@@ -95,33 +72,30 @@ void MapPropertiesDialog::set_encounter_list_value(int row, int troop)
 
 void MapPropertiesDialog::on_button_ok_clicked()
 {
-    mic->set_name(id, this->ui->line_name->text());
+    if (this->create_new_map)
+    {
+        //new map
+        bool success = mic->create_map(id);
+        if (!success)
+        {
+            //this solution is not suitable for real time applications
+            //if implementing multi user system, determine id here instead of maptreewidget
+            QMessageBox::critical(this, "Error creating map", "Map cannot be created");
+            return;
+        }
+    }
 
+    mic->set_name(id, this->ui->line_name->text());
 
     RPGMapController mc;
     mc.setDB(mic->get_db());
     mc.setMap(id, false);
     mc.set_jsonvalue("@encounter_step", this->ui->spin_steps->value());
+    mc.set_jsonvalue("@autoplay_bgm", this->ui->check_auto_change_bgm->isChecked());
+    mc.set_jsonvalue("@autoplay_bgs", this->ui->check_auto_change_bgs->isChecked());
     mc.set_size(this->ui->spin_x->value(), this->ui->spin_y->value());
 
 
-    /*
-    this->mapinfo->name = this->ui->line_name->text();
-    this->mapinfo->map->tileset_id = this->ui->combo_tileset->currentData().toInt();
-
-    this->mapinfo->map->autoplay_bgm = this->ui->check_auto_change_bgm->isChecked();
-    this->mapinfo->map->autoplay_bgs = this->ui->check_auto_change_bgs->isChecked();
-
-    this->mapinfo->map->encounter_step = this->ui->spin_steps->value();
-    this->mapinfo->map->encounter_list.clear();
-
-    for (int i = 0; i < this->ui->table_encounters->rowCount(); i++)
-        this->mapinfo->map->encounter_list.append(this->ui->table_encounters->item(i,1)->text().toInt());
-
-    this->bgm.copy_to(&this->mapinfo->map->bgm);
-    this->bgs.copy_to(&this->mapinfo->map->bgs);
-
-    */
     emit ok_clicked();
     this->close();
 }

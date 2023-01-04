@@ -10,6 +10,8 @@
 #include <QDir>
 #include <QMap>
 
+#include "factory.h"
+
 class RPGEditorController;
 
 class RPGDB : public QObject
@@ -40,6 +42,25 @@ public:
         if (this->map_files.contains(id))
             return this->map_files.value(id);
         else return 0;
+    }
+    void remove_map_file_by_id(int id){
+        if (this->map_files.contains(id)){
+            delete this->map_files.value(id);
+            this->map_files.remove(id);
+        }
+    }
+    QJsonDocument *create_mapfile_with_id(int id) {
+        if (this->map_files.contains(id))
+        {
+            qDebug() << "Error: ID already exists";
+            return 0;
+        }
+        else
+        {
+            this->map_files.insert(id, Factory().create_new_map());
+            return this->map_files.value(id);
+        }
+        return 0;
     }
 
 

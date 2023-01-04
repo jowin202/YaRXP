@@ -131,23 +131,43 @@ void MainWindow::on_actionSelect_triggered()
 
 void MainWindow::on_actionCut_triggered()
 {
-    this->clipboard = this->ui->mapView->do_cut();
+    //this->clipboard = this->ui->mapView->do_cut();
 }
 
 void MainWindow::on_actionCopy_triggered()
 {
-    this->clipboard = this->ui->mapView->do_copy();
+    if (this->ui->map_tree_widget->hasFocus())
+    {
+        this->ui->map_tree_widget->copy_map();
+    }
+    else
+    {
+
+    }
 }
 
 void MainWindow::on_actionPaste_triggered()
 {
-    if (this->clipboard.length() >= 3)
-        this->ui->mapView->do_paste(this->clipboard);
+    if (this->ui->map_tree_widget->hasFocus())
+    {
+        this->ui->map_tree_widget->paste_map();
+    }
+    else
+    {
+
+    }
 }
 
 void MainWindow::on_actionDelete_triggered()
 {
-    this->ui->mapView->do_delete();
+    if (this->ui->map_tree_widget->hasFocus())
+    {
+        this->ui->map_tree_widget->delete_map();
+    }
+    else
+    {
+        //this->clipboard = this->ui->mapView->do_copy();
+    }
 }
 
 void MainWindow::on_actionFlood_Fill_triggered()
@@ -183,7 +203,6 @@ void MainWindow::on_actionImport_RGSSAD_triggered()
         QString export_dir = fi.dir().absolutePath() + QDir::separator();
         QDir().mkdir(fi.dir().absolutePath() + QDir::separator() + "Data" + QDir::separator());
         IORGSSAD rgssad_file(name,export_dir);
-
     }
 
     this->open_project(name);

@@ -1,5 +1,6 @@
 #include "rpgmapinfocontroller.h"
 #include "rpgdb.h"
+#include "factory.h"
 
 RPGMapInfoController::RPGMapInfoController(RPGDB *db)
     : QObject()
@@ -10,6 +11,16 @@ RPGMapInfoController::RPGMapInfoController(RPGDB *db)
 bool RPGMapInfoController::id_is_valid(int id)
 {
     return db->get_mapinfos()->object().contains(QString::number(id));
+}
+
+int RPGMapInfoController::get_lowest_available_id()
+{
+    for (int i = 1; i <= 999; i++)
+    {
+        if (!this->id_is_valid(i))
+            return i;
+    }
+    return -1;
 }
 
 void RPGMapInfoController::set_expanded(int id, bool expanded)
@@ -96,4 +107,18 @@ QJsonArray RPGMapInfoController::get_child_maps()
         array.append(mapinfo);
     }
     return array;
+}
+
+bool RPGMapInfoController::create_map(int id)
+{
+    QJsonObject mapinfo = Factory().create_map_info(false, "", 999, 0,0,0);
+
+    if (this->db->create_mapfile_with_id(id) == 0)
+        return false; // if failed no mapinfo entry
+
+    QJsonObject dict = db->get_mapinfos()->object();
+    dict.insert(QString::number(id), mapinfo);
+    db->get_mapinfos()->setObject(dict);
+
+    return true;
 }
