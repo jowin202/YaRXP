@@ -9,6 +9,7 @@ EventDialog::EventDialog(QJsonObject event, QWidget *parent) :
 {
     ui->setupUi(this);
 
+    Q_UNUSED(event);
 
     if (this->event != 0)
     {

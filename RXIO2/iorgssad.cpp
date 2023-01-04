@@ -4,7 +4,7 @@
 
 IORGSSAD::IORGSSAD(QObject *parent)
 {
-
+    Q_UNUSED(parent);
 }
 
 IORGSSAD::IORGSSAD(QString path, QString output_dir)

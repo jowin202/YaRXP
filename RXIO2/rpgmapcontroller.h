@@ -59,11 +59,6 @@ public:
 
     int get_height();
     int get_width();
-    void set_height(int tiles);
-    void set_width(int tiles);
-
-
-
 
     QJsonValue get_jsonvalue(QString key);
     void set_jsonvalue(QString key, QJsonValue value);

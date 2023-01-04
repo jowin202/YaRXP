@@ -365,6 +365,7 @@ void RPGMapController::set_size(int xtiles, int ytiles)
     }
 
 
+
     QJsonArray values = this->doc->object().value("@data").toObject().value("values").toArray();
     for (int layer = 2; layer >= 0; layer--)
     {
@@ -375,19 +376,28 @@ void RPGMapController::set_size(int xtiles, int ytiles)
                 values.insert(array_position(QPoint(this->get_width(),y),layer),0);
             }
         }
-        for (int y = this->get_height(); y < ytiles; y++)
-        {
-            for (int x = 0; x < this->get_width(); x++)
-            {
-                values.insert(array_position(QPoint(x,this->get_height()),layer),0);
-            }
-        }
-
         for (int y = this->get_height()-1; y >= 0; y--)
         {
             for (int x = xtiles; x < this->get_width(); x++)
             {
                 values.removeAt(array_position(QPoint(xtiles,y),layer));
+            }
+        }
+    }
+
+    QJsonObject obj = this->doc->object();
+    obj.insert("@width", xtiles);
+    this->doc->setObject(obj);
+    //xtiles has to be saved as width because array_position() and get_width() use it from there
+
+    //new loop for y
+    for (int layer = 2; layer >= 0; layer--)
+    {
+        for (int x = 0; x < this->get_width(); x++)
+        {
+            for (int y = this->get_height(); y < ytiles; y++)
+            {
+                values.insert(array_position(QPoint(x,this->get_height()),layer),0);
             }
         }
         for (int x = this->get_width()-1; x >= 0; x--)
@@ -399,11 +409,10 @@ void RPGMapController::set_size(int xtiles, int ytiles)
         }
     }
 
-    QJsonObject obj = this->doc->object();
+    obj = this->doc->object();
     QJsonObject data_obj = this->doc->object().value("@data").toObject();
     data_obj.insert("values", values);
     obj.insert("@data", data_obj);
-    obj.insert("@width", xtiles);
     obj.insert("@height", ytiles);
     this->doc->setObject(obj);
 }
@@ -416,18 +425,6 @@ int RPGMapController::get_height()
 int RPGMapController::get_width()
 {
     return this->get_jsonvalue("@width").toInt();
-}
-
-void RPGMapController::set_height(int tiles)
-{
-    this->set_jsonvalue("@height", tiles);
-    //TODO
-}
-
-void RPGMapController::set_width(int tiles)
-{
-    this->set_jsonvalue("@width", tiles);
-    //TODO
 }
 
 QJsonValue RPGMapController::get_jsonvalue(QString key)
