@@ -61,7 +61,8 @@ void MapView::set_brush(QList<int> data)
         this->set_mode(PEN);
     this->brush = data;
     this->rectangle_offset = QPoint(0,0);
-    this->rectangle->setSize(data.at(0), data.at(1));
+    if (data.length() > 2)
+        this->rectangle->setSize(data.at(0), data.at(1));
     this->rectangle->update();
 }
 
@@ -198,7 +199,7 @@ void MapView::mouseReleaseEvent(QMouseEvent *event)
         if (this->rectangle != 0)
             this->rectangle_offset = QPoint(this->rectangle->pos().x()/32,this->rectangle->pos().y()/32)-last_valid_pos_in_draw_rectangle;
 
-        if (this->brush.at(0) == 1 && this->brush.at(1) == 1 && this->brush.length() == 3)
+        if (this->brush.length() > 2 && this->brush.at(0) == 1 && this->brush.at(1) == 1 && this->brush.length() == 3)
             emit one_tile_selected(this->brush.at(2));
     }
     else if (opt.mode == SELECT)

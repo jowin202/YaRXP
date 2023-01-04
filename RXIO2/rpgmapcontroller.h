@@ -19,6 +19,7 @@ public:
     void setDB(RPGDB *db) {this->db = db; }
     void setMap(int id, bool load_images = true);
 
+    bool current_map_is_valid() { return (this->doc != 0); }
 
 
     int array_position(QPoint p, int layer)

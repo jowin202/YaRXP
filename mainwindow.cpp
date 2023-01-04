@@ -79,7 +79,10 @@ void MainWindow::open_project(QString project_path)
 void MainWindow::change_map(int id)
 {
     this->ui->mapView->set_map(id);
-    this->ui->tilesetView->set_tileset(this->db.get_mapfile_by_id(id)->object().value("@tileset_id").toInt());
+
+    QJsonDocument *doc;
+    if ( (doc = this->db.get_mapfile_by_id(id)) != 0)
+    this->ui->tilesetView->set_tileset(doc->object().value("@tileset_id").toInt());
 }
 
 void MainWindow::on_actionLayer1_triggered()

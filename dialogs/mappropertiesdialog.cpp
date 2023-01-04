@@ -22,20 +22,31 @@ MapPropertiesDialog::MapPropertiesDialog(RPGMapInfoController *mic, int id, QWid
 
     this->ui->line_id->setText(QString::number(id));
 
+
     if (mic->id_is_valid(id))
     {
         this->map = mic->get_db()->get_mapfile_by_id(id);
-        this->ui->line_name->setText(mic->get_name(id));
-        this->ui->check_auto_change_bgm->setChecked(map->object().value("@autoplay_bgm").toBool());
-        this->ui->check_auto_change_bgs->setChecked(map->object().value("@autoplay_bgs").toBool());
-        this->ui->line_bgm->setText(map->object().value("@bgm").toObject().value("@name").toString());
-        this->ui->line_bgs->setText(map->object().value("@bgs").toObject().value("@name").toString());
 
-        this->ui->spin_steps->setValue(map->object().value("@encounter_step").toInt());
+        if (this->map != 0)
+        {
+            this->ui->line_name->setText(mic->get_name(id));
+            this->ui->check_auto_change_bgm->setChecked(map->object().value("@autoplay_bgm").toBool());
+            this->ui->check_auto_change_bgs->setChecked(map->object().value("@autoplay_bgs").toBool());
+            this->ui->line_bgm->setText(map->object().value("@bgm").toObject().value("@name").toString());
+            this->ui->line_bgs->setText(map->object().value("@bgs").toObject().value("@name").toString());
+
+            this->ui->spin_steps->setValue(map->object().value("@encounter_step").toInt());
 
 
-        this->ui->spin_x->setValue(map->object().value("@width").toInt());
-        this->ui->spin_y->setValue(map->object().value("@height").toInt());
+            this->ui->spin_x->setValue(map->object().value("@width").toInt());
+            this->ui->spin_y->setValue(map->object().value("@height").toInt());
+        }
+        else
+        {
+            //happens if get_mapfile_by_id() returns zero (file does not exist)
+            QMessageBox::information(this, "File does not exist", "No file exists for this map.");
+            //should not happen
+        }
     }
     else
     {

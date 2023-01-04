@@ -26,6 +26,13 @@ void RPGMapController::setMap(int id, bool load_images)
             }
         }
     }
+    else
+    {
+        //file does not exist
+        db->create_mapfile_with_id(id);
+        this->doc = db->get_mapfile_by_id(id);
+        //create this file automatically if it does not exist
+    }
 }
 
 int RPGMapController::get_autotile_nn(QPoint pos, int layer)
