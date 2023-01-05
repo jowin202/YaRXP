@@ -65,8 +65,8 @@ bool MapSelectRectangle::pos_is_in_rectangle(QPoint pos)
 {
     if (this->x()/32 > pos.x()) return false;
     if (this->y()/32 > pos.y()) return false;
-    if (this->x()/32 + this->w < pos.x()) return false;
-    if (this->y()/32 + this->h < pos.y()) return false;
+    if (this->x()/32 + this->w-1 < pos.x()) return false;
+    if (this->y()/32 + this->h-1 < pos.y()) return false;
 
     return true;
 }

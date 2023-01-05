@@ -7,6 +7,10 @@
 #include <QMouseEvent>
 #include <QWheelEvent>
 #include <QDebug>
+#include <QRect>
+#include <QJsonObject>
+#include <QJsonArray>
+#include <QSettings>
 
 #include "mapselectrectangle.h"
 
@@ -77,39 +81,69 @@ public:
         this->redraw();
     }
 
-    QList<int> do_copy()
-    { return this->select_rectangle->brush; }
-    QList<int> do_cut()
+    void do_copy()
     {
-        QList<int> brush = this->select_rectangle->brush;
-        this->kill_select_rectangle();
-        return brush;
+        if (opt.mode == SELECT && this->select_rectangle != 0)
+        {
+            QJsonArray array;
+            for (int i = 0; i < this->select_rectangle->brush.length(); i++)
+                array.append(this->select_rectangle->brush.at(i));
+            QJsonDocument doc(array);
+            QSettings settings;
+            settings.setValue("copied_map_part", doc.toJson(QJsonDocument::Compact));
+        }
+        else if (opt.mode == EVENT)
+        {
+
+        }
+    }
+    void do_cut()
+    {
+        this->do_copy();
+        this->do_delete();
     }
     void do_delete()
     {
         if (opt.mode == EVENT)
         {
-            //TODO
+
         }
         else if (opt.mode == SELECT && this->select_rectangle != 0)
         {
             this->kill_select_rectangle();
         }
     }
-    void do_paste(QList<int> data)
+    void do_paste()
     {
-        if (opt.mode == SELECT && this->select_rectangle != 0)
+        if (opt.mode == SELECT || opt.mode == PEN)
         {
-            //save current selection
-            this->select_rectangle->save_to_map();
-            this->kill_select_rectangle();
+            if (this->select_rectangle != 0)
+            {
+                //save current selection
+                this->select_rectangle->save_to_map();
+                this->kill_select_rectangle();
+            }
+            QSettings settings;
+            QJsonParseError err;
+            QByteArray json = settings.value("copied_map_part").toByteArray();
+            QJsonDocument doc = QJsonDocument::fromJson(json, &err);
+            if (err.error != QJsonParseError::NoError) return;
+
+            QList<int> data;
+            for (int i = 0; i < doc.array().count(); i++)
+                data.append(doc.array().at(i).toInt());
+
+            this->set_mode(SELECT);
+            this->select_rectangle = new MapSelectRectangle(&this->mc,0,0);
+            this->select_rectangle->setSize(data.at(0),data.at(1));
+            this->select_rectangle->set_brush(data, &opt);
+            this->select_rectangle->setPos(32*this->last_pos);
+            this->scene()->addItem(this->select_rectangle);
         }
-        this->set_mode(SELECT);
-        this->select_rectangle = new MapSelectRectangle(&this->mc,0,0);
-        this->select_rectangle->setSize(data.at(0),data.at(1));
-        this->select_rectangle->set_brush(data, &opt);
-        this->select_rectangle->setPos(32*this->last_pos);
-        this->scene()->addItem(this->select_rectangle);
+        else if (opt.mode == EVENT)
+        {
+
+        }
     }
 
 

@@ -134,30 +134,30 @@ void MainWindow::on_actionSelect_triggered()
 
 void MainWindow::on_actionCut_triggered()
 {
-    //this->clipboard = this->ui->mapView->do_cut();
+    this->ui->mapView->do_cut();
 }
 
 void MainWindow::on_actionCopy_triggered()
 {
-    if (this->ui->map_tree_widget->hasFocus())
+    //if (this->ui->map_tree_widget->hasFocus())
     {
-        this->ui->map_tree_widget->copy_map();
+        //this->ui->map_tree_widget->copy_map();
     }
-    else
+    //else if (this->ui->mapView->hasFocus())
     {
-
+        this->ui->mapView->do_copy();
     }
 }
 
 void MainWindow::on_actionPaste_triggered()
 {
-    if (this->ui->map_tree_widget->hasFocus())
+    //if (this->ui->map_tree_widget->hasFocus())
     {
-        this->ui->map_tree_widget->paste_map();
+        //this->ui->map_tree_widget->paste_map();
     }
-    else
+    //else if (this->ui->mapView->hasFocus())
     {
-
+        this->ui->mapView->do_paste();
     }
 }
 
@@ -167,9 +167,9 @@ void MainWindow::on_actionDelete_triggered()
     {
         this->ui->map_tree_widget->delete_map();
     }
-    else
+    else if (this->ui->mapView->hasFocus())
     {
-        //this->clipboard = this->ui->mapView->do_copy();
+        this->ui->mapView->do_delete();
     }
 }
 
@@ -204,7 +204,7 @@ void MainWindow::on_actionImport_RGSSAD_triggered()
     if (name != "" && fi.exists() && fi.isFile())
     {
         QString export_dir = fi.dir().absolutePath() + QDir::separator();
-        QDir().mkdir(fi.dir().absolutePath() + QDir::separator() + "Data" + QDir::separator());
+        //QDir().mkdir(fi.dir().absolutePath() + QDir::separator());
         IORGSSAD rgssad_file(name,export_dir);
     }
 

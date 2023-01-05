@@ -28,7 +28,7 @@ IORGSSAD::IORGSSAD(QString path, QString output_dir)
 
         QByteArray buffer = this->file.read(file_size);
 
-        qDebug() << name;
+        QDir().mkpath(QFileInfo(output_dir + name).absolutePath());
 
 
         int tempKey = key;
@@ -75,9 +75,13 @@ IORGSSAD::IORGSSAD(QString path, QString output_dir)
             break;
     }
 
-
-
     file.close();
+
+    QFile start_file(output_dir + "Game.rxproj");
+    start_file.open(QIODevice::WriteOnly);
+    start_file.write("RPGXP 1.05");
+    start_file.flush();
+    start_file.close();
 }
 
 int IORGSSAD::read_and_decrypt_integer()
