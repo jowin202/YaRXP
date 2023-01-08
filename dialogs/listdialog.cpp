@@ -30,7 +30,7 @@ void ListDialog::variable_dialog()
     this->variable_is_set = true;
     this->setWindowTitle("YaRXP - Variables");
     this->ui->list->clear();
-    for (int i = 0; i < db->get_variable_names().count(); i++)
+    for (int i = 1; i < db->get_variable_names().count(); i++)
         this->ui->list->addItem(QString("%1: %2").arg(i,4,10,QChar('0')).arg(db->get_variable_names().at(i).toString()));
 }
 
@@ -85,7 +85,7 @@ void ListDialog::on_list_doubleClicked(const QModelIndex &index)
     }
     else if (variable_is_set)
     {
-        QString name = QInputDialog::getText(this, "Rename Variable", "Rename Variable", QLineEdit::Normal, db->get_switch_names().at(n+1).toString(), &ok);
+        QString name = QInputDialog::getText(this, "Rename Variable", "Rename Variable", QLineEdit::Normal, db->get_variable_names().at(n+1).toString(), &ok);
         if (ok)
             db->change_variable_name(n+1, name);
         this->variable_dialog();

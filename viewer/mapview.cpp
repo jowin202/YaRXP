@@ -2,7 +2,7 @@
 #include "maprectangle.h"
 #include "maptile.h"
 #include "mapselectrectangle.h"
-#include "event_dialogs/eventdialog.h"
+#include "events/eventdialog.h"
 
 
 #include "RXIO2/rpgdb.h"
@@ -240,7 +240,7 @@ void MapView::mouseDoubleClickEvent(QMouseEvent *event)
         QJsonObject event = this->mc.event_on_pos(pos);
         if (event.keys().count() > 1)
         {
-            EventDialog *dialog = new EventDialog(event);
+            EventDialog *dialog = new EventDialog(&this->mc, event);
             dialog->show();
         }
     }

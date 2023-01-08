@@ -1,0 +1,1244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>EventCommandDialog</class>
+ <widget class="QWidget" name="EventCommandDialog">
+  <property name="windowModality">
+   <enum>Qt::ApplicationModal</enum>
+  </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1114</width>
+    <height>642</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>YaRXP - Event Command</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="1" column="0">
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QPushButton" name="pushButton">
+       <property name="text">
+        <string>Show Text</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_2">
+       <property name="text">
+        <string>Show Choices</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_3">
+       <property name="text">
+        <string>Input Number</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_4">
+       <property name="text">
+        <string>Change Text Options</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_5">
+       <property name="text">
+        <string>Button Input Processing</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_6">
+       <property name="text">
+        <string>Wait</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_7">
+       <property name="text">
+        <string>Comment</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_8">
+       <property name="text">
+        <string>Conditional Branch</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_9">
+       <property name="text">
+        <string>Loop</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_10">
+       <property name="text">
+        <string>Break Loop</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_12">
+       <property name="text">
+        <string>Exit Event Processing</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_13">
+       <property name="text">
+        <string>Erase Event</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_14">
+       <property name="text">
+        <string>Call Common Event</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_15">
+       <property name="text">
+        <string>Label</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_16">
+       <property name="text">
+        <string>Jump to Label</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="verticalSpacer">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>40</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+   <item row="1" column="1">
+    <layout class="QVBoxLayout" name="verticalLayout_2">
+     <item>
+      <widget class="QPushButton" name="pushButton_17">
+       <property name="text">
+        <string>Control Switches</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_18">
+       <property name="text">
+        <string>Control Variables</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_19">
+       <property name="text">
+        <string>Control Self Switch</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_20">
+       <property name="text">
+        <string>Control Timer</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_21">
+       <property name="text">
+        <string>Change Gold</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_22">
+       <property name="text">
+        <string>Change Items</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_23">
+       <property name="text">
+        <string>Change Weapons</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_24">
+       <property name="text">
+        <string>Change Armor</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_25">
+       <property name="text">
+        <string>Change Party Member</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_26">
+       <property name="text">
+        <string>Change Windowskin</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_27">
+       <property name="text">
+        <string>Change Battle BGM</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_28">
+       <property name="text">
+        <string>Change Battle End ME</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_29">
+       <property name="text">
+        <string>Change Save Access</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_30">
+       <property name="text">
+        <string>Change Menu Access</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_31">
+       <property name="text">
+        <string>Change Encounter</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="verticalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>40</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+   <item row="1" column="2">
+    <layout class="QVBoxLayout" name="verticalLayout_3">
+     <item>
+      <widget class="QPushButton" name="pushButton_11">
+       <property name="text">
+        <string>Transfer Player</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_32">
+       <property name="text">
+        <string>Set Event Location</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_33">
+       <property name="text">
+        <string>Scroll Map</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_34">
+       <property name="text">
+        <string>Change Map Settings</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_35">
+       <property name="text">
+        <string>Change Fog Color Tone</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_36">
+       <property name="text">
+        <string>Change Fog Opacity</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_37">
+       <property name="text">
+        <string>Show Animation</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_38">
+       <property name="text">
+        <string>Change Transparent Flag</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_39">
+       <property name="text">
+        <string>Set Move Route</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_40">
+       <property name="text">
+        <string>Wait for Move's Completition</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_41">
+       <property name="text">
+        <string>Prepare for Transistion</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_42">
+       <property name="text">
+        <string>Execute Transistion</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_43">
+       <property name="text">
+        <string>Change Screen Color Tone</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_44">
+       <property name="text">
+        <string>Screen Flash</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_45">
+       <property name="text">
+        <string>Screen Shake</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="verticalSpacer_3">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>40</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+   <item row="1" column="3">
+    <layout class="QVBoxLayout" name="verticalLayout_4">
+     <item>
+      <widget class="QPushButton" name="pushButton_46">
+       <property name="text">
+        <string>Show Picture</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_47">
+       <property name="text">
+        <string>Move Picture</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_48">
+       <property name="text">
+        <string>Rotate Picture</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_49">
+       <property name="text">
+        <string>Change Picture Color Tone</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_50">
+       <property name="text">
+        <string>Erase Picture</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_51">
+       <property name="text">
+        <string>Set Weather Effects</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_52">
+       <property name="text">
+        <string>Play BGM</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_53">
+       <property name="text">
+        <string>Fade out BGM</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_54">
+       <property name="text">
+        <string>Play BGS</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_55">
+       <property name="text">
+        <string>Fade out BGS</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_56">
+       <property name="text">
+        <string>Memorize BGM/BGS</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_57">
+       <property name="text">
+        <string>Restore BGM/BGS</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_58">
+       <property name="text">
+        <string>Play ME</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_59">
+       <property name="text">
+        <string>Play SE</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_60">
+       <property name="text">
+        <string>Stop SE</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="verticalSpacer_4">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>40</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+   <item row="1" column="4">
+    <layout class="QVBoxLayout" name="verticalLayout_5">
+     <item>
+      <widget class="QPushButton" name="pushButton_61">
+       <property name="text">
+        <string>Battle Processing</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_62">
+       <property name="text">
+        <string>Shop Processing</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_63">
+       <property name="text">
+        <string>Name Input Processing</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_64">
+       <property name="text">
+        <string>Change HP</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_65">
+       <property name="text">
+        <string>Change SP</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_66">
+       <property name="text">
+        <string>Change State</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_67">
+       <property name="text">
+        <string>Recover All</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_75">
+       <property name="text">
+        <string>Change Exp</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_68">
+       <property name="text">
+        <string>Change Level</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_69">
+       <property name="text">
+        <string>Change Parameters</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_70">
+       <property name="text">
+        <string>Change Skills</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_71">
+       <property name="text">
+        <string>Change Equipment</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_72">
+       <property name="text">
+        <string>Change Actor Name</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_73">
+       <property name="text">
+        <string>Change Actor Class</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_74">
+       <property name="text">
+        <string>Change Actor Graphic</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="verticalSpacer_5">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>40</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+   <item row="1" column="5">
+    <layout class="QVBoxLayout" name="verticalLayout_6">
+     <item>
+      <widget class="QPushButton" name="pushButton_76">
+       <property name="text">
+        <string>Change Enemy HP</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_77">
+       <property name="text">
+        <string>Change Enemy SP</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_78">
+       <property name="text">
+        <string>Change Enemy State</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_79">
+       <property name="text">
+        <string>Enemy Recover All</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_80">
+       <property name="text">
+        <string>Enemy Appearance</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_81">
+       <property name="text">
+        <string>Enemy Transform</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_82">
+       <property name="text">
+        <string>Show Battle Animation</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_83">
+       <property name="text">
+        <string>Deal Damage</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_84">
+       <property name="text">
+        <string>Force Action</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_85">
+       <property name="text">
+        <string>Abort Battle</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_86">
+       <property name="text">
+        <string>Call Menu Screen</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_87">
+       <property name="text">
+        <string>Call Save Screen</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_88">
+       <property name="text">
+        <string>Game Over</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_89">
+       <property name="text">
+        <string>Return To Title Screen</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_90">
+       <property name="text">
+        <string>Script</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="verticalSpacer_6">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>40</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+   <item row="0" column="0" colspan="6">
+    <widget class="QCheckBox" name="check_pokemon_stuff_only">
+     <property name="text">
+      <string>Only show Pokemon related stuff</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>check_pokemon_stuff_only</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>pushButton_22</receiver>
+   <slot>setHidden(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>159</x>
+     <y>20</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>237</x>
+     <y>255</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>check_pokemon_stuff_only</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>pushButton_23</receiver>
+   <slot>setHidden(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>96</x>
+     <y>15</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>254</x>
+     <y>293</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>check_pokemon_stuff_only</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>pushButton_24</receiver>
+   <slot>setHidden(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>68</x>
+     <y>19</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>215</x>
+     <y>331</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>check_pokemon_stuff_only</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>pushButton_25</receiver>
+   <slot>setHidden(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>39</x>
+     <y>19</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>221</x>
+     <y>379</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>check_pokemon_stuff_only</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>pushButton_41</receiver>
+   <slot>setHidden(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>298</x>
+     <y>17</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>506</x>
+     <y>458</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>check_pokemon_stuff_only</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>pushButton_42</receiver>
+   <slot>setHidden(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>356</x>
+     <y>14</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>451</x>
+     <y>502</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>check_pokemon_stuff_only</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>pushButton_61</receiver>
+   <slot>setHidden(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>633</x>
+     <y>21</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>853</x>
+     <y>62</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>check_pokemon_stuff_only</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>pushButton_62</receiver>
+   <slot>setHidden(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>677</x>
+     <y>22</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>839</x>
+     <y>100</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>check_pokemon_stuff_only</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>pushButton_63</receiver>
+   <slot>setHidden(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>727</x>
+     <y>16</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>799</x>
+     <y>144</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>check_pokemon_stuff_only</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>pushButton_64</receiver>
+   <slot>setHidden(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>746</x>
+     <y>19</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>809</x>
+     <y>179</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>check_pokemon_stuff_only</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>pushButton_65</receiver>
+   <slot>setHidden(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>613</x>
+     <y>17</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>817</x>
+     <y>208</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>check_pokemon_stuff_only</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>pushButton_66</receiver>
+   <slot>setHidden(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>597</x>
+     <y>19</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>774</x>
+     <y>255</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>check_pokemon_stuff_only</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>pushButton_75</receiver>
+   <slot>setHidden(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>541</x>
+     <y>17</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>836</x>
+     <y>342</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>check_pokemon_stuff_only</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>pushButton_68</receiver>
+   <slot>setHidden(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>525</x>
+     <y>18</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>790</x>
+     <y>388</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>check_pokemon_stuff_only</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>pushButton_69</receiver>
+   <slot>setHidden(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>511</x>
+     <y>20</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>822</x>
+     <y>416</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>check_pokemon_stuff_only</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>pushButton_70</receiver>
+   <slot>setHidden(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>586</x>
+     <y>13</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>842</x>
+     <y>457</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>check_pokemon_stuff_only</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>pushButton_71</receiver>
+   <slot>setHidden(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>566</x>
+     <y>17</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>797</x>
+     <y>489</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>check_pokemon_stuff_only</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>pushButton_72</receiver>
+   <slot>setHidden(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>480</x>
+     <y>23</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>887</x>
+     <y>537</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>check_pokemon_stuff_only</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>pushButton_73</receiver>
+   <slot>setHidden(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>458</x>
+     <y>13</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>788</x>
+     <y>575</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>check_pokemon_stuff_only</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>pushButton_74</receiver>
+   <slot>setHidden(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>553</x>
+     <y>13</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>793</x>
+     <y>604</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>check_pokemon_stuff_only</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>pushButton_76</receiver>
+   <slot>setHidden(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>915</x>
+     <y>18</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>961</x>
+     <y>54</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>check_pokemon_stuff_only</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>pushButton_77</receiver>
+   <slot>setHidden(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>963</x>
+     <y>10</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>982</x>
+     <y>108</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>check_pokemon_stuff_only</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>pushButton_78</receiver>
+   <slot>setHidden(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>892</x>
+     <y>16</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>989</x>
+     <y>144</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>check_pokemon_stuff_only</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>pushButton_79</receiver>
+   <slot>setHidden(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>870</x>
+     <y>15</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>979</x>
+     <y>181</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>check_pokemon_stuff_only</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>pushButton_80</receiver>
+   <slot>setHidden(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>852</x>
+     <y>20</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1019</x>
+     <y>211</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>check_pokemon_stuff_only</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>pushButton_81</receiver>
+   <slot>setHidden(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>792</x>
+     <y>15</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1019</x>
+     <y>258</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>check_pokemon_stuff_only</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>pushButton_82</receiver>
+   <slot>setHidden(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>770</x>
+     <y>10</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>975</x>
+     <y>285</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>check_pokemon_stuff_only</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>pushButton_83</receiver>
+   <slot>setHidden(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>698</x>
+     <y>17</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1014</x>
+     <y>344</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>check_pokemon_stuff_only</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>pushButton_84</receiver>
+   <slot>setHidden(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>665</x>
+     <y>20</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>981</x>
+     <y>364</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>check_pokemon_stuff_only</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>pushButton_85</receiver>
+   <slot>setHidden(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>695</x>
+     <y>14</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>991</x>
+     <y>415</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

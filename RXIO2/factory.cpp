@@ -633,4 +633,80 @@ QJsonObject Factory::create_map_info(bool expanded, QString name, int order, int
     return obj;
 }
 
+QJsonObject Factory::create_event(int id, int x, int y)
+{
+    QJsonObject obj;
+    obj.insert("@id", id);
+    obj.insert("@x", x);
+    obj.insert("@y", y);
+    obj.insert("@name", QString("Event %1").arg(id));
+    obj.insert("@pages", QJsonArray());
+    obj.insert("RXClass", "RPG::Event");
+    return obj;
+}
+
+QJsonObject Factory::create_event_page(bool always_on_top, bool direction_fix, bool step_anime, bool through, bool walk_anime, int move_type, int move_speed, int move_freq, int trigger, QJsonObject condition, QJsonArray list, QJsonObject graphic, QJsonObject move_route)
+{
+    QJsonObject obj;
+    obj.insert("@always_on_top", always_on_top);
+    obj.insert("@condition", condition);
+    obj.insert("@direction_fix", direction_fix);
+    obj.insert("@step_anime", step_anime);
+    obj.insert("@through", through);
+    obj.insert("@walk_anime", walk_anime);
+
+    obj.insert("@graphic", graphic);
+
+    obj.insert("@list", list);
+
+    obj.insert("@move_route", move_route);
+
+    obj.insert("@move_type", move_type);
+    obj.insert("@move_speed", move_speed);
+    obj.insert("@move_frequency", move_freq);
+    obj.insert("@trigger", trigger);
+    obj.insert("RXClass", "RPG::Event::Page");
+    return obj;
+}
+
+QJsonObject Factory::create_page_condition(bool self_switch_valid, bool switch1_valid, bool switch2_valid, bool variable_valid,
+                                           int self_switch_ch, int switch1_id, int switch2_id, int variable_id, int variable_value)
+{
+    QJsonObject obj;
+    if (self_switch_ch == 0)
+        obj.insert("@self_switch_ch","A");
+    else if (self_switch_ch == 1)
+        obj.insert("@self_switch_ch","B");
+    else if (self_switch_ch == 2)
+        obj.insert("@self_switch_ch","C");
+    else if (self_switch_ch == 3)
+        obj.insert("@self_switch_ch","D");
+
+    obj.insert("@self_switch_valid",self_switch_valid);
+    obj.insert("@switch1_id",switch1_id);
+    obj.insert("@switch1_valid", switch1_valid);
+    obj.insert("@switch2_id",switch2_id);
+    obj.insert("@switch2_valid",switch2_valid);
+    obj.insert("@variable_id",variable_id);
+    obj.insert("@variable_valid",variable_valid);
+    obj.insert("@variable_value", variable_value);
+    obj.insert("RXClass", "RPG::Event::Page::Condition");
+    return obj;
+}
+
+QJsonObject Factory::create_page_graphic(QString character_name, int character_hue, int blend_type, int direction, int opacity, int pattern, int tile_id)
+{
+    QJsonObject obj;
+    obj.insert("@blend_type", blend_type);
+    obj.insert("@character_hue", character_hue);
+    obj.insert("@character_name", character_name);
+    obj.insert("@direction", direction);
+    obj.insert("@opacity", opacity);
+    obj.insert("@pattern", pattern);
+    obj.insert("@tile_id", tile_id);
+
+    obj.insert("RXClass", "RPG::Event::Page::Graphic");
+    return obj;
+}
+
 

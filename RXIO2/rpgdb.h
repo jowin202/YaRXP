@@ -63,7 +63,6 @@ public:
         return 0;
     }
 
-
     //switches and variables
     QJsonArray get_switch_names();
     QJsonArray get_variable_names();

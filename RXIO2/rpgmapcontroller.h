@@ -17,6 +17,7 @@ public:
     explicit RPGMapController(QObject *parent = nullptr);
 
     void setDB(RPGDB *db) {this->db = db; }
+    RPGDB *getDB() { return this->db; }
     void setMap(int id, bool load_images = true);
 
     bool current_map_is_valid() { return (this->doc != 0); }

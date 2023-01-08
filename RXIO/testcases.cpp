@@ -22,7 +22,7 @@
 
 #include <QTemporaryFile>
 
-#include "event_dialogs/eventlist.h"
+#include "events/eventlist.h"
 
 Testcases::Testcases(QObject *parent) : QObject(parent)
 {

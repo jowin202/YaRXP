@@ -121,15 +121,15 @@ SOURCES += \
     editors/troops/trooppageconditiondialog.cpp \
     editors/troops/trooppiclabel.cpp \
     editors/weapons/editweapons.cpp \
-    event_dialogs/choicesdialog.cpp \
-    event_dialogs/commands/multilineeventcell.cpp \
-    event_dialogs/commands/simpleeventcell.cpp \
-    event_dialogs/conditionalbranchdialog.cpp \
-    event_dialogs/eventcommanddialog.cpp \
-    event_dialogs/eventdialog.cpp \
-    event_dialogs/eventlist.cpp \
-    event_dialogs/eventpage.cpp \
-    event_dialogs/moveroutedialog.cpp \
+    events/choicesdialog.cpp \
+    events/commands/multilineeventcell.cpp \
+    events/commands/simpleeventcell.cpp \
+    events/conditionalbranchdialog.cpp \
+    events/eventcommanddialog.cpp \
+    events/eventdialog.cpp \
+    events/eventlist.cpp \
+    events/eventpage.cpp \
+    events/moveroutedialog.cpp \
     main.cpp \
     mainwindow.cpp \
     viewer/maprectangle.cpp \
@@ -246,15 +246,15 @@ HEADERS += \
     editors/troops/trooppageconditiondialog.h \
     editors/troops/trooppiclabel.h \
     editors/weapons/editweapons.h \
-    event_dialogs/choicesdialog.h \
-    event_dialogs/commands/multilineeventcell.h \
-    event_dialogs/commands/simpleeventcell.h \
-    event_dialogs/conditionalbranchdialog.h \
-    event_dialogs/eventcommanddialog.h \
-    event_dialogs/eventdialog.h \
-    event_dialogs/eventlist.h \
-    event_dialogs/eventpage.h \
-    event_dialogs/moveroutedialog.h \
+    events/choicesdialog.h \
+    events/commands/multilineeventcell.h \
+    events/commands/simpleeventcell.h \
+    events/conditionalbranchdialog.h \
+    events/eventcommanddialog.h \
+    events/eventdialog.h \
+    events/eventlist.h \
+    events/eventpage.h \
+    events/moveroutedialog.h \
     mainwindow.h \
     viewer/maprectangle.h \
     viewer/mapselectrectangle.h \
@@ -301,12 +301,12 @@ FORMS += \
     editors/troops/troopeventpage.ui \
     editors/troops/trooppageconditiondialog.ui \
     editors/weapons/editweapons.ui \
-    event_dialogs/choicesdialog.ui \
-    event_dialogs/conditionalbranchdialog.ui \
-    event_dialogs/eventcommanddialog.ui \
-    event_dialogs/eventdialog.ui \
-    event_dialogs/eventpage.ui \
-    event_dialogs/moveroutedialog.ui \
+    events/choicesdialog.ui \
+    events/conditionalbranchdialog.ui \
+    events/eventcommanddialog.ui \
+    events/eventdialog.ui \
+    events/eventpage.ui \
+    events/moveroutedialog.ui \
     mainwindow.ui
 
 # Default rules for deployment.
