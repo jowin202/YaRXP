@@ -143,15 +143,14 @@ void RPGMapController::remove_event_by_id(int id)
 
 void RPGMapController::move_event(QPoint from, QPoint to)
 {
-    QJsonObject event_on_dest_pos = this->event_on_pos(to);
-    if (event_on_dest_pos.contains("RXClass"))
+    QJsonObject event_on_from_pos = this->event_on_pos(from);
+    if (!event_on_from_pos.contains("RXClass"))
         return;
 
-    QJsonObject event = this->event_on_pos(from);
-    int id = event.value("@id").toInt();
-    event.insert("@x", to.x());
-    event.insert("@y", to.y());
-    this->set_event_by_id(id, event);
+    int id = event_on_from_pos.value("@id").toInt();
+    event_on_from_pos.insert("@x", to.x());
+    event_on_from_pos.insert("@y", to.y());
+    this->set_event_by_id(id, event_on_from_pos);
 }
 
 QList<int> RPGMapController::get_elements_in_rectangle(QRect rect, int fromlayer, int tolayer)

@@ -22,6 +22,7 @@ class EventPage : public QWidget
 
 public:
     explicit EventPage(QJsonObject page, RPGDB *db, QWidget *parent = nullptr);
+    EventPage(RPGDB *db, QWidget *parent = nullptr);
     ~EventPage();
 
     QJsonObject getPage();

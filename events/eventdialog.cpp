@@ -44,8 +44,9 @@ void EventDialog::do_numbers_of_tabs_right()
 
 void EventDialog::on_button_new_clicked()
 {
-    //this->ui->tab_widget->addTab(new EventPage(nullptr, 0, system), "1");
+    int pos = this->ui->tab_widget->addTab(new EventPage(mc->getDB()), QString()); //empty
     this->do_numbers_of_tabs_right();
+    this->ui->tab_widget->setCurrentIndex(pos);
 }
 
 void EventDialog::on_button_delete_clicked()
@@ -79,4 +80,5 @@ void EventDialog::on_button_apply_clicked()
     this->event.insert("@name", this->ui->line_name->text());
     int id = this->event.value("@id").toInt();
     mc->set_event_by_id(id, this->event);
+    this->do_numbers_of_tabs_right();
 }

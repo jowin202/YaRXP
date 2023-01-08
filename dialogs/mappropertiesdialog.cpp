@@ -34,6 +34,10 @@ MapPropertiesDialog::MapPropertiesDialog(RPGMapInfoController *mic, int id, QWid
             this->ui->check_auto_change_bgs->setChecked(map->object().value("@autoplay_bgs").toBool());
             this->ui->line_bgm->setText(map->object().value("@bgm").toObject().value("@name").toString());
             this->ui->line_bgs->setText(map->object().value("@bgs").toObject().value("@name").toString());
+            this->bgm_pitch = map->object().value("@bgm").toObject().value("@pitch").toInt();
+            this->bgs_pitch = map->object().value("@bgs").toObject().value("@pitch").toInt();
+            this->bgm_volume = map->object().value("@bgm").toObject().value("@volume").toInt();
+            this->bgs_volume = map->object().value("@bgs").toObject().value("@volume").toInt();
 
             this->ui->spin_steps->setValue(map->object().value("@encounter_step").toInt());
 
@@ -104,6 +108,8 @@ void MapPropertiesDialog::on_button_ok_clicked()
     mc.set_jsonvalue("@encounter_step", this->ui->spin_steps->value());
     mc.set_jsonvalue("@autoplay_bgm", this->ui->check_auto_change_bgm->isChecked());
     mc.set_jsonvalue("@autoplay_bgs", this->ui->check_auto_change_bgs->isChecked());
+    mc.set_jsonvalue("@bgm", Factory().create_audiofile(this->ui->line_bgm->text(), this->bgm_volume, this->bgm_pitch));
+    mc.set_jsonvalue("@bgs", Factory().create_audiofile(this->ui->line_bgs->text(), this->bgs_volume, this->bgs_pitch));
     mc.set_size(this->ui->spin_x->value(), this->ui->spin_y->value());
 
 
@@ -118,16 +124,24 @@ void MapPropertiesDialog::on_button_cancel_clicked()
 
 void MapPropertiesDialog::on_button_bgm_clicked()
 {
-    //AudioDialog *dialog = new AudioDialog(system, &this->bgm, AudioDialog::BGM);
-    //connect(dialog, SIGNAL(ok_clicked(QString)), this->ui->line_bgm, SLOT(setText(QString)));
-    //dialog->show();
+    AudioDialog *dialog = new AudioDialog(mic->get_db(), this->ui->line_bgm->text(), this->bgm_volume, this->bgm_pitch, AudioDialog::BGM);
+    connect(dialog, &AudioDialog::ok_clicked, this, [=](QString name, int volume, int pitch){
+        this->ui->line_bgm->setText(name);
+        this->bgm_pitch = pitch;
+        this->bgm_volume = volume;
+    });
+    dialog->show();
 }
 
 void MapPropertiesDialog::on_button_bgs_clicked()
 {
-    //AudioDialog *dialog = new AudioDialog(system, &this->bgs, AudioDialog::BGS);
-    //connect(dialog, SIGNAL(ok_clicked(QString)), this->ui->line_bgs, SLOT(setText(QString)));
-    //dialog->show();
+    AudioDialog *dialog = new AudioDialog(mic->get_db(), this->ui->line_bgs->text(), this->bgs_volume, this->bgs_pitch, AudioDialog::BGS);
+    connect(dialog, &AudioDialog::ok_clicked, this, [=](QString name, int volume, int pitch){
+        this->ui->line_bgs->setText(name);
+        this->bgs_pitch = pitch;
+        this->bgs_volume = volume;
+    });
+    dialog->show();
 }
 
 

@@ -33,11 +33,11 @@ EventPage::EventPage(QJsonObject page, RPGDB *db, QWidget *parent) :
     if (page.value("@condition").toObject().value("@self_switch_ch").toString() == "A")
         this->ui->combo_self_switch->setCurrentIndex(0);
     else if (page.value("@condition").toObject().value("@self_switch_ch").toString() == "B")
-        this->ui->combo_self_switch->setCurrentIndex(0);
+        this->ui->combo_self_switch->setCurrentIndex(1);
     else if (page.value("@condition").toObject().value("@self_switch_ch").toString() == "C")
-        this->ui->combo_self_switch->setCurrentIndex(0);
+        this->ui->combo_self_switch->setCurrentIndex(2);
     else if (page.value("@condition").toObject().value("@self_switch_ch").toString() == "D")
-        this->ui->combo_self_switch->setCurrentIndex(0);
+        this->ui->combo_self_switch->setCurrentIndex(3);
 
 
 
@@ -71,6 +71,21 @@ EventPage::EventPage(QJsonObject page, RPGDB *db, QWidget *parent) :
         this->ui->radio_parallel_process->setChecked(true);
     }
 
+}
+
+EventPage::EventPage(RPGDB *db, QWidget *parent):
+    QWidget(parent),
+    ui(new Ui::EventPage)
+{
+    ui->setupUi(this);
+    this->db = db;
+    //blank page
+    this->ui->widget_switch1->setSwitchWidget(db);
+    this->ui->widget_switch2->setSwitchWidget(db);
+    this->ui->widget_variable->setVariableWidget(db);
+
+    //TODO init list
+    //TODO init graphic
 }
 
 EventPage::~EventPage()

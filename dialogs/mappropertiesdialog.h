@@ -69,6 +69,11 @@ private:
     bool create_new_map = false;
     RPGMapInfoController *mic;
     QJsonDocument *map;
+
+    int bgm_volume;
+    int bgm_pitch;
+    int bgs_volume;
+    int bgs_pitch;
 };
 
 #endif // MAPPROPERTIESDIALOG_H
