@@ -18,13 +18,15 @@ public:
     void update_image();
     void set_data(RPGDB *db, int mode, QString current_file);
     void set_data(RPGDB *db, int mode, QString current_file, int hue);
-    //void set_data_from_page(RPGDB *db, RPGEventPage *page);
+    void set_data_from_page(RPGDB *db, QString character_name, int character_hue, int pattern, int direction, int opacity, int blend_type, int tile_id, int tileset_id);
+
+
+
 
     void mouseDoubleClickEvent(QMouseEvent *ev);
 
     QString current_file;
     int hue = 0;
-    int tile_id;
 
 
 signals:
@@ -40,7 +42,13 @@ public slots:
 private:
     RPGDB *db;
     int mode;
-    //RPGEventPage *page;
+
+    int pattern;
+    int direction;
+    int opacity;
+    int blend_type;
+    int tile_id;
+    int tileset_id;
 
 };
 

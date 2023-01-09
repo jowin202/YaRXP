@@ -13,11 +13,13 @@ EventDialog::EventDialog(RPGMapController *mc, QJsonObject event, QWidget *paren
 
     this->event = event;
     this->mc = mc;
+
+    this->setWindowTitle(QString("YaRXP - Event %1").arg(event.value("@id").toInt(),3,10,QChar('0')));
     QJsonArray pages = event.value("@pages").toArray();
 
     for (int i = 0; i < pages.count(); i++)
     {
-        this->ui->tab_widget->addTab(new EventPage(pages.at(i).toObject(), mc->getDB()), QString());
+        this->ui->tab_widget->addTab(new EventPage(pages.at(i).toObject(), mc), QString());
     }
 
     this->ui->line_name->setText(event.value("@name").toString());
@@ -44,7 +46,7 @@ void EventDialog::do_numbers_of_tabs_right()
 
 void EventDialog::on_button_new_clicked()
 {
-    int pos = this->ui->tab_widget->addTab(new EventPage(mc->getDB()), QString()); //empty
+    int pos = this->ui->tab_widget->addTab(new EventPage(mc), QString()); //empty
     this->do_numbers_of_tabs_right();
     this->ui->tab_widget->setCurrentIndex(pos);
 }

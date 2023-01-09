@@ -141,10 +141,23 @@ void RPGMapController::remove_event_by_id(int id)
         doc->setObject(map_object);
 }
 
+int RPGMapController::get_next_event_id()
+{
+    QJsonObject events = this->get_jsonvalue("@events").toObject();
+    for (int i = 1; i < this->get_height()*this->get_width(); i++)
+    {
+        if (!events.contains(QString::number(i)))
+            return i;
+    }
+
+    return -1;
+}
+
 void RPGMapController::move_event(QPoint from, QPoint to)
 {
     QJsonObject event_on_from_pos = this->event_on_pos(from);
-    if (!event_on_from_pos.contains("RXClass"))
+    QJsonObject event_on_to_pos = this->event_on_pos(to);
+    if (!event_on_from_pos.contains("RXClass") || event_on_to_pos.contains("RXClass")) //from pos should contain event, to pos should not
         return;
 
     int id = event_on_from_pos.value("@id").toInt();

@@ -53,8 +53,15 @@ void MapTile::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, Q
 
             QPen pen;
             pen.setColor(Qt::white);
-            if (opt->marked_event.x() == this->pos.x() && opt->marked_event.y() == this->pos.y())
-                pen.setColor(Qt::black);
+            pen.setWidth(3);
+            painter->setPen(pen);
+            painter->drawRect(2,2,28,28);
+        }
+        if (opt->marked_tile.x() == this->pos.x() && opt->marked_tile.y() == this->pos.y())
+        {
+            painter->setOpacity(1);
+            QPen pen;
+            pen.setColor(Qt::black);
             pen.setWidth(3);
             painter->setPen(pen);
             painter->drawRect(2,2,28,28);

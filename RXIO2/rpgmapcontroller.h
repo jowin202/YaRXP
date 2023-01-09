@@ -46,6 +46,7 @@ public:
     QJsonObject event_by_id(int id);
     void set_event_by_id(int id, QJsonObject event);
     void remove_event_by_id(int id);
+    int get_next_event_id();
 
     void move_event(QPoint from, QPoint to);
 
@@ -65,6 +66,7 @@ public:
     QJsonValue get_jsonvalue(QString key);
     void set_jsonvalue(QString key, QJsonValue value);
 
+    QJsonDocument *current_map() {return doc;}
 private:
     RPGDB *db;
     QJsonDocument *doc;

@@ -26,7 +26,7 @@ struct tile_options {
     int layer;
     bool current_and_below;
     //bool dim;
-    QPoint marked_event;
+    QPoint marked_tile; //events
 };
 
 class MapView : public QGraphicsView
@@ -94,7 +94,13 @@ public:
         }
         else if (opt.mode == EVENT)
         {
-
+            QJsonObject ev = this->mc.event_on_pos(opt.marked_tile);
+            if (ev.contains("RXClass"))
+            {
+                QJsonDocument doc(ev);
+                QSettings settings;
+                settings.setValue("copied_event", doc.toJson(QJsonDocument::Compact));
+            }
         }
     }
     void do_cut()
@@ -106,7 +112,9 @@ public:
     {
         if (opt.mode == EVENT)
         {
-
+            QJsonObject ev = this->mc.event_on_pos(opt.marked_tile);
+            if (ev.contains("RXClass"))
+                mc.remove_event_by_id(ev.value("@id").toInt());
         }
         else if (opt.mode == SELECT && this->select_rectangle != 0)
         {
@@ -142,7 +150,17 @@ public:
         }
         else if (opt.mode == EVENT)
         {
-
+            QSettings settings;
+            QJsonDocument doc = QJsonDocument::fromJson(settings.value("copied_event").toByteArray());
+            if (!mc.event_on_pos(opt.marked_tile).contains("RXClass"))
+            {
+                int id = mc.get_next_event_id();
+                QJsonObject ev = doc.object();
+                ev.insert("@x", opt.marked_tile.x());
+                ev.insert("@y", opt.marked_tile.y());
+                ev.insert("@id", id);
+                mc.set_event_by_id(id, ev);
+            }
         }
     }
 

@@ -224,8 +224,17 @@ void MapView::mouseReleaseEvent(QMouseEvent *event)
         {
             this->event_left_button_for_moving = false;
             this->mc.move_event(this->event_moving_from_pos, pos);
-            ((MapTile*)this->scene()->itemAt(32*event_moving_from_pos,QTransform()))->update();
-            ((MapTile*)this->scene()->itemAt(32*pos,QTransform()))->update();
+            MapTile *tile;
+            if ( (tile = ((MapTile*)this->scene()->itemAt(32*event_moving_from_pos,QTransform()))) != 0)
+                tile->update();
+            if ( (tile = ((MapTile*)this->scene()->itemAt(32*pos,QTransform()))) != 0)
+                tile->update();
+
+            //marked tile
+            QPoint prev_marked_tile = opt.marked_tile;
+            this->opt.marked_tile = pos;
+            if ( (tile = ((MapTile*)this->scene()->itemAt(32*prev_marked_tile,QTransform()))) != 0)
+                tile->update();
         }
     }
 }

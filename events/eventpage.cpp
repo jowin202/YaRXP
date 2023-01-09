@@ -3,15 +3,17 @@
 
 #include "RXIO2/rpgdb.h"
 #include "RXIO2/factory.h"
+#include "RXIO2/rpgmapcontroller.h"
 #include "dialogs/imagedialog.h"
 
-EventPage::EventPage(QJsonObject page, RPGDB *db, QWidget *parent) :
+EventPage::EventPage(QJsonObject page, RPGMapController *mc, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::EventPage)
 {
     ui->setupUi(this);
 
-    this->db = db;
+    this->mc = mc;
+    this->db = mc->getDB();
     this->page = page;
 
 
@@ -40,6 +42,25 @@ EventPage::EventPage(QJsonObject page, RPGDB *db, QWidget *parent) :
         this->ui->combo_self_switch->setCurrentIndex(3);
 
 
+    /*
+    obj.insert("@blend_type", blend_type);
+    obj.insert("@character_hue", character_hue);
+    obj.insert("@character_name", character_name);
+    obj.insert("@direction", direction);
+    obj.insert("@opacity", opacity);
+    obj.insert("@pattern", pattern);
+    obj.insert("@tile_id", tile_id);
+    */
+
+    this->ui->label_graphic->set_data_from_page(this->db,
+                                                page.value("@graphic").toObject().value("@character_name").toString(),
+                                                page.value("@graphic").toObject().value("@character_hue").toInt(),
+                                                page.value("@graphic").toObject().value("@pattern").toInt(),
+                                                page.value("@graphic").toObject().value("@direction").toInt(),
+                                                page.value("@graphic").toObject().value("@opacity").toInt(),
+                                                page.value("@graphic").toObject().value("@blend_type").toInt(),
+                                                page.value("@graphic").toObject().value("@tile_id").toInt(),
+                                                mc->current_map()->object().value("@tileset_id").toInt());
 
 
     this->ui->check_always_on_top->setChecked(page.value("@always_on_top").toBool());
@@ -73,12 +94,13 @@ EventPage::EventPage(QJsonObject page, RPGDB *db, QWidget *parent) :
 
 }
 
-EventPage::EventPage(RPGDB *db, QWidget *parent):
+EventPage::EventPage(RPGMapController *mc, QWidget *parent):
     QWidget(parent),
     ui(new Ui::EventPage)
 {
     ui->setupUi(this);
-    this->db = db;
+    this->mc = mc;
+    this->db = mc->getDB();
     //blank page
     this->ui->widget_switch1->setSwitchWidget(db);
     this->ui->widget_switch2->setSwitchWidget(db);

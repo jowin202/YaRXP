@@ -14,15 +14,15 @@ class EventPage;
 
 
 class RPGDB;
-class RPGEventPageController;
+class RPGMapController;
 
 class EventPage : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit EventPage(QJsonObject page, RPGDB *db, QWidget *parent = nullptr);
-    EventPage(RPGDB *db, QWidget *parent = nullptr);
+    explicit EventPage(QJsonObject page, RPGMapController *mc, QWidget *parent = nullptr);
+    EventPage(RPGMapController *mc, QWidget *parent = nullptr);
     ~EventPage();
 
     QJsonObject getPage();
@@ -33,6 +33,7 @@ private slots:
 
 private:
     Ui::EventPage *ui;
+    RPGMapController *mc;
     RPGDB *db;
     QJsonObject page;
 };

@@ -21,12 +21,26 @@ void ImageDisplayWidget::set_background_color()
 void ImageDisplayWidget::update_image()
 {
     QImage pic;
-    /*
-    if (mode == ImageDialog::EVENTPAGE && this->page != 0)
-        pic = page->get_page_graphic(system);
-    else
-    */
-    if (mode == ImageDialog::CHARACTERS)
+    if (mode == ImageDialog::EVENTPAGE)
+    {
+        if (tile_id == 0)
+        {
+            QImage tmp(db->project_dir + "Graphics" + QDir::separator() + "Characters" + QDir::separator() + current_file);
+            pic = tmp.copy(tmp.width()/4*pattern,tmp.height()/4*(direction/2-1),tmp.width()/4, tmp.height()/4);
+        }
+        else if (tile_id >= 384) // no autotiles allowed here
+        {
+            QJsonObject tileset = this->db->get_tileset_by_id(tileset_id);
+            QImage tileset_img(db->project_dir + "Graphics" + QDir::separator() + "Tilesets" + QDir::separator() + tileset.value("@tileset_name").toString());
+            if (!tileset_img.isNull())
+            {
+                int x = (tile_id-384)%8;
+                int y = (tile_id-384)/8;
+                pic = tileset_img.copy(32*x,32*y,32,32);
+            }
+        }
+    }
+    else if (mode == ImageDialog::CHARACTERS)
     {
         QImage tmp(db->project_dir + "Graphics" + QDir::separator() + "Characters" + QDir::separator() + current_file);
         pic = tmp.copy(0,0,tmp.width()/4, tmp.height()/4);
@@ -66,25 +80,28 @@ void ImageDisplayWidget::set_data(RPGDB *db, int mode, QString current_file, int
     this->current_file = current_file;
     this->hue = hue;
 
-
     this->set_background_color();
     this->update_image();
 }
-/*
-void ImageDisplayWidget::set_data_from_page(RPGDB *db, RPGEventPage *page)
+
+void ImageDisplayWidget::set_data_from_page(RPGDB *db, QString character_name, int character_hue, int pattern, int direction, int opacity, int blend_type, int tile_id, int tileset_id)
 {
-    this->db = db;
     this->mode = ImageDialog::EVENTPAGE;
-    this->current_file = page->character_name;
-    this->hue = page->character_hue;
-    this->tile_id = page->tile_id;
-    this->page = page;
+    this->db = db;
+    this->current_file = character_name;
+    this->hue = character_hue;
 
+    //specific
+    this->pattern = pattern;
+    this->direction = direction;
+    this->opacity = opacity;
+    this->blend_type = blend_type;
+    this->tile_id = tile_id;
+    this->tileset_id = tileset_id;
 
     this->set_background_color();
     this->update_image();
 }
-*/
 
 void ImageDisplayWidget::mouseDoubleClickEvent(QMouseEvent *ev)
 {

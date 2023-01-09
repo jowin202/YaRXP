@@ -23,8 +23,10 @@ void TilesetView::set_tileset(int id)
     this->max_height = tileset_image.height()+32;
     QJsonArray autotiles = current.value("@autotile_names").toArray();
     if (tileset_image.isNull())
+    {
+        qDebug() << "tileset error:" << db->project_dir + "Graphics" + QDir::separator() + "Tilesets" + QDir::separator() + current.value("@tileset_name").toString();
         return;
-
+    }
 
     this->scene()->clear();
     this->setBackgroundBrush(db->transparent);
