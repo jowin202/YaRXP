@@ -2,6 +2,7 @@
 
 
 #include "RXIO2/rpgdb.h"
+#include "RXIO2/fileopener.h"
 #include "RXIO2/rpgeditorcontroller.h"
 
 TroopPicLabel::TroopPicLabel(QWidget *parent) : QLabel(parent)
@@ -128,7 +129,7 @@ void TroopPicLabel::redraw()
     members = ec->obj_get_jsonvalue(RPGDB::TROOPS, "@members").toArray();
 
     QString battleback_name = ec->obj_get_jsonvalue(RPGDB::SYSTEM, "@battleback_name").toString();
-    QImage battleback(ec->get_db()->project_dir + "Graphics" + QDir::separator() + "Battlebacks" + QDir::separator() + battleback_name);
+    QImage battleback = FileOpener(ec->get_db()->battleback_dir,battleback_name).get_image();
 
     if (!battleback.isNull())
         battleback = battleback.scaled(battleback.width()/2, battleback.height()/2, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
@@ -152,7 +153,7 @@ void TroopPicLabel::redraw()
 
 
         QJsonObject enemy = ec->get_object_by_id(RPGDB::ENEMIES,member.value("@enemy_id").toInt());
-        QImage battler = QImage(ec->get_db()->project_dir + "Graphics" + QDir::separator() + "Battlers" + QDir::separator() + enemy.value("@battler_name").toString());
+        QImage battler = FileOpener(ec->get_db()->battler_dir,enemy.value("@battler_name").toString()).get_image();
 
         if (battler.isNull()) continue;
         battler = battler.scaled(battler.width()/2, battler.height()/2);

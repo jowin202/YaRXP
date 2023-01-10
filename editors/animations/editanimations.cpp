@@ -96,7 +96,7 @@ void EditAnimations::on_frame_list_currentRowChanged(int currentRow)
     QJsonObject frame = frames.at(currentRow).toObject();
 
     this->ui->animation_label->update(currentRow);
-    qDebug() << frame;
+    //qDebug() << frame;
 }
 
 

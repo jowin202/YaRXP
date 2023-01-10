@@ -79,6 +79,10 @@ public:
     QString graphics_dir;
     QString tileset_dir;
     QString autotiles_dir;
+    QString character_dir;
+    QString battler_dir;
+    QString battleback_dir;
+    QString animations_dir;
 
 
     void set_files(

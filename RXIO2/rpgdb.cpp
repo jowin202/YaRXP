@@ -22,6 +22,10 @@ void RPGDB::load_project(QString dir)
     this->graphics_dir = FileOpener(this->project_dir, "graphics").get_existing_directory();
     this->tileset_dir = FileOpener(this->graphics_dir, "tilesets").get_existing_directory();
     this->autotiles_dir = FileOpener(this->graphics_dir, "autotiles").get_existing_directory();
+    this->character_dir = FileOpener(this->graphics_dir, "characters").get_existing_directory();
+    this->battler_dir = FileOpener(this->graphics_dir, "battlers").get_existing_directory();
+    this->battleback_dir = FileOpener(this->graphics_dir, "battlebacks").get_existing_directory();
+    this->animations_dir = FileOpener(this->graphics_dir, "animations").get_existing_directory();
 
     Parser actor_parser(&actor_file, &param_oders,               FileOpener(this->data_dir,"Actors.rxdata").get_existing_file());
     Parser animation_parser(&animation_file, &param_oders,       FileOpener(this->data_dir,"Animations.rxdata").get_existing_file());

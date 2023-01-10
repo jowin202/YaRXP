@@ -1,4 +1,5 @@
 #include "RXIO2/rpgdb.h"
+#include "RXIO2/fileopener.h"
 #include "RXIO2/rpgeditorcontroller.h"
 #include "animationlabel.h"
 
@@ -25,7 +26,7 @@ void AnimationLabel::update(int frame)
 
 
 
-        QImage battler(ec->get_db()->project_dir + "Graphics" + QDir::separator() + "Battlers" + QDir::separator() + battler_name);
+        QImage battler = FileOpener(ec->get_db()->battler_dir, battler_name).get_image();
         if (!battler.isNull())
         {
             battler = battler.scaled(battler.width()/2, battler.height()/2);//, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
@@ -142,7 +143,7 @@ void AnimationLabel::set_animation_graphic(QString name, int hue)
 {
     if (this->current_animation_graphic == name && this->current_hue == hue) return;
 
-    this->animation_graphic = QImage(ec->get_db()->project_dir + "Graphics" + QDir::separator() + "Animations" + QDir::separator() + name);
+    this->animation_graphic = FileOpener(ec->get_db()->animations_dir, name).get_image();
 
     if (!this->animation_graphic.isNull())
     {

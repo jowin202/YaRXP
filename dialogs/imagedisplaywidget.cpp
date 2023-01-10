@@ -1,6 +1,7 @@
 #include "imagedialog.h"
 #include "imagedisplaywidget.h"
 
+#include "RXIO2/fileopener.h"
 
 #include "RXIO2/rpgdb.h"
 
@@ -25,13 +26,13 @@ void ImageDisplayWidget::update_image()
     {
         if (tile_id == 0)
         {
-            QImage tmp(db->project_dir + "Graphics" + QDir::separator() + "Characters" + QDir::separator() + current_file);
+            QImage tmp = FileOpener(db->character_dir,current_file).get_image();
             pic = tmp.copy(tmp.width()/4*pattern,tmp.height()/4*(direction/2-1),tmp.width()/4, tmp.height()/4);
         }
         else if (tile_id >= 384) // no autotiles allowed here
         {
             QJsonObject tileset = this->db->get_tileset_by_id(tileset_id);
-            QImage tileset_img(db->project_dir + "Graphics" + QDir::separator() + "Tilesets" + QDir::separator() + tileset.value("@tileset_name").toString());
+            QImage tileset_img = FileOpener(db->tileset_dir,tileset.value("@tileset_name").toString()).get_image();
             if (!tileset_img.isNull())
             {
                 int x = (tile_id-384)%8;
@@ -42,11 +43,11 @@ void ImageDisplayWidget::update_image()
     }
     else if (mode == ImageDialog::CHARACTERS)
     {
-        QImage tmp(db->project_dir + "Graphics" + QDir::separator() + "Characters" + QDir::separator() + current_file);
+        QImage tmp = FileOpener(db->character_dir,current_file).get_image();
         pic = tmp.copy(0,0,tmp.width()/4, tmp.height()/4);
     }
     else if (mode == ImageDialog::BATTLERS)
-        pic = QImage(db->project_dir + "Graphics" + QDir::separator() + "Battlers" + QDir::separator() + current_file);
+        pic = FileOpener(db->battler_dir,current_file).get_image();
     pic = pic.convertToFormat(QImage::Format_ARGB32);
 
     for (int y = 0; y < pic.height(); y++)
