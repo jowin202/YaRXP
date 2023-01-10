@@ -61,7 +61,42 @@ void Tile::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     }
     else if (opt->mode == PASSAGES4)
     {
-        QImage arrow_down(":/icons/bxs-down-arrow-alt.svg");
+        if ((passage & 0x01) != 1) //down
+        {
+            QPolygon polygon;
+            polygon.append(QPoint(10,20));
+            polygon.append(QPoint(20,20));
+            polygon.append(QPoint(15,30));
+            painter->setBrush(Qt::white);
+            painter->drawPolygon(polygon);
+        }
+        if ((passage & 0x02) != 2) //left
+        {
+            QPolygon polygon;
+            polygon.append(QPoint(10,10));
+            polygon.append(QPoint(10,20));
+            polygon.append(QPoint(1,15));
+            painter->setBrush(Qt::white);
+            painter->drawPolygon(polygon);
+        }
+        if ((passage & 0x04) != 4) //right
+        {
+            QPolygon polygon;
+            polygon.append(QPoint(20,10));
+            polygon.append(QPoint(20,20));
+            polygon.append(QPoint(30,15));
+            painter->setBrush(Qt::white);
+            painter->drawPolygon(polygon);
+        }
+        if ((passage & 0x08) != 8) //up
+        {
+            QPolygon polygon;
+            polygon.append(QPoint(10,10));
+            polygon.append(QPoint(20,10));
+            polygon.append(QPoint(15,1));
+            painter->setBrush(Qt::white);
+            painter->drawPolygon(polygon);
+        }
     }
     else if (opt->mode == PRIORITY)
     {
@@ -120,7 +155,6 @@ void Tile::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 
 void Tile::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-
     if (event->button() == Qt::RightButton) return;
 
     if (opt->mode == PASSAGES)
@@ -134,7 +168,16 @@ void Tile::mousePressEvent(QGraphicsSceneMouseEvent *event)
     }
     else if (opt->mode == PASSAGES4)
     {
+        if (event->pos().y() < 10 && event->pos().x() > 5 && event->pos().x() < 27)
+            passage ^= 0x08;
+        if (event->pos().y() > 20 && event->pos().x() > 5 && event->pos().x() < 27)
+            passage ^= 0x01;
+        if (event->pos().x() < 10 && event->pos().y() > 5 && event->pos().y() < 27)
+            passage ^= 0x02;
+        if (event->pos().x() > 20 && event->pos().y() > 5 && event->pos().y() < 27)
+            passage ^= 0x04;
 
+        opt->parent->change_passage(tile_num, passage);
     }
     else if (opt->mode == PRIORITY)
     {
