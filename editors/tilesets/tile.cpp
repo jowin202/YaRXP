@@ -176,7 +176,6 @@ void Tile::mousePressEvent(QGraphicsSceneMouseEvent *event)
             passage ^= 0x02;
         if (event->pos().x() > 20 && event->pos().y() > 5 && event->pos().y() < 27)
             passage ^= 0x04;
-
         opt->parent->change_passage(tile_num, passage);
     }
     else if (opt->mode == PRIORITY)
