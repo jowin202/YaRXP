@@ -74,6 +74,11 @@ public:
 
     QColor transparent = QColor(0x8a,0x16,0xa0);
     QString project_dir;
+    QString data_dir;
+    QString audio_dir;
+    QString graphics_dir;
+    QString tileset_dir;
+    QString autotiles_dir;
 
 
     void set_files(

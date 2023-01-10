@@ -5,6 +5,8 @@
 #include "tilesetrectangle.h"
 #include "tilesetview.h"
 
+#include "RXIO2/fileopener.h"
+
 
 TilesetView::TilesetView(QWidget *parent) : QGraphicsView(parent)
 {
@@ -19,17 +21,17 @@ TilesetView::TilesetView(QWidget *parent) : QGraphicsView(parent)
 void TilesetView::set_tileset(int id)
 {
     QJsonObject current = db->get_tileset_by_id(id);
-    QImage tileset_image(db->project_dir + "Graphics" + QDir::separator() + "Tilesets" + QDir::separator() + current.value("@tileset_name").toString());
+    QImage tileset_image = FileOpener(db->tileset_dir, current.value("@tileset_name").toString()).get_image();
     this->max_height = tileset_image.height()+32;
     QJsonArray autotiles = current.value("@autotile_names").toArray();
-    if (tileset_image.isNull())
-    {
-        qDebug() << "tileset error:" << db->project_dir + "Graphics" + QDir::separator() + "Tilesets" + QDir::separator() + current.value("@tileset_name").toString();
-        return;
-    }
 
     this->scene()->clear();
     this->setBackgroundBrush(db->transparent);
+    if (tileset_image.isNull())
+    {
+        qDebug() << "tileset error:" << db->tileset_dir << current.value("@tileset_name").toString();
+        return;
+    }
 
     QGraphicsPixmapItem *background = new QGraphicsPixmapItem(QPixmap::fromImage(tileset_image));
     background->setPos(0,32);
@@ -39,7 +41,7 @@ void TilesetView::set_tileset(int id)
 
     for (int i = 0; i < 7; i++)
     {
-        QImage autotile_img(db->project_dir + "Graphics" + QDir::separator() + "Autotiles" + QDir::separator() + autotiles.at(i).toString());
+        QImage autotile_img = FileOpener(db->autotiles_dir, autotiles.at(i).toString()).get_image();
         QGraphicsPixmapItem *autotile = new QGraphicsPixmapItem(QPixmap::fromImage(autotile_img.copy(0,0,32,32)));
         autotile->setPos((i+1)*32,0);
         this->scene()->addItem(autotile);

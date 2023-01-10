@@ -2,6 +2,7 @@
 
 #include "tile.h"
 #include "RXIO2/rpgdb.h"
+#include "RXIO2/fileopener.h"
 #include "RXIO2/rpgeditorcontroller.h"
 
 TilesetEditWidget::TilesetEditWidget(QWidget *parent) : QGraphicsView(parent)
@@ -43,7 +44,7 @@ void TilesetEditWidget::update_tileset()
 
     this->scene()->clear();
     this->setBackgroundBrush(ec->get_db()->transparent);
-    QImage tileset_img(ec->get_db()->project_dir + "Graphics" + QDir::separator() + "Tilesets" + QDir::separator() + tileset_image);
+    QImage tileset_img = FileOpener(ec->get_db()->tileset_dir,tileset_image).get_image();
 
     int tiles_x = 8; //tileset_img.width()/32; //assuming that is divisible
     int tiles_y = qFloor(tileset_img.height()/32.0);
@@ -64,7 +65,7 @@ void TilesetEditWidget::update_tileset()
         this->autotiles_items[i]->setPos(32*i,0);
         if (i > 0)
         {
-            QImage autotile_img(ec->get_db()->project_dir + "Graphics" + QDir::separator() + "Autotiles" + QDir::separator() + autotile_names.at(i-1).toString());
+            QImage autotile_img = FileOpener(ec->get_db()->autotiles_dir,autotile_names.at(i-1).toString()).get_image();
             if (!autotile_img.isNull())
                 this->autotiles_items[i]->setPixmap(QPixmap::fromImage(autotile_img.copy(0,0,32,32)));
         }

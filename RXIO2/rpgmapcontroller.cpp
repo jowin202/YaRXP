@@ -2,6 +2,8 @@
 #include "rpgdb.h"
 #include "autotileset.h"
 
+#include "fileopener.h"
+
 RPGMapController::RPGMapController(QObject *parent)
     : QObject{parent}
 {
@@ -17,12 +19,12 @@ void RPGMapController::setMap(int id, bool load_images)
         QJsonObject tileset = this->db->get_tileset_by_id(this->get_jsonvalue("@tileset_id").toInt());
         if (load_images)
         {
-            this->tileset_image = QImage(this->db->project_dir + "Graphics" + QDir::separator() + "Tilesets" + QDir::separator() + tileset.value("@tileset_name").toString());
+            this->tileset_image = FileOpener(db->tileset_dir,tileset.value("@tileset_name").toString()).get_image();
 
             QJsonArray autotile_names = tileset.value("@autotile_names").toArray();
             for (int i = 0; i < 7; i++)
             {
-                this->autotiles[i] = Autotileset(QImage(this->db->project_dir + "Graphics" + QDir::separator() + "Autotiles" + QDir::separator() + autotile_names.at(i).toString())).get_full_tileset();
+                this->autotiles[i] = Autotileset(FileOpener(db->autotiles_dir, autotile_names.at(i).toString()).get_image()).get_full_tileset();
             }
         }
     }

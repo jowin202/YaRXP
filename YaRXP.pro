@@ -66,6 +66,7 @@ SOURCES += \
     RXIO/testcases.cpp \
     RXIO2/autotileset.cpp \
     RXIO2/factory.cpp \
+    RXIO2/fileopener.cpp \
     RXIO2/iorgssad.cpp \
     RXIO2/parser.cpp \
     RXIO2/rpgdb.cpp \
@@ -191,6 +192,7 @@ HEADERS += \
     RXIO/testcases.h \
     RXIO2/autotileset.h \
     RXIO2/factory.h \
+    RXIO2/fileopener.h \
     RXIO2/iorgssad.h \
     RXIO2/parser.h \
     RXIO2/rpgdb.h \
