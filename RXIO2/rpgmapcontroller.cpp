@@ -433,6 +433,8 @@ void RPGMapController::set_size(int xtiles, int ytiles)
     obj = this->doc->object();
     QJsonObject data_obj = this->doc->object().value("@data").toObject();
     data_obj.insert("values", values);
+    data_obj.insert("x", xtiles);
+    data_obj.insert("y", ytiles);
     obj.insert("@data", data_obj);
     obj.insert("@height", ytiles);
     this->doc->setObject(obj);
