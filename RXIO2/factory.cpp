@@ -625,7 +625,7 @@ QJsonObject Factory::create_map_info(bool expanded, QString name, int order, int
     obj.insert("@expanded", expanded);
     obj.insert("@name", name);
     obj.insert("@order", order);
-    obj.insert("@parent", parent);
+    obj.insert("@parent_id", parent);
     obj.insert("@scroll_x", scroll_x);
     obj.insert("@scroll_y", scroll_y);
 
