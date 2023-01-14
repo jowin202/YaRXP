@@ -1,4 +1,5 @@
 #include "maptile.h"
+#include "RXIO2/rpgdb.h"
 #include "RXIO2/rpgmapcontroller.h"
 #include "mapview.h"
 
@@ -18,7 +19,7 @@ void MapTile::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, Q
     QImage img2 = mc->get_tile_from_pos(this->pos, 1);
     QImage img3 = mc->get_tile_from_pos(this->pos, 2);
 
-    painter->fillRect(0,0,32,32, purple);
+    painter->fillRect(0,0,32,32, mc->getDB()->transparent);
 
     painter->setOpacity(1.0);
     painter->drawImage(0,0, img1);

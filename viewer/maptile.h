@@ -27,7 +27,6 @@ public:
 private:
     RPGMapController *mc;
     QPoint pos;
-    QColor purple = QColor(0x8a,0x16,0xa0);
     tile_options *opt;
 
 };
