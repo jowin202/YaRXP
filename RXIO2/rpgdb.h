@@ -10,6 +10,10 @@
 #include <QDir>
 #include <QMap>
 
+#include <QListWidget>
+#include <QComboBox>
+
+
 #include "factory.h"
 
 class RPGEditorController;
@@ -101,6 +105,9 @@ public:
             QJsonDocument weapon_file);
 
 
+    void fill_list(QListWidget *list, int type, bool shownum, int chars);
+    void fill_combo(QComboBox *box, int type, bool shownum, int chars);
+    QString get_object_name(int type, int id);
 
 private:
     QJsonDocument actor_file;
@@ -116,6 +123,7 @@ private:
     QJsonDocument tileset_file;
     QJsonDocument troop_file;
     QJsonDocument weapon_file;
+    QJsonDocument *files[13] = {&actor_file, &class_file, &skill_file, &item_file, &weapon_file, &armor_file, &enemy_file, &troop_file, &state_file, &animation_file, &tileset_file, &common_event_file, &system_file };
 
     QJsonDocument mapinfo_file;
     QMap<int,QJsonDocument*> map_files;

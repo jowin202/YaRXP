@@ -198,3 +198,27 @@ void RPGDB::set_files(QJsonDocument actor_file, QJsonDocument animation_file, QJ
     this->troop_file = troop_file;
     this->weapon_file = weapon_file;
 }
+
+void RPGDB::fill_list(QListWidget *list, int type, bool shownum, int chars)
+{
+    list->clear();
+    for (int i = 1; i < files[type]->array().count(); i++)
+        list->addItem(shownum ? QString("%1: " + files[type]->array().at(i).toObject().value("@name").toString())
+                                .arg(i,chars,10,QChar('0')) :
+                                files[type]->array().at(i).toObject().value("@name").toString());
+
+}
+
+void RPGDB::fill_combo(QComboBox *box, int type, bool shownum, int chars)
+{
+    box->clear();
+    for (int i = 1; i < files[type]->array().count(); i++)
+        box->addItem(shownum ? QString("%1: " + files[type]->array().at(i).toObject().value("@name").toString())
+                                .arg(i,chars,10,QChar('0')) :
+                               files[type]->array().at(i).toObject().value("@name").toString(),QVariant(i));
+}
+
+QString RPGDB::get_object_name(int type, int id)
+{
+    return files[type]->array().at(id).toObject().value("@name").toString();
+}

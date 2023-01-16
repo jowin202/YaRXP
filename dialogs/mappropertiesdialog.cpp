@@ -22,6 +22,9 @@ MapPropertiesDialog::MapPropertiesDialog(RPGMapInfoController *mic, int id, QWid
 
     this->ui->line_id->setText(QString::number(id));
 
+    this->mic->get_db()->fill_combo(this->ui->combo_tileset, RPGDB::TILESETS, true, 3);
+
+
 
     if (mic->id_is_valid(id))
     {
@@ -40,7 +43,15 @@ MapPropertiesDialog::MapPropertiesDialog(RPGMapInfoController *mic, int id, QWid
             this->bgs_volume = map->object().value("@bgs").toObject().value("@volume").toInt();
 
             this->ui->spin_steps->setValue(map->object().value("@encounter_step").toInt());
+            this->ui->combo_tileset->setCurrentIndex(map->object().value("@tileset_id").toInt()-1);
 
+            this->ui->table_encounters->setRowCount(map->object().value("@encounter_list").toArray().count());
+            for (int i = 0; i < map->object().value("@encounter_list").toArray().count(); i++)
+            {
+                int id = map->object().value("@encounter_list").toArray().at(i).toInt();
+                QString name = mic->get_db()->get_object_name(RPGDB::TROOPS, id);
+                this->ui->table_encounters->setItem(i,0, new QTableWidgetItem(QString("%1: %2").arg(id,3,10,QChar('0')).arg(name)));
+            }
 
             this->ui->spin_x->setValue(map->object().value("@width").toInt());
             this->ui->spin_y->setValue(map->object().value("@height").toInt());
@@ -110,6 +121,7 @@ void MapPropertiesDialog::on_button_ok_clicked()
     mc.set_jsonvalue("@autoplay_bgs", this->ui->check_auto_change_bgs->isChecked());
     mc.set_jsonvalue("@bgm", Factory().create_audiofile(this->ui->line_bgm->text(), this->bgm_volume, this->bgm_pitch));
     mc.set_jsonvalue("@bgs", Factory().create_audiofile(this->ui->line_bgs->text(), this->bgs_volume, this->bgs_pitch));
+    mc.set_jsonvalue("@tileset_id", this->ui->combo_tileset->currentData().toInt());
     mc.set_size(this->ui->spin_x->value(), this->ui->spin_y->value());
 
 

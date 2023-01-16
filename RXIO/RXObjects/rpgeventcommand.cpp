@@ -232,6 +232,7 @@ QString RPGEventCommand::getType()
 
 QString RPGEventCommand::get_command_text(RPGSystem *system)
 {
+    /*
     if (code == 0)
         return "@>";
     else if (code == 101)
@@ -372,9 +373,9 @@ QString RPGEventCommand::get_command_text(RPGSystem *system)
             else if (s == 10) status_var = "MDEF";
             else if (s == 11) status_var = "EVA";
             op2 = "[" + QString::number(parameters.at(4).toInt()+1) + "]'s " + status_var;
-            /**
-              Note: Original RPGMaker XP only uses enemie's number here, not the name
-              **/
+
+//Note: Original RPGMaker XP only uses enemie's number here, not the name
+
         }
         else if (operand_type == 6) // Characters
         {
@@ -498,9 +499,9 @@ QString RPGEventCommand::get_command_text(RPGSystem *system)
         return "@>Change Menu access: " + QString(parameters.at(0).toInt() == 0 ? "Disable":"Enable");
     else if (code == 136)
         return "@>Change Encounter: " + QString(parameters.at(0).toInt() == 0 ? "Disable":"Enable");
-    /**
-      Starting Page 2
-      **/
+
+//Starting Page 2
+
     else if (code == 201)
     {
         QString data;
@@ -747,9 +748,8 @@ QString RPGEventCommand::get_command_text(RPGSystem *system)
         return "@>Play SE: '" + this->audiofile.name + "', " + QString::number(this->audiofile.volume) + ", " + QString::number(this->audiofile.pitch);
     else if (code == 251)
         return "@>Stop SE";
-    /**
-      Starting Page 3
-      **/
+
+//Starting Page 3
 
 
     else if (code == 301 || code == 601 || code == 603 || code == 604)
@@ -1100,5 +1100,6 @@ QString RPGEventCommand::get_command_text(RPGSystem *system)
         return "Branch End";
     else
         return "unknown (" + QString::number(code) + ")";
+*/
 }
 

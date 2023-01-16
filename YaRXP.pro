@@ -75,7 +75,6 @@ SOURCES += \
     RXIO2/rpgmapinfocontroller.cpp \
     RXIO2/rxexception.cpp \
     RXIO2/writer.cpp \
-    datasource.cpp \
     dialogs/audiodialog.cpp \
     dialogs/imagedialog.cpp \
     dialogs/imagedisplaywidget.cpp \
@@ -201,7 +200,6 @@ HEADERS += \
     RXIO2/rpgmapinfocontroller.h \
     RXIO2/rxexception.h \
     RXIO2/writer.h \
-    datasource.h \
     dialogs/audiodialog.h \
     dialogs/imagedialog.h \
     dialogs/imagedisplaywidget.h \
