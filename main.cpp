@@ -14,6 +14,10 @@ int main(int argc, char *argv[])
     QCoreApplication::setApplicationName("YaRXP");
 
     MainWindow w;
+    if (argc > 1)
+    {
+        w.open_project(QString(argv[1]));
+    }
     w.showMaximized();
 
 
