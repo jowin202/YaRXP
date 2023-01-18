@@ -15,7 +15,7 @@ SimpleEventCell::SimpleEventCell(RPGEventCommand *command, RPGSystem *system)
     font.setStyleHint(QFont::TypeWriter);
     this->set_color();
     this->setFont(font);
-    this->setText(indent_as_string + command->get_command_text(system));
+    //this->setText(indent_as_string + command->get_command_text(system));
 }
 
 void SimpleEventCell::set_color()

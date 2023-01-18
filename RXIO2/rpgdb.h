@@ -70,6 +70,9 @@ public:
     //switches and variables
     QJsonArray get_switch_names();
     QJsonArray get_variable_names();
+    QString get_switch_name(int n) { return this->get_switch_names().at(n).toString();}
+    QString get_variable_name(int n) { return this->get_variable_names().at(n).toString();}
+
     void change_switch_name(int i, QString name);
     void change_variable_name(int i, QString name);
     void set_max_switches(int n);

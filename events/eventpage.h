@@ -15,6 +15,7 @@ class EventPage;
 
 class RPGDB;
 class RPGMapController;
+class RPGEventListController;
 
 class EventPage : public QWidget
 {
@@ -36,6 +37,7 @@ private:
     RPGMapController *mc;
     RPGDB *db;
     QJsonObject page;
+    RPGEventListController *evc;
 };
 
 #endif // EVENTPAGE_H

@@ -4,6 +4,7 @@
 #include "RXIO2/rpgdb.h"
 #include "RXIO2/factory.h"
 #include "RXIO2/rpgmapcontroller.h"
+#include "RXIO2/rpgeventlistcontroller.h"
 #include "dialogs/imagedialog.h"
 
 EventPage::EventPage(QJsonObject page, RPGMapController *mc, QWidget *parent) :
@@ -51,7 +52,6 @@ EventPage::EventPage(QJsonObject page, RPGMapController *mc, QWidget *parent) :
     obj.insert("@pattern", pattern);
     obj.insert("@tile_id", tile_id);
     */
-
     this->ui->label_graphic->set_data_from_page(this->db,
                                                 page.value("@graphic").toObject().value("@character_name").toString(),
                                                 page.value("@graphic").toObject().value("@character_hue").toInt(),
@@ -92,6 +92,7 @@ EventPage::EventPage(QJsonObject page, RPGMapController *mc, QWidget *parent) :
         this->ui->radio_parallel_process->setChecked(true);
     }
 
+    this->evc = new RPGEventListController(this->mc, page.value("@list").toArray(), this->ui->eventList);
 }
 
 EventPage::EventPage(RPGMapController *mc, QWidget *parent):

@@ -230,9 +230,9 @@ QString RPGEventCommand::getType()
         return "unknown (" + QString::number(code) + ")";
 }
 
+/*
 QString RPGEventCommand::get_command_text(RPGSystem *system)
 {
-    /*
     if (code == 0)
         return "@>";
     else if (code == 101)
@@ -1100,6 +1100,6 @@ QString RPGEventCommand::get_command_text(RPGSystem *system)
         return "Branch End";
     else
         return "unknown (" + QString::number(code) + ")";
-*/
 }
+*/
 

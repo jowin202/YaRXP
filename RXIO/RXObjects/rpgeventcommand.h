@@ -23,7 +23,7 @@ public:
     QString getType();
 
 
-    QString get_command_text(RPGSystem *system);
+    //QString get_command_text(RPGSystem *system);
 
     int code;
     int indent;

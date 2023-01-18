@@ -71,6 +71,7 @@ SOURCES += \
     RXIO2/parser.cpp \
     RXIO2/rpgdb.cpp \
     RXIO2/rpgeditorcontroller.cpp \
+    RXIO2/rpgeventlistcontroller.cpp \
     RXIO2/rpgmapcontroller.cpp \
     RXIO2/rpgmapinfocontroller.cpp \
     RXIO2/rxexception.cpp \
@@ -196,6 +197,7 @@ HEADERS += \
     RXIO2/parser.h \
     RXIO2/rpgdb.h \
     RXIO2/rpgeditorcontroller.h \
+    RXIO2/rpgeventlistcontroller.h \
     RXIO2/rpgmapcontroller.h \
     RXIO2/rpgmapinfocontroller.h \
     RXIO2/rxexception.h \
