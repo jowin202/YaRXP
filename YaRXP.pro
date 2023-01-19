@@ -16,54 +16,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    RXIO/RXObjects/parserexception.cpp \
-    RXIO/RXObjects/rpgactor.cpp \
-    RXIO/RXObjects/rpganimation.cpp \
-    RXIO/RXObjects/rpganimationframe.cpp \
-    RXIO/RXObjects/rpganimationtiming.cpp \
-    RXIO/RXObjects/rpgarmor.cpp \
-    RXIO/RXObjects/rpgaudiofile.cpp \
-    RXIO/RXObjects/rpgclass.cpp \
-    RXIO/RXObjects/rpgcommonevent.cpp \
-    RXIO/RXObjects/rpgenemy.cpp \
-    RXIO/RXObjects/rpgenemyaction.cpp \
-    RXIO/RXObjects/rpgevent.cpp \
-    RXIO/RXObjects/rpgeventcommand.cpp \
-    RXIO/RXObjects/rpgeventpage.cpp \
-    RXIO/RXObjects/rpgitem.cpp \
-    RXIO/RXObjects/rpgmap.cpp \
-    RXIO/RXObjects/rpgmapinfo.cpp \
-    RXIO/RXObjects/rpgmovecommand.cpp \
-    RXIO/RXObjects/rpgmoveroute.cpp \
-    RXIO/RXObjects/rpgskill.cpp \
-    RXIO/RXObjects/rpgstate.cpp \
-    RXIO/RXObjects/rpgstring.cpp \
-    RXIO/RXObjects/rpgsystem.cpp \
-    RXIO/RXObjects/rpgtileset.cpp \
-    RXIO/RXObjects/rpgtone.cpp \
-    RXIO/RXObjects/rpgtroop.cpp \
-    RXIO/RXObjects/rpgtroopmember.cpp \
-    RXIO/RXObjects/rpgtrooppage.cpp \
-    RXIO/RXObjects/rpgvariant.cpp \
-    RXIO/RXObjects/rpgweapon.cpp \
-    RXIO/fileparser.cpp \
-    RXIO/ioactorfile.cpp \
-    RXIO/ioanimationfile.cpp \
-    RXIO/ioarmorfile.cpp \
-    RXIO/ioclassfile.cpp \
-    RXIO/iocommoneventfile.cpp \
-    RXIO/ioenemyfile.cpp \
-    RXIO/ioitemfile.cpp \
-    RXIO/iomapfile.cpp \
-    RXIO/iomapinfofile.cpp \
-    RXIO/ioscriptfile.cpp \
-    RXIO/ioskillfile.cpp \
-    RXIO/iostatefile.cpp \
-    RXIO/iosystemfile.cpp \
-    RXIO/iotilesetfile.cpp \
-    RXIO/iotroopfile.cpp \
-    RXIO/ioweaponfile.cpp \
-    RXIO/testcases.cpp \
     RXIO2/autotileset.cpp \
     RXIO2/factory.cpp \
     RXIO2/fileopener.cpp \
@@ -123,12 +75,9 @@ SOURCES += \
     editors/troops/trooppiclabel.cpp \
     editors/weapons/editweapons.cpp \
     events/choicesdialog.cpp \
-    events/commands/multilineeventcell.cpp \
-    events/commands/simpleeventcell.cpp \
     events/conditionalbranchdialog.cpp \
     events/eventcommanddialog.cpp \
     events/eventdialog.cpp \
-    events/eventlist.cpp \
     events/eventpage.cpp \
     events/moveroutedialog.cpp \
     main.cpp \
@@ -142,54 +91,6 @@ SOURCES += \
     viewer/tilesetview.cpp
 
 HEADERS += \
-    RXIO/RXObjects/parserexception.h \
-    RXIO/RXObjects/rpgactor.h \
-    RXIO/RXObjects/rpganimation.h \
-    RXIO/RXObjects/rpganimationframe.h \
-    RXIO/RXObjects/rpganimationtiming.h \
-    RXIO/RXObjects/rpgarmor.h \
-    RXIO/RXObjects/rpgaudiofile.h \
-    RXIO/RXObjects/rpgclass.h \
-    RXIO/RXObjects/rpgcommonevent.h \
-    RXIO/RXObjects/rpgenemy.h \
-    RXIO/RXObjects/rpgenemyaction.h \
-    RXIO/RXObjects/rpgevent.h \
-    RXIO/RXObjects/rpgeventcommand.h \
-    RXIO/RXObjects/rpgeventpage.h \
-    RXIO/RXObjects/rpgitem.h \
-    RXIO/RXObjects/rpgmap.h \
-    RXIO/RXObjects/rpgmapinfo.h \
-    RXIO/RXObjects/rpgmovecommand.h \
-    RXIO/RXObjects/rpgmoveroute.h \
-    RXIO/RXObjects/rpgskill.h \
-    RXIO/RXObjects/rpgstate.h \
-    RXIO/RXObjects/rpgstring.h \
-    RXIO/RXObjects/rpgsystem.h \
-    RXIO/RXObjects/rpgtileset.h \
-    RXIO/RXObjects/rpgtone.h \
-    RXIO/RXObjects/rpgtroop.h \
-    RXIO/RXObjects/rpgtroopmember.h \
-    RXIO/RXObjects/rpgtrooppage.h \
-    RXIO/RXObjects/rpgvariant.h \
-    RXIO/RXObjects/rpgweapon.h \
-    RXIO/fileparser.h \
-    RXIO/ioactorfile.h \
-    RXIO/ioanimationfile.h \
-    RXIO/ioarmorfile.h \
-    RXIO/ioclassfile.h \
-    RXIO/iocommoneventfile.h \
-    RXIO/ioenemyfile.h \
-    RXIO/ioitemfile.h \
-    RXIO/iomapfile.h \
-    RXIO/iomapinfofile.h \
-    RXIO/ioscriptfile.h \
-    RXIO/ioskillfile.h \
-    RXIO/iostatefile.h \
-    RXIO/iosystemfile.h \
-    RXIO/iotilesetfile.h \
-    RXIO/iotroopfile.h \
-    RXIO/ioweaponfile.h \
-    RXIO/testcases.h \
     RXIO2/autotileset.h \
     RXIO2/factory.h \
     RXIO2/fileopener.h \
@@ -249,12 +150,9 @@ HEADERS += \
     editors/troops/trooppiclabel.h \
     editors/weapons/editweapons.h \
     events/choicesdialog.h \
-    events/commands/multilineeventcell.h \
-    events/commands/simpleeventcell.h \
     events/conditionalbranchdialog.h \
     events/eventcommanddialog.h \
     events/eventdialog.h \
-    events/eventlist.h \
     events/eventpage.h \
     events/moveroutedialog.h \
     mainwindow.h \

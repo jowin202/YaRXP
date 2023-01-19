@@ -20,7 +20,7 @@ public:
         if ((code >= 351 && code <= 355) || code == 655) item->setForeground(grey);
         else if (code == 209 || code == 509) item->setForeground(dark_red);
         else if (code == 108 || code == 408) item->setForeground(green);
-        else if ((code >= 112 && code <= 119) || code == 413) item->setForeground(blue);
+        else if ((code >= 111 && code <= 119) || code == 413 || code == 412 || code == 411) item->setForeground(blue);
         else if ((code >= 121 && code <= 129)) item->setForeground(red);
         else if ((code >= 131 && code <= 136)) item->setForeground(pink);
         else if (code >= 201 && code <= 208) item->setForeground(dark_red);
@@ -81,6 +81,9 @@ private:
                                    "Move Animation ON", "Move Animation OFF", "Stop Animation ON", "Stop Animation OFF", "Direction Fix ON", "Direction Fix OFF",
                                    "Through ON", "Through OFF", "Always on Top ON", "Always on Top OFF", "Graphic: ",
                                    "Change Opacity: ", "Change Blending: ", "SE: ", "Script: " };
+
+    QStringList text_weather = { "None", "Rain", "Storm", "Snow" };
+    QStringList text_basic_actions = { "Attack", "Defend", "Escape", "Do Nothing" };
 signals:
 
 

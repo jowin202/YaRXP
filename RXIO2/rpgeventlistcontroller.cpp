@@ -135,6 +135,8 @@ QString RPGEventListController::get_text(QJsonObject obj)
         case 12: text += QString("Script: %1").arg(parameters.at(1).toString());break; // script
         }
     }
+    else if (code == 411)
+        text = " : Else";
     else if (code == 112)
         text = "@>Loop";
     else if (code == 113)
@@ -362,6 +364,155 @@ QString RPGEventListController::get_text(QJsonObject obj)
                 .arg(parameters.at(0).toInt())
                 .arg(parameters.at(1).toInt())
                 .arg(parameters.at(2).toInt());
+    else if (code == 231)
+        text += "@>Show Picture: " + QString::number(parameters.at(0).toInt())
+                + ", '" + parameters.at(1).toString() + "', "
+                + (parameters.at(2).toInt() == 0 ? "Upper Left " : "Center ")
+                + (parameters.at(3).toInt() == 0 ? QString("(%1, %2), ").arg(parameters.at(4).toInt()).arg(parameters.at(5).toInt())
+                                                 : QString("(Variable [%1][%2]), ").arg(parameters.at(4).toInt(),4,10,QChar('0')).arg(parameters.at(5).toInt(),4,10,QChar('0')) )
+                + QString("(%1%, %2%)").arg(parameters.at(6).toInt()).arg(parameters.at(7).toInt())
+                + ", " + QString::number(parameters.at(8).toInt()) + ", "
+                + this->text_blend.at(parameters.at(9).toInt());
+    else if (code == 232)
+        text += "@>Move Picture: " + QString::number(parameters.at(0).toInt())
+                + ", @" + QString::number(parameters.at(1).toInt()) + ", " +
+                + (parameters.at(2).toInt() == 0 ? "Upper Left " : "Center ")
+                + (parameters.at(3).toInt() == 0 ? QString("(%1, %2), ").arg(parameters.at(4).toInt()).arg(parameters.at(5).toInt())
+                                                 : QString("(Variable [%1][%2]), ").arg(parameters.at(4).toInt(),4,10,QChar('0')).arg(parameters.at(5).toInt(),4,10,QChar('0')) )
+                + QString("(%1%, %2%)").arg(parameters.at(6).toInt()).arg(parameters.at(7).toInt())
+                + ", " + QString::number(parameters.at(8).toInt()) + ", "
+                + this->text_blend.at(parameters.at(9).toInt());
+    else if (code == 233)
+        text += "@>Rotate Picture: " + QString::number(parameters.at(0).toInt()) + ", " + QString::number(parameters.at(1).toInt());
+    else if (code == 234)
+        text += "@>Change Picture Color Tone: " + QString("%1, (%2, %3, %4, %5), @%6")
+                .arg(parameters.at(0).toInt())
+                .arg(parameters.at(1).toObject().value("r").toInt())
+                .arg(parameters.at(1).toObject().value("g").toInt())
+                .arg(parameters.at(1).toObject().value("b").toInt())
+                .arg(parameters.at(1).toObject().value("alpha_gray").toInt())
+                .arg(parameters.at(2).toInt());
+    else if (code == 235)
+        text += "@>Erase Picture: " + QString::number(parameters.at(0).toInt());
+    else if (code == 236)
+        text += "@>Set Weather Effects: " + this->text_weather.at(parameters.at(0).toInt()) + ", "
+                + (parameters.at(0).toInt() != 0 ? QString::number(parameters.at(1).toInt()) + ", " : "")
+                + QString("@%1").arg(parameters.at(2).toInt());
+    else if (code == 241)
+        text += "@>Play BGM: " + QString("'%1', %2, %3").arg(parameters.at(0).toObject().value("@name").toString()).arg(parameters.at(0).toObject().value("@volume").toInt()).arg(parameters.at(0).toObject().value("@pitch").toInt());
+    else if (code == 242)
+        text += "@>Fade out BGM: " + QString::number(parameters.at(0).toInt()) + " sec.";
+    else if (code == 245)
+        text += "@>Play BGS: " + QString("'%1', %2, %3").arg(parameters.at(0).toObject().value("@name").toString()).arg(parameters.at(0).toObject().value("@volume").toInt()).arg(parameters.at(0).toObject().value("@pitch").toInt());
+    else if (code == 246)
+        text += "@>Fade out BGS: " + QString::number(parameters.at(0).toInt()) + " sec.";
+    else if (code == 247)
+        text += "@>Memorize BGM/BGS";
+    else if (code == 248)
+        text += "@>Restore BGM/BGS";
+    else if (code == 249)
+        text += "@>Play ME: " + QString("'%1', %2, %3").arg(parameters.at(0).toObject().value("@name").toString()).arg(parameters.at(0).toObject().value("@volume").toInt()).arg(parameters.at(0).toObject().value("@pitch").toInt());
+    else if (code == 250)
+        text += "@>Play SE: " + QString("'%1', %2, %3").arg(parameters.at(0).toObject().value("@name").toString()).arg(parameters.at(0).toObject().value("@volume").toInt()).arg(parameters.at(0).toObject().value("@pitch").toInt());
+    else if (code == 251)
+        text += "@>Stop SE";
+    else if (code == 301)
+        text += "@>Battle Processing: " + db->get_object_name(RPGDB::TROOPS, parameters.at(0).toInt());
+    else if (code == 601)
+        text += " :  If Win";
+    else if (code == 603)
+        text += " :  If Lose";
+    else if (code == 604)
+        text += " :  Branch End";
+    else if (code == 302)
+        text += "@>Shop Processing: [" + (parameters.at(0).toInt() == 0 ? db->get_object_name(RPGDB::ITEMS, parameters.at(1).toInt()) : "")
+                 + (parameters.at(0).toInt() == 1 ? db->get_object_name(RPGDB::WEAPONS, parameters.at(1).toInt()) : "")
+                + (parameters.at(0).toInt() == 2 ? db->get_object_name(RPGDB::ARMORS, parameters.at(1).toInt()) : "") + "]";
+    else if (code == 303)
+        text += "@>Name Input Processing: " + db->get_object_name(RPGDB::ACTORS, parameters.at(0).toInt()) + ", " + QString::number(parameters.at(1).toInt()) + " characters";
+    else if (code == 311)
+        text += "@>Change HP: " + (parameters.at(0).toInt() == 0 ? "Entire Party" : "[" + db->get_object_name(RPGDB::ACTORS,parameters.at(0).toInt()) + "]")
+                + " " + this->text_pm.at(parameters.at(1).toInt()) + " "
+                + (parameters.at(2).toInt() == 0 ? QString::number(parameters.at(3).toInt()) : QString("Variable [%1, %2]").arg(parameters.at(3).toInt(),4,10, QChar('0')).arg(db->get_variable_name(parameters.at(3).toInt())));
+    else if (code == 312)
+        text += "@>Change SP: " + (parameters.at(0).toInt() == 0 ? "Entire Party" : "[" + db->get_object_name(RPGDB::ACTORS,parameters.at(0).toInt()) + "]")
+                + " " + this->text_pm.at(parameters.at(1).toInt()) + " "
+                + (parameters.at(2).toInt() == 0 ? QString::number(parameters.at(3).toInt()) : QString("Variable [%1, %2]").arg(parameters.at(3).toInt(),4,10, QChar('0')).arg(db->get_variable_name(parameters.at(3).toInt())));
+    else if (code == 313)
+        text += "@>Change State: " + (parameters.at(0).toInt() == 0 ? "Entire Party" : "[" + db->get_object_name(RPGDB::ACTORS,parameters.at(0).toInt()) + "]")
+                + " " + this->text_pm.at(parameters.at(1).toInt()) + " "
+                 + "[" + db->get_object_name(RPGDB::STATES,parameters.at(2).toInt()) + "]";
+    else if (code == 314)
+        text += "@>Recover All: " + (parameters.at(0).toInt() == 0 ? "Entire Party" : "[" + db->get_object_name(RPGDB::ACTORS,parameters.at(0).toInt()) + "]");
+    else if (code == 315)
+        text += "@>Change EXP: " + (parameters.at(0).toInt() == 0 ? "Entire Party" : "[" + db->get_object_name(RPGDB::ACTORS,parameters.at(0).toInt()) + "]")
+                + " " + this->text_pm.at(parameters.at(1).toInt()) + " "
+                + (parameters.at(2).toInt() == 0 ? QString::number(parameters.at(3).toInt()) : QString("Variable [%1, %2]").arg(parameters.at(3).toInt(),4,10, QChar('0')).arg(db->get_variable_name(parameters.at(3).toInt())));
+    else if (code == 316)
+        text += "@>Change Level: " + (parameters.at(0).toInt() == 0 ? "Entire Party" : "[" + db->get_object_name(RPGDB::ACTORS,parameters.at(0).toInt()) + "]")
+                + " " + this->text_pm.at(parameters.at(1).toInt()) + " "
+                + (parameters.at(2).toInt() == 0 ? QString::number(parameters.at(3).toInt()) : QString("Variable [%1, %2]").arg(parameters.at(3).toInt(),4,10, QChar('0')).arg(db->get_variable_name(parameters.at(3).toInt())));
+    else if (code == 317)
+        text += "@>Change Parameters: " + (parameters.at(0).toInt() == 0 ? "Entire Party" : "[" + db->get_object_name(RPGDB::ACTORS,parameters.at(0).toInt()) + "]")
+                + ", " + text_stat_vars.at(4+parameters.at(1).toInt()) + " " + this->text_pm.at(parameters.at(2).toInt()) + " " + (parameters.at(3).toInt() == 0 ? QString::number(parameters.at(4).toInt()) : QString("Variable [%1, %2]").arg(parameters.at(4).toInt(),4,10, QChar('0')).arg(db->get_variable_name(parameters.at(4).toInt())));
+        //Entire Party is not implemented here
+    else if (code == 318)
+        text += "@>Change Skills: " + (parameters.at(0).toInt() == 0 ? "Entire Party" : "[" + db->get_object_name(RPGDB::ACTORS,parameters.at(0).toInt()) + "]")
+                + " " + this->text_pm.at(parameters.at(1).toInt()) + " "
+                + "[" + db->get_object_name(RPGDB::SKILLS,parameters.at(2).toInt()) + "]";
+    //Entire Party is not implemented here
+    else if (code == 320)
+        text += "@>Change Actor Name: [" + db->get_object_name(RPGDB::ACTORS,parameters.at(0).toInt()) + "], '" + parameters.at(1).toString() + "'";
+    else if (code == 321)
+        text += "@>Change Actor Class: [" + db->get_object_name(RPGDB::ACTORS,parameters.at(0).toInt()) + "], [" + db->get_object_name(RPGDB::CLASSES,parameters.at(1).toInt()) + "]";
+    else if (code == 322)
+        text += "@>Change Actor Graphic: [" + db->get_object_name(RPGDB::ACTORS,parameters.at(0).toInt()) + "], " + parameters.at(1).toString() + ", " + QString::number(parameters.at(2).toInt()) + ", " + parameters.at(3).toString() +", " + QString::number(parameters.at(4).toInt());
+    else if (code == 331)
+        text += "@>Change Enemy HP: " + (parameters.at(0).toInt() == -1 ? "Entire Troop" : "[" + QString::number(parameters.at(0).toInt()+1) + ".]")
+                + " " + this->text_pm.at(parameters.at(1).toInt()) + " "
+                + (parameters.at(2).toInt() == 0 ? QString::number(parameters.at(3).toInt()) : QString("Variable [%1, %2]").arg(parameters.at(3).toInt(),4,10, QChar('0')).arg(db->get_variable_name(parameters.at(3).toInt())));
+    else if (code == 332)
+        text += "@>Change Enemy SP: " + (parameters.at(0).toInt() == -1 ? "Entire Troop" : "[" + QString::number(parameters.at(0).toInt()+1) + ".]")
+                + " " + this->text_pm.at(parameters.at(1).toInt()) + " "
+                + (parameters.at(2).toInt() == 0 ? QString::number(parameters.at(3).toInt()) : QString("Variable [%1, %2]").arg(parameters.at(3).toInt(),4,10, QChar('0')).arg(db->get_variable_name(parameters.at(3).toInt())));
+    else if (code == 333)
+        text += "@>Change Enemy State: " + (parameters.at(0).toInt() == -1 ? "Entire Troop" : "[" + QString::number(parameters.at(0).toInt()+1) + ".]")
+                + " " + this->text_pm.at(parameters.at(1).toInt()) + " "
+                + "[" + db->get_object_name(RPGDB::STATES,parameters.at(2).toInt()) + "]";
+    else if (code == 334)
+        text += "@>Enemy Recover All: " + (parameters.at(0).toInt() == -1 ? "Entire Troop" : "[" + QString::number(parameters.at(0).toInt()+1) + ".]");
+    else if (code == 335)
+        text += "@>Enemy Appearance: [" + QString::number(parameters.at(0).toInt()+1) + ".]";
+    else if (code == 336)
+        text += "@>Enemy Transform: [" + QString::number(parameters.at(0).toInt()+1) + ".], [" + db->get_object_name(RPGDB::ENEMIES,parameters.at(1).toInt()) + "]";
+    else if (code == 337)
+        text += "@>Show Battle Animation: " + (parameters.at(0).toInt() == 0 ? (parameters.at(1).toInt() == -1 ? "Entire Troop, " : QString("[%1.], ").arg(parameters.at(1).toInt()+1))
+                                                                             : (parameters.at(1).toInt() == -1 ? "Entire Party, " : QString("Actor No. %1,").arg(parameters.at(1).toInt()+1)))
+                + "[" + db->get_object_name(RPGDB::ANIMATIONS, parameters.at(2).toInt()) + "]";
+    else if (code == 338)
+        text += "@>Deal Damage: " + (parameters.at(0).toInt() == 0 ? (parameters.at(1).toInt() == -1 ? "Entire Troop, " : QString("[%1.], ").arg(parameters.at(1).toInt()+1))
+                                                                  : (parameters.at(1).toInt() == -1 ? "Entire Party, " : QString("Actor No. %1, ").arg(parameters.at(1).toInt()+1)))
+                + (parameters.at(2).toInt() == 0 ? QString::number(parameters.at(3).toInt()) : QString("Variable [%1: %2]").arg(parameters.at(3).toInt(),4,10,QChar('0')).arg(db->get_variable_name(parameters.at(3).toInt())));
+    else if (code == 339)
+        text += "@>Force Action: " + (parameters.at(0).toInt() == 0 ? QString("[%1.], ").arg(parameters.at(1).toInt()+1)
+                                                                  :  QString("Actor No. %1, ").arg(parameters.at(1).toInt()+1))
+                + (parameters.at(2).toInt() == 0 ? this->text_basic_actions.at(parameters.at(3).toInt()) : "[" + db->get_object_name(RPGDB::SKILLS,parameters.at(3).toInt()) + "]")
+                + ", " + (parameters.at(4).toInt() == -2 ? "Last Target" : (parameters.at(4).toInt() == -1 ? "Random" : QString("Index %1").arg(parameters.at(4).toInt()+1)))
+                + (parameters.at(5).toInt() == 1 ? ", Execute Now" : "");
+    else if (code == 340)
+        text += "@>Abort Battle";
+    else if (code == 351)
+        text += "@>Call Menu Screen";
+    else if (code == 352)
+        text += "@>Call Save Screen";
+    else if (code == 353)
+        text += "@>Game Over";
+    else if (code == 354)
+        text += "@>Return to Title Screen";
+    else if (code == 355)
+        text += "@>Script: " + parameters.at(0).toString();
+    else if (code == 655)
+        text += " :      : " + parameters.at(0).toString();
     else
     {
         qDebug() << code << parameters;
