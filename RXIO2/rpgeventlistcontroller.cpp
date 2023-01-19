@@ -1,5 +1,6 @@
 #include "rpgdb.h"
 #include "rpgmapcontroller.h"
+#include "rpgmapinfocontroller.h"
 #include "rpgeventlistcontroller.h"
 
 RPGEventListController::RPGEventListController(RPGMapController *mc, QJsonArray list, QListWidget *listwidget)
@@ -7,6 +8,7 @@ RPGEventListController::RPGEventListController(RPGMapController *mc, QJsonArray 
 {
     this->mc = mc;
     this->db = mc->getDB();
+    this->mic = new RPGMapInfoController(db);
     listwidget->clear();
 
     QFont font("Monospace");
@@ -240,6 +242,58 @@ QString RPGEventListController::get_text(QJsonObject obj)
         text += "@>Change Menu Access: " + this->text_en_dis.at(parameters.at(0).toInt());
     else if (code == 136)
         text += "@>Change Encounter: " + this->text_en_dis.at(parameters.at(0).toInt());
+    else if (code == 201)
+        text += "@>Transfer Player: " + (parameters.at(0).toInt() == 0 ?
+                                             QString("[%1: %2], (%3,%4)")
+                                             .arg(parameters.at(1).toInt(),3,10,QChar('0'))
+                                             .arg(this->mic->get_name(parameters.at(1).toInt()))
+                                             .arg(parameters.at(2).toInt(),3,10,QChar('0'))
+                                             .arg(parameters.at(3).toInt(),3,10,QChar('0'))
+                                           : QString("Variable [%1][%2][%3]")
+                                             .arg(parameters.at(1).toInt(),4,10,QChar('0'))
+                                             .arg(parameters.at(2).toInt(),4,10,QChar('0'))
+                                             .arg(parameters.at(3).toInt(),4,10,QChar('0')))
+                                             + (parameters.at(4).toInt() == 0 ? "" : ", " + this->text_directions.at(parameters.at(4).toInt()/2-1))
+                                             + (parameters.at(5).toInt() == 1 ? ", No Fade" : "");
+    else if (code == 202)
+        text += "@>Set Event Location: " + (parameters.at(0).toInt() == 0 ?
+                                                "This event, " :
+                                                "[" + mc->current_map()->object().value("@events").toObject().value(QString::number(parameters.at(0).toInt())).toObject().value("@name").toString() +"], ")
+                + (parameters.at(1).toInt() == 0 ? QString("(%1,%2)").arg(parameters.at(2).toInt(),3,10,QChar('0')).arg(parameters.at(3).toInt(),3,10,QChar('0')) :
+                  (parameters.at(1).toInt() == 1 ? QString("Variable [%1,%2]").arg(parameters.at(2).toInt(),4,10,QChar('0')).arg(parameters.at(3).toInt(),4,10,QChar('0')) :
+                                                   QString("Switch with [%1]").arg(mc->current_map()->object().value("@events").toObject().value(QString::number(parameters.at(2).toInt())).toObject().value("@name").toString())))
+                + (parameters.at(4).toInt() != 0 ? ", " +this->text_directions.at(parameters.at(4).toInt()/2-1) : "");
+    else if (code == 203)
+        text += "@>Scroll Map: " + this->text_directions.at(parameters.at(0).toInt()/2-1) + ", " + QString::number(parameters.at(1).toInt()) + ", " + QString::number(parameters.at(2).toInt());
+    else if (code == 204)
+        text += "@>Change Map Setings: " + (parameters.at(0).toInt() == 0 ?  QString("Panorama = '%1', %2").arg(parameters.at(1).toString()).arg(parameters.at(2).toInt()) :
+                                            parameters.at(0).toInt() == 1 ? QString("Fog = '%1', %2, %3, %4, %5, %6, %7")
+                                                                          .arg(parameters.at(1).toString())
+                                                                          .arg(parameters.at(2).toInt())
+                                                                          .arg(parameters.at(3).toInt())
+                                                                          .arg(this->text_blend.at(parameters.at(4).toInt()))
+                                                                            .arg(parameters.at(5).toInt())
+                                                                            .arg(parameters.at(6).toInt())
+                                                                            .arg(parameters.at(7).toInt())
+                                                                          :
+                                                                            QString("Battleback = '%1'").arg(parameters.at(1).toString()));
+    else if (code == 205)
+        text += "@>Change Fog Color Tone: " + QString("(%1,%2,%3,%4), @%5")
+                .arg(parameters.at(0).toObject().value("r").toInt())
+                .arg(parameters.at(0).toObject().value("g").toInt())
+                .arg(parameters.at(0).toObject().value("b").toInt())
+                .arg(parameters.at(0).toObject().value("alpha_gray").toInt())
+                .arg(parameters.at(1).toInt());
+    else if (code == 206)
+        text += "@>Change Fog Opacity: " + QString("%1, @%2")
+                .arg(parameters.at(0).toInt())
+                .arg(parameters.at(1).toInt());
+    else if (code == 207)
+        text += "@>Show Animation: " + (parameters.at(0).toInt() == -1 ? "Player"
+                                                                       : (parameters.at(0).toInt() == 0 ? "This event" : "[" + QString(mc->current_map()->object().value("@events").toObject().value(QString::number(parameters.at(0).toInt())).toObject().value("@name").toString() +"]")))
+                + ", " + QString("[%1]").arg(db->get_object_name(RPGDB::ANIMATIONS,parameters.at(1).toInt()));
+    else if (code == 208)
+        text += "@>Change Transparent Flag: " + QString(parameters.at(0).toInt() == 0 ? "Transparency" : "Normal");
     else
     {
         qDebug() << code << parameters;

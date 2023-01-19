@@ -6,6 +6,7 @@
 
 class RPGDB;
 class RPGMapController;
+class RPGMapInfoController;
 
 class RPGEventListController : public QObject
 {
@@ -52,6 +53,7 @@ private:
 
     RPGDB *db;
     RPGMapController *mc;
+    RPGMapInfoController *mic;
 
     QStringList text_option_pos = { "Top", "Middle", "High" };
     QStringList text_option_win = { "Show", "Hide" };
@@ -64,7 +66,8 @@ private:
     QStringList text_map_vars = { "Map X", "Map Y", "Direction", "Screen X", "Screen Y", "Terrain Tag" };
     QStringList text_other_vars = { "Map ID", "Party Members", "Gold", "Steps", "Play Time", "Timer", "Save Count" };
     QStringList text_pm = {"+", "-" };
-    QStringList text_en_dis { "Disable", "Enable" };
+    QStringList text_en_dis = { "Disable", "Enable" };
+    QStringList text_blend { "Normal", "Add", "Sub" };
 signals:
 
 
