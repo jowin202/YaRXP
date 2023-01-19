@@ -68,6 +68,19 @@ private:
     QStringList text_pm = {"+", "-" };
     QStringList text_en_dis = { "Disable", "Enable" };
     QStringList text_blend { "Normal", "Add", "Sub" };
+
+    QStringList text_move_routes = { "Move Down", "Move Left", "Move Right", "Move Up",
+                                     "Move Lower Left", "Move Lower Right", "Move Upper Left", "Move Upper Right",
+                                   "Move at Random", "Move toward Player", "Move away from Player", "1 Step Forward", "1 Step Backward",
+                                   "Jump: ", "Wait: ",
+
+                                   "Turn Down", "Turn Left", "Turn Right", "Turn Up", "Turn 90° Right", "Turn 90° Left", "Turn 180°",
+                                   "Turn 90° Right or Left", "Turn at Random", "Turn toward Player", "Turn away from Player",
+                                   "Switch ON: ", "Switch OFF: ", "Change Speed: ", "Change Freq: ",
+
+                                   "Move Animation ON", "Move Animation OFF", "Stop Animation ON", "Stop Animation OFF", "Direction Fix ON", "Direction Fix OFF",
+                                   "Through ON", "Through OFF", "Always on Top ON", "Always on Top OFF", "Graphic: ",
+                                   "Change Opacity: ", "Change Blending: ", "SE: ", "Script: " };
 signals:
 
 

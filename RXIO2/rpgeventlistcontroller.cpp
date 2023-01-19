@@ -294,6 +294,74 @@ QString RPGEventListController::get_text(QJsonObject obj)
                 + ", " + QString("[%1]").arg(db->get_object_name(RPGDB::ANIMATIONS,parameters.at(1).toInt()));
     else if (code == 208)
         text += "@>Change Transparent Flag: " + QString(parameters.at(0).toInt() == 0 ? "Transparency" : "Normal");
+    else if (code == 209)
+    {
+        text += "@>Set Move Route: " + QString(parameters.at(0).toInt() == -1 ? "Player" :
+                                       (parameters.at(0).toInt() == 0 ? "This event" :
+                                                                        "[" +mc->current_map()->object().value("@events").toObject().value(QString::number(parameters.at(0).toInt())).toObject().value("@name").toString() + "]"));
+        if (parameters.at(1).toObject().value("@repeat").toBool() || parameters.at(1).toObject().value("@repeat").toBool() )
+        {
+            text += " (";
+            if (parameters.at(1).toObject().value("@repeat").toBool())
+                text += "Repeat Action";
+            if (parameters.at(1).toObject().value("@repeat").toBool() && parameters.at(1).toObject().value("@skippable").toBool() )
+                text += ", ";
+            if (parameters.at(1).toObject().value("@skippable").toBool())
+                text += "Ignore If Can't Move";
+
+            text += ")";
+        }
+    }
+    else if (code == 509)
+    {
+        int code = parameters.at(0).toObject().value("@code").toInt();
+        QJsonArray mr_params = parameters.at(0).toObject().value("@parameters").toArray();
+        if (code >= 1 && code <= 45)
+        {
+                text += " :              : " + this->text_move_routes.at(code-1);
+                if (code == 14)
+                    text += QString("%1, %2").arg(mr_params.at(0).toInt()).arg(mr_params.at(1).toInt());
+                else if (code == 15)
+                    text += QString("%1 frame(s)").arg(mr_params.at(0).toInt());
+                else if (code == 27 || code == 28)
+                    text += QString("%1").arg(mr_params.at(0).toInt(),4,10, QChar('0'));
+                else if (code == 29 || code == 30 || code == 42)
+                    text += QString("%1").arg(mr_params.at(0).toInt());
+                else if (code == 41)
+                    text += QString("'%1', %2, %3, %4").arg(mr_params.at(0).toString()).arg(mr_params.at(1).toInt()).arg(mr_params.at(2).toInt()).arg(mr_params.at(3).toInt());
+                else if (code == 43)
+                    text += this->text_blend.at(mr_params.at(0).toInt());
+                else if (code == 44)
+                    text += QString("'%1', %2, %3").arg(mr_params.at(0).toObject().value("@name").toString()).arg(mr_params.at(0).toObject().value("@volume").toInt()).arg(mr_params.at(0).toObject().value("@pitch").toInt());
+                else if (code == 45)
+                    text += mr_params.at(0).toString();
+        }
+    }
+    else if (code == 210)
+        text += "@>Wait for Move's Completition";
+    else if (code == 221)
+        text += "@>Prepare for Transistion";
+    else if (code == 222)
+        text += "@>Execute Transistion: '" + parameters.at(0).toString() + "'";
+    else if (code == 223)
+        text += "@>Change Screen Color Tone: " + QString("(%1, %2, %3, %4), @%5")
+                .arg(parameters.at(0).toObject().value("r").toInt())
+                .arg(parameters.at(0).toObject().value("g").toInt())
+                .arg(parameters.at(0).toObject().value("b").toInt())
+                .arg(parameters.at(0).toObject().value("alpha_gray").toInt())
+                .arg(parameters.at(1).toInt());
+    else if (code == 224)
+        text += "@>Screen Flash: " + QString("(%1, %2, %3, %4), @%5")
+                .arg(parameters.at(0).toObject().value("r").toInt())
+                .arg(parameters.at(0).toObject().value("g").toInt())
+                .arg(parameters.at(0).toObject().value("b").toInt())
+                .arg(parameters.at(0).toObject().value("alpha_gray").toInt())
+                .arg(parameters.at(1).toInt());
+    else if (code == 225)
+        text += "@>Screen Shake: " + QString("%1, %2, @%3")
+                .arg(parameters.at(0).toInt())
+                .arg(parameters.at(1).toInt())
+                .arg(parameters.at(2).toInt());
     else
     {
         qDebug() << code << parameters;
