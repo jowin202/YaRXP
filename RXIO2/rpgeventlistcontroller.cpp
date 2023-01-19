@@ -434,6 +434,10 @@ QString RPGEventListController::get_text(QJsonObject obj)
         text += "@>Shop Processing: [" + (parameters.at(0).toInt() == 0 ? db->get_object_name(RPGDB::ITEMS, parameters.at(1).toInt()) : "")
                  + (parameters.at(0).toInt() == 1 ? db->get_object_name(RPGDB::WEAPONS, parameters.at(1).toInt()) : "")
                 + (parameters.at(0).toInt() == 2 ? db->get_object_name(RPGDB::ARMORS, parameters.at(1).toInt()) : "") + "]";
+    else if (code == 605)
+        text += " :               : [" + (parameters.at(0).toInt() == 0 ? db->get_object_name(RPGDB::ITEMS, parameters.at(1).toInt()) : "")
+                + (parameters.at(0).toInt() == 1 ? db->get_object_name(RPGDB::WEAPONS, parameters.at(1).toInt()) : "")
+               + (parameters.at(0).toInt() == 2 ? db->get_object_name(RPGDB::ARMORS, parameters.at(1).toInt()) : "") + "]";
     else if (code == 303)
         text += "@>Name Input Processing: " + db->get_object_name(RPGDB::ACTORS, parameters.at(0).toInt()) + ", " + QString::number(parameters.at(1).toInt()) + " characters";
     else if (code == 311)
