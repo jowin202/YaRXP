@@ -3,6 +3,7 @@
 #include "trooppageconditiondialog.h"
 
 #include "RXIO2/rpgdb.h"
+#include "RXIO2/rpgeventlistcontroller.h"
 #include "RXIO2/rpgeditorcontroller.h"
 
 #include "trooppiclabel.h"
@@ -17,6 +18,8 @@ TroopEventPage::TroopEventPage(QWidget *parent) :
 TroopEventPage::~TroopEventPage()
 {
     delete ui;
+    if (ecl != 0)
+        delete ecl;
 }
 
 void TroopEventPage::setTroopPage(RPGEditorController *ec, int page_num)
@@ -24,11 +27,10 @@ void TroopEventPage::setTroopPage(RPGEditorController *ec, int page_num)
     this->ec = ec;
     this->page_num = page_num;
 
-    //TODO: event list
-    //this->ui->list->set_data(ec, &page->list);
-    //this->ui->list->import_list();
+    if (this->ecl == 0)
+        this->ecl = new RPGEventListController(ec->get_db()->mc, this->ui->list);
+    this->ecl->fill_list(ec->obj_get_jsonvalue(RPGDB::TROOPS, "@pages").toArray().at(page_num).toObject().value("@list").toArray());
 
-    //first load the condition, then generate string
     this->update_condition();
 }
 

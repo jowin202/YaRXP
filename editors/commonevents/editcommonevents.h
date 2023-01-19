@@ -9,6 +9,7 @@ class EditCommonEvents;
 
 class RPGDB;
 class RPGEditorController;
+class RPGEventListController;
 
 class EditCommonEvents : public QWidget
 {
@@ -29,6 +30,7 @@ private slots:
 private:
     Ui::EditCommonEvents *ui;
     RPGEditorController *ec;
+    RPGEventListController *ecl = 0;
 };
 
 #endif // EDITCOMMONEVENTS_H

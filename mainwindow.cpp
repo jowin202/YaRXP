@@ -19,6 +19,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     this->ui->map_tree_widget->setDB(&this->db);
     this->ui->mapView->setDB(&this->db);
+    this->db.mc = this->ui->mapView->get_mc(); //for editor controller
 
     connect(this->ui->mapView, SIGNAL(zoom_in()), this, SLOT(zoom_in()));
     connect(this->ui->mapView, SIGNAL(zoom_out()), this, SLOT(zoom_out()));

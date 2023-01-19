@@ -98,8 +98,8 @@ private:
     QActionGroup *modegroup;
     QActionGroup *viewgroup;
 
-
     RPGDB db;
+
 
 };
 #endif // MAINWINDOW_H

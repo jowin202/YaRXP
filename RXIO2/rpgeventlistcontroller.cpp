@@ -3,17 +3,23 @@
 #include "rpgmapinfocontroller.h"
 #include "rpgeventlistcontroller.h"
 
-RPGEventListController::RPGEventListController(RPGMapController *mc, QJsonArray list, QListWidget *listwidget)
+RPGEventListController::RPGEventListController(RPGMapController *mc, QListWidget *listwidget)
     : QObject{}
 {
     this->mc = mc;
     this->db = mc->getDB();
     this->mic = new RPGMapInfoController(db);
-    listwidget->clear();
+    this->listwidget = listwidget;
+
 
     QFont font("Monospace");
     font.setStyleHint(QFont::TypeWriter);
     listwidget->setFont(font);
+}
+
+void RPGEventListController::fill_list(QJsonArray list)
+{
+    listwidget->clear();
     for (int i = 0; i < list.count(); i++)
     {
         QListWidgetItem *item = new QListWidgetItem;
@@ -320,7 +326,7 @@ QString RPGEventListController::get_text(QJsonObject obj)
         QJsonArray mr_params = parameters.at(0).toObject().value("@parameters").toArray();
         if (code >= 1 && code <= 45)
         {
-                text += " :              : " + this->text_move_routes.at(code-1);
+                text += " :              : $>" + this->text_move_routes.at(code-1);
                 if (code == 14)
                     text += QString("%1, %2").arg(mr_params.at(0).toInt()).arg(mr_params.at(1).toInt());
                 else if (code == 15)

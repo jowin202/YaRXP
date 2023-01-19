@@ -12,7 +12,7 @@ class RPGEventListController : public QObject
 {
     Q_OBJECT
 public:
-    RPGEventListController(RPGMapController *mc, QJsonArray list, QListWidget *listwidget);
+    RPGEventListController(RPGMapController *mc, QListWidget *listwidget);
 
 
     void setColor(int code, QListWidgetItem *item)
@@ -34,6 +34,7 @@ public:
     }
 
 
+    void fill_list(QJsonArray list);
     QString get_text(QJsonObject obj);
 
 private:
@@ -54,6 +55,7 @@ private:
     RPGDB *db;
     RPGMapController *mc;
     RPGMapInfoController *mic;
+    QListWidget *listwidget;
 
     QStringList text_option_pos = { "Top", "Middle", "High" };
     QStringList text_option_win = { "Show", "Hide" };

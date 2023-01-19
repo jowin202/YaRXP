@@ -17,6 +17,7 @@
 #include "factory.h"
 
 class RPGEditorController;
+class RPGMapController;
 
 class RPGDB : public QObject
 {
@@ -24,6 +25,7 @@ class RPGDB : public QObject
 public:
     explicit RPGDB(QObject *parent = nullptr);
 
+    RPGMapController *mc;
     void load_project(QString dir);
     void save_project();
     void close_project();
@@ -133,6 +135,7 @@ private:
 
 
     QMap<QString, QStringList> param_oders;
+
 
 
 

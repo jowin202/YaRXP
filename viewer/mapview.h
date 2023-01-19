@@ -165,6 +165,7 @@ public:
     }
 
 
+    RPGMapController *get_mc() { return &this->mc; } //for editor dialog event handling in troops and common events
 signals:
     void zoom_in();
     void zoom_out();

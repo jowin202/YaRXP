@@ -5,6 +5,8 @@
 
 class RPGEditorController;
 
+class RPGEventListController;
+
 namespace Ui {
 class TroopEventPage;
 }
@@ -32,6 +34,9 @@ private:
     Ui::TroopEventPage *ui;
     RPGEditorController *ec;
     int page_num;
+
+    RPGEventListController *ecl = 0;
+
 
 
 };

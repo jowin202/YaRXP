@@ -69,7 +69,7 @@
     </layout>
    </item>
    <item row="1" column="0">
-    <widget class="QListView" name="list"/>
+    <widget class="QListWidget" name="list"/>
    </item>
   </layout>
  </widget>
@@ -84,7 +84,6 @@
  <tabstops>
   <tabstop>line_name</tabstop>
   <tabstop>combo_trigger</tabstop>
-  <tabstop>list</tabstop>
  </tabstops>
  <resources/>
  <connections/>

@@ -92,7 +92,8 @@ EventPage::EventPage(QJsonObject page, RPGMapController *mc, QWidget *parent) :
         this->ui->radio_parallel_process->setChecked(true);
     }
 
-    this->evc = new RPGEventListController(this->mc, page.value("@list").toArray(), this->ui->eventList);
+    this->evc = new RPGEventListController(this->mc, this->ui->eventList);
+    this->evc->fill_list(page.value("@list").toArray());
 }
 
 EventPage::EventPage(RPGMapController *mc, QWidget *parent):
