@@ -18,7 +18,27 @@ MapView::MapView(QWidget *parent) : QGraphicsView(parent)
     //this->opt.dim = true;
     this->opt.mode = PEN;
 
-    //connect(this, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(prepare_context_menu(QPoint)));
+    this->action_newevent.setText("New Event");
+    this->action_newevent.setShortcut(Qt::Key_Enter);
+    this->action_editevent.setText("Edit Event");
+    this->action_editevent.setShortcut(Qt::Key_Return);
+    connect(&this->action_editevent, &QAction::triggered, this, [=]{ if (opt.mode == EVENT) this->edit_event_on_pos(opt.marked_tile);});
+    this->addAction(&this->action_editevent); //return should work
+    this->action_cut.setText("Cut");
+    this->action_cut.setShortcut(QKeySequence(tr("Ctrl+X")));
+    connect(&this->action_cut, SIGNAL(triggered()), this, SLOT(do_cut()));
+    this->action_copy.setText("Copy");
+    this->action_copy.setShortcut(QKeySequence(tr("Ctrl+C")));
+    connect(&this->action_copy, SIGNAL(triggered()), this, SLOT(do_copy()));
+    this->action_paste.setText("Paste");
+    this->action_paste.setShortcut(QKeySequence(tr("Ctrl+V")));
+    connect(&this->action_paste, SIGNAL(triggered()), this, SLOT(do_paste()));
+    this->action_delete.setText("Delete");
+    this->action_delete.setShortcut(Qt::Key_Delete);
+    connect(&this->action_delete, SIGNAL(triggered()), this, SLOT(do_delete()));
+    this->action_set_start.setText("Set Starting Pos");
+
+    connect(this, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(prepare_context_menu(QPoint)));
 
 }
 
@@ -64,6 +84,16 @@ void MapView::set_brush(QList<int> data)
     if (data.length() > 2)
         this->rectangle->setSize(data.at(0), data.at(1));
     this->rectangle->update();
+}
+
+void MapView::edit_event_on_pos(QPoint pos)
+{
+    QJsonObject event = this->mc.event_on_pos(pos);
+    if (event.keys().count() > 1)
+    {
+        EventDialog *dialog = new EventDialog(&this->mc, event);
+        dialog->show();
+    }
 }
 
 void MapView::mouseMoveEvent(QMouseEvent *event)
@@ -175,6 +205,15 @@ void MapView::mousePressEvent(QMouseEvent *event)
     }
     else if (opt.mode == EVENT)
     {
+        //marked tile
+        MapTile *tile;
+        QPoint prev_marked_tile = opt.marked_tile;
+        this->opt.marked_tile = pos;
+        if ( (tile = ((MapTile*)this->scene()->itemAt(32*pos,QTransform()))) != 0)
+            tile->update();
+        if ( (tile = ((MapTile*)this->scene()->itemAt(32*prev_marked_tile,QTransform()))) != 0)
+            tile->update();
+
         if (event->button() == Qt::LeftButton)
         {
             this->event_left_button_for_moving = true;
@@ -246,12 +285,7 @@ void MapView::mouseDoubleClickEvent(QMouseEvent *event)
 
     if (opt.mode == EVENT)
     {
-        QJsonObject event = this->mc.event_on_pos(pos);
-        if (event.keys().count() > 1)
-        {
-            EventDialog *dialog = new EventDialog(&this->mc, event);
-            dialog->show();
-        }
+        this->edit_event_on_pos(pos);
     }
 }
 

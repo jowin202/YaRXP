@@ -12,6 +12,9 @@
 #include <QJsonArray>
 #include <QSettings>
 
+#include <QAction>
+#include <QMenu>
+
 #include "mapselectrectangle.h"
 
 #include "RXIO2/rpgmapcontroller.h"
@@ -81,6 +84,20 @@ public:
         this->redraw();
     }
 
+
+
+
+    RPGMapController *get_mc() { return &this->mc; } //for editor dialog event handling in troops and common events
+signals:
+    void zoom_in();
+    void zoom_out();
+    void one_tile_selected(int);
+    //void hover_coordinates(int,int);
+    void mouse_over_coordinates(int,int);
+
+public slots:
+    void redraw();
+    void set_brush(QList<int> data);
     void do_copy()
     {
         if (opt.mode == SELECT && this->select_rectangle != 0)
@@ -163,20 +180,28 @@ public:
             }
         }
     }
+    void prepare_context_menu(QPoint pos)
+    {
+        if (opt.mode == EVENT)
+        {
+            QMenu menu;
+            if (mc.event_on_pos(opt.marked_tile).contains("RXClass"))
+                menu.addAction(&this->action_editevent);
+            else
+                menu.addAction(&this->action_newevent);
+            menu.addSeparator();
+            menu.addAction(&this->action_cut);
+            menu.addAction(&this->action_copy);
+            menu.addAction(&this->action_paste);
+            menu.addAction(&this->action_delete);
+            menu.addSeparator();
+            menu.addAction(&this->action_set_start);
+            menu.exec(this->mapToGlobal(pos));
+        }
+    }
 
 
-    RPGMapController *get_mc() { return &this->mc; } //for editor dialog event handling in troops and common events
-signals:
-    void zoom_in();
-    void zoom_out();
-    void one_tile_selected(int);
-    //void hover_coordinates(int,int);
-    void mouse_over_coordinates(int,int);
-
-public slots:
-    void redraw();
-    void set_brush(QList<int> data);
-
+    void edit_event_on_pos(QPoint pos);
 private:
     bool changes_made = false;
     RPGDB *db;
@@ -216,6 +241,14 @@ private:
         delete this->select_rectangle;
         this->select_rectangle = 0;
     }
+
+    QAction action_newevent;
+    QAction action_editevent;
+    QAction action_cut;
+    QAction action_copy;
+    QAction action_paste;
+    QAction action_delete;
+    QAction action_set_start;
 
 
 };

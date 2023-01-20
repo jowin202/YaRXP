@@ -144,7 +144,7 @@ QJsonObject EventPage::getPage()
                                                 this->ui->widget_switch2->getValue(),
                                                 this->ui->widget_variable->getValue(),
                                                 this->ui->spin_variable->value()),
-                page.value("@list").toArray(),
+                this->evc->get_list(),
                 page.value("@graphic").toObject(),
                 page.value("@move_route").toObject());
 }

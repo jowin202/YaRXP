@@ -69,7 +69,7 @@ public:
     QJsonDocument *current_map() {return doc;}
 private:
     RPGDB *db;
-    QJsonDocument *doc;
+    QJsonDocument *doc = 0;
 
     QImage tileset_image;
     QImage autotiles[7];

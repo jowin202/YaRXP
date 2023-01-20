@@ -78,6 +78,7 @@ SOURCES += \
     events/conditionalbranchdialog.cpp \
     events/eventcommanddialog.cpp \
     events/eventdialog.cpp \
+    events/eventlistitem.cpp \
     events/eventpage.cpp \
     events/moveroutedialog.cpp \
     main.cpp \
@@ -153,6 +154,7 @@ HEADERS += \
     events/conditionalbranchdialog.h \
     events/eventcommanddialog.h \
     events/eventdialog.h \
+    events/eventlistitem.h \
     events/eventpage.h \
     events/moveroutedialog.h \
     mainwindow.h \
