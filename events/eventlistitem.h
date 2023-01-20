@@ -17,7 +17,7 @@ class RPGMapInfoController;
 class EventListItem : public QListWidgetItem
 {
 public:
-    EventListItem(QListWidget *parent, RPGMapController *mc, RPGMapInfoController *mic, QJsonObject obj);
+    EventListItem(QListWidget *item, RPGMapController *mc, RPGMapInfoController *mic, QJsonObject obj);
     QString get_text(QJsonObject obj);
     void setColor(int code);
 
@@ -25,6 +25,9 @@ public:
     QJsonObject get_obj() { return this->obj; }
 
     void edit_cell();
+
+public slots:
+    void set_parameters(QJsonArray parameters) {this->obj.insert("@parameters", parameters); this->update_text(); }
 
 private:
     QColor black = QColor(0,0,0);
@@ -41,7 +44,7 @@ private:
     QColor cyan = QColor(0x1e,0x90,0xff);
 
 
-    QStringList text_option_pos = { "Top", "Middle", "High" };
+    QStringList text_option_pos = { "Top", "Middle", "Bottom" };
     QStringList text_option_win = { "Show", "Hide" };
     QStringList text_on_off = {"ON", "OFF" };
     QStringList text_compare_op = { "==", " >=", "<=", ">", "<" , "!=" };
@@ -76,7 +79,7 @@ private:
     RPGDB *db;
     RPGMapController *mc;
     RPGMapInfoController *mic;
-    QListWidget *parent;
+    QListWidget*parent;
 };
 
 #endif // EVENTLISTITEM_H

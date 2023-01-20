@@ -75,6 +75,8 @@ SOURCES += \
     editors/troops/trooppiclabel.cpp \
     editors/weapons/editweapons.cpp \
     events/choicesdialog.cpp \
+    events/commands/changetextoptionsdialog.cpp \
+    events/commands/showtextdialog.cpp \
     events/conditionalbranchdialog.cpp \
     events/eventcommanddialog.cpp \
     events/eventdialog.cpp \
@@ -151,6 +153,8 @@ HEADERS += \
     editors/troops/trooppiclabel.h \
     editors/weapons/editweapons.h \
     events/choicesdialog.h \
+    events/commands/changetextoptionsdialog.h \
+    events/commands/showtextdialog.h \
     events/conditionalbranchdialog.h \
     events/eventcommanddialog.h \
     events/eventdialog.h \
@@ -204,6 +208,8 @@ FORMS += \
     editors/troops/trooppageconditiondialog.ui \
     editors/weapons/editweapons.ui \
     events/choicesdialog.ui \
+    events/commands/changetextoptionsdialog.ui \
+    events/commands/showtextdialog.ui \
     events/conditionalbranchdialog.ui \
     events/eventcommanddialog.ui \
     events/eventdialog.ui \

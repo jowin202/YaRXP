@@ -4,8 +4,11 @@
 #include "RXIO2/rpgmapcontroller.h"
 #include "RXIO2/rpgmapinfocontroller.h"
 
+#include "commands/changetextoptionsdialog.h"
+#include "commands/showtextdialog.h"
 
-EventListItem::EventListItem(QListWidget *parent, RPGMapController *mc, RPGMapInfoController *mic, QJsonObject obj) : QListWidgetItem(parent)
+
+EventListItem::EventListItem(QListWidget *parent, RPGMapController *mc, RPGMapInfoController *mic, QJsonObject obj) : QListWidgetItem()
 {
     this->setColor(obj.value("@code").toInt());
     this->obj = obj;
@@ -48,8 +51,49 @@ void EventListItem::edit_cell()
     int code = obj.value("@code").toInt();
     QJsonArray parameters = obj.value("@parameters").toArray();
 
+    if (code == 101)
+    {
+        QString full = parameters.at(0).toString() + '\n';
+        int row = parent->indexFromItem(this).row();
+        for (int i = 1; dynamic_cast<EventListItem*>(parent->item(row+i)) != nullptr
+             && ((EventListItem*)parent->item(row+i))->get_obj().value("@code").toInt() == 401; i++)
+        {
+            full += ((EventListItem*)parent->item(row+i))->get_obj().value("@parameters").toArray().at(0).toString() + '\n';
+        }
+        ShowTextDialog *dialog = new ShowTextDialog;
+        dialog->setString(full);
+        dialog->show();
 
-    if (code == 106)
+        QObject::connect(dialog, &ShowTextDialog::ok_clicked, [=](QString text){
+            for (int i = 1; dynamic_cast<EventListItem*>(parent->item(row+i)) != nullptr
+                 && ((EventListItem*)parent->item(row+i))->get_obj().value("@code").toInt() == 401; i++) {
+                parent->takeItem(row+i);
+            }
+            QStringList list = text.split('\n');
+            QJsonArray parameters;
+            parameters.append(list.first());
+
+            for (int i = 1; i < list.length(); i++)
+            {
+                QJsonArray parameters;
+                parameters.append(list.at(i));
+                QJsonObject obj_new = QJsonObject(this->obj);
+                obj_new.insert("@code", 401);
+                obj_new.insert("@parameters", parameters);
+
+                EventListItem *item = new EventListItem(this->parent, mc, mic,obj_new);
+                parent->insertItem(row+1, item);
+            }
+        });
+    }
+    else if (code == 104)
+    {
+        ChangeTextOptionsDialog *dialog = new ChangeTextOptionsDialog;
+        dialog->setParameters(parameters);
+        dialog->show();
+        QObject::connect(dialog, &ChangeTextOptionsDialog::ok_clicked, [=](QJsonArray parameters) { this->set_parameters(parameters); });
+    }
+    else if (code == 106)
     {
         bool ok;
         int v = QInputDialog::getInt(this->parent, "Wait", "Frames:", parameters.at(0).toInt(),1,999, 1, &ok);
