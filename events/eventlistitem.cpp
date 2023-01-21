@@ -1,11 +1,19 @@
 #include "eventlistitem.h"
 
 #include "RXIO2/rpgdb.h"
+#include "RXIO2/factory.h"
 #include "RXIO2/rpgmapcontroller.h"
 #include "RXIO2/rpgmapinfocontroller.h"
 
 #include "commands/changetextoptionsdialog.h"
 #include "commands/showtextdialog.h"
+#include "commands/radiodialog.h"
+#include "commands/singlecombodialog.h"
+#include "commands/increasedecreasedialog.h"
+
+
+#include "dialogs/audiodialog.h"
+
 
 
 EventListItem::EventListItem(QListWidget *parent, RPGMapController *mc, RPGMapInfoController *mic, QJsonObject obj) : QListWidgetItem()
@@ -51,38 +59,48 @@ void EventListItem::edit_cell()
     int code = obj.value("@code").toInt();
     QJsonArray parameters = obj.value("@parameters").toArray();
 
-    if (code == 101)
+    if (code == 101 || code == 108 || code == 355) //Multiline text
     {
+        int multiline_id = code+300;
         QString full = parameters.at(0).toString() + '\n';
         int row = parent->indexFromItem(this).row();
         for (int i = 1; dynamic_cast<EventListItem*>(parent->item(row+i)) != nullptr
-             && ((EventListItem*)parent->item(row+i))->get_obj().value("@code").toInt() == 401; i++)
+             && ((EventListItem*)parent->item(row+i))->get_obj().value("@code").toInt() == multiline_id; i++)
         {
             full += ((EventListItem*)parent->item(row+i))->get_obj().value("@parameters").toArray().at(0).toString() + '\n';
         }
-        ShowTextDialog *dialog = new ShowTextDialog;
+        ShowTextDialog *dialog = new ShowTextDialog(nullptr, code);
         dialog->setString(full);
         dialog->show();
 
         QObject::connect(dialog, &ShowTextDialog::ok_clicked, [=](QString text){
-            for (int i = 1; dynamic_cast<EventListItem*>(parent->item(row+i)) != nullptr
-                 && ((EventListItem*)parent->item(row+i))->get_obj().value("@code").toInt() == 401; i++) {
-                parent->takeItem(row+i);
+            for (int i = 1; dynamic_cast<EventListItem*>(parent->item(row+1)) != nullptr
+                 && ((EventListItem*)parent->item(row+1))->get_obj().value("@code").toInt() == multiline_id; i++) {
+                parent->takeItem(row+1);
             }
             QStringList list = text.split('\n');
-            QJsonArray parameters;
-            parameters.append(list.first());
+            if (list.last() == "")
+                list.removeLast();
+
+            if (list.length() > 0)
+            {
+                QJsonArray p;
+                p.append(list.first());
+                this->obj.insert("@parameters", p);
+                this->update_text();
+            }
+
 
             for (int i = 1; i < list.length(); i++)
             {
                 QJsonArray parameters;
                 parameters.append(list.at(i));
                 QJsonObject obj_new = QJsonObject(this->obj);
-                obj_new.insert("@code", 401);
+                obj_new.insert("@code", multiline_id);
                 obj_new.insert("@parameters", parameters);
 
                 EventListItem *item = new EventListItem(this->parent, mc, mic,obj_new);
-                parent->insertItem(row+1, item);
+                parent->insertItem(row+i, item);
             }
         });
     }
@@ -93,17 +111,27 @@ void EventListItem::edit_cell()
         dialog->show();
         QObject::connect(dialog, &ChangeTextOptionsDialog::ok_clicked, [=](QJsonArray parameters) { this->set_parameters(parameters); });
     }
-    else if (code == 106)
+    else if (code == 106 || code == 235 || code == 242 || code == 246)
     {
+        QString text1;
+        QString text2;
+        switch (code)
+        {
+        case 106: text1 = "Wait"; text2 = "Frames:"; break;
+        case 235: text1 = "Erase Picture"; text2 = "Pic. No.:"; break;
+        case 242: text1 = "Fade Out BGM"; text2 = "Time in sec:"; break;
+        case 246: text1 = "Fade Out BGS"; text2 = "Time in sec:"; break;
+        }
+
         bool ok;
-        int v = QInputDialog::getInt(this->parent, "Wait", "Frames:", parameters.at(0).toInt(),1,999, 1, &ok);
+        int v = QInputDialog::getInt(this->parent, text1, text2, parameters.at(0).toInt(),1,999, 1, &ok);
         if (ok){
             QJsonArray newparams;
             newparams.append(v);
             this->obj.insert("@parameters", newparams);
         }
     }
-    if (code == 118 || code == 119)
+    else if (code == 118 || code == 119)
     {
         bool ok;
         QString label = QInputDialog::getText(this->parent, (code == 119 ? QString("Jump to ") : "") + "Label", (code == 119 ? QString("Jump to ") : "") + "Label:", QLineEdit::Normal, parameters.at(0).toString(), &ok);
@@ -113,6 +141,46 @@ void EventListItem::edit_cell()
             this->obj.insert("@parameters", newparams);
         }
     }
+    else if (code == 134 || code == 135 || code == 136 || code == 208) //2 radio buttons
+    {
+        RadioDialog *dialog = new RadioDialog(nullptr, code, parameters.at(0).toInt() == 0);
+        dialog->show();
+        QObject::connect(dialog, &RadioDialog::ok_clicked, [=](QJsonArray array){ this->obj.insert("@parameters", array); this->update_text(); });
+    }
+    else if (code == 132 || code == 133 || code == 241 || code == 245 || code == 249 || code == 250) //Audio Dialog
+    {
+        int type;
+        if (code == 132 || code == 241) type = AudioDialog::BGM;
+        else if (code == 245) type = AudioDialog::BGS;
+        else if (code == 133 || code == 249) type = AudioDialog::ME;
+        else //if (code == 250)
+            type = AudioDialog::SE;
+        AudioDialog *dialog = new AudioDialog(this->db, parameters.at(0).toObject().value("@name").toString(), parameters.at(0).toObject().value("@volume").toInt(), parameters.at(0).toObject().value("@pitch").toInt(), type);
+        dialog->show();
+        QObject::connect(dialog, &AudioDialog::ok_clicked, [=](QString name, int volume, int pitch){
+            QJsonArray param;
+            param.append(Factory().create_audiofile(name, volume,pitch));
+            this->obj.insert("@parameters", param);
+            this->update_text();
+        });
+
+    }
+    else if (code == 105 || code == 117 || code == 314 || code == 334 || code == 335) //single combo box
+    {
+        SingleComboDialog *dialog = new SingleComboDialog(this->db, code, parameters.at(0).toInt());
+        dialog->show();
+        QObject::connect(dialog, &SingleComboDialog::ok_clicked, [=](QJsonArray parameters) { this->obj.insert("@parameters", parameters); this->update_text(); });
+    }
+    else if ((code >= 125 && code <= 128) || code == 311 || code == 312 || (code >= 315 && code <= 317) || code == 331 || code == 332) //single combo box
+    {
+        //qDebug() << parameters;
+        IncreaseDecreaseDialog *dialog = new IncreaseDecreaseDialog(this->db, code, parameters);
+        dialog->show();
+        QObject::connect(dialog, &IncreaseDecreaseDialog::ok_clicked, [=](QJsonArray parameters) {
+            //qDebug() << parameters;
+            this->obj.insert("@parameters", parameters); this->update_text(); });
+    }
+
     this->update_text();
 }
 
@@ -158,9 +226,9 @@ QString EventListItem::get_text(QJsonObject obj)
     else if (code == 106)
         text = "@>Wait: " + QString("%1 frame(s)").arg(parameters.at(0).toInt());
     else if (code == 108)
-        text = "@>Wait: " + parameters.at(0).toString();
+        text = "@>Comment: " + parameters.at(0).toString();
     else if (code == 408)
-        text = " :    : " + parameters.at(0).toString();
+        text = " :       : " + parameters.at(0).toString();
     else if (code == 111)
     {
         //Conditional Branch
@@ -348,7 +416,7 @@ QString EventListItem::get_text(QJsonObject obj)
                                                 "This event, " :
                                                 "[" + mc->current_map()->object().value("@events").toObject().value(QString::number(parameters.at(0).toInt())).toObject().value("@name").toString() +"], ")
                 + (parameters.at(1).toInt() == 0 ? QString("(%1,%2)").arg(parameters.at(2).toInt(),3,10,QChar('0')).arg(parameters.at(3).toInt(),3,10,QChar('0')) :
-                  (parameters.at(1).toInt() == 1 ? QString("Variable [%1,%2]").arg(parameters.at(2).toInt(),4,10,QChar('0')).arg(parameters.at(3).toInt(),4,10,QChar('0')) :
+                  (parameters.at(1).toInt() == 1 ? QString("Variable [%1:%2]").arg(parameters.at(2).toInt(),4,10,QChar('0')).arg(parameters.at(3).toInt(),4,10,QChar('0')) :
                                                    QString("Switch with [%1]").arg(mc->current_map()->object().value("@events").toObject().value(QString::number(parameters.at(2).toInt())).toObject().value("@name").toString())))
                 + (parameters.at(4).toInt() != 0 ? ", " +this->text_directions.at(parameters.at(4).toInt()/2-1) : "");
     else if (code == 203)
@@ -523,11 +591,11 @@ QString EventListItem::get_text(QJsonObject obj)
     else if (code == 311)
         text += "@>Change HP: " + (parameters.at(0).toInt() == 0 ? "Entire Party" : "[" + db->get_object_name(RPGDB::ACTORS,parameters.at(0).toInt()) + "]")
                 + " " + this->text_pm.at(parameters.at(1).toInt()) + " "
-                + (parameters.at(2).toInt() == 0 ? QString::number(parameters.at(3).toInt()) : QString("Variable [%1, %2]").arg(parameters.at(3).toInt(),4,10, QChar('0')).arg(db->get_variable_name(parameters.at(3).toInt())));
+                + (parameters.at(2).toInt() == 0 ? QString::number(parameters.at(3).toInt()) : QString("Variable [%1: %2]").arg(parameters.at(3).toInt(),4,10, QChar('0')).arg(db->get_variable_name(parameters.at(3).toInt())));
     else if (code == 312)
         text += "@>Change SP: " + (parameters.at(0).toInt() == 0 ? "Entire Party" : "[" + db->get_object_name(RPGDB::ACTORS,parameters.at(0).toInt()) + "]")
                 + " " + this->text_pm.at(parameters.at(1).toInt()) + " "
-                + (parameters.at(2).toInt() == 0 ? QString::number(parameters.at(3).toInt()) : QString("Variable [%1, %2]").arg(parameters.at(3).toInt(),4,10, QChar('0')).arg(db->get_variable_name(parameters.at(3).toInt())));
+                + (parameters.at(2).toInt() == 0 ? QString::number(parameters.at(3).toInt()) : QString("Variable [%1: %2]").arg(parameters.at(3).toInt(),4,10, QChar('0')).arg(db->get_variable_name(parameters.at(3).toInt())));
     else if (code == 313)
         text += "@>Change State: " + (parameters.at(0).toInt() == 0 ? "Entire Party" : "[" + db->get_object_name(RPGDB::ACTORS,parameters.at(0).toInt()) + "]")
                 + " " + this->text_pm.at(parameters.at(1).toInt()) + " "
@@ -537,14 +605,14 @@ QString EventListItem::get_text(QJsonObject obj)
     else if (code == 315)
         text += "@>Change EXP: " + (parameters.at(0).toInt() == 0 ? "Entire Party" : "[" + db->get_object_name(RPGDB::ACTORS,parameters.at(0).toInt()) + "]")
                 + " " + this->text_pm.at(parameters.at(1).toInt()) + " "
-                + (parameters.at(2).toInt() == 0 ? QString::number(parameters.at(3).toInt()) : QString("Variable [%1, %2]").arg(parameters.at(3).toInt(),4,10, QChar('0')).arg(db->get_variable_name(parameters.at(3).toInt())));
+                + (parameters.at(2).toInt() == 0 ? QString::number(parameters.at(3).toInt()) : QString("Variable [%1: %2]").arg(parameters.at(3).toInt(),4,10, QChar('0')).arg(db->get_variable_name(parameters.at(3).toInt())));
     else if (code == 316)
         text += "@>Change Level: " + (parameters.at(0).toInt() == 0 ? "Entire Party" : "[" + db->get_object_name(RPGDB::ACTORS,parameters.at(0).toInt()) + "]")
                 + " " + this->text_pm.at(parameters.at(1).toInt()) + " "
-                + (parameters.at(2).toInt() == 0 ? QString::number(parameters.at(3).toInt()) : QString("Variable [%1, %2]").arg(parameters.at(3).toInt(),4,10, QChar('0')).arg(db->get_variable_name(parameters.at(3).toInt())));
+                + (parameters.at(2).toInt() == 0 ? QString::number(parameters.at(3).toInt()) : QString("Variable [%1: %2]").arg(parameters.at(3).toInt(),4,10, QChar('0')).arg(db->get_variable_name(parameters.at(3).toInt())));
     else if (code == 317)
         text += "@>Change Parameters: " + (parameters.at(0).toInt() == 0 ? "Entire Party" : "[" + db->get_object_name(RPGDB::ACTORS,parameters.at(0).toInt()) + "]")
-                + ", " + text_stat_vars.at(4+parameters.at(1).toInt()) + " " + this->text_pm.at(parameters.at(2).toInt()) + " " + (parameters.at(3).toInt() == 0 ? QString::number(parameters.at(4).toInt()) : QString("Variable [%1, %2]").arg(parameters.at(4).toInt(),4,10, QChar('0')).arg(db->get_variable_name(parameters.at(4).toInt())));
+                + ", " + text_stat_vars.at(4+parameters.at(1).toInt()) + " " + this->text_pm.at(parameters.at(2).toInt()) + " " + (parameters.at(3).toInt() == 0 ? QString::number(parameters.at(4).toInt()) : QString("Variable [%1: %2]").arg(parameters.at(4).toInt(),4,10, QChar('0')).arg(db->get_variable_name(parameters.at(4).toInt())));
         //Entire Party is not implemented here
     else if (code == 318)
         text += "@>Change Skills: " + (parameters.at(0).toInt() == 0 ? "Entire Party" : "[" + db->get_object_name(RPGDB::ACTORS,parameters.at(0).toInt()) + "]")
@@ -560,11 +628,11 @@ QString EventListItem::get_text(QJsonObject obj)
     else if (code == 331)
         text += "@>Change Enemy HP: " + (parameters.at(0).toInt() == -1 ? "Entire Troop" : "[" + QString::number(parameters.at(0).toInt()+1) + ".]")
                 + " " + this->text_pm.at(parameters.at(1).toInt()) + " "
-                + (parameters.at(2).toInt() == 0 ? QString::number(parameters.at(3).toInt()) : QString("Variable [%1, %2]").arg(parameters.at(3).toInt(),4,10, QChar('0')).arg(db->get_variable_name(parameters.at(3).toInt())));
+                + (parameters.at(2).toInt() == 0 ? QString::number(parameters.at(3).toInt()) : QString("Variable [%1: %2]").arg(parameters.at(3).toInt(),4,10, QChar('0')).arg(db->get_variable_name(parameters.at(3).toInt())));
     else if (code == 332)
         text += "@>Change Enemy SP: " + (parameters.at(0).toInt() == -1 ? "Entire Troop" : "[" + QString::number(parameters.at(0).toInt()+1) + ".]")
                 + " " + this->text_pm.at(parameters.at(1).toInt()) + " "
-                + (parameters.at(2).toInt() == 0 ? QString::number(parameters.at(3).toInt()) : QString("Variable [%1, %2]").arg(parameters.at(3).toInt(),4,10, QChar('0')).arg(db->get_variable_name(parameters.at(3).toInt())));
+                + (parameters.at(2).toInt() == 0 ? QString::number(parameters.at(3).toInt()) : QString("Variable [%1: %2]").arg(parameters.at(3).toInt(),4,10, QChar('0')).arg(db->get_variable_name(parameters.at(3).toInt())));
     else if (code == 333)
         text += "@>Change Enemy State: " + (parameters.at(0).toInt() == -1 ? "Entire Troop" : "[" + QString::number(parameters.at(0).toInt()+1) + ".]")
                 + " " + this->text_pm.at(parameters.at(1).toInt()) + " "

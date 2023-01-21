@@ -76,7 +76,10 @@ SOURCES += \
     editors/weapons/editweapons.cpp \
     events/choicesdialog.cpp \
     events/commands/changetextoptionsdialog.cpp \
+    events/commands/increasedecreasedialog.cpp \
+    events/commands/radiodialog.cpp \
     events/commands/showtextdialog.cpp \
+    events/commands/singlecombodialog.cpp \
     events/conditionalbranchdialog.cpp \
     events/eventcommanddialog.cpp \
     events/eventdialog.cpp \
@@ -154,7 +157,10 @@ HEADERS += \
     editors/weapons/editweapons.h \
     events/choicesdialog.h \
     events/commands/changetextoptionsdialog.h \
+    events/commands/increasedecreasedialog.h \
+    events/commands/radiodialog.h \
     events/commands/showtextdialog.h \
+    events/commands/singlecombodialog.h \
     events/conditionalbranchdialog.h \
     events/eventcommanddialog.h \
     events/eventdialog.h \
@@ -209,7 +215,10 @@ FORMS += \
     editors/weapons/editweapons.ui \
     events/choicesdialog.ui \
     events/commands/changetextoptionsdialog.ui \
+    events/commands/increasedecreasedialog.ui \
+    events/commands/radiodialog.ui \
     events/commands/showtextdialog.ui \
+    events/commands/singlecombodialog.ui \
     events/conditionalbranchdialog.ui \
     events/eventcommanddialog.ui \
     events/eventdialog.ui \

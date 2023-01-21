@@ -1,24 +1,21 @@
-#ifndef SHOWTEXTDIALOG_H
-#define SHOWTEXTDIALOG_H
+#ifndef RADIODIALOG_H
+#define RADIODIALOG_H
 
 #include <QWidget>
-#include <QJsonObject>
-#include <QJsonArray>
 #include <QKeyEvent>
+#include <QJsonArray>
 
 namespace Ui {
-class ShowTextDialog;
+class RadioDialog;
 }
 
-class ShowTextDialog : public QWidget
+class RadioDialog : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit ShowTextDialog(QWidget *parent = nullptr, int code = 101);
-    ~ShowTextDialog();
-
-    void setString(QString text);
+    explicit RadioDialog(QWidget *parent = nullptr, int code = 0, bool left = true);
+    ~RadioDialog();
 
     void keyPressEvent(QKeyEvent *e) {
         if(e->key() == Qt::Key_Escape)
@@ -27,15 +24,17 @@ public:
             this->on_button_ok_clicked();
     }
 
+
 signals:
-    void ok_clicked(QString);
+    void ok_clicked(QJsonArray);
 
 private slots:
-    void on_button_ok_clicked();
     void on_button_cancel_clicked();
 
+    void on_button_ok_clicked();
+
 private:
-    Ui::ShowTextDialog *ui;
+    Ui::RadioDialog *ui;
 };
 
-#endif // SHOWTEXTDIALOG_H
+#endif // RADIODIALOG_H
