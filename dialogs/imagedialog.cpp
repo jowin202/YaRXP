@@ -80,7 +80,7 @@ ImageDialog::ImageDialog(RPGDB *db, int mode, QString current_image_file, QWidge
         break;
     case TRANSITIONS:
         title = "Transition Graphic";
-        folder_name = "Transistions";
+        folder_name = "Transitions";
         break;
     case WINDOWSKINS:
         title = "Windowskin Graphic";

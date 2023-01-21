@@ -13,7 +13,7 @@
 
 
 #include "dialogs/audiodialog.h"
-
+#include "dialogs/imagedialog.h"
 
 
 EventListItem::EventListItem(QListWidget *parent, RPGMapController *mc, RPGMapInfoController *mic, QJsonObject obj) : QListWidgetItem()
@@ -179,6 +179,17 @@ void EventListItem::edit_cell()
         QObject::connect(dialog, &IncreaseDecreaseDialog::ok_clicked, [=](QJsonArray parameters) {
             //qDebug() << parameters;
             this->obj.insert("@parameters", parameters); this->update_text(); });
+    }
+    else if (code == 131 || code == 222)
+    {
+        ImageDialog *dialog = new ImageDialog(db, (code == 131 ? ImageDialog::WINDOWSKINS : ImageDialog::TRANSITIONS), parameters.at(0).toString());
+        dialog->show();
+        QObject::connect(dialog, &ImageDialog::ok_clicked, [=](QString img) {
+            QJsonArray p;
+            p.append(img);
+            this->obj.insert("@parameters", p);
+            this->update_text();
+        });
     }
 
     this->update_text();
