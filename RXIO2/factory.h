@@ -57,6 +57,9 @@ public:
     QJsonObject create_page_condition(bool self_switch_valid, bool switch1_valid, bool switch2_valid, bool variable_valid,
                                       int self_switch_ch, int switch1_id, int switch2_id, int variable_id, int variable_value);
     QJsonObject create_page_graphic(QString character_name, int character_hue, int blend_type, int direction, int opacity, int pattern, int tile_id);
+
+
+    QJsonObject create_color_tone(int r, int g, int b, int gray);
 };
 
 #endif // FACTORY_H

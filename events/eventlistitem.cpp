@@ -11,7 +11,8 @@
 #include "commands/singlecombodialog.h"
 #include "commands/increasedecreasedialog.h"
 #include "commands/changestatedialog.h"
-
+#include "commands/combospindialog.h"
+#include "commands/changecolortonedialog.h"
 
 #include "dialogs/audiodialog.h"
 #include "dialogs/imagedialog.h"
@@ -200,7 +201,24 @@ void EventListItem::edit_cell()
             this->obj.insert("@parameters", p);
             this->update_text();
         });
-
+    }
+    else if (code == 103 || code == 303) //Input Number Processing, Name Input Processing
+    {
+        ComboSpinDialog *dialog = new ComboSpinDialog(db, code, parameters);
+        dialog->show();
+        QObject::connect(dialog, &ComboSpinDialog::ok_clicked, [=](QJsonArray p) {
+            this->obj.insert("@parameters", p);
+            this->update_text();
+        });
+    }
+    else if (code == 205 || code == 223 || code == 234) //Color Tones
+    {
+        ChangeColorToneDialog *dialog = new ChangeColorToneDialog(db, code, parameters);
+        dialog->show();
+        QObject::connect(dialog, &ChangeColorToneDialog::ok_clicked, [=](QJsonArray p) {
+            this->obj.insert("@parameters", p);
+            this->update_text();
+        });
     }
 
     this->update_text();
@@ -522,7 +540,7 @@ QString EventListItem::get_text(QJsonObject obj)
     else if (code == 222)
         text += "@>Execute Transistion: '" + parameters.at(0).toString() + "'";
     else if (code == 223)
-        text += "@>Change Screen Color Tone: " + QString("(%1, %2, %3, %4), @%5")
+        text += "@>Change Screen Color Tone: " + QString("(%1,%2,%3,%4), @%5")
                 .arg(parameters.at(0).toObject().value("r").toInt())
                 .arg(parameters.at(0).toObject().value("g").toInt())
                 .arg(parameters.at(0).toObject().value("b").toInt())
@@ -561,7 +579,7 @@ QString EventListItem::get_text(QJsonObject obj)
     else if (code == 233)
         text += "@>Rotate Picture: " + QString::number(parameters.at(0).toInt()) + ", " + QString::number(parameters.at(1).toInt());
     else if (code == 234)
-        text += "@>Change Picture Color Tone: " + QString("%1, (%2, %3, %4, %5), @%6")
+        text += "@>Change Picture Color Tone: " + QString("%1, (%2,%3,%4,%5), @%6")
                 .arg(parameters.at(0).toInt())
                 .arg(parameters.at(1).toObject().value("r").toInt())
                 .arg(parameters.at(1).toObject().value("g").toInt())

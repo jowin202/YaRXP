@@ -75,8 +75,10 @@ SOURCES += \
     editors/troops/trooppiclabel.cpp \
     editors/weapons/editweapons.cpp \
     events/choicesdialog.cpp \
+    events/commands/changecolortonedialog.cpp \
     events/commands/changestatedialog.cpp \
     events/commands/changetextoptionsdialog.cpp \
+    events/commands/combospindialog.cpp \
     events/commands/increasedecreasedialog.cpp \
     events/commands/radiodialog.cpp \
     events/commands/showtextdialog.cpp \
@@ -157,8 +159,10 @@ HEADERS += \
     editors/troops/trooppiclabel.h \
     editors/weapons/editweapons.h \
     events/choicesdialog.h \
+    events/commands/changecolortonedialog.h \
     events/commands/changestatedialog.h \
     events/commands/changetextoptionsdialog.h \
+    events/commands/combospindialog.h \
     events/commands/increasedecreasedialog.h \
     events/commands/radiodialog.h \
     events/commands/showtextdialog.h \
@@ -216,8 +220,10 @@ FORMS += \
     editors/troops/trooppageconditiondialog.ui \
     editors/weapons/editweapons.ui \
     events/choicesdialog.ui \
+    events/commands/changecolortonedialog.ui \
     events/commands/changestatedialog.ui \
     events/commands/changetextoptionsdialog.ui \
+    events/commands/combospindialog.ui \
     events/commands/increasedecreasedialog.ui \
     events/commands/radiodialog.ui \
     events/commands/showtextdialog.ui \
