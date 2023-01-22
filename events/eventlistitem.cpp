@@ -10,6 +10,7 @@
 #include "commands/radiodialog.h"
 #include "commands/singlecombodialog.h"
 #include "commands/increasedecreasedialog.h"
+#include "commands/changestatedialog.h"
 
 
 #include "dialogs/audiodialog.h"
@@ -190,6 +191,16 @@ void EventListItem::edit_cell()
             this->obj.insert("@parameters", p);
             this->update_text();
         });
+    }
+    else if (code == 313 || code == 333) //State (Enemy) State
+    {
+        ChangeStateDialog *dialog = new ChangeStateDialog(db, code, parameters);
+        dialog->show();
+        QObject::connect(dialog, &ChangeStateDialog::ok_clicked, [=](QJsonArray p) {
+            this->obj.insert("@parameters", p);
+            this->update_text();
+        });
+
     }
 
     this->update_text();

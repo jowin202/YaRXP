@@ -75,6 +75,7 @@ SOURCES += \
     editors/troops/trooppiclabel.cpp \
     editors/weapons/editweapons.cpp \
     events/choicesdialog.cpp \
+    events/commands/changestatedialog.cpp \
     events/commands/changetextoptionsdialog.cpp \
     events/commands/increasedecreasedialog.cpp \
     events/commands/radiodialog.cpp \
@@ -156,6 +157,7 @@ HEADERS += \
     editors/troops/trooppiclabel.h \
     editors/weapons/editweapons.h \
     events/choicesdialog.h \
+    events/commands/changestatedialog.h \
     events/commands/changetextoptionsdialog.h \
     events/commands/increasedecreasedialog.h \
     events/commands/radiodialog.h \
@@ -214,6 +216,7 @@ FORMS += \
     editors/troops/trooppageconditiondialog.ui \
     editors/weapons/editweapons.ui \
     events/choicesdialog.ui \
+    events/commands/changestatedialog.ui \
     events/commands/changetextoptionsdialog.ui \
     events/commands/increasedecreasedialog.ui \
     events/commands/radiodialog.ui \

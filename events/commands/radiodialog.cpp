@@ -48,7 +48,8 @@ void RadioDialog::on_button_ok_clicked()
     QJsonArray array;
     if (this->ui->radio_left->isChecked())
         array.append(0);
-    else array.append(1);
+    else
+        array.append(1);
     emit ok_clicked(array);
     this->close();
 }
