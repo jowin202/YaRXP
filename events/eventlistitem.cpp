@@ -13,6 +13,7 @@
 #include "commands/changestatedialog.h"
 #include "commands/combospindialog.h"
 #include "commands/changecolortonedialog.h"
+#include "commands/combocombodialog.h"
 
 #include "dialogs/audiodialog.h"
 #include "dialogs/imagedialog.h"
@@ -216,6 +217,15 @@ void EventListItem::edit_cell()
         ChangeColorToneDialog *dialog = new ChangeColorToneDialog(db, code, parameters);
         dialog->show();
         QObject::connect(dialog, &ChangeColorToneDialog::ok_clicked, [=](QJsonArray p) {
+            this->obj.insert("@parameters", p);
+            this->update_text();
+        });
+    }
+    else if (code == 207 || code == 321 || code == 336) //Show Animation, Actor Class, Enemy Transform
+    {
+        ComboComboDialog *dialog = new ComboComboDialog(db, mc, code, parameters);
+        dialog->show();
+        QObject::connect(dialog, &ComboComboDialog::ok_clicked, [=](QJsonArray p) {
             this->obj.insert("@parameters", p);
             this->update_text();
         });

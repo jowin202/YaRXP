@@ -78,6 +78,7 @@ SOURCES += \
     events/commands/changecolortonedialog.cpp \
     events/commands/changestatedialog.cpp \
     events/commands/changetextoptionsdialog.cpp \
+    events/commands/combocombodialog.cpp \
     events/commands/combospindialog.cpp \
     events/commands/increasedecreasedialog.cpp \
     events/commands/radiodialog.cpp \
@@ -162,6 +163,7 @@ HEADERS += \
     events/commands/changecolortonedialog.h \
     events/commands/changestatedialog.h \
     events/commands/changetextoptionsdialog.h \
+    events/commands/combocombodialog.h \
     events/commands/combospindialog.h \
     events/commands/increasedecreasedialog.h \
     events/commands/radiodialog.h \
@@ -223,6 +225,7 @@ FORMS += \
     events/commands/changecolortonedialog.ui \
     events/commands/changestatedialog.ui \
     events/commands/changetextoptionsdialog.ui \
+    events/commands/combocombodialog.ui \
     events/commands/combospindialog.ui \
     events/commands/increasedecreasedialog.ui \
     events/commands/radiodialog.ui \
