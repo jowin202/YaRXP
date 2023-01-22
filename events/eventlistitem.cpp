@@ -192,7 +192,7 @@ void EventListItem::edit_cell()
             this->update_text();
         });
     }
-    else if (code == 313 || code == 333) //State (Enemy) State
+    else if (code == 313 || code == 333 || code == 318) //Change (Enemy) State and Skills
     {
         ChangeStateDialog *dialog = new ChangeStateDialog(db, code, parameters);
         dialog->show();

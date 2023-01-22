@@ -10,7 +10,11 @@ ChangeStateDialog::ChangeStateDialog(RPGDB *db, int code, QJsonArray parameters,
     ui->setupUi(this);
 
     this->code = code;
-    db->fill_combo(this->ui->combo_state, RPGDB::STATES, true, 3);
+
+    if (code == 318)
+        db->fill_combo(this->ui->combo_state, RPGDB::SKILLS, true, 3);
+    else
+        db->fill_combo(this->ui->combo_state, RPGDB::STATES, true, 3);
 
     if (code == 313)
     {
@@ -18,13 +22,21 @@ ChangeStateDialog::ChangeStateDialog(RPGDB *db, int code, QJsonArray parameters,
         this->ui->comboBox->insertItem(0, "Entire Party");
         this->ui->comboBox->setCurrentIndex(parameters.at(0).toInt());
     }
-    else //if (code == 333)
+    else if (code == 333)
     {
         this->setWindowTitle("Change Enemy State");
         this->ui->comboBox->addItem("Entire Troop");
         for (int i = 0; i < 8; i++)
             this->ui->comboBox->addItem(QString("%1.").arg(i+1));
         this->ui->comboBox->setCurrentIndex(parameters.at(0).toInt()+1);
+    }
+    else if (code == 318)
+    {
+        this->setWindowTitle("Change Skills");
+        this->ui->label_2->setText("Skill:");
+        db->fill_combo(this->ui->comboBox, RPGDB::ACTORS, true, 3);
+        this->ui->comboBox->setCurrentIndex(parameters.at(0).toInt()-1);
+
     }
 
     if (parameters.at(1).toInt() == 0)
@@ -51,8 +63,10 @@ void ChangeStateDialog::on_button_ok_clicked()
     QJsonArray p;
     if (code == 313)
         p.append(this->ui->comboBox->currentIndex());
-    else //if (code == 333)
+    else if (code == 333)
         p.append(this->ui->comboBox->currentIndex()-1);
+    else if (code == 318)
+        p.append(this->ui->comboBox->currentIndex()+1);
 
     if (this->ui->radio_add->isChecked())
         p.append(0);
