@@ -709,7 +709,7 @@ QJsonObject Factory::create_page_graphic(QString character_name, int character_h
     return obj;
 }
 
-QJsonObject Factory::create_color_tone(int r, int g, int b, int gray)
+QJsonObject Factory::create_color_tone(int r, int g, int b, int gray, bool tone)
 {
     QJsonObject obj;
     obj.insert("r", r);
@@ -717,7 +717,7 @@ QJsonObject Factory::create_color_tone(int r, int g, int b, int gray)
     obj.insert("b", b);
     obj.insert("alpha_gray", gray);
 
-    obj.insert("RXClass", "Tone");
+    obj.insert("RXClass", tone ? "Tone" : "Color");
     return obj;
 }
 

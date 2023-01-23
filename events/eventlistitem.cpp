@@ -109,6 +109,18 @@ void EventListItem::edit_cell()
             }
         });
     }
+    else if (code == 401 || code == 408 || code == 655) //Multiline text in the middle
+    {
+        int row = parent->indexFromItem(this).row();
+        for (int i = 1; row >= 0 && dynamic_cast<EventListItem*>(parent->item(row-i)) != nullptr; i++)
+        {
+            if (((EventListItem*)parent->item(row-i))->get_obj().value("@code").toInt() == code-300)
+            {
+                ((EventListItem*)parent->item(row-i))->edit_cell();
+                return;
+            }
+        }
+    }
     else if (code == 104)
     {
         ChangeTextOptionsDialog *dialog = new ChangeTextOptionsDialog;
@@ -214,7 +226,7 @@ void EventListItem::edit_cell()
             this->update_text();
         });
     }
-    else if (code == 205 || code == 223 || code == 234) //Color Tones
+    else if (code == 205 || code == 223 || code == 234 || code == 224) //Color Tones
     {
         ChangeColorToneDialog *dialog = new ChangeColorToneDialog(db, code, parameters);
         dialog->show();

@@ -13,6 +13,16 @@ ChangeColorToneDialog::ChangeColorToneDialog(RPGDB *db, int code, QJsonArray par
     Q_UNUSED(db);
     this->code = code;
 
+    if (code == 224)
+    {
+        //for screen flash everything must be >= 0
+        this->ui->slider_red->setMinimum(0);
+        this->ui->slider_green->setMinimum(0);
+        this->ui->slider_blue->setMinimum(0);
+        this->ui->spin_red->setMinimum(0);
+        this->ui->spin_green->setMinimum(0);
+        this->ui->spin_blue->setMinimum(0);
+    }
 
     if (code != 234) //if not picture
     {
@@ -23,6 +33,8 @@ ChangeColorToneDialog::ChangeColorToneDialog(RPGDB *db, int code, QJsonArray par
             this->setWindowTitle("Change Fog Color Tone");
         else if (code == 223)
             this->setWindowTitle("Change Screen Color Tone");
+        else if (code == 224)
+            this->setWindowTitle("Screen Flash");
 
         this->ui->spin_red->setValue(parameters.at(0).toObject().value("r").toInt());
         this->ui->spin_green->setValue(parameters.at(0).toObject().value("g").toInt());
@@ -67,7 +79,7 @@ void ChangeColorToneDialog::on_button_ok_clicked()
     if (code == 234)
         p.append(this->ui->spin_img_num->value());
 
-    p.append(Factory().create_color_tone(this->ui->spin_red->value(), this->ui->spin_green->value(), this->ui->spin_blue->value(), this->ui->spin_gray->value()));
+    p.append(Factory().create_color_tone(this->ui->spin_red->value(), this->ui->spin_green->value(), this->ui->spin_blue->value(), this->ui->spin_gray->value(),code!=224));
     p.append(this->ui->spin_time->value());
 
     emit ok_clicked(p);

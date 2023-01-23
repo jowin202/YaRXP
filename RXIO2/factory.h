@@ -59,7 +59,7 @@ public:
     QJsonObject create_page_graphic(QString character_name, int character_hue, int blend_type, int direction, int opacity, int pattern, int tile_id);
 
 
-    QJsonObject create_color_tone(int r, int g, int b, int gray);
+    QJsonObject create_color_tone(int r, int g, int b, int gray, bool tone);
 };
 
 #endif // FACTORY_H
