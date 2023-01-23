@@ -85,9 +85,13 @@ SOURCES += \
     events/commands/increasedecreasedialog.cpp \
     events/commands/picturedialog.cpp \
     events/commands/radiodialog.cpp \
+    events/commands/screenshakedialog.cpp \
+    events/commands/scrollmapdialog.cpp \
+    events/commands/selfswitchdialog.cpp \
     events/commands/showtextdialog.cpp \
     events/commands/singlecombodialog.cpp \
     events/commands/spinspindialog.cpp \
+    events/commands/timerdialog.cpp \
     events/commands/weatherdialog.cpp \
     events/commands/conditionalbranchdialog.cpp \
     events/eventcommanddialog.cpp \
@@ -175,9 +179,13 @@ HEADERS += \
     events/commands/increasedecreasedialog.h \
     events/commands/picturedialog.h \
     events/commands/radiodialog.h \
+    events/commands/screenshakedialog.h \
+    events/commands/scrollmapdialog.h \
+    events/commands/selfswitchdialog.h \
     events/commands/showtextdialog.h \
     events/commands/singlecombodialog.h \
     events/commands/spinspindialog.h \
+    events/commands/timerdialog.h \
     events/commands/weatherdialog.h \
     events/commands/conditionalbranchdialog.h \
     events/eventcommanddialog.h \
@@ -242,9 +250,13 @@ FORMS += \
     events/commands/increasedecreasedialog.ui \
     events/commands/picturedialog.ui \
     events/commands/radiodialog.ui \
+    events/commands/screenshakedialog.ui \
+    events/commands/scrollmapdialog.ui \
+    events/commands/selfswitchdialog.ui \
     events/commands/showtextdialog.ui \
     events/commands/singlecombodialog.ui \
     events/commands/spinspindialog.ui \
+    events/commands/timerdialog.ui \
     events/commands/weatherdialog.ui \
     events/commands/conditionalbranchdialog.ui \
     events/eventcommanddialog.ui \

@@ -20,6 +20,10 @@
 #include "commands/spinspindialog.h"
 #include "commands/changemapsettingsdialog.h"
 #include "commands/changeequipmentdialog.h"
+#include "commands/timerdialog.h"
+#include "commands/selfswitchdialog.h"
+#include "commands/scrollmapdialog.h"
+#include "commands/screenshakedialog.h"
 
 #include "dialogs/audiodialog.h"
 #include "dialogs/imagedialog.h"
@@ -289,6 +293,42 @@ void EventListItem::edit_cell()
         ChangeEquipmentDialog *dialog = new ChangeEquipmentDialog(db, parameters);
         dialog->show();
         QObject::connect(dialog, &ChangeEquipmentDialog::ok_clicked, [=](QJsonArray p) {
+            this->obj.insert("@parameters", p);
+            this->update_text();
+        });
+    }
+    else if (code == 123) //Self Switch
+    {
+        SelfSwitchDialog *dialog = new SelfSwitchDialog(parameters);
+        dialog->show();
+        QObject::connect(dialog, &SelfSwitchDialog::ok_clicked, [=](QJsonArray p) {
+            this->obj.insert("@parameters", p);
+            this->update_text();
+        });
+    }
+    else if (code == 124) //Timer
+    {
+        TimerDialog *dialog = new TimerDialog(parameters);
+        dialog->show();
+        QObject::connect(dialog, &TimerDialog::ok_clicked, [=](QJsonArray p) {
+            this->obj.insert("@parameters", p);
+            this->update_text();
+        });
+    }
+    else if (code == 203) //Scroll Map
+    {
+        ScrollMapDialog *dialog = new ScrollMapDialog(parameters);
+        dialog->show();
+        QObject::connect(dialog, &ScrollMapDialog::ok_clicked, [=](QJsonArray p) {
+            this->obj.insert("@parameters", p);
+            this->update_text();
+        });
+    }
+    else if (code == 225) //Screen Shake
+    {
+        ScreenShakeDialog *dialog = new ScreenShakeDialog(parameters);
+        dialog->show();
+        QObject::connect(dialog, &ScreenShakeDialog::ok_clicked, [=](QJsonArray p) {
             this->obj.insert("@parameters", p);
             this->update_text();
         });

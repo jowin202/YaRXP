@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ScrollMapDialog</class>
+ <widget class="QWidget" name="ScrollMapDialog">
+  <property name="windowModality">
+   <enum>Qt::ApplicationModal</enum>
+  </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>253</width>
+    <height>120</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Scroll Map</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout_2">
+   <item row="2" column="0">
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="button_cancel">
+       <property name="text">
+        <string>Cancel</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="button_ok">
+       <property name="text">
+        <string>Ok</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="0" column="0">
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="1" column="0">
+      <widget class="QComboBox" name="combo_dir">
+       <item>
+        <property name="text">
+         <string>Down</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Left</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Right</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Up</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="1" column="2">
+      <widget class="QComboBox" name="combo_speed">
+       <item>
+        <property name="text">
+         <string>1: Slowest</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>2: Slower</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>3: Slow</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>4: Fast</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>5: Faster</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>6: Fastest</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QSpinBox" name="spin_dist">
+       <property name="maximum">
+        <number>100</number>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Direction:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>Distance:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="2">
+      <widget class="QLabel" name="label_3">
+       <property name="text">
+        <string>Speed:</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="1" column="0">
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+  </layout>
+ </widget>
+ <tabstops>
+  <tabstop>combo_dir</tabstop>
+  <tabstop>spin_dist</tabstop>
+  <tabstop>combo_speed</tabstop>
+  <tabstop>button_cancel</tabstop>
+  <tabstop>button_ok</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>
