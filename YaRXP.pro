@@ -85,6 +85,7 @@ SOURCES += \
     events/commands/radiodialog.cpp \
     events/commands/showtextdialog.cpp \
     events/commands/singlecombodialog.cpp \
+    events/commands/spinspindialog.cpp \
     events/commands/weatherdialog.cpp \
     events/commands/conditionalbranchdialog.cpp \
     events/eventcommanddialog.cpp \
@@ -172,6 +173,7 @@ HEADERS += \
     events/commands/radiodialog.h \
     events/commands/showtextdialog.h \
     events/commands/singlecombodialog.h \
+    events/commands/spinspindialog.h \
     events/commands/weatherdialog.h \
     events/commands/conditionalbranchdialog.h \
     events/eventcommanddialog.h \
@@ -236,6 +238,7 @@ FORMS += \
     events/commands/radiodialog.ui \
     events/commands/showtextdialog.ui \
     events/commands/singlecombodialog.ui \
+    events/commands/spinspindialog.ui \
     events/commands/weatherdialog.ui \
     events/commands/conditionalbranchdialog.ui \
     events/eventcommanddialog.ui \

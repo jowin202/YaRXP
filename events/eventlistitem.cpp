@@ -17,6 +17,7 @@
 #include "commands/weatherdialog.h"
 #include "commands/picturedialog.h"
 #include "commands/conditionalbranchdialog.h"
+#include "commands/spinspindialog.h"
 
 #include "dialogs/audiodialog.h"
 #include "dialogs/imagedialog.h"
@@ -259,6 +260,15 @@ void EventListItem::edit_cell()
         PictureDialog *dialog = new PictureDialog(db,code, parameters);
         dialog->show();
         QObject::connect(dialog, &PictureDialog::ok_clicked, [=](QJsonArray p) {
+            this->obj.insert("@parameters", p);
+            this->update_text();
+        });
+    }
+    else if (code == 206 || code == 233) //Change Fog Opacity / Rotate Picture
+    {
+        SpinSpinDialog *dialog = new SpinSpinDialog(code, parameters);
+        dialog->show();
+        QObject::connect(dialog, &SpinSpinDialog::ok_clicked, [=](QJsonArray p) {
             this->obj.insert("@parameters", p);
             this->update_text();
         });
