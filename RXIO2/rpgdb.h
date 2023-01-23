@@ -81,6 +81,12 @@ public:
     void set_max_variables(int n);
 
 
+
+    //Class Condition
+    QJsonArray get_equipment_vars(int actor_id);
+
+
+
     QColor transparent = QColor(0x8a,0x16,0xa0);
     QString project_dir;
     QString data_dir;

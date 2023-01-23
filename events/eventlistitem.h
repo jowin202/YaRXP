@@ -73,6 +73,7 @@ private:
 
     QStringList text_weather = { "None", "Rain", "Storm", "Snow" };
     QStringList text_basic_actions = { "Attack", "Defend", "Escape", "Do Nothing" };
+    QStringList text_equipment = { "Weapon", "Shield", "Helmet", "Body Armor", "Accessory" };
 
 
     QJsonObject obj;

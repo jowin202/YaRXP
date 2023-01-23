@@ -182,6 +182,40 @@ void RPGDB::set_max_variables(int n)
     system_file.setObject(system_obj);
 }
 
+QJsonArray RPGDB::get_equipment_vars(int actor_id)
+{
+    QJsonArray result;
+    QJsonObject actor = this->actor_file.array().at(actor_id).toObject();
+    QJsonObject class_obj = this->class_file.array().at(actor.value("@class_id").toInt()).toObject();
+    result.append(class_obj.value("@weapon_set").toArray());
+
+    QJsonArray shield;
+    QJsonArray helmet;
+    QJsonArray armor;
+    QJsonArray accessory;
+
+    for (int i = 0; i < class_obj.value("@armor_set").toArray().count(); i++)
+    {
+        int id = class_obj.value("@armor_set").toArray().at(i).toInt();
+        QJsonObject obj = this->armor_file.array().at(id).toObject();
+        if (obj.value("@kind").toInt() == 0)
+            shield.append(id);
+        else if (obj.value("@kind").toInt() == 1)
+            helmet.append(id);
+        else if (obj.value("@kind").toInt() == 2)
+            armor.append(id);
+        else if (obj.value("@kind").toInt() == 3)
+            accessory.append(id);
+    }
+    result.append(shield);
+    result.append(helmet);
+    result.append(armor);
+    result.append(accessory);
+
+
+    return result;
+}
+
 void RPGDB::set_files(QJsonDocument actor_file, QJsonDocument animation_file, QJsonDocument armor_file, QJsonDocument class_file, QJsonDocument common_event_file, QJsonDocument enemy_file, QJsonDocument item_file, QJsonDocument skill_file, QJsonDocument state_file, QJsonDocument system_file, QJsonDocument tileset_file, QJsonDocument troop_file, QJsonDocument weapon_file)
 {
     this->actor_file = actor_file;

@@ -18,6 +18,8 @@
 #include "commands/picturedialog.h"
 #include "commands/conditionalbranchdialog.h"
 #include "commands/spinspindialog.h"
+#include "commands/changemapsettingsdialog.h"
+#include "commands/changeequipmentdialog.h"
 
 #include "dialogs/audiodialog.h"
 #include "dialogs/imagedialog.h"
@@ -269,6 +271,24 @@ void EventListItem::edit_cell()
         SpinSpinDialog *dialog = new SpinSpinDialog(code, parameters);
         dialog->show();
         QObject::connect(dialog, &SpinSpinDialog::ok_clicked, [=](QJsonArray p) {
+            this->obj.insert("@parameters", p);
+            this->update_text();
+        });
+    }
+    else if (code == 204) //Change Map Settings
+    {
+        ChangeMapSettingsDialog *dialog = new ChangeMapSettingsDialog(db, parameters);
+        dialog->show();
+        QObject::connect(dialog, &ChangeMapSettingsDialog::ok_clicked, [=](QJsonArray p) {
+            this->obj.insert("@parameters", p);
+            this->update_text();
+        });
+    }
+    else if (code == 319) //Change Equipment
+    {
+        ChangeEquipmentDialog *dialog = new ChangeEquipmentDialog(db, parameters);
+        dialog->show();
+        QObject::connect(dialog, &ChangeEquipmentDialog::ok_clicked, [=](QJsonArray p) {
             this->obj.insert("@parameters", p);
             this->update_text();
         });
@@ -526,7 +546,7 @@ QString EventListItem::get_text(QJsonObject obj)
     else if (code == 203)
         text += "@>Scroll Map: " + this->text_directions.at(parameters.at(0).toInt()/2-1) + ", " + QString::number(parameters.at(1).toInt()) + ", " + QString::number(parameters.at(2).toInt());
     else if (code == 204)
-        text += "@>Change Map Setings: " + (parameters.at(0).toInt() == 0 ?  QString("Panorama = '%1', %2").arg(parameters.at(1).toString()).arg(parameters.at(2).toInt()) :
+        text += "@>Change Map Settings: " + (parameters.at(0).toInt() == 0 ?  QString("Panorama = '%1', %2").arg(parameters.at(1).toString()).arg(parameters.at(2).toInt()) :
                                             parameters.at(0).toInt() == 1 ? QString("Fog = '%1', %2, %3, %4, %5, %6, %7")
                                                                           .arg(parameters.at(1).toString())
                                                                           .arg(parameters.at(2).toInt())
@@ -723,6 +743,10 @@ QString EventListItem::get_text(QJsonObject obj)
                 + " " + this->text_pm.at(parameters.at(1).toInt()) + " "
                 + "[" + db->get_object_name(RPGDB::SKILLS,parameters.at(2).toInt()) + "]";
     //Entire Party is not implemented here
+    else if (code == 319)
+        text += "@>Change Equipment: [" + db->get_object_name(RPGDB::ACTORS,parameters.at(0).toInt()) + "], " + this->text_equipment.at(parameters.at(1).toInt()) + QString(" = ")
+                + (parameters.at(1).toInt() == 0 ? (parameters.at(2).toInt() == 0 ? QString("(None)") : "[" + db->get_object_name(RPGDB::WEAPONS,parameters.at(2).toInt()) + "]"): QString(""))
+                + (parameters.at(1).toInt() > 0 ? (parameters.at(2).toInt() == 0 ? QString("(None)") : "[" + db->get_object_name(RPGDB::ARMORS,parameters.at(2).toInt()) + "]"): QString(""));
     else if (code == 320)
         text += "@>Change Actor Name: [" + db->get_object_name(RPGDB::ACTORS,parameters.at(0).toInt()) + "], '" + parameters.at(1).toString() + "'";
     else if (code == 321)
