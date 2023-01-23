@@ -74,7 +74,7 @@ SOURCES += \
     editors/troops/trooppageconditiondialog.cpp \
     editors/troops/trooppiclabel.cpp \
     editors/weapons/editweapons.cpp \
-    events/choicesdialog.cpp \
+    events/commands/choicesdialog.cpp \
     events/commands/changecolortonedialog.cpp \
     events/commands/changestatedialog.cpp \
     events/commands/changetextoptionsdialog.cpp \
@@ -92,7 +92,7 @@ SOURCES += \
     events/eventdialog.cpp \
     events/eventlistitem.cpp \
     events/eventpage.cpp \
-    events/moveroutedialog.cpp \
+    events/commands/moveroutedialog.cpp \
     main.cpp \
     mainwindow.cpp \
     viewer/maprectangle.cpp \
@@ -162,7 +162,7 @@ HEADERS += \
     editors/troops/trooppageconditiondialog.h \
     editors/troops/trooppiclabel.h \
     editors/weapons/editweapons.h \
-    events/choicesdialog.h \
+    events/commands/choicesdialog.h \
     events/commands/changecolortonedialog.h \
     events/commands/changestatedialog.h \
     events/commands/changetextoptionsdialog.h \
@@ -180,7 +180,7 @@ HEADERS += \
     events/eventdialog.h \
     events/eventlistitem.h \
     events/eventpage.h \
-    events/moveroutedialog.h \
+    events/commands/moveroutedialog.h \
     mainwindow.h \
     viewer/maprectangle.h \
     viewer/mapselectrectangle.h \
@@ -227,7 +227,7 @@ FORMS += \
     editors/troops/troopeventpage.ui \
     editors/troops/trooppageconditiondialog.ui \
     editors/weapons/editweapons.ui \
-    events/choicesdialog.ui \
+    events/commands/choicesdialog.ui \
     events/commands/changecolortonedialog.ui \
     events/commands/changestatedialog.ui \
     events/commands/changetextoptionsdialog.ui \
@@ -244,7 +244,7 @@ FORMS += \
     events/eventcommanddialog.ui \
     events/eventdialog.ui \
     events/eventpage.ui \
-    events/moveroutedialog.ui \
+    events/commands/moveroutedialog.ui \
     mainwindow.ui
 
 # Default rules for deployment.
