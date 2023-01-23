@@ -86,7 +86,7 @@ SOURCES += \
     events/commands/showtextdialog.cpp \
     events/commands/singlecombodialog.cpp \
     events/commands/weatherdialog.cpp \
-    events/conditionalbranchdialog.cpp \
+    events/commands/conditionalbranchdialog.cpp \
     events/eventcommanddialog.cpp \
     events/eventdialog.cpp \
     events/eventlistitem.cpp \
@@ -173,7 +173,7 @@ HEADERS += \
     events/commands/showtextdialog.h \
     events/commands/singlecombodialog.h \
     events/commands/weatherdialog.h \
-    events/conditionalbranchdialog.h \
+    events/commands/conditionalbranchdialog.h \
     events/eventcommanddialog.h \
     events/eventdialog.h \
     events/eventlistitem.h \
@@ -237,7 +237,7 @@ FORMS += \
     events/commands/showtextdialog.ui \
     events/commands/singlecombodialog.ui \
     events/commands/weatherdialog.ui \
-    events/conditionalbranchdialog.ui \
+    events/commands/conditionalbranchdialog.ui \
     events/eventcommanddialog.ui \
     events/eventdialog.ui \
     events/eventpage.ui \

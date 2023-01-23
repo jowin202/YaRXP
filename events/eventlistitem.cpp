@@ -16,6 +16,7 @@
 #include "commands/combocombodialog.h"
 #include "commands/weatherdialog.h"
 #include "commands/picturedialog.h"
+#include "commands/conditionalbranchdialog.h"
 
 #include "dialogs/audiodialog.h"
 #include "dialogs/imagedialog.h"
@@ -262,6 +263,17 @@ void EventListItem::edit_cell()
             this->update_text();
         });
     }
+    else if (code == 111) // Conditional Branch
+    {
+        ConditionalBranchDialog *dialog = new ConditionalBranchDialog(db, mc, parameters);
+        dialog->show();
+        QObject::connect(dialog, &ConditionalBranchDialog::ok_clicked, [=](QJsonArray p) {
+            this->obj.insert("@parameters", p);
+            this->update_text();
+        });
+
+        //TODO: Else Branch not implemented yet
+    }
 
     this->update_text();
 }
@@ -327,7 +339,7 @@ QString EventListItem::get_text(QJsonObject obj)
                     .arg(this->text_compare_op.at(parameters.at(4).toInt()))
                     .arg(parameters.at(2).toInt()==0 ?
                              QString::number(parameters.at(3).toInt())
-                           : QString("Variable [%1: %2]").arg(parameters.at(3).toInt()).arg(db->get_variable_name(parameters.at(3).toInt()))); break; // variable
+                           : QString("Variable [%1: %2]").arg(parameters.at(3).toInt(),4,10, QChar('0')).arg(db->get_variable_name(parameters.at(3).toInt()))); break; // variable
         case 2: text += QString("Self Switch %1 == %2")
                     .arg(parameters.at(1).toString())
                     .arg(this->text_on_off.at((parameters.at(2).toInt()))); break; // self switch
@@ -353,7 +365,7 @@ QString EventListItem::get_text(QJsonObject obj)
         case 5: text += QString("[%1.] is %2")
                     .arg(parameters.at(1).toInt()+1)
                     .arg(parameters.at(2).toInt() == 0 ?
-                             "is appeared" : QString("[%1] inflicted").arg(db->get_object_name(RPGDB::STATES,parameters.at(3).toInt()))); break; // enemy
+                             "appeared" : QString("[%1] inflicted").arg(db->get_object_name(RPGDB::STATES,parameters.at(3).toInt()))); break; // enemy
         case 6: text += QString("%1 is facing %2")
                     .arg(parameters.at(1).toInt() == -1 ? "Player" :
                                                           parameters.at(1).toInt() == 0 ? "This event" : QString("[%1]").arg(
