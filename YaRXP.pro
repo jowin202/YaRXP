@@ -81,9 +81,11 @@ SOURCES += \
     events/commands/combocombodialog.cpp \
     events/commands/combospindialog.cpp \
     events/commands/increasedecreasedialog.cpp \
+    events/commands/picturedialog.cpp \
     events/commands/radiodialog.cpp \
     events/commands/showtextdialog.cpp \
     events/commands/singlecombodialog.cpp \
+    events/commands/weatherdialog.cpp \
     events/conditionalbranchdialog.cpp \
     events/eventcommanddialog.cpp \
     events/eventdialog.cpp \
@@ -166,9 +168,11 @@ HEADERS += \
     events/commands/combocombodialog.h \
     events/commands/combospindialog.h \
     events/commands/increasedecreasedialog.h \
+    events/commands/picturedialog.h \
     events/commands/radiodialog.h \
     events/commands/showtextdialog.h \
     events/commands/singlecombodialog.h \
+    events/commands/weatherdialog.h \
     events/conditionalbranchdialog.h \
     events/eventcommanddialog.h \
     events/eventdialog.h \
@@ -228,9 +232,11 @@ FORMS += \
     events/commands/combocombodialog.ui \
     events/commands/combospindialog.ui \
     events/commands/increasedecreasedialog.ui \
+    events/commands/picturedialog.ui \
     events/commands/radiodialog.ui \
     events/commands/showtextdialog.ui \
     events/commands/singlecombodialog.ui \
+    events/commands/weatherdialog.ui \
     events/conditionalbranchdialog.ui \
     events/eventcommanddialog.ui \
     events/eventdialog.ui \

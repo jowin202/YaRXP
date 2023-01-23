@@ -14,6 +14,8 @@
 #include "commands/combospindialog.h"
 #include "commands/changecolortonedialog.h"
 #include "commands/combocombodialog.h"
+#include "commands/weatherdialog.h"
+#include "commands/picturedialog.h"
 
 #include "dialogs/audiodialog.h"
 #include "dialogs/imagedialog.h"
@@ -226,6 +228,24 @@ void EventListItem::edit_cell()
         ComboComboDialog *dialog = new ComboComboDialog(db, mc, code, parameters);
         dialog->show();
         QObject::connect(dialog, &ComboComboDialog::ok_clicked, [=](QJsonArray p) {
+            this->obj.insert("@parameters", p);
+            this->update_text();
+        });
+    }
+    else if (code == 236) //weather
+    {
+        WeatherDialog *dialog = new WeatherDialog(code, parameters);
+        dialog->show();
+        QObject::connect(dialog, &WeatherDialog::ok_clicked, [=](QJsonArray p) {
+            this->obj.insert("@parameters", p);
+            this->update_text();
+        });
+    }
+    else if (code == 231 || code == 232) //Show/Move Picture
+    {
+        PictureDialog *dialog = new PictureDialog(db,code, parameters);
+        dialog->show();
+        QObject::connect(dialog, &PictureDialog::ok_clicked, [=](QJsonArray p) {
             this->obj.insert("@parameters", p);
             this->update_text();
         });
