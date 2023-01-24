@@ -26,8 +26,6 @@ public:
 
     void edit_cell();
 
-public slots:
-    void set_parameters(QJsonArray parameters) {this->obj.insert("@parameters", parameters); this->update_text(); }
 
 private:
     QColor black = QColor(0,0,0);

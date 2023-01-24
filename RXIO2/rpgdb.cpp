@@ -256,3 +256,8 @@ QString RPGDB::get_object_name(int type, int id)
 {
     return files[type]->array().at(id).toObject().value("@name").toString();
 }
+
+int RPGDB::get_object_price(int type, int id)
+{
+    return files[type]->array().at(id).toObject().value("@price").toInt();
+}

@@ -28,6 +28,7 @@
 #include "commands/dealdamagedialog.h"
 #include "commands/showbattleanimationdialog.h"
 #include "commands/changeactornamedialog.h"
+#include "commands/shopprocessingdialog.h"
 
 #include "dialogs/audiodialog.h"
 #include "dialogs/imagedialog.h"
@@ -121,24 +122,57 @@ void EventListItem::edit_cell()
             }
         });
     }
-    else if (code == 401 || code == 408 || code == 655) //Multiline text in the middle
+    else if (code == 401 || code == 408 || code == 655 || code == 605) //Multiline text in the middle
     {
         int row = parent->indexFromItem(this).row();
         for (int i = 1; row >= 0 && dynamic_cast<EventListItem*>(parent->item(row-i)) != nullptr; i++)
         {
-            if (((EventListItem*)parent->item(row-i))->get_obj().value("@code").toInt() == code-300)
+            if (((EventListItem*)parent->item(row-i))->get_obj().value("@code").toInt() == (code == 605 ?302 : code-300))
             {
                 ((EventListItem*)parent->item(row-i))->edit_cell();
                 return;
             }
         }
     }
+    else if (code == 302)
+    {
+        QJsonArray shop_params;
+        shop_params.append(parameters);
+        int row = parent->indexFromItem(this).row();
+        for (int i = 1; dynamic_cast<EventListItem*>(parent->item(row+i)) != nullptr
+             && ((EventListItem*)parent->item(row+i))->get_obj().value("@code").toInt() == 605; i++)
+        {
+            shop_params.append(((EventListItem*)parent->item(row+i))->get_obj().value("@parameters").toArray());
+        }
+
+        ShopProcessingDialog *dialog = new ShopProcessingDialog(db,shop_params);
+        dialog->show();
+        QObject::connect(dialog, &ShopProcessingDialog::ok_clicked, [=](QJsonArray shop_params) {
+            this->obj.insert("@parameters", shop_params.at(0).toArray());
+            for (int i = 1; dynamic_cast<EventListItem*>(parent->item(row+1)) != nullptr
+                 && ((EventListItem*)parent->item(row+1))->get_obj().value("@code").toInt() == 605; i++) {
+                delete parent->takeItem(row+1);
+            }
+            for (int i = shop_params.count()-1; i > 0; i--)
+            {
+                QJsonObject obj_new = QJsonObject(this->obj);
+                obj_new.insert("@code", 605);
+                obj_new.insert("@parameters", shop_params.at(i).toArray());
+
+                parent->insertItem(row+1,new EventListItem(parent,mc,mic, obj_new));
+            }
+        });
+
+    }
     else if (code == 104)
     {
         ChangeTextOptionsDialog *dialog = new ChangeTextOptionsDialog;
         dialog->setParameters(parameters);
         dialog->show();
-        QObject::connect(dialog, &ChangeTextOptionsDialog::ok_clicked, [=](QJsonArray parameters) { this->set_parameters(parameters); });
+        QObject::connect(dialog, &ChangeTextOptionsDialog::ok_clicked, [=](QJsonArray parameters) {
+            this->obj.insert("@parameters", parameters);
+            this->update_text();
+        });
     }
     else if (code == 106 || code == 235 || code == 242 || code == 246)
     {
@@ -418,8 +452,8 @@ void EventListItem::edit_cell()
                 else if (((EventListItem*)parent->item(row+i))->get_obj().value("@code").toInt() == 412 && depth == 0 && else_branch)
                 {
                     //not good, create branch
-                    parent->insertItem(row+i, new EventListItem(nullptr, mc, mic, Factory().create_event_command(0,obj.value("@indent").toInt()+1, QJsonArray())));
-                    parent->insertItem(row+i, new EventListItem(nullptr, mc, mic, Factory().create_event_command(411,obj.value("@indent").toInt(), QJsonArray())));
+                    parent->insertItem(row+i, new EventListItem(this->parent, mc, mic, Factory().create_event_command(0,obj.value("@indent").toInt()+1, QJsonArray())));
+                    parent->insertItem(row+i, new EventListItem(this->parent, mc, mic, Factory().create_event_command(411,obj.value("@indent").toInt(), QJsonArray())));
                     break;
                 }
                 else if (((EventListItem*)parent->item(row+i))->get_obj().value("@code").toInt() == 411 && depth == 0 && !else_branch)

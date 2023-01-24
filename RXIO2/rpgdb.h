@@ -119,6 +119,7 @@ public:
     void fill_list(QListWidget *list, int type, bool shownum, int chars);
     void fill_combo(QComboBox *box, int type, bool shownum, int chars);
     QString get_object_name(int type, int id);
+    int get_object_price(int type, int id);
 
 private:
     QJsonDocument actor_file;
