@@ -20,6 +20,7 @@ MapView::MapView(QWidget *parent) : QGraphicsView(parent)
 
     this->action_newevent.setText("New Event");
     this->action_newevent.setShortcut(Qt::Key_Enter);
+    connect(&this->action_newevent, &QAction::triggered, this, [=]{ if (opt.mode == EVENT) this->edit_event_on_pos(opt.marked_tile);});
     this->action_editevent.setText("Edit Event");
     this->action_editevent.setShortcut(Qt::Key_Return);
     connect(&this->action_editevent, &QAction::triggered, this, [=]{ if (opt.mode == EVENT) this->edit_event_on_pos(opt.marked_tile);});
@@ -92,6 +93,12 @@ void MapView::edit_event_on_pos(QPoint pos)
     if (event.keys().count() > 1)
     {
         EventDialog *dialog = new EventDialog(&this->mc, event);
+        dialog->show();
+    }
+    else
+    {
+        QJsonObject event_to_create = Factory().create_event(mc.get_next_event_id(),pos.x(),pos.y());
+        EventDialog *dialog = new EventDialog(&this->mc, event_to_create); //create event
         dialog->show();
     }
 }

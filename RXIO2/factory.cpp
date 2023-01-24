@@ -72,7 +72,7 @@ QJsonObject Factory::create_troop_member(int enemy_id, bool hidden, bool immorta
     return obj;
 }
 
-QJsonObject Factory::create_empty_event()
+QJsonObject Factory::create_empty_event_command()
 {
     QJsonObject obj;
     obj.insert("@code", 0);
@@ -82,7 +82,7 @@ QJsonObject Factory::create_empty_event()
     return obj;
 }
 
-QJsonObject Factory::create_event(int code, int indent, QJsonArray parameters)
+QJsonObject Factory::create_event_command(int code, int indent, QJsonArray parameters)
 {
     QJsonObject obj;
     obj.insert("@code", code);
@@ -120,7 +120,7 @@ QJsonObject Factory::create_troop_page()
     QJsonObject obj;
     obj.insert("@condition", this->create_troop_page_condition());
     QJsonArray commands;
-    commands.append(this->create_empty_event());
+    commands.append(this->create_empty_event_command());
     obj.insert("@list", commands);
     obj.insert("@span",0);
 
@@ -578,7 +578,7 @@ QJsonObject Factory::create_new_commonevent(int id)
     QJsonObject obj;
     obj.insert("@id", id);
     QJsonArray event_list;
-    event_list.append(this->create_empty_event());
+    event_list.append(this->create_empty_event_command());
     obj.insert("@list", event_list);
     obj.insert("@name","");
     obj.insert("@switch_id",1);
@@ -650,7 +650,15 @@ QJsonObject Factory::create_event(int id, int x, int y)
     obj.insert("@x", x);
     obj.insert("@y", y);
     obj.insert("@name", QString("Event %1").arg(id));
-    obj.insert("@pages", QJsonArray());
+    QJsonArray list;
+    list.append(this->create_empty_event_command());
+    QJsonObject graphic = this->create_page_graphic("", 0,0,2,255,0,0);
+    QJsonObject condition = this->create_page_condition(false,false,false,false,0,1,1,1,0);
+    QJsonObject moveroute = this->create_move_route(true, false);
+    QJsonObject page = this->create_event_page(false,false,false,false,true,0,3,3,0,condition,list,graphic,moveroute);
+    QJsonArray pages;
+    pages.append(page);
+    obj.insert("@pages", pages);
     obj.insert("RXClass", "RPG::Event");
     return obj;
 }
@@ -716,6 +724,24 @@ QJsonObject Factory::create_page_graphic(QString character_name, int character_h
     obj.insert("@tile_id", tile_id);
 
     obj.insert("RXClass", "RPG::Event::Page::Graphic");
+    return obj;
+}
+
+QJsonObject Factory::create_move_route(bool repeat, bool skippable)
+{
+    QJsonObject obj;
+    obj.insert("@repeat", repeat);
+    obj.insert("@skippable", skippable);
+
+    QJsonObject item;
+    item.insert("@code", 0);
+    item.insert("@parameters", QJsonArray());
+    item.insert("RXClass", "RPG::MoveCommand");
+    QJsonArray list;
+    list.append(item);
+
+    obj.insert("@list", list);
+    obj.insert("RXClass", "RPG::MoveRoute");
     return obj;
 }
 

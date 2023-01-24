@@ -21,8 +21,8 @@ public:
     QJsonObject create_troop_member();
     QJsonObject create_troop_member(int enemy_id, bool hidden, bool immortal, int x, int y);
 
-    QJsonObject create_empty_event();
-    QJsonObject create_event(int code, int indent, QJsonArray parameters);
+    QJsonObject create_empty_event_command();
+    QJsonObject create_event_command(int code, int indent, QJsonArray parameters);
 
     QJsonObject create_troop_page_condition(int actor_hp, int actor_id, bool actor_valid, int enemy_hp, int enemy_index, bool enemy_valid, int switch_id, bool switch_valid, int turn_a, int turn_b, bool turn_valid);
     QJsonObject create_troop_page_condition();
@@ -59,6 +59,7 @@ public:
                                       int self_switch_ch, int switch1_id, int switch2_id, int variable_id, int variable_value);
     QJsonObject create_page_graphic(QString character_name, int character_hue, int blend_type, int direction, int opacity, int pattern, int tile_id);
 
+    QJsonObject create_move_route(bool repeat, bool skippable);
 
     QJsonObject create_color_tone(int r, int g, int b, int gray, bool tone);
 };

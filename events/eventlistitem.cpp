@@ -378,8 +378,8 @@ void EventListItem::edit_cell()
                 else if (((EventListItem*)parent->item(row+i))->get_obj().value("@code").toInt() == 412 && depth == 0 && else_branch)
                 {
                     //not good, create branch
-                    parent->insertItem(row+i, new EventListItem(nullptr, mc, mic, Factory().create_event(0,obj.value("@indent").toInt()+1, QJsonArray())));
-                    parent->insertItem(row+i, new EventListItem(nullptr, mc, mic, Factory().create_event(411,obj.value("@indent").toInt(), QJsonArray())));
+                    parent->insertItem(row+i, new EventListItem(nullptr, mc, mic, Factory().create_event_command(0,obj.value("@indent").toInt()+1, QJsonArray())));
+                    parent->insertItem(row+i, new EventListItem(nullptr, mc, mic, Factory().create_event_command(411,obj.value("@indent").toInt(), QJsonArray())));
                     break;
                 }
                 else if (((EventListItem*)parent->item(row+i))->get_obj().value("@code").toInt() == 411 && depth == 0 && !else_branch)
