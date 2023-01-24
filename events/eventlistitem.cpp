@@ -26,6 +26,8 @@
 #include "commands/screenshakedialog.h"
 #include "commands/forceactiondialog.h"
 #include "commands/dealdamagedialog.h"
+#include "commands/showbattleanimationdialog.h"
+#include "commands/changeactornamedialog.h"
 
 #include "dialogs/audiodialog.h"
 #include "dialogs/imagedialog.h"
@@ -331,6 +333,24 @@ void EventListItem::edit_cell()
         ScreenShakeDialog *dialog = new ScreenShakeDialog(parameters);
         dialog->show();
         QObject::connect(dialog, &ScreenShakeDialog::ok_clicked, [=](QJsonArray p) {
+            this->obj.insert("@parameters", p);
+            this->update_text();
+        });
+    }
+    else if (code == 320) //Change Actor Name
+    {
+        ChangeActorNameDialog *dialog = new ChangeActorNameDialog(db, parameters);
+        dialog->show();
+        QObject::connect(dialog, &ChangeActorNameDialog::ok_clicked, [=](QJsonArray p) {
+            this->obj.insert("@parameters", p);
+            this->update_text();
+        });
+    }
+    else if (code == 337) //Show Battle Animation
+    {
+        ShowBattleAnimationDialog *dialog = new ShowBattleAnimationDialog(db, parameters);
+        dialog->show();
+        QObject::connect(dialog, &ShowBattleAnimationDialog::ok_clicked, [=](QJsonArray p) {
             this->obj.insert("@parameters", p);
             this->update_text();
         });
