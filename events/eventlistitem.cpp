@@ -29,6 +29,7 @@
 #include "commands/showbattleanimationdialog.h"
 #include "commands/changeactornamedialog.h"
 #include "commands/shopprocessingdialog.h"
+#include "commands/changeactorgraphicdialog.h"
 
 #include "dialogs/audiodialog.h"
 #include "dialogs/imagedialog.h"
@@ -376,6 +377,15 @@ void EventListItem::edit_cell()
         ChangeActorNameDialog *dialog = new ChangeActorNameDialog(db, parameters);
         dialog->show();
         QObject::connect(dialog, &ChangeActorNameDialog::ok_clicked, [=](QJsonArray p) {
+            this->obj.insert("@parameters", p);
+            this->update_text();
+        });
+    }
+    else if (code == 322) //Change Actor Graphic
+    {
+        ChangeActorGraphicDialog *dialog = new ChangeActorGraphicDialog(db, parameters);
+        dialog->show();
+        QObject::connect(dialog, &ChangeActorGraphicDialog::ok_clicked, [=](QJsonArray p) {
             this->obj.insert("@parameters", p);
             this->update_text();
         });
