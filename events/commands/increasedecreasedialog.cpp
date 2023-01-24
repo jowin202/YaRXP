@@ -11,8 +11,7 @@ IncreaseDecreaseDialog::IncreaseDecreaseDialog(RPGDB *db, int code, QJsonArray p
     ui->setupUi(this);
 
     this->code = code;
-    for (int i = 1; i < db->get_variable_names().count(); i++)
-        this->ui->combo_variable->addItem(QString("%1: %2").arg(i,4,10,QChar('0')).arg(db->get_variable_name(i)));
+    this->ui->widget_variable->setVariableWidget(db);
 
     if (code == 125) //change gold
     {
@@ -30,15 +29,11 @@ IncreaseDecreaseDialog::IncreaseDecreaseDialog(RPGDB *db, int code, QJsonArray p
         {
             this->ui->radio_constant->setChecked(true);
             this->ui->spin_constant->setValue(parameters.at(2).toInt());
-
-            this->ui->combo_variable->setEnabled(false);
         }
         else //variable
         {
             this->ui->radio_variable->setChecked(true);
-            this->ui->combo_variable->setCurrentIndex(parameters.at(2).toInt()-1);
-
-            this->ui->spin_constant->setEnabled(false);
+            this->ui->widget_variable->setValue(parameters.at(2).toInt());
         }
     }
     else if (code == 126 || code == 127 || code == 128)
@@ -75,15 +70,11 @@ IncreaseDecreaseDialog::IncreaseDecreaseDialog(RPGDB *db, int code, QJsonArray p
         {
             this->ui->radio_constant->setChecked(true);
             this->ui->spin_constant->setValue(parameters.at(3).toInt());
-
-            this->ui->combo_variable->setEnabled(false);
         }
         else //variable
         {
             this->ui->radio_variable->setChecked(true);
-            this->ui->combo_variable->setCurrentIndex(parameters.at(3).toInt()-1);
-
-            this->ui->spin_constant->setEnabled(false);
+            this->ui->widget_variable->setValue(parameters.at(3).toInt());
         }
     }
     else if (code == 311 || code == 312 || code == 315 || code == 316) //Change HP, SP, EXP, LEVEL
@@ -111,15 +102,11 @@ IncreaseDecreaseDialog::IncreaseDecreaseDialog(RPGDB *db, int code, QJsonArray p
         {
             this->ui->radio_constant->setChecked(true);
             this->ui->spin_constant->setValue(parameters.at(3).toInt());
-
-            this->ui->combo_variable->setEnabled(false);
         }
         else //variable
         {
             this->ui->radio_variable->setChecked(true);
-            this->ui->combo_variable->setCurrentIndex(parameters.at(3).toInt()-1);
-
-            this->ui->spin_constant->setEnabled(false);
+            this->ui->widget_variable->setValue(parameters.at(3).toInt());
         }
 
         if (code == 311)
@@ -142,15 +129,11 @@ IncreaseDecreaseDialog::IncreaseDecreaseDialog(RPGDB *db, int code, QJsonArray p
         {
             this->ui->radio_constant->setChecked(true);
             this->ui->spin_constant->setValue(parameters.at(4).toInt());
-
-            this->ui->combo_variable->setEnabled(false);
         }
         else //variable
         {
             this->ui->radio_variable->setChecked(true);
-            this->ui->combo_variable->setCurrentIndex(parameters.at(4).toInt()-1);
-
-            this->ui->spin_constant->setEnabled(false);
+            this->ui->widget_variable->setValue(parameters.at(4).toInt());
         }
         this->ui->combo_param->setCurrentIndex(parameters.at(1).toInt());
 
@@ -180,15 +163,11 @@ IncreaseDecreaseDialog::IncreaseDecreaseDialog(RPGDB *db, int code, QJsonArray p
         {
             this->ui->radio_constant->setChecked(true);
             this->ui->spin_constant->setValue(parameters.at(3).toInt());
-
-            this->ui->combo_variable->setEnabled(false);
         }
         else //variable
         {
             this->ui->radio_variable->setChecked(true);
-            this->ui->combo_variable->setCurrentIndex(parameters.at(3).toInt()-1);
-
-            this->ui->spin_constant->setEnabled(false);
+            this->ui->widget_variable->setValue(parameters.at(3).toInt());
         }
 
         if (code == 331)
@@ -220,7 +199,7 @@ void IncreaseDecreaseDialog::on_button_ok_clicked()
         if (this->ui->radio_constant->isChecked())
             parameters.append(this->ui->spin_constant->value());
         else //if (this->ui->radio_variable->isChecked())
-            parameters.append(this->ui->combo_variable->currentIndex()+1);
+            parameters.append(this->ui->widget_variable->getValue());
         emit ok_clicked(parameters);
     }
     else if (code == 126 || code == 127 || code == 128) //change item, weapon, armor
@@ -233,7 +212,7 @@ void IncreaseDecreaseDialog::on_button_ok_clicked()
         if (this->ui->radio_constant->isChecked())
             parameters.append(this->ui->spin_constant->value());
         else //if (this->ui->radio_variable->isChecked())
-            parameters.append(this->ui->combo_variable->currentIndex()+1);
+            parameters.append(this->ui->widget_variable->getValue());
         emit ok_clicked(parameters);
     }
     else if (code == 311 || code == 312 || code == 315 || code == 316) //Change HP, SP, EXP, LEVEL
@@ -246,7 +225,7 @@ void IncreaseDecreaseDialog::on_button_ok_clicked()
         if (this->ui->radio_constant->isChecked())
             parameters.append(this->ui->spin_constant->value());
         else //if (this->ui->radio_variable->isChecked())
-            parameters.append(this->ui->combo_variable->currentIndex()+1);
+            parameters.append(this->ui->widget_variable->getValue());
 
         if (code == 311)
             parameters.append(this->ui->check_battle_knockout->isChecked());
@@ -263,7 +242,7 @@ void IncreaseDecreaseDialog::on_button_ok_clicked()
         if (this->ui->radio_constant->isChecked())
             parameters.append(this->ui->spin_constant->value());
         else //if (this->ui->radio_variable->isChecked())
-            parameters.append(this->ui->combo_variable->currentIndex()+1);
+            parameters.append(this->ui->widget_variable->getValue());
 
         emit ok_clicked(parameters);
     }
@@ -277,7 +256,7 @@ void IncreaseDecreaseDialog::on_button_ok_clicked()
         if (this->ui->radio_constant->isChecked())
             parameters.append(this->ui->spin_constant->value());
         else //if (this->ui->radio_variable->isChecked())
-            parameters.append(this->ui->combo_variable->currentIndex()+1);
+            parameters.append(this->ui->widget_variable->getValue());
 
         if (code == 331)
             parameters.append(this->ui->check_battle_knockout->isChecked());

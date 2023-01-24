@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>294</width>
-    <height>396</height>
+    <width>287</width>
+    <height>376</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -92,6 +92,9 @@
         </item>
         <item row="0" column="1" rowspan="2">
          <widget class="QSpinBox" name="spin_constant">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="minimum">
            <number>1</number>
           </property>
@@ -108,7 +111,11 @@
          </widget>
         </item>
         <item row="2" column="1">
-         <widget class="QComboBox" name="combo_variable"/>
+         <widget class="SwitchVariableWidget" name="widget_variable" native="true">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -197,6 +204,14 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>SwitchVariableWidget</class>
+   <extends>QWidget</extends>
+   <header>dialogs/switchvariablewidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <tabstops>
   <tabstop>combo</tabstop>
   <tabstop>combo_param</tabstop>
@@ -205,7 +220,6 @@
   <tabstop>radio_constant</tabstop>
   <tabstop>spin_constant</tabstop>
   <tabstop>radio_variable</tabstop>
-  <tabstop>combo_variable</tabstop>
   <tabstop>check_battle_knockout</tabstop>
   <tabstop>button_cancel</tabstop>
   <tabstop>button_ok</tabstop>
@@ -231,16 +245,16 @@
   <connection>
    <sender>radio_variable</sender>
    <signal>toggled(bool)</signal>
-   <receiver>combo_variable</receiver>
+   <receiver>widget_variable</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>52</x>
-     <y>286</y>
+     <x>68</x>
+     <y>272</y>
     </hint>
     <hint type="destinationlabel">
-     <x>234</x>
-     <y>295</y>
+     <x>183</x>
+     <y>279</y>
     </hint>
    </hints>
   </connection>
