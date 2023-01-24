@@ -5,11 +5,13 @@
 #include "RXIO2/rpgmapcontroller.h"
 
 
-ConditionalBranchDialog::ConditionalBranchDialog(RPGDB *db, RPGMapController *mc, QJsonArray parameters, QWidget *parent) :
+ConditionalBranchDialog::ConditionalBranchDialog(RPGDB *db, RPGMapController *mc, QJsonArray parameters, bool else_branch, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::ConditionalBranchDialog)
 {
     ui->setupUi(this);
+
+    this->ui->check_else_branch->setChecked(else_branch);
 
     maingroup.addButton(this->ui->radio_switch);
     maingroup.addButton(this->ui->radio_variable);
@@ -370,7 +372,7 @@ void ConditionalBranchDialog::on_button_ok_clicked()
         p.append(this->ui->line_script->text());
     }
 
-    emit ok_clicked(p);
+    emit ok_clicked(p, this->ui->check_else_branch->isChecked());
 
     this->close();
 }

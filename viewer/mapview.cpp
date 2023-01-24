@@ -153,14 +153,13 @@ void MapView::mouseMoveEvent(QMouseEvent *event)
 
 void MapView::mousePressEvent(QMouseEvent *event)
 {
-    if (this->rectangle == 0)
-        return;
-
     QPointF posf = mapToScene(event->pos());
     QPoint pos = QPoint((int)posf.x()/32, (int)posf.y()/32);
 
     if (opt.mode == PEN)
     {
+        if (this->rectangle == 0)
+            return;
         if (event->button() == Qt::LeftButton)
         {
             this->left_button_clicked = true;
@@ -218,8 +217,11 @@ void MapView::mousePressEvent(QMouseEvent *event)
         {
             this->event_left_button_for_moving = true;
             QJsonObject event = this->mc.event_on_pos(pos);
-            this->event_moving_from_pos.setX(event.value("@x").toInt());
-            this->event_moving_from_pos.setY(event.value("@y").toInt());
+            if (event.contains("RXClass"))
+            {
+                this->event_moving_from_pos.setX(event.value("@x").toInt());
+                this->event_moving_from_pos.setY(event.value("@y").toInt());
+            }
         }
     }
 }

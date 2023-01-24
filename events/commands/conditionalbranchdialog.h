@@ -18,7 +18,7 @@ class ConditionalBranchDialog : public QWidget
     Q_OBJECT
 
 public:
-    explicit ConditionalBranchDialog(RPGDB *db, RPGMapController *mc, QJsonArray parameters, QWidget *parent = nullptr);
+    explicit ConditionalBranchDialog(RPGDB *db, RPGMapController *mc, QJsonArray parameters, bool else_branch, QWidget *parent = nullptr);
     ~ConditionalBranchDialog();
     void keyPressEvent(QKeyEvent *e) {
         if(e->key() == Qt::Key_Escape)
@@ -29,7 +29,7 @@ public:
 
 
 signals:
-    void ok_clicked(QJsonArray);
+    void ok_clicked(QJsonArray, bool else_branch);
 
 private slots:
     void on_button_ok_clicked();

@@ -89,7 +89,7 @@ void EventListItem::edit_cell()
         QObject::connect(dialog, &ShowTextDialog::ok_clicked, [=](QString text){
             for (int i = 1; dynamic_cast<EventListItem*>(parent->item(row+1)) != nullptr
                  && ((EventListItem*)parent->item(row+1))->get_obj().value("@code").toInt() == multiline_id; i++) {
-                parent->takeItem(row+1);
+                delete parent->takeItem(row+1);
             }
             QStringList list = text.split('\n');
             if (list.last() == "")
@@ -335,15 +335,69 @@ void EventListItem::edit_cell()
     }
     else if (code == 111) // Conditional Branch
     {
-        ConditionalBranchDialog *dialog = new ConditionalBranchDialog(db, mc, parameters);
+        bool else_branch = false;
+        int depth = 0;
+        int row = parent->indexFromItem(this).row();
+        for (int i = 1; row+i < parent->count() && dynamic_cast<EventListItem*>(parent->item(row+i)) != nullptr; i++)
+        {
+            if (((EventListItem*)parent->item(row+i))->get_obj().value("@code").toInt() == 111)
+                depth++;
+            else if (((EventListItem*)parent->item(row+i))->get_obj().value("@code").toInt() == 412 && depth > 0)
+                depth--;
+            else if (((EventListItem*)parent->item(row+i))->get_obj().value("@code").toInt() == 412 && depth == 0)
+            {
+                else_branch = false;
+                break;
+            }
+            else if (((EventListItem*)parent->item(row+i))->get_obj().value("@code").toInt() == 411 && depth == 0)
+            {
+                else_branch = true;
+                break;
+            }
+        }
+
+        ConditionalBranchDialog *dialog = new ConditionalBranchDialog(db, mc, parameters, else_branch);
         dialog->show();
-        QObject::connect(dialog, &ConditionalBranchDialog::ok_clicked, [=](QJsonArray p) {
+        QObject::connect(dialog, &ConditionalBranchDialog::ok_clicked, [=](QJsonArray p, bool else_branch) {
             this->obj.insert("@parameters", p);
             this->update_text();
+
+
+            int depth = 0;
+            int row = parent->indexFromItem(this).row();
+            for (int i = 1; row+i < parent->count() && dynamic_cast<EventListItem*>(parent->item(row+i)) != nullptr; i++)
+            {
+                if (((EventListItem*)parent->item(row+i))->get_obj().value("@code").toInt() == 111)
+                    depth++;
+                else if (((EventListItem*)parent->item(row+i))->get_obj().value("@code").toInt() == 412 && depth > 0)
+                    depth--;
+                else if (((EventListItem*)parent->item(row+i))->get_obj().value("@code").toInt() == 412 && depth == 0 && !else_branch)
+                    break; //good
+                else if (((EventListItem*)parent->item(row+i))->get_obj().value("@code").toInt() == 411 && depth == 0 && else_branch)
+                    break; //good
+                else if (((EventListItem*)parent->item(row+i))->get_obj().value("@code").toInt() == 412 && depth == 0 && else_branch)
+                {
+                    //not good, create branch
+                    parent->insertItem(row+i, new EventListItem(nullptr, mc, mic, Factory().create_event(0,obj.value("@indent").toInt()+1, QJsonArray())));
+                    parent->insertItem(row+i, new EventListItem(nullptr, mc, mic, Factory().create_event(411,obj.value("@indent").toInt(), QJsonArray())));
+                    break;
+                }
+                else if (((EventListItem*)parent->item(row+i))->get_obj().value("@code").toInt() == 411 && depth == 0 && !else_branch)
+                {
+                    //not good, delete branch
+                    while (parent->count() > row+i && ((EventListItem*)parent->item(row+i))->get_obj().value("@code").toInt() != 412)
+                        delete parent->takeItem(row+i);
+                    break;
+                }
+
+
+            }
         });
 
-        //TODO: Else Branch not implemented yet
+
     }
+    else
+        qDebug() << this->obj;
 
     this->update_text();
 }

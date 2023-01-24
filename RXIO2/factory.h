@@ -21,7 +21,8 @@ public:
     QJsonObject create_troop_member();
     QJsonObject create_troop_member(int enemy_id, bool hidden, bool immortal, int x, int y);
 
-    QJsonObject create_empty_event_list();
+    QJsonObject create_empty_event();
+    QJsonObject create_event(int code, int indent, QJsonArray parameters);
 
     QJsonObject create_troop_page_condition(int actor_hp, int actor_id, bool actor_valid, int enemy_hp, int enemy_index, bool enemy_valid, int switch_id, bool switch_valid, int turn_a, int turn_b, bool turn_valid);
     QJsonObject create_troop_page_condition();

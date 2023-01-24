@@ -72,12 +72,22 @@ QJsonObject Factory::create_troop_member(int enemy_id, bool hidden, bool immorta
     return obj;
 }
 
-QJsonObject Factory::create_empty_event_list()
+QJsonObject Factory::create_empty_event()
 {
     QJsonObject obj;
     obj.insert("@code", 0);
     obj.insert("@indent", 0);
     obj.insert("@parameters", QJsonArray());
+    obj.insert("RXClass", "RPG::EventCommand");
+    return obj;
+}
+
+QJsonObject Factory::create_event(int code, int indent, QJsonArray parameters)
+{
+    QJsonObject obj;
+    obj.insert("@code", code);
+    obj.insert("@indent", indent);
+    obj.insert("@parameters", parameters);
     obj.insert("RXClass", "RPG::EventCommand");
     return obj;
 }
@@ -110,7 +120,7 @@ QJsonObject Factory::create_troop_page()
     QJsonObject obj;
     obj.insert("@condition", this->create_troop_page_condition());
     QJsonArray commands;
-    commands.append(this->create_empty_event_list());
+    commands.append(this->create_empty_event());
     obj.insert("@list", commands);
     obj.insert("@span",0);
 
@@ -568,7 +578,7 @@ QJsonObject Factory::create_new_commonevent(int id)
     QJsonObject obj;
     obj.insert("@id", id);
     QJsonArray event_list;
-    event_list.append(this->create_empty_event_list());
+    event_list.append(this->create_empty_event());
     obj.insert("@list", event_list);
     obj.insert("@name","");
     obj.insert("@switch_id",1);
