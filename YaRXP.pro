@@ -74,6 +74,7 @@ SOURCES += \
     editors/troops/trooppageconditiondialog.cpp \
     editors/troops/trooppiclabel.cpp \
     editors/weapons/editweapons.cpp \
+    events/commands/changeactornamedialog.cpp \
     events/commands/changeequipmentdialog.cpp \
     events/commands/changemapsettingsdialog.cpp \
     events/commands/choicesdialog.cpp \
@@ -90,6 +91,7 @@ SOURCES += \
     events/commands/screenshakedialog.cpp \
     events/commands/scrollmapdialog.cpp \
     events/commands/selfswitchdialog.cpp \
+    events/commands/showbattleanimationdialog.cpp \
     events/commands/showtextdialog.cpp \
     events/commands/singlecombodialog.cpp \
     events/commands/spinspindialog.cpp \
@@ -170,6 +172,7 @@ HEADERS += \
     editors/troops/trooppageconditiondialog.h \
     editors/troops/trooppiclabel.h \
     editors/weapons/editweapons.h \
+    events/commands/changeactornamedialog.h \
     events/commands/changeequipmentdialog.h \
     events/commands/changemapsettingsdialog.h \
     events/commands/choicesdialog.h \
@@ -186,6 +189,7 @@ HEADERS += \
     events/commands/screenshakedialog.h \
     events/commands/scrollmapdialog.h \
     events/commands/selfswitchdialog.h \
+    events/commands/showbattleanimationdialog.h \
     events/commands/showtextdialog.h \
     events/commands/singlecombodialog.h \
     events/commands/spinspindialog.h \
@@ -243,6 +247,7 @@ FORMS += \
     editors/troops/troopeventpage.ui \
     editors/troops/trooppageconditiondialog.ui \
     editors/weapons/editweapons.ui \
+    events/commands/changeactornamedialog.ui \
     events/commands/changeequipmentdialog.ui \
     events/commands/changemapsettingsdialog.ui \
     events/commands/choicesdialog.ui \
@@ -259,6 +264,7 @@ FORMS += \
     events/commands/screenshakedialog.ui \
     events/commands/scrollmapdialog.ui \
     events/commands/selfswitchdialog.ui \
+    events/commands/showbattleanimationdialog.ui \
     events/commands/showtextdialog.ui \
     events/commands/singlecombodialog.ui \
     events/commands/spinspindialog.ui \

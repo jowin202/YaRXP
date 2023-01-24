@@ -831,11 +831,13 @@ QString EventListItem::get_text(QJsonObject obj)
     else if (code == 301)
         text += "@>Battle Processing: " + db->get_object_name(RPGDB::TROOPS, parameters.at(0).toInt());
     else if (code == 601)
-        text += " :  If Win";
+        text += ": If Win";
+    else if (code == 602)
+        text += ": If Escape";
     else if (code == 603)
-        text += " :  If Lose";
+        text += ": If Lose";
     else if (code == 604)
-        text += " :  Branch End";
+        text += ": Branch End";
     else if (code == 302)
         text += "@>Shop Processing: [" + (parameters.at(0).toInt() == 0 ? db->get_object_name(RPGDB::ITEMS, parameters.at(1).toInt()) : "")
                  + (parameters.at(0).toInt() == 1 ? db->get_object_name(RPGDB::WEAPONS, parameters.at(1).toInt()) : "")
