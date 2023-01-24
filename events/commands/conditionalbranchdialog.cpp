@@ -45,14 +45,10 @@ ConditionalBranchDialog::ConditionalBranchDialog(RPGDB *db, RPGMapController *mc
     this->db = db;
     this->mc = mc;
 
-    for (int i = 1; i < db->get_switch_names().count(); i++)
-        this->ui->combo_switch->addItem(QString("%1: %2").arg(i,4,10, QChar('0')).arg(db->get_switch_name(i)));
+    this->ui->widget_switch->setSwitchWidget(db);
+    this->ui->widget_variable->setVariableWidget(db);
+    this->ui->widget_var_variable->setVariableWidget(db);
 
-    for (int i = 1; i < db->get_variable_names().count(); i++)
-    {
-        this->ui->combo_variable->addItem(QString("%1: %2").arg(i,4,10, QChar('0')).arg(db->get_variable_name(i)));
-        this->ui->combo_var_variable->addItem(QString("%1: %2").arg(i,4,10, QChar('0')).arg(db->get_variable_name(i)));
-    }
 
     db->fill_combo(this->ui->combo_actor, RPGDB::ACTORS, true, 3);
     db->fill_combo(this->ui->combo_actor_skill, RPGDB::SKILLS, true, 3);
@@ -94,14 +90,14 @@ ConditionalBranchDialog::ConditionalBranchDialog(RPGDB *db, RPGMapController *mc
     {
         //switch
         this->ui->radio_switch->setChecked(true);
-        this->ui->combo_switch->setCurrentIndex(parameters.at(1).toInt()-1);
+        this->ui->widget_switch->setValue(parameters.at(1).toInt());
         this->ui->combo_switch_state->setCurrentIndex(parameters.at(2).toInt());
     }
     else if (parameters.at(0).toInt() == 1)
     {
         //Variable
         this->ui->radio_variable->setChecked(true);
-        this->ui->combo_variable->setCurrentIndex(parameters.at(1).toInt()-1);
+        this->ui->widget_variable->setValue(parameters.at(1).toInt());
 
         if (parameters.at(2).toInt() == 0) //Constant
         {
@@ -112,7 +108,7 @@ ConditionalBranchDialog::ConditionalBranchDialog(RPGDB *db, RPGMapController *mc
         else //variable
         {
             this->ui->radio_var_variable->setChecked(true);
-            this->ui->combo_var_variable->setCurrentIndex(parameters.at(3).toInt()-1);
+            this->ui->widget_var_variable->setValue(parameters.at(3).toInt());
             this->ui->combo_variable_op->setCurrentIndex(parameters.at(4).toInt());
         }
     }
@@ -248,13 +244,13 @@ void ConditionalBranchDialog::on_button_ok_clicked()
     if (this->ui->radio_switch->isChecked())
     {
         p.append(0);
-        p.append(this->ui->combo_switch->currentIndex()+1);
+        p.append(this->ui->widget_switch->getValue());
         p.append(this->ui->combo_switch_state->currentIndex());
     }
     else if (this->ui->radio_variable->isChecked())
     {
         p.append(1);
-        p.append(this->ui->combo_variable->currentIndex()+1);
+        p.append(this->ui->widget_variable->getValue());
         if (this->ui->radio_var_constant->isChecked())
         {
             p.append(0);
@@ -263,7 +259,7 @@ void ConditionalBranchDialog::on_button_ok_clicked()
         else //variable
         {
             p.append(1);
-            p.append(this->ui->combo_var_variable->currentIndex()+1);
+            p.append(this->ui->widget_var_variable->getValue());
         }
         p.append(this->ui->combo_variable_op->currentIndex());
     }

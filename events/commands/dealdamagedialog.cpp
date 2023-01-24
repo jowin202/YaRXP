@@ -9,8 +9,8 @@ DealDamageDialog::DealDamageDialog(RPGDB *db, QJsonArray parameters, QWidget *pa
 {
     ui->setupUi(this);
 
-    for (int i = 1; i < db->get_variable_names().count(); i++)
-        this->ui->combo_variable->addItem(QString("%1: %2").arg(i,4,10,QChar('0')).arg(db->get_variable_name(i)));
+    this->ui->variable_widget->setVariableWidget(db);
+
 
     if (parameters.at(0).toInt() == 0)
     {
@@ -32,7 +32,7 @@ DealDamageDialog::DealDamageDialog(RPGDB *db, QJsonArray parameters, QWidget *pa
     else
     {
         this->ui->radio_variable->setChecked(true);
-        this->ui->combo_variable->setCurrentIndex(parameters.at(3).toInt()-1);
+        this->ui->variable_widget->setValue(parameters.at(3).toInt());
     }
 }
 
@@ -63,7 +63,7 @@ void DealDamageDialog::on_button_ok_clicked()
     else if (this->ui->radio_variable->isChecked())
     {
         p.append(1);
-        p.append(this->ui->combo_variable->currentIndex()+1);
+        p.append(this->ui->variable_widget->getValue());
     }
 
     emit ok_clicked(p);

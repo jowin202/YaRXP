@@ -13,11 +13,9 @@ PictureDialog::PictureDialog(RPGDB *db, int code, QJsonArray parameters, QWidget
     this->code = code;
     this->db = db; //image dialog
 
-    for (int i = 1; i < db->get_variable_names().count(); i++)
-    {
-        this->ui->combo_var_x->addItem(QString("%1: %2").arg(i,4,10,QChar('0')).arg(db->get_variable_name(i)));
-        this->ui->combo_var_y->addItem(QString("%1: %2").arg(i,4,10,QChar('0')).arg(db->get_variable_name(i)));
-    }
+
+    this->ui->widget_var_x->setVariableWidget(db);
+    this->ui->widget_var_y->setVariableWidget(db);
 
 
     if (code == 231)
@@ -43,18 +41,14 @@ PictureDialog::PictureDialog(RPGDB *db, int code, QJsonArray parameters, QWidget
     if (parameters.at(3).toInt() == 0)
     {
         this->ui->radio_constant->setChecked(true);
-        this->ui->combo_var_x->setEnabled(false);
-        this->ui->combo_var_y->setEnabled(false);
         this->ui->spin_const_x->setValue(parameters.at(4).toInt());
         this->ui->spin_const_y->setValue(parameters.at(5).toInt());
     }
     else if (parameters.at(3).toInt() == 1)
     {
         this->ui->radio_variable->setChecked(true);
-        this->ui->spin_const_x->setEnabled(false);
-        this->ui->spin_const_y->setEnabled(false);
-        this->ui->combo_var_x->setCurrentIndex(parameters.at(4).toInt()-1);
-        this->ui->combo_var_y->setCurrentIndex(parameters.at(5).toInt()-1);
+        this->ui->widget_var_x->setValue(parameters.at(4).toInt());
+        this->ui->widget_var_y->setValue(parameters.at(5).toInt());
     }
 
     this->ui->spin_zoom_x->setValue(parameters.at(6).toInt());
@@ -105,8 +99,8 @@ void PictureDialog::on_button_ok_clicked()
     else //variable
     {
         p.append(1);
-        p.append(this->ui->combo_var_x->currentIndex()+1);
-        p.append(this->ui->combo_var_y->currentIndex()+1);
+        p.append(this->ui->widget_var_x->getValue());
+        p.append(this->ui->widget_var_y->getValue());
     }
 
     p.append(this->ui->spin_zoom_x->value());

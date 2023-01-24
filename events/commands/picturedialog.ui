@@ -97,6 +97,9 @@
         </item>
         <item row="2" column="2">
          <widget class="QSpinBox" name="spin_const_y">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="minimum">
            <number>-9999</number>
           </property>
@@ -121,6 +124,9 @@
         </item>
         <item row="1" column="2">
          <widget class="QSpinBox" name="spin_const_x">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="minimum">
            <number>-9999</number>
           </property>
@@ -174,10 +180,18 @@
          </widget>
         </item>
         <item row="3" column="2">
-         <widget class="QComboBox" name="combo_var_x"/>
+         <widget class="SwitchVariableWidget" name="widget_var_x" native="true">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+         </widget>
         </item>
         <item row="4" column="2">
-         <widget class="QComboBox" name="combo_var_y"/>
+         <widget class="SwitchVariableWidget" name="widget_var_y" native="true">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -360,6 +374,14 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>SwitchVariableWidget</class>
+   <extends>QWidget</extends>
+   <header>dialogs/switchvariablewidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections>
   <connection>
@@ -369,12 +391,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>77</x>
-     <y>189</y>
+     <x>92</x>
+     <y>259</y>
     </hint>
     <hint type="destinationlabel">
-     <x>266</x>
-     <y>194</y>
+     <x>342</x>
+     <y>264</y>
     </hint>
    </hints>
   </connection>
@@ -385,44 +407,44 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>67</x>
-     <y>193</y>
+     <x>82</x>
+     <y>259</y>
     </hint>
     <hint type="destinationlabel">
-     <x>273</x>
-     <y>229</y>
+     <x>342</x>
+     <y>302</y>
     </hint>
    </hints>
   </connection>
   <connection>
    <sender>radio_variable</sender>
    <signal>toggled(bool)</signal>
-   <receiver>combo_var_x</receiver>
+   <receiver>widget_var_x</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>64</x>
-     <y>262</y>
+     <x>90</x>
+     <y>323</y>
     </hint>
     <hint type="destinationlabel">
-     <x>279</x>
-     <y>266</y>
+     <x>267</x>
+     <y>311</y>
     </hint>
    </hints>
   </connection>
   <connection>
    <sender>radio_variable</sender>
    <signal>toggled(bool)</signal>
-   <receiver>combo_var_y</receiver>
+   <receiver>widget_var_y</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>72</x>
-     <y>271</y>
+     <x>75</x>
+     <y>320</y>
     </hint>
     <hint type="destinationlabel">
-     <x>275</x>
-     <y>307</y>
+     <x>265</x>
+     <y>342</y>
     </hint>
    </hints>
   </connection>

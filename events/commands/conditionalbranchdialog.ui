@@ -239,9 +239,12 @@
         </widget>
        </item>
        <item>
-        <widget class="QComboBox" name="combo_switch">
-         <property name="enabled">
-          <bool>false</bool>
+        <widget class="SwitchVariableWidget" name="widget_switch" native="true">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
          </property>
         </widget>
        </item>
@@ -275,19 +278,6 @@
          </item>
         </widget>
        </item>
-       <item>
-        <spacer name="horizontalSpacer_2">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
       </layout>
      </item>
      <item row="3" column="0">
@@ -306,13 +296,6 @@
          </property>
          <property name="text">
           <string>Constant</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1">
-        <widget class="QComboBox" name="combo_variable">
-         <property name="enabled">
-          <bool>false</bool>
          </property>
         </widget>
        </item>
@@ -377,12 +360,11 @@
          </property>
         </widget>
        </item>
+       <item row="0" column="1">
+        <widget class="SwitchVariableWidget" name="widget_variable" native="true"/>
+       </item>
        <item row="2" column="2" colspan="2">
-        <widget class="QComboBox" name="combo_var_variable">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-        </widget>
+        <widget class="SwitchVariableWidget" name="widget_var_variable" native="true"/>
        </item>
       </layout>
      </item>
@@ -994,17 +976,22 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>SwitchVariableWidget</class>
+   <extends>QWidget</extends>
+   <header>dialogs/switchvariablewidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <tabstops>
   <tabstop>radio_switch</tabstop>
-  <tabstop>combo_switch</tabstop>
   <tabstop>combo_switch_state</tabstop>
   <tabstop>radio_variable</tabstop>
-  <tabstop>combo_variable</tabstop>
   <tabstop>combo_variable_op</tabstop>
   <tabstop>radio_var_constant</tabstop>
   <tabstop>spin_var_const</tabstop>
   <tabstop>radio_var_variable</tabstop>
-  <tabstop>combo_var_variable</tabstop>
   <tabstop>radio_self_switch</tabstop>
   <tabstop>combo_self_switch</tabstop>
   <tabstop>combo_self_switch_state</tabstop>
@@ -1055,22 +1042,6 @@
   <connection>
    <sender>radio_switch</sender>
    <signal>toggled(bool)</signal>
-   <receiver>combo_switch</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>40</x>
-     <y>28</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>176</x>
-     <y>36</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>radio_switch</sender>
-   <signal>toggled(bool)</signal>
    <receiver>combo_switch_state</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
@@ -1079,24 +1050,8 @@
      <y>24</y>
     </hint>
     <hint type="destinationlabel">
-     <x>333</x>
-     <y>15</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>radio_variable</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>combo_variable</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>49</x>
-     <y>70</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>126</x>
-     <y>63</y>
+     <x>388</x>
+     <y>23</y>
     </hint>
    </hints>
   </connection>
@@ -1107,8 +1062,8 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>24</x>
-     <y>69</y>
+     <x>32</x>
+     <y>91</y>
     </hint>
     <hint type="destinationlabel">
      <x>103</x>
@@ -1139,28 +1094,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>131</x>
-     <y>106</y>
+     <x>174</x>
+     <y>129</y>
     </hint>
     <hint type="destinationlabel">
      <x>335</x>
      <y>111</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>radio_var_variable</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>combo_var_variable</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>122</x>
-     <y>151</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>344</x>
-     <y>149</y>
     </hint>
    </hints>
   </connection>
@@ -1187,12 +1126,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>54</x>
-     <y>186</y>
+     <x>62</x>
+     <y>214</y>
     </hint>
     <hint type="destinationlabel">
-     <x>339</x>
-     <y>194</y>
+     <x>280</x>
+     <y>219</y>
     </hint>
    </hints>
   </connection>
@@ -1203,12 +1142,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>51</x>
-     <y>243</y>
+     <x>59</x>
+     <y>271</y>
     </hint>
     <hint type="destinationlabel">
-     <x>94</x>
-     <y>239</y>
+     <x>130</x>
+     <y>276</y>
     </hint>
    </hints>
   </connection>
@@ -1219,12 +1158,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>37</x>
-     <y>238</y>
+     <x>45</x>
+     <y>271</y>
     </hint>
     <hint type="destinationlabel">
-     <x>205</x>
-     <y>231</y>
+     <x>218</x>
+     <y>276</y>
     </hint>
    </hints>
   </connection>
@@ -1235,12 +1174,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>47</x>
-     <y>234</y>
+     <x>55</x>
+     <y>271</y>
     </hint>
     <hint type="destinationlabel">
-     <x>345</x>
-     <y>246</y>
+     <x>336</x>
+     <y>276</y>
     </hint>
    </hints>
   </connection>
@@ -1251,12 +1190,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>66</x>
-     <y>291</y>
+     <x>69</x>
+     <y>328</y>
     </hint>
     <hint type="destinationlabel">
-     <x>91</x>
-     <y>286</y>
+     <x>167</x>
+     <y>333</y>
     </hint>
    </hints>
   </connection>
@@ -1267,12 +1206,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>53</x>
-     <y>283</y>
+     <x>61</x>
+     <y>328</y>
     </hint>
     <hint type="destinationlabel">
-     <x>78</x>
-     <y>312</y>
+     <x>154</x>
+     <y>361</y>
     </hint>
    </hints>
   </connection>
@@ -1283,12 +1222,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>45</x>
-     <y>287</y>
+     <x>53</x>
+     <y>328</y>
     </hint>
     <hint type="destinationlabel">
-     <x>78</x>
-     <y>346</y>
+     <x>154</x>
+     <y>394</y>
     </hint>
    </hints>
   </connection>
@@ -1299,12 +1238,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>36</x>
-     <y>289</y>
+     <x>44</x>
+     <y>328</y>
     </hint>
     <hint type="destinationlabel">
-     <x>97</x>
-     <y>398</y>
+     <x>173</x>
+     <y>432</y>
     </hint>
    </hints>
   </connection>
@@ -1315,12 +1254,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>30</x>
-     <y>287</y>
+     <x>38</x>
+     <y>328</y>
     </hint>
     <hint type="destinationlabel">
-     <x>86</x>
-     <y>433</y>
+     <x>162</x>
+     <y>470</y>
     </hint>
    </hints>
   </connection>
@@ -1331,12 +1270,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>28</x>
-     <y>281</y>
+     <x>36</x>
+     <y>328</y>
     </hint>
     <hint type="destinationlabel">
-     <x>87</x>
-     <y>466</y>
+     <x>163</x>
+     <y>508</y>
     </hint>
    </hints>
   </connection>
@@ -1347,12 +1286,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>23</x>
-     <y>290</y>
+     <x>31</x>
+     <y>328</y>
     </hint>
     <hint type="destinationlabel">
-     <x>114</x>
-     <y>507</y>
+     <x>175</x>
+     <y>546</y>
     </hint>
    </hints>
   </connection>
@@ -1363,12 +1302,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>112</x>
-     <y>349</y>
+     <x>175</x>
+     <y>394</y>
     </hint>
     <hint type="destinationlabel">
-     <x>248</x>
-     <y>362</y>
+     <x>326</x>
+     <y>399</y>
     </hint>
    </hints>
   </connection>
@@ -1379,12 +1318,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>156</x>
-     <y>388</y>
+     <x>175</x>
+     <y>432</y>
     </hint>
     <hint type="destinationlabel">
-     <x>242</x>
-     <y>389</y>
+     <x>326</x>
+     <y>437</y>
     </hint>
    </hints>
   </connection>
@@ -1395,12 +1334,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>153</x>
-     <y>419</y>
+     <x>175</x>
+     <y>470</y>
     </hint>
     <hint type="destinationlabel">
-     <x>200</x>
-     <y>421</y>
+     <x>326</x>
+     <y>475</y>
     </hint>
    </hints>
   </connection>
@@ -1411,12 +1350,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>139</x>
-     <y>469</y>
+     <x>175</x>
+     <y>508</y>
     </hint>
     <hint type="destinationlabel">
-     <x>234</x>
-     <y>463</y>
+     <x>326</x>
+     <y>513</y>
     </hint>
    </hints>
   </connection>
@@ -1427,12 +1366,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>131</x>
-     <y>503</y>
+     <x>175</x>
+     <y>546</y>
     </hint>
     <hint type="destinationlabel">
-     <x>257</x>
-     <y>504</y>
+     <x>326</x>
+     <y>551</y>
     </hint>
    </hints>
   </connection>
@@ -1523,8 +1462,8 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>426</x>
-     <y>206</y>
+     <x>509</x>
+     <y>233</y>
     </hint>
     <hint type="destinationlabel">
      <x>530</x>
@@ -1539,8 +1478,8 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>438</x>
-     <y>207</y>
+     <x>509</x>
+     <y>233</y>
     </hint>
     <hint type="destinationlabel">
      <x>655</x>
@@ -1555,8 +1494,8 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>503</x>
-     <y>253</y>
+     <x>509</x>
+     <y>280</y>
     </hint>
     <hint type="destinationlabel">
      <x>519</x>
@@ -1571,12 +1510,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>503</x>
-     <y>291</y>
+     <x>509</x>
+     <y>327</y>
     </hint>
     <hint type="destinationlabel">
-     <x>610</x>
-     <y>296</y>
+     <x>616</x>
+     <y>332</y>
     </hint>
    </hints>
   </connection>
@@ -1587,12 +1526,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>503</x>
-     <y>329</y>
+     <x>509</x>
+     <y>374</y>
     </hint>
     <hint type="destinationlabel">
-     <x>610</x>
-     <y>334</y>
+     <x>616</x>
+     <y>379</y>
     </hint>
    </hints>
   </connection>
@@ -1603,12 +1542,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>503</x>
-     <y>367</y>
+     <x>509</x>
+     <y>421</y>
     </hint>
     <hint type="destinationlabel">
-     <x>610</x>
-     <y>372</y>
+     <x>616</x>
+     <y>426</y>
     </hint>
    </hints>
   </connection>
@@ -1619,12 +1558,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>503</x>
-     <y>405</y>
+     <x>509</x>
+     <y>468</y>
     </hint>
     <hint type="destinationlabel">
-     <x>717</x>
-     <y>410</y>
+     <x>723</x>
+     <y>473</y>
     </hint>
    </hints>
   </connection>
@@ -1657,6 +1596,54 @@
     <hint type="destinationlabel">
      <x>547</x>
      <y>127</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radio_switch</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>widget_switch</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>69</x>
+     <y>23</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>96</x>
+     <y>21</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radio_variable</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>widget_variable</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>57</x>
+     <y>86</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>104</x>
+     <y>88</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radio_var_variable</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>widget_var_variable</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>145</x>
+     <y>155</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>210</x>
+     <y>157</y>
     </hint>
    </hints>
   </connection>
