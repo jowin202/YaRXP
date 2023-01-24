@@ -82,6 +82,8 @@ SOURCES += \
     events/commands/changetextoptionsdialog.cpp \
     events/commands/combocombodialog.cpp \
     events/commands/combospindialog.cpp \
+    events/commands/dealdamagedialog.cpp \
+    events/commands/forceactiondialog.cpp \
     events/commands/increasedecreasedialog.cpp \
     events/commands/picturedialog.cpp \
     events/commands/radiodialog.cpp \
@@ -176,6 +178,8 @@ HEADERS += \
     events/commands/changetextoptionsdialog.h \
     events/commands/combocombodialog.h \
     events/commands/combospindialog.h \
+    events/commands/dealdamagedialog.h \
+    events/commands/forceactiondialog.h \
     events/commands/increasedecreasedialog.h \
     events/commands/picturedialog.h \
     events/commands/radiodialog.h \
@@ -247,6 +251,8 @@ FORMS += \
     events/commands/changetextoptionsdialog.ui \
     events/commands/combocombodialog.ui \
     events/commands/combospindialog.ui \
+    events/commands/dealdamagedialog.ui \
+    events/commands/forceactiondialog.ui \
     events/commands/increasedecreasedialog.ui \
     events/commands/picturedialog.ui \
     events/commands/radiodialog.ui \

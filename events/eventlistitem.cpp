@@ -24,6 +24,8 @@
 #include "commands/selfswitchdialog.h"
 #include "commands/scrollmapdialog.h"
 #include "commands/screenshakedialog.h"
+#include "commands/forceactiondialog.h"
+#include "commands/dealdamagedialog.h"
 
 #include "dialogs/audiodialog.h"
 #include "dialogs/imagedialog.h"
@@ -329,6 +331,24 @@ void EventListItem::edit_cell()
         ScreenShakeDialog *dialog = new ScreenShakeDialog(parameters);
         dialog->show();
         QObject::connect(dialog, &ScreenShakeDialog::ok_clicked, [=](QJsonArray p) {
+            this->obj.insert("@parameters", p);
+            this->update_text();
+        });
+    }
+    else if (code == 338) //Deal Damage
+    {
+        DealDamageDialog *dialog = new DealDamageDialog(db, parameters);
+        dialog->show();
+        QObject::connect(dialog, &DealDamageDialog::ok_clicked, [=](QJsonArray p) {
+            this->obj.insert("@parameters", p);
+            this->update_text();
+        });
+    }
+    else if (code == 339) //Force Action
+    {
+        ForceActionDialog *dialog = new ForceActionDialog(db, parameters);
+        dialog->show();
+        QObject::connect(dialog, &ForceActionDialog::ok_clicked, [=](QJsonArray p) {
             this->obj.insert("@parameters", p);
             this->update_text();
         });

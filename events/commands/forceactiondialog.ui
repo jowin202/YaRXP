@@ -1,0 +1,447 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ForceActionDialog</class>
+ <widget class="QWidget" name="ForceActionDialog">
+  <property name="windowModality">
+   <enum>Qt::ApplicationModal</enum>
+  </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>231</width>
+    <height>437</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Force Action</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout_4">
+   <item row="4" column="0">
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="button_cancel">
+       <property name="text">
+        <string>Cancel</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="button_ok">
+       <property name="text">
+        <string>Ok</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="1" column="0">
+    <widget class="QGroupBox" name="groupBox_2">
+     <property name="title">
+      <string>Action</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_2">
+      <item row="1" column="1">
+       <widget class="QComboBox" name="combo_skill">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <item>
+         <property name="text">
+          <string>Last Target</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Random</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Index 1</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Index 2</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Index 3</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Index 4</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Index 5</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Index 6</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Index 7</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Index 8</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="3" column="0" colspan="2">
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <item>
+         <widget class="QLabel" name="label">
+          <property name="text">
+           <string>Action Target:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="combo_target">
+          <item>
+           <property name="text">
+            <string>Last Target</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Random</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Index 1</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Index 2</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Index 3</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Index 4</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Index 5</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Index 6</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Index 7</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Index 8</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="1" column="0">
+       <widget class="QRadioButton" name="radio_skill">
+        <property name="text">
+         <string>Skill</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QRadioButton" name="radio_basic">
+        <property name="text">
+         <string>Basic</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QComboBox" name="combo_basic">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <item>
+         <property name="text">
+          <string>Attack</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Defend</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Escape</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Do Nothing</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="2" column="0" colspan="2">
+       <widget class="Line" name="line">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="0" column="0">
+    <widget class="QGroupBox" name="groupBox">
+     <property name="title">
+      <string>Battler</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="0">
+       <widget class="QRadioButton" name="radio_enemy">
+        <property name="text">
+         <string>Enemy</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QRadioButton" name="radio_actor">
+        <property name="text">
+         <string>Actor</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QComboBox" name="combo_enemy">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <item>
+         <property name="text">
+          <string>1.</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>2.</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>3.</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>4.</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>5.</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>6.</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>7.</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>8.</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QComboBox" name="combo_actor">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <item>
+         <property name="text">
+          <string>Actor No. 1</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Actor No. 2</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Actor No. 3</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Actor No. 4</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QGroupBox" name="groupBox_3">
+     <property name="title">
+      <string>Timing</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_3">
+      <item row="0" column="0">
+       <widget class="QRadioButton" name="radio_normal_sequence">
+        <property name="text">
+         <string>Execute in Normal Sequence</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QRadioButton" name="radio_execute_now">
+        <property name="text">
+         <string>Execute Now</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="3" column="0">
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+  </layout>
+ </widget>
+ <tabstops>
+  <tabstop>radio_enemy</tabstop>
+  <tabstop>combo_enemy</tabstop>
+  <tabstop>combo_actor</tabstop>
+  <tabstop>radio_basic</tabstop>
+  <tabstop>combo_basic</tabstop>
+  <tabstop>radio_skill</tabstop>
+  <tabstop>combo_skill</tabstop>
+  <tabstop>combo_target</tabstop>
+  <tabstop>radio_normal_sequence</tabstop>
+  <tabstop>radio_execute_now</tabstop>
+  <tabstop>button_cancel</tabstop>
+  <tabstop>button_ok</tabstop>
+  <tabstop>radio_actor</tabstop>
+ </tabstops>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>radio_enemy</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>combo_enemy</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>45</x>
+     <y>59</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>133</x>
+     <y>60</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radio_actor</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>combo_actor</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>95</x>
+     <y>97</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>165</x>
+     <y>88</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radio_basic</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>combo_basic</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>113</x>
+     <y>182</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>143</x>
+     <y>175</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radio_skill</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>combo_skill</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>90</x>
+     <y>219</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>167</x>
+     <y>217</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>
