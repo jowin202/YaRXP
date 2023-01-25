@@ -34,6 +34,7 @@
 #include "commands/controlswitchesdialog.h"
 #include "commands/controlvariablesdialog.h"
 #include "commands/choicesdialog.h"
+#include "commands/transferplayerdialog.h"
 
 #include "dialogs/audiodialog.h"
 #include "dialogs/imagedialog.h"
@@ -490,6 +491,15 @@ void EventListItem::edit_cell()
         ChangePartyMemberDialog *dialog = new ChangePartyMemberDialog(db,parameters);
         dialog->show();
         QObject::connect(dialog, &ChangePartyMemberDialog::ok_clicked, [=](QJsonArray p) {
+            this->obj.insert("@parameters", p);
+            this->update_text();
+        });
+    }
+    else if (code == 201) //Transfer Player
+    {
+        TransferPlayerDialog *dialog = new TransferPlayerDialog(db,parameters);
+        dialog->show();
+        QObject::connect(dialog, &TransferPlayerDialog::ok_clicked, [=](QJsonArray p) {
             this->obj.insert("@parameters", p);
             this->update_text();
         });

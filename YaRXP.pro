@@ -32,6 +32,8 @@ SOURCES += \
     dialogs/imagedialog.cpp \
     dialogs/imagedisplaywidget.cpp \
     dialogs/listdialog.cpp \
+    dialogs/maplocationarea.cpp \
+    dialogs/maplocationfinderdialog.cpp \
     dialogs/mappropertiesdialog.cpp \
     dialogs/objectcombodialog.cpp \
     dialogs/switchvariablewidget.cpp \
@@ -102,6 +104,7 @@ SOURCES += \
     events/commands/singlecombodialog.cpp \
     events/commands/spinspindialog.cpp \
     events/commands/timerdialog.cpp \
+    events/commands/transferplayerdialog.cpp \
     events/commands/weatherdialog.cpp \
     events/commands/conditionalbranchdialog.cpp \
     events/eventcommanddialog.cpp \
@@ -136,6 +139,8 @@ HEADERS += \
     dialogs/imagedialog.h \
     dialogs/imagedisplaywidget.h \
     dialogs/listdialog.h \
+    dialogs/maplocationarea.h \
+    dialogs/maplocationfinderdialog.h \
     dialogs/mappropertiesdialog.h \
     dialogs/objectcombodialog.h \
     dialogs/switchvariablewidget.h \
@@ -206,6 +211,7 @@ HEADERS += \
     events/commands/singlecombodialog.h \
     events/commands/spinspindialog.h \
     events/commands/timerdialog.h \
+    events/commands/transferplayerdialog.h \
     events/commands/weatherdialog.h \
     events/commands/conditionalbranchdialog.h \
     events/eventcommanddialog.h \
@@ -226,6 +232,7 @@ FORMS += \
     dialogs/audiodialog.ui \
     dialogs/imagedialog.ui \
     dialogs/listdialog.ui \
+    dialogs/maplocationfinderdialog.ui \
     dialogs/mappropertiesdialog.ui \
     dialogs/objectcombodialog.ui \
     dialogs/switchvariablewidget.ui \
@@ -287,6 +294,7 @@ FORMS += \
     events/commands/singlecombodialog.ui \
     events/commands/spinspindialog.ui \
     events/commands/timerdialog.ui \
+    events/commands/transferplayerdialog.ui \
     events/commands/weatherdialog.ui \
     events/commands/conditionalbranchdialog.ui \
     events/eventcommanddialog.ui \

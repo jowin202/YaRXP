@@ -264,7 +264,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="icons.qrc">
+    <iconset>
      <normaloff>:/icons/icons/bx-layer1.svg</normaloff>:/icons/icons/bx-layer1.svg</iconset>
    </property>
    <property name="text">
@@ -282,7 +282,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="icons.qrc">
+    <iconset>
      <normaloff>:/icons/icons/bx-layer2.svg</normaloff>:/icons/icons/bx-layer2.svg</iconset>
    </property>
    <property name="text">
@@ -695,8 +695,6 @@
    <header>viewer/tilesetview.h</header>
   </customwidget>
  </customwidgets>
- <resources>
-  <include location="icons.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>
