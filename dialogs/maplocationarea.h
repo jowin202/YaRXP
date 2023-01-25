@@ -37,7 +37,7 @@ public:
 
     void mousePressEvent(QMouseEvent *e);
 
-    Rectangle *rectangle;
+    Rectangle *rectangle = 0;
     void define_rectangle(int x, int y) { this->rectangle = new Rectangle;
                                           this->rectangle->setPos(32*x,32*y);
                                           this->scene()->addItem(rectangle); }

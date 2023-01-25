@@ -97,6 +97,7 @@ SOURCES += \
     events/commands/screenshakedialog.cpp \
     events/commands/scrollmapdialog.cpp \
     events/commands/selfswitchdialog.cpp \
+    events/commands/seteventlocationdialog.cpp \
     events/commands/shopgoodsdialog.cpp \
     events/commands/shopprocessingdialog.cpp \
     events/commands/showbattleanimationdialog.cpp \
@@ -204,6 +205,7 @@ HEADERS += \
     events/commands/screenshakedialog.h \
     events/commands/scrollmapdialog.h \
     events/commands/selfswitchdialog.h \
+    events/commands/seteventlocationdialog.h \
     events/commands/shopgoodsdialog.h \
     events/commands/shopprocessingdialog.h \
     events/commands/showbattleanimationdialog.h \
@@ -287,6 +289,7 @@ FORMS += \
     events/commands/screenshakedialog.ui \
     events/commands/scrollmapdialog.ui \
     events/commands/selfswitchdialog.ui \
+    events/commands/seteventlocationdialog.ui \
     events/commands/shopgoodsdialog.ui \
     events/commands/shopprocessingdialog.ui \
     events/commands/showbattleanimationdialog.ui \

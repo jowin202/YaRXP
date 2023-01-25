@@ -6,6 +6,7 @@
 #include <QTreeWidgetItem>
 #include <QGraphicsPixmapItem>
 #include <QPainter>
+#include <QKeyEvent>
 
 class RPGDB;
 
@@ -20,6 +21,13 @@ class MapLocationFinderDialog : public QWidget
 public:
     explicit MapLocationFinderDialog(RPGDB *db, int id, int x, int y, QWidget *parent = nullptr);
     ~MapLocationFinderDialog();
+
+    void keyPressEvent(QKeyEvent *e) {
+        if(e->key() == Qt::Key_Escape)
+            this->on_button_cancel_clicked();
+        else if (e->key() == Qt::Key_Return || e->key() == Qt::Key_Enter)
+            this->on_button_ok_clicked();
+    }
 
     void list_maps();
 

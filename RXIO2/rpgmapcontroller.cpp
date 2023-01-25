@@ -13,6 +13,7 @@ RPGMapController::RPGMapController(QObject *parent)
 void RPGMapController::setMap(int id, bool load_images)
 {
     QJsonDocument *doc;
+    this->current_map_id = id;
     if ( (doc = db->get_mapfile_by_id(id)) != 0)
     {
         this->doc = doc;

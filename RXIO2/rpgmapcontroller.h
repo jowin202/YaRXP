@@ -67,9 +67,12 @@ public:
     void set_jsonvalue(QString key, QJsonValue value);
 
     QJsonDocument *current_map() {return doc;}
+    int get_current_map_id() { return this->current_map_id; }
+
 private:
     RPGDB *db;
     QJsonDocument *doc = 0;
+    int current_map_id = 0;
 
     QImage tileset_image;
     QImage autotiles[7];
