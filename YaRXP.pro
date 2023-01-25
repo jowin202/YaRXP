@@ -78,12 +78,14 @@ SOURCES += \
     events/commands/changeactornamedialog.cpp \
     events/commands/changeequipmentdialog.cpp \
     events/commands/changemapsettingsdialog.cpp \
+    events/commands/changepartymemberdialog.cpp \
     events/commands/choicesdialog.cpp \
     events/commands/changecolortonedialog.cpp \
     events/commands/changestatedialog.cpp \
     events/commands/changetextoptionsdialog.cpp \
     events/commands/combocombodialog.cpp \
     events/commands/combospindialog.cpp \
+    events/commands/controlswitchesdialog.cpp \
     events/commands/dealdamagedialog.cpp \
     events/commands/forceactiondialog.cpp \
     events/commands/increasedecreasedialog.cpp \
@@ -179,12 +181,14 @@ HEADERS += \
     events/commands/changeactornamedialog.h \
     events/commands/changeequipmentdialog.h \
     events/commands/changemapsettingsdialog.h \
+    events/commands/changepartymemberdialog.h \
     events/commands/choicesdialog.h \
     events/commands/changecolortonedialog.h \
     events/commands/changestatedialog.h \
     events/commands/changetextoptionsdialog.h \
     events/commands/combocombodialog.h \
     events/commands/combospindialog.h \
+    events/commands/controlswitchesdialog.h \
     events/commands/dealdamagedialog.h \
     events/commands/forceactiondialog.h \
     events/commands/increasedecreasedialog.h \
@@ -257,12 +261,14 @@ FORMS += \
     events/commands/changeactornamedialog.ui \
     events/commands/changeequipmentdialog.ui \
     events/commands/changemapsettingsdialog.ui \
+    events/commands/changepartymemberdialog.ui \
     events/commands/choicesdialog.ui \
     events/commands/changecolortonedialog.ui \
     events/commands/changestatedialog.ui \
     events/commands/changetextoptionsdialog.ui \
     events/commands/combocombodialog.ui \
     events/commands/combospindialog.ui \
+    events/commands/controlswitchesdialog.ui \
     events/commands/dealdamagedialog.ui \
     events/commands/forceactiondialog.ui \
     events/commands/increasedecreasedialog.ui \

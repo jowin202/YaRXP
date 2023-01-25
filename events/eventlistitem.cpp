@@ -30,6 +30,8 @@
 #include "commands/changeactornamedialog.h"
 #include "commands/shopprocessingdialog.h"
 #include "commands/changeactorgraphicdialog.h"
+#include "commands/changepartymemberdialog.h"
+#include "commands/controlswitchesdialog.h"
 
 #include "dialogs/audiodialog.h"
 #include "dialogs/imagedialog.h"
@@ -336,6 +338,15 @@ void EventListItem::edit_cell()
             this->update_text();
         });
     }
+    else if (code == 121) //Control Switches
+    {
+        ControlSwitchesDialog *dialog = new ControlSwitchesDialog(db,parameters);
+        dialog->show();
+        QObject::connect(dialog, &ControlSwitchesDialog::ok_clicked, [=](QJsonArray p) {
+            this->obj.insert("@parameters", p);
+            this->update_text();
+        });
+    }
     else if (code == 123) //Self Switch
     {
         SelfSwitchDialog *dialog = new SelfSwitchDialog(parameters);
@@ -350,6 +361,15 @@ void EventListItem::edit_cell()
         TimerDialog *dialog = new TimerDialog(parameters);
         dialog->show();
         QObject::connect(dialog, &TimerDialog::ok_clicked, [=](QJsonArray p) {
+            this->obj.insert("@parameters", p);
+            this->update_text();
+        });
+    }
+    else if (code == 129) //Change Party Member
+    {
+        ChangePartyMemberDialog *dialog = new ChangePartyMemberDialog(db,parameters);
+        dialog->show();
+        QObject::connect(dialog, &ChangePartyMemberDialog::ok_clicked, [=](QJsonArray p) {
             this->obj.insert("@parameters", p);
             this->update_text();
         });
