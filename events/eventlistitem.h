@@ -23,6 +23,7 @@ public:
 
     void update_text();
     QJsonObject get_obj() { return this->obj; }
+    void set_obj(QJsonObject obj) { this->obj = obj; }
 
     void edit_cell();
 

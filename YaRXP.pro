@@ -86,6 +86,7 @@ SOURCES += \
     events/commands/combocombodialog.cpp \
     events/commands/combospindialog.cpp \
     events/commands/controlswitchesdialog.cpp \
+    events/commands/controlvariablesdialog.cpp \
     events/commands/dealdamagedialog.cpp \
     events/commands/forceactiondialog.cpp \
     events/commands/increasedecreasedialog.cpp \
@@ -189,6 +190,7 @@ HEADERS += \
     events/commands/combocombodialog.h \
     events/commands/combospindialog.h \
     events/commands/controlswitchesdialog.h \
+    events/commands/controlvariablesdialog.h \
     events/commands/dealdamagedialog.h \
     events/commands/forceactiondialog.h \
     events/commands/increasedecreasedialog.h \
@@ -269,6 +271,7 @@ FORMS += \
     events/commands/combocombodialog.ui \
     events/commands/combospindialog.ui \
     events/commands/controlswitchesdialog.ui \
+    events/commands/controlvariablesdialog.ui \
     events/commands/dealdamagedialog.ui \
     events/commands/forceactiondialog.ui \
     events/commands/increasedecreasedialog.ui \

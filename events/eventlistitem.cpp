@@ -32,6 +32,8 @@
 #include "commands/changeactorgraphicdialog.h"
 #include "commands/changepartymemberdialog.h"
 #include "commands/controlswitchesdialog.h"
+#include "commands/controlvariablesdialog.h"
+#include "commands/choicesdialog.h"
 
 #include "dialogs/audiodialog.h"
 #include "dialogs/imagedialog.h"
@@ -165,7 +167,116 @@ void EventListItem::edit_cell()
                 parent->insertItem(row+1,new EventListItem(parent,mc,mic, obj_new));
             }
         });
+    }
+    else if (code == 102) //Show Choices
+    {
+        //402 -- when x
+        //403 -- wenn cancel
+        //404 -- branch end
+        int row = parent->indexFromItem(this).row();
+        ChoicesDialog *dialog = new ChoicesDialog(parameters);
+        dialog->show();
+        QObject::connect(dialog, &ChoicesDialog::ok_clicked, [=](QJsonArray p) {
+            this->obj.insert("@parameters", p);
+            this->update_text();
 
+            bool has_else = (p.at(1).toInt() == 5);
+            int depth = 0;
+            int item = 0;
+            for (int i = 1; row+i < parent->count() && dynamic_cast<EventListItem*>(parent->item(row+i)) != nullptr; i++) {
+                //only for recursion
+                if (((EventListItem*)parent->item(row+i))->get_obj().value("@code").toInt() == 102)
+                {
+                    depth++;//depth if new show choices
+                    continue;
+                }
+                else if (((EventListItem*)parent->item(row+i))->get_obj().value("@code").toInt() == 404 && depth > 0)
+                {
+                    depth--;
+                    continue;
+                }
+                else if (depth > 0)
+                {
+                    continue;
+                }
+
+                //when branch
+                if (((EventListItem*)parent->item(row+i))->get_obj().value("@code").toInt() == 402)
+                {
+                    if (item < p.at(0).toArray().count())
+                    {
+                        //change 402 to new label
+                        QJsonObject o = ((EventListItem*)parent->item(row+i))->get_obj();
+                        QJsonArray item_p = QJsonArray();
+                        item_p.append(item);
+                        item_p.append(p.at(0).toArray().at(item).toString());
+                        o.insert("@parameters", item_p);
+                        ((EventListItem*)parent->item(row+i))->set_obj(o);
+                        ((EventListItem*)parent->item(row+i))->update_text();
+                        item++;
+                    }
+                    else
+                    {
+                        //remove 402 branches
+                        while (row+i < parent->count() && dynamic_cast<EventListItem*>(parent->item(row+i)) != nullptr
+                               && ((EventListItem*)parent->item(row+i))->get_obj().value("@code").toInt() != 403
+                               && ((EventListItem*)parent->item(row+i))->get_obj().value("@code").toInt() != 404)
+                            delete parent->takeItem(row+i);
+                        i--; //parse line again
+                    }
+                }
+                else if (((EventListItem*)parent->item(row+i))->get_obj().value("@code").toInt() == 403
+                         || ((EventListItem*)parent->item(row+i))->get_obj().value("@code").toInt() == 404)
+                {
+                    //qDebug() << item << p.at(0).toArray().count() << ((EventListItem*)parent->item(row+i))->get_obj().value("@code").toInt();
+                    while (item < p.at(0).toArray().count())
+                    {
+                        //create more choices 402
+                        QJsonObject obj1 = Factory().create_empty_event_command(); // code 0, parameters []
+                        obj1.insert("@indent", obj.value("@indent").toInt()+1);
+
+                        QJsonObject obj2 = Factory().create_empty_event_command(); // code 0, parameters []
+                        obj2.insert("@indent", obj.value("@indent").toInt());
+                        obj2.insert("@code", 402);
+                        QJsonArray item_p = QJsonArray();
+                        item_p.append(item);
+                        item_p.append(p.at(0).toArray().at(item).toString());
+                        obj2.insert("@parameters", item_p);
+                        item++;
+
+                        parent->insertItem(row+i, new EventListItem(parent,mc,mic,obj1)); //swapped places
+                        parent->insertItem(row+i, new EventListItem(parent,mc,mic,obj2));
+                        i += 2;
+                    }
+
+                    if (((EventListItem*)parent->item(row+i))->get_obj().value("@code").toInt() == 403 && !has_else)
+                    {
+                        //remove "when cancel" branch
+                        while (row+i < parent->count() && dynamic_cast<EventListItem*>(parent->item(row+i)) != nullptr
+                               && ((EventListItem*)parent->item(row+i))->get_obj().value("@code").toInt() != 404)
+                            delete parent->takeItem(row+i);
+                        return;
+                    }
+                    if (((EventListItem*)parent->item(row+i))->get_obj().value("@code").toInt() == 404 && has_else)
+                    {
+                        //create 403
+                        QJsonObject obj1 = Factory().create_empty_event_command(); // code 0, parameters []
+                        obj1.insert("@indent", obj.value("@indent").toInt()+1);
+
+                        QJsonObject obj2 = Factory().create_empty_event_command(); // code 0, parameters []
+                        obj2.insert("@indent", obj.value("@indent").toInt());
+                        obj2.insert("@code", 403);
+
+                        parent->insertItem(row+i, new EventListItem(parent,mc,mic,obj1)); //swapped places
+                        parent->insertItem(row+i, new EventListItem(parent,mc,mic,obj2));
+                        return;
+                    }
+
+                    return; //when reaching 403 or 404 and else branch handling is finished, we can stop
+                }
+            }
+
+        });
     }
     else if (code == 104)
     {
@@ -343,6 +454,15 @@ void EventListItem::edit_cell()
         ControlSwitchesDialog *dialog = new ControlSwitchesDialog(db,parameters);
         dialog->show();
         QObject::connect(dialog, &ControlSwitchesDialog::ok_clicked, [=](QJsonArray p) {
+            this->obj.insert("@parameters", p);
+            this->update_text();
+        });
+    }
+    else if (code == 122) //Control Variables
+    {
+        ControlVariablesDialog *dialog = new ControlVariablesDialog(db,mc,parameters);
+        dialog->show();
+        QObject::connect(dialog, &ControlVariablesDialog::ok_clicked, [=](QJsonArray p) {
             this->obj.insert("@parameters", p);
             this->update_text();
         });
@@ -618,7 +738,7 @@ QString EventListItem::get_text(QJsonObject obj)
     else if (code == 113)
         text = "@>Break Loop";
     else if (code == 413)
-        text = "@>Repeat Above";
+        text = " : Repeat Above";
     else if (code == 115)
         text = "@>Exit Event Processing";
     else if (code == 116)
@@ -644,7 +764,7 @@ QString EventListItem::get_text(QJsonObject obj)
     else if (code == 122)
     {
         text = "@>Control Variables: " +
-                ((parameters.at(0) == parameters.at(1)) ? QString("[%1: %2] %3 ")
+                ((parameters.at(0).toInt() == parameters.at(1).toInt()) ? QString("[%1: %2] %3 ")
                                                          .arg(parameters.at(0).toInt(),4,10,QChar('0'))
                                                          .arg(db->get_variable_name(parameters.at(0).toInt()))
                                                          .arg(this->text_var_operators.at(parameters.at(2).toInt()))

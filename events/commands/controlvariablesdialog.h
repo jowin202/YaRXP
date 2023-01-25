@@ -1,21 +1,25 @@
-#ifndef CHOICESDIALOG_H
-#define CHOICESDIALOG_H
+#ifndef CONTROLVARIABLESDIALOG_H
+#define CONTROLVARIABLESDIALOG_H
 
 #include <QWidget>
 #include <QJsonArray>
 #include <QKeyEvent>
 
+class RPGDB;
+class RPGMapController;
+
 namespace Ui {
-class ChoicesDialog;
+class ControlVariablesDialog;
 }
 
-class ChoicesDialog : public QWidget
+class ControlVariablesDialog : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit ChoicesDialog(QJsonArray parameters, QWidget *parent = nullptr);
-    ~ChoicesDialog();
+    explicit ControlVariablesDialog(RPGDB *db, RPGMapController *mc, QJsonArray parameters, QWidget *parent = nullptr);
+    ~ControlVariablesDialog();
+
     void keyPressEvent(QKeyEvent *e) {
         if(e->key() == Qt::Key_Escape)
             this->on_button_cancel_clicked();
@@ -27,12 +31,12 @@ signals:
     void ok_clicked(QJsonArray);
 
 private slots:
-    void on_button_ok_clicked();
-
     void on_button_cancel_clicked();
 
+    void on_button_ok_clicked();
+
 private:
-    Ui::ChoicesDialog *ui;
+    Ui::ControlVariablesDialog *ui;
 };
 
-#endif // CHOICESDIALOG_H
+#endif // CONTROLVARIABLESDIALOG_H
