@@ -36,6 +36,7 @@
 #include "commands/choicesdialog.h"
 #include "commands/transferplayerdialog.h"
 #include "commands/seteventlocationdialog.h"
+#include "commands/battleprocessingdialog.h"
 
 #include "dialogs/audiodialog.h"
 #include "dialogs/imagedialog.h"
@@ -141,6 +142,138 @@ void EventListItem::edit_cell()
             }
         }
     }
+    else if (code == 301)
+    {
+        //601-- win
+        //602-- escape
+        //603-- lose
+        //604-- end
+        QJsonArray p;
+        p.append(parameters.at(0).toInt());
+        bool can_escape = false;
+        bool can_lose = false;
+        int pos_602 = -1;
+        int pos_603 = -1;
+        int depth = 0;
+        int row = parent->indexFromItem(this).row();
+        for (int i = 1; dynamic_cast<EventListItem*>(parent->item(row+i)) != nullptr; i++)
+        {
+            if (((EventListItem*)parent->item(row+i))->get_obj().value("@code").toInt() == 301)
+            {
+                depth++;
+                continue;
+            }
+            else if (((EventListItem*)parent->item(row+i))->get_obj().value("@code").toInt() == 604 && depth > 0)
+            {
+                depth--;
+                continue;
+            }
+            else if (depth > 0)
+                continue;
+
+
+            if (((EventListItem*)parent->item(row+i))->get_obj().value("@code").toInt() == 602)
+            {can_escape = true; pos_602 = row+i; }
+            if (((EventListItem*)parent->item(row+i))->get_obj().value("@code").toInt() == 603)
+            {can_lose = true; pos_603 = row+i; }
+            if (((EventListItem*)parent->item(row+i))->get_obj().value("@code").toInt() == 604)
+                break;
+        }
+        p.append(can_escape);
+        p.append(can_lose);
+
+
+        BattleProcessingDialog *dialog = new BattleProcessingDialog(db,p);
+        dialog->show();
+        QObject::connect(dialog, &BattleProcessingDialog::ok_clicked, [=](QJsonArray p) {
+            this->obj.insert("@parameters", p);
+            this->update_text();
+
+            //both unchecked, delete all
+            if (!p.at(1).toBool() && !p.at(2).toBool()
+                    && row+1 < parent->count() && dynamic_cast<EventListItem*>(parent->item(row+1)) != nullptr
+                    && ((EventListItem*)parent->item(row+1))->get_obj().value("@code").toInt() == 601)
+            {
+                while (row+1 < parent->count() && dynamic_cast<EventListItem*>(parent->item(row+1)) != nullptr
+                       && ((EventListItem*)parent->item(row+1))->get_obj().value("@code").toInt() != 604)
+                    delete parent->takeItem(row+1);
+                delete parent->takeItem(row+1); //delete also the 604 row
+            }
+            //escape unchecked, delete 602
+            else if (!p.at(1).toBool() && p.at(2).toBool() && pos_602 >= 0)
+            {
+                while (pos_602 < parent->count() && dynamic_cast<EventListItem*>(parent->item(pos_602)) != nullptr
+                       && ((EventListItem*)parent->item(pos_602))->get_obj().value("@code").toInt() != 603
+                       && ((EventListItem*)parent->item(pos_602))->get_obj().value("@code").toInt() != 604)
+                    delete parent->takeItem(pos_602);
+            }
+            //can lose unchecked unchecked, delete 603
+            else if (p.at(1).toBool() && !p.at(2).toBool() && pos_603 >= 0)
+            {
+                while (pos_603 < parent->count() && dynamic_cast<EventListItem*>(parent->item(pos_603)) != nullptr
+                       && ((EventListItem*)parent->item(pos_603))->get_obj().value("@code").toInt() != 602
+                       && ((EventListItem*)parent->item(pos_603))->get_obj().value("@code").toInt() != 604)
+                    delete parent->takeItem(pos_603);
+            }
+
+
+            //if one is checked, and there is the "win" branch, create it
+            if ((p.at(1).toBool() || p.at(2).toBool())
+                    && row+1 < parent->count() && dynamic_cast<EventListItem*>(parent->item(row+1)) != nullptr
+                    && ((EventListItem*)parent->item(row+1))->get_obj().value("@code").toInt() != 601)
+            {
+                QJsonObject obj_new;
+
+                //inverse order
+                obj_new = QJsonObject(this->obj);
+                obj_new.insert("@code", 604);
+                obj_new.insert("@parameters", QJsonArray());
+                parent->insertItem(row+1,new EventListItem(parent,mc,mic, obj_new));
+
+                obj_new = QJsonObject(this->obj);
+                obj_new.insert("@code", 0);
+                obj_new.insert("@indent", this->obj.value("@indent").toInt()+1);
+                obj_new.insert("@parameters", QJsonArray());
+                parent->insertItem(row+1,new EventListItem(parent,mc,mic, obj_new));
+
+                obj_new = QJsonObject(this->obj);
+                obj_new.insert("@code", 601);
+                obj_new.insert("@parameters", QJsonArray());
+                parent->insertItem(row+1,new EventListItem(parent,mc,mic, obj_new));
+            }
+
+            /*
+                if (p.at(2).toBool())
+                {
+                    obj_new = QJsonObject(this->obj);
+                    obj_new.insert("@code", 0);
+                    obj_new.insert("@indent", this->obj.value("@indent").toInt()+1);
+                    obj_new.insert("@parameters", QJsonArray());
+                    parent->insertItem(row+1,new EventListItem(parent,mc,mic, obj_new));
+
+                    obj_new = QJsonObject(this->obj);
+                    obj_new.insert("@code", 603);
+                    obj_new.insert("@parameters", QJsonArray());
+                    parent->insertItem(row+1,new EventListItem(parent,mc,mic, obj_new));
+                }
+                if (p.at(1).toBool())
+                {
+                    obj_new = QJsonObject(this->obj);
+                    obj_new.insert("@code", 0);
+                    obj_new.insert("@indent", this->obj.value("@indent").toInt()+1);
+                    obj_new.insert("@parameters", QJsonArray());
+                    parent->insertItem(row+1,new EventListItem(parent,mc,mic, obj_new));
+
+                    obj_new = QJsonObject(this->obj);
+                    obj_new.insert("@code", 602);
+                    obj_new.insert("@parameters", QJsonArray());
+                    parent->insertItem(row+1,new EventListItem(parent,mc,mic, obj_new));
+                }
+                */
+
+            //TODO
+        });
+    }
     else if (code == 302)
     {
         QJsonArray shop_params;
@@ -156,6 +289,7 @@ void EventListItem::edit_cell()
         dialog->show();
         QObject::connect(dialog, &ShopProcessingDialog::ok_clicked, [=](QJsonArray shop_params) {
             this->obj.insert("@parameters", shop_params.at(0).toArray());
+            this->update_text();
             for (int i = 1; dynamic_cast<EventListItem*>(parent->item(row+1)) != nullptr
                  && ((EventListItem*)parent->item(row+1))->get_obj().value("@code").toInt() == 605; i++) {
                 delete parent->takeItem(row+1);

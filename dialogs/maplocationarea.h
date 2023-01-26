@@ -40,7 +40,8 @@ public:
     Rectangle *rectangle = 0;
     void define_rectangle(int x, int y) { this->rectangle = new Rectangle;
                                           this->rectangle->setPos(32*x,32*y);
-                                          this->scene()->addItem(rectangle); }
+                                          this->scene()->addItem(rectangle);
+                                          this->centerOn(rectangle); }
 signals:
     void pressed(int,int);
 };

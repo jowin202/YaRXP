@@ -11,7 +11,9 @@ MapLocationArea::MapLocationArea(QWidget *parent) : QGraphicsView(parent)
 
 void MapLocationArea::mousePressEvent(QMouseEvent *e)
 {
+    QPointF pos = mapToScene(QPoint(e->pos().x(), e->pos().y()));
+
     if (rectangle != 0)
-        this->rectangle->setPos(e->pos().x()/32*32, e->pos().y()/32*32);
-    emit pressed(e->pos().x()/32, e->pos().y()/32);
+        this->rectangle->setPos(((int)pos.x()/32)*32, ((int)pos.y()/32)*32);
+    emit pressed(pos.x()/32, pos.y()/32);
 }

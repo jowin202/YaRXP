@@ -84,7 +84,7 @@ void TransferPlayerDialog::on_button_cancel_clicked()
 
 void TransferPlayerDialog::on_button_change_location_clicked()
 {
-    MapLocationFinderDialog *dialog = new MapLocationFinderDialog(db,id,x,y);
+    MapLocationFinderDialog *dialog = new MapLocationFinderDialog(db,id,x,y, true);
     dialog->show();
     connect(dialog, &MapLocationFinderDialog::ok_clicked, [=](int id, int x, int y){
        this->set_direct(id,x,y);

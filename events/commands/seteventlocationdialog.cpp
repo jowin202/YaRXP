@@ -18,7 +18,6 @@ SetEventLocationDialog::SetEventLocationDialog(RPGDB *db, RPGMapController *mc, 
     this->ui->widget_var_x->setVariableWidget(db);
     this->ui->widget_var_y->setVariableWidget(db);
 
-    qDebug() << parameters;
     QJsonObject events = mc->current_map()->object().value("@events").toObject();
 
     //THX to https://stackoverflow.com/questions/54427846/how-can-i-do-a-numeric-sort-of-a-qstringlist-in-qt-4-6-2-where-qcollator-is-not
@@ -112,7 +111,7 @@ void SetEventLocationDialog::on_button_cancel_clicked()
 
 void SetEventLocationDialog::on_button_change_location_clicked()
 {
-    MapLocationFinderDialog *dialog = new MapLocationFinderDialog(db,mc->get_current_map_id(),x,y);
+    MapLocationFinderDialog *dialog = new MapLocationFinderDialog(db,mc->get_current_map_id(),x,y, false);
     dialog->show();
     connect(dialog, &MapLocationFinderDialog::ok_clicked, [=](int id, int x, int y){
         Q_UNUSED(id);

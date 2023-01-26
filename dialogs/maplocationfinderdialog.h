@@ -19,7 +19,7 @@ class MapLocationFinderDialog : public QWidget
     Q_OBJECT
 
 public:
-    explicit MapLocationFinderDialog(RPGDB *db, int id, int x, int y, QWidget *parent = nullptr);
+    explicit MapLocationFinderDialog(RPGDB *db, int id, int x, int y, bool can_change_map, QWidget *parent = nullptr);
     ~MapLocationFinderDialog();
 
     void keyPressEvent(QKeyEvent *e) {
@@ -30,6 +30,7 @@ public:
     }
 
     void list_maps();
+    void display_map();
 
 
 signals:

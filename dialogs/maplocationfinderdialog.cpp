@@ -5,7 +5,7 @@
 #include "RXIO2/rpgmapinfocontroller.h"
 #include "RXIO2/rpgmapcontroller.h"
 
-MapLocationFinderDialog::MapLocationFinderDialog(RPGDB *db, int id, int x, int y, QWidget *parent) :
+MapLocationFinderDialog::MapLocationFinderDialog(RPGDB *db, int id, int x, int y, bool can_change_map, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::MapLocationFinderDialog)
 {
@@ -16,7 +16,15 @@ MapLocationFinderDialog::MapLocationFinderDialog(RPGDB *db, int id, int x, int y
     this->y = y;
     this->id = id;
 
-    this->list_maps();
+    if (can_change_map)
+    {
+        this->list_maps();
+    }
+    else
+    {
+        this->ui->treeWidget->setVisible(false);
+        this->display_map();
+    }
     this->ui->treeWidget->hideColumn(1);
     this->ui->treeWidget->hideColumn(2);
 
@@ -85,13 +93,8 @@ void MapLocationFinderDialog::list_maps()
     this->ui->treeWidget->sortItems(1,Qt::SortOrder::AscendingOrder);
 }
 
-
-
-void MapLocationFinderDialog::on_treeWidget_currentItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *previous)
+void MapLocationFinderDialog::display_map()
 {
-    Q_UNUSED(previous);
-    this->id = current->text(2).toInt();
-
     QJsonObject map = db->get_mapfile_by_id(id)->object();
     if (map.value("RXClass").toString() != "RPG::Map")
         return;
@@ -133,6 +136,16 @@ void MapLocationFinderDialog::on_treeWidget_currentItemChanged(QTreeWidgetItem *
     this->ui->graphicsView->scene()->addItem(background);
     this->ui->graphicsView->scene()->setSceneRect(0,0,32*width,32*height);
     this->ui->graphicsView->define_rectangle(x,y);
+}
+
+
+
+void MapLocationFinderDialog::on_treeWidget_currentItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *previous)
+{
+    Q_UNUSED(previous);
+    this->id = current->text(2).toInt();
+
+    this->display_map();
 }
 
 void MapLocationFinderDialog::on_button_ok_clicked()

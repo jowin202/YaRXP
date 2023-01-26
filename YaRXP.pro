@@ -76,6 +76,7 @@ SOURCES += \
     editors/troops/trooppageconditiondialog.cpp \
     editors/troops/trooppiclabel.cpp \
     editors/weapons/editweapons.cpp \
+    events/commands/battleprocessingdialog.cpp \
     events/commands/changeactorgraphicdialog.cpp \
     events/commands/changeactornamedialog.cpp \
     events/commands/changeequipmentdialog.cpp \
@@ -184,6 +185,7 @@ HEADERS += \
     editors/troops/trooppageconditiondialog.h \
     editors/troops/trooppiclabel.h \
     editors/weapons/editweapons.h \
+    events/commands/battleprocessingdialog.h \
     events/commands/changeactorgraphicdialog.h \
     events/commands/changeactornamedialog.h \
     events/commands/changeequipmentdialog.h \
@@ -268,6 +270,7 @@ FORMS += \
     editors/troops/troopeventpage.ui \
     editors/troops/trooppageconditiondialog.ui \
     editors/weapons/editweapons.ui \
+    events/commands/battleprocessingdialog.ui \
     events/commands/changeactorgraphicdialog.ui \
     events/commands/changeactornamedialog.ui \
     events/commands/changeequipmentdialog.ui \
