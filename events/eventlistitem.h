@@ -57,7 +57,7 @@ private:
     QStringList text_en_dis = { "Disable", "Enable" };
     QStringList text_blend { "Normal", "Add", "Sub" };
 
-    QStringList text_move_routes = { "Move Down", "Move Left", "Move Right", "Move Up",
+    QStringList text_move_routes = { "", "Move Down", "Move Left", "Move Right", "Move Up",
                                      "Move Lower Left", "Move Lower Right", "Move Upper Left", "Move Upper Right",
                                    "Move at Random", "Move toward Player", "Move away from Player", "1 Step Forward", "1 Step Backward",
                                    "Jump: ", "Wait: ",

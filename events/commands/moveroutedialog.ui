@@ -14,358 +14,111 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>YaRXP - Move Route</string>
+   <string>Set Move Route</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
-   <item row="0" column="1" rowspan="3">
-    <layout class="QVBoxLayout" name="verticalLayout">
-     <item>
-      <widget class="QPushButton" name="pushButton_3">
-       <property name="text">
-        <string>Move Down</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButton_4">
-       <property name="text">
-        <string>Move Left</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButton">
-       <property name="text">
-        <string>Move Right</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButton_5">
-       <property name="text">
-        <string>Move Up</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButton_6">
-       <property name="text">
-        <string>Move Lower Left</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButton_8">
-       <property name="text">
-        <string>Move Lower Right</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButton_7">
-       <property name="text">
-        <string>Move Upper Left</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButton_9">
-       <property name="text">
-        <string>Move Upper Right</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButton_11">
-       <property name="text">
-        <string>Move at Random</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButton_10">
-       <property name="text">
-        <string>Move toward Player</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButton_12">
-       <property name="text">
-        <string>Move away from Player</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButton_13">
-       <property name="text">
-        <string>1 Step Forward</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButton_14">
-       <property name="text">
-        <string>1 Step Backward</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButton_15">
-       <property name="text">
-        <string>Jump</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButton_16">
-       <property name="text">
-        <string>Wait</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <spacer name="verticalSpacer">
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>20</width>
-         <height>40</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-    </layout>
-   </item>
-   <item row="0" column="0">
-    <widget class="QComboBox" name="comboBox"/>
-   </item>
-   <item row="0" column="2" rowspan="3">
-    <layout class="QVBoxLayout" name="verticalLayout_3">
-     <item>
-      <widget class="QPushButton" name="pushButton_17">
-       <property name="text">
-        <string>Turn Down</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButton_18">
-       <property name="text">
-        <string>Turn Left</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButton_19">
-       <property name="text">
-        <string>Turn Right</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButton_20">
-       <property name="text">
-        <string>Turn Up</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButton_21">
-       <property name="text">
-        <string>Turn 90° Right</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButton_22">
-       <property name="text">
-        <string>Turn 90° Left</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButton_23">
-       <property name="text">
-        <string>Turn 180°</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButton_24">
-       <property name="text">
-        <string>Turn 90° Left or Right</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButton_25">
-       <property name="text">
-        <string>Turn at Random</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButton_26">
-       <property name="text">
-        <string>Turn toward Player</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButton_27">
-       <property name="text">
-        <string>Turn away from Player</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButton_28">
-       <property name="text">
-        <string>Switch ON</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButton_29">
-       <property name="text">
-        <string>Switch OFF</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButton_30">
-       <property name="text">
-        <string>Change Speed</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButton_31">
-       <property name="text">
-        <string>Change Freq</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <spacer name="verticalSpacer_2">
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>20</width>
-         <height>40</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-    </layout>
-   </item>
    <item row="0" column="3" rowspan="3">
     <layout class="QVBoxLayout" name="verticalLayout_4">
      <item>
-      <widget class="QPushButton" name="pushButton_32">
+      <widget class="QPushButton" name="button_move_animation_on">
        <property name="text">
         <string>Move Animation ON</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_33">
+      <widget class="QPushButton" name="button_move_animation_off">
        <property name="text">
         <string>Move Animation OFF</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_34">
+      <widget class="QPushButton" name="button_stop_animation_on">
        <property name="text">
         <string>Stop Animation ON</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_35">
+      <widget class="QPushButton" name="button_stop_animation_off">
        <property name="text">
         <string>Stop Animation OFF</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_36">
+      <widget class="QPushButton" name="button_direction_fix_on">
        <property name="text">
         <string>Direction Fix ON</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_37">
+      <widget class="QPushButton" name="button_direction_fix_off">
        <property name="text">
         <string>Direction Fix OFF</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_38">
+      <widget class="QPushButton" name="button_through_on">
        <property name="text">
         <string>Through ON</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_39">
+      <widget class="QPushButton" name="button_through_off">
        <property name="text">
         <string>Through OFF</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_40">
+      <widget class="QPushButton" name="button_always_on_top_on">
        <property name="text">
         <string>Always on Top ON</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_41">
+      <widget class="QPushButton" name="button_always_on_top_off">
        <property name="text">
         <string>Always on Top OFF</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_42">
+      <widget class="QPushButton" name="button_change_graphic">
        <property name="text">
         <string>Change Graphic</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_43">
+      <widget class="QPushButton" name="button_opacity">
        <property name="text">
         <string>Change Opacity</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_44">
+      <widget class="QPushButton" name="button_change_blending">
        <property name="text">
         <string>Change Blending</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_45">
+      <widget class="QPushButton" name="button_play_se">
        <property name="text">
         <string>Play SE</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_46">
+      <widget class="QPushButton" name="button_script">
        <property name="text">
         <string>Script</string>
        </property>
@@ -386,8 +139,252 @@
      </item>
     </layout>
    </item>
-   <item row="1" column="0">
-    <widget class="QListView" name="listView"/>
+   <item row="0" column="1" rowspan="3">
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QPushButton" name="button_move_down">
+       <property name="text">
+        <string>Move Down</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="button_move_left">
+       <property name="text">
+        <string>Move Left</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="button_move_right">
+       <property name="text">
+        <string>Move Right</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="button_move_up">
+       <property name="text">
+        <string>Move Up</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="button_move_lower_left">
+       <property name="text">
+        <string>Move Lower Left</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="button_move_lower_right">
+       <property name="text">
+        <string>Move Lower Right</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="button_move_upper_left">
+       <property name="text">
+        <string>Move Upper Left</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="button_move_upper_right">
+       <property name="text">
+        <string>Move Upper Right</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="button_move_random">
+       <property name="text">
+        <string>Move at Random</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="button_move_toward_player">
+       <property name="text">
+        <string>Move toward Player</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="button_move_away_from_player">
+       <property name="text">
+        <string>Move away from Player</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="button_one_step_forward">
+       <property name="text">
+        <string>1 Step Forward</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="button_one_step_backward">
+       <property name="text">
+        <string>1 Step Backward</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="button_jump">
+       <property name="text">
+        <string>Jump</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="button_wait">
+       <property name="text">
+        <string>Wait</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="verticalSpacer">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>40</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+   <item row="0" column="2" rowspan="3">
+    <layout class="QVBoxLayout" name="verticalLayout_3">
+     <item>
+      <widget class="QPushButton" name="button_turn_down">
+       <property name="text">
+        <string>Turn Down</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="button_turn_left">
+       <property name="text">
+        <string>Turn Left</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="button_turn_right">
+       <property name="text">
+        <string>Turn Right</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="button_turn_up">
+       <property name="text">
+        <string>Turn Up</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="button_turn_90_right">
+       <property name="text">
+        <string>Turn 90° Right</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="button_turn_90_left">
+       <property name="text">
+        <string>Turn 90° Left</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="button_turn_180">
+       <property name="text">
+        <string>Turn 180°</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="button_turn_90_left_or_right">
+       <property name="text">
+        <string>Turn 90° Left or Right</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="button_turn_random">
+       <property name="text">
+        <string>Turn at Random</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="button_turn_toward_player">
+       <property name="text">
+        <string>Turn toward Player</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="button_turn_away_from_player">
+       <property name="text">
+        <string>Turn away from Player</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="button_switch_on">
+       <property name="text">
+        <string>Switch ON</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="button_switch_off">
+       <property name="text">
+        <string>Switch OFF</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="button_change_speed">
+       <property name="text">
+        <string>Change Speed</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="button_change_freq">
+       <property name="text">
+        <string>Change Freq</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="verticalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>40</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+   <item row="0" column="0">
+    <widget class="QComboBox" name="combo_event"/>
    </item>
    <item row="2" column="0">
     <widget class="QGroupBox" name="groupBox">
@@ -396,14 +393,14 @@
      </property>
      <layout class="QGridLayout" name="gridLayout">
       <item row="0" column="0">
-       <widget class="QCheckBox" name="checkBox">
+       <widget class="QCheckBox" name="check_repeat">
         <property name="text">
          <string>Repeat Action</string>
         </property>
        </widget>
       </item>
       <item row="1" column="0">
-       <widget class="QCheckBox" name="checkBox_2">
+       <widget class="QCheckBox" name="check_skippable">
         <property name="text">
          <string>Ignore if can't move</string>
         </property>
@@ -411,19 +408,6 @@
       </item>
      </layout>
     </widget>
-   </item>
-   <item row="3" column="1">
-    <spacer name="verticalSpacer_4">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>40</height>
-      </size>
-     </property>
-    </spacer>
    </item>
    <item row="4" column="0" colspan="4">
     <layout class="QHBoxLayout" name="horizontalLayout">
@@ -455,6 +439,22 @@
       </widget>
      </item>
     </layout>
+   </item>
+   <item row="3" column="1">
+    <spacer name="verticalSpacer_4">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="1" column="0">
+    <widget class="QListWidget" name="listWidget"/>
    </item>
   </layout>
  </widget>

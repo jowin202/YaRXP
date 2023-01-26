@@ -59,6 +59,8 @@ public:
                                       int self_switch_ch, int switch1_id, int switch2_id, int variable_id, int variable_value);
     QJsonObject create_page_graphic(QString character_name, int character_hue, int blend_type, int direction, int opacity, int pattern, int tile_id);
 
+
+    QJsonObject create_move_command(int code);
     QJsonObject create_move_route(bool repeat, bool skippable);
 
     QJsonObject create_color_tone(int r, int g, int b, int gray, bool tone);

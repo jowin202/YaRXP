@@ -37,6 +37,7 @@
 #include "commands/transferplayerdialog.h"
 #include "commands/seteventlocationdialog.h"
 #include "commands/battleprocessingdialog.h"
+#include "commands/moveroutedialog.h"
 
 #include "dialogs/audiodialog.h"
 #include "dialogs/imagedialog.h"
@@ -130,7 +131,7 @@ void EventListItem::edit_cell()
             }
         });
     }
-    else if (code == 401 || code == 408 || code == 655 || code == 605) //Multiline text in the middle
+    else if (code == 509 || code == 401 || code == 408 || code == 655 || code == 605) //Multiline text in the middle
     {
         int row = parent->indexFromItem(this).row();
         for (int i = 1; row >= 0 && dynamic_cast<EventListItem*>(parent->item(row-i)) != nullptr; i++)
@@ -141,6 +142,11 @@ void EventListItem::edit_cell()
                 return;
             }
         }
+    }
+    else if (code == 209)
+    {
+        MoveRouteDialog *dialog = new MoveRouteDialog(db, mc, parameters);
+        dialog->show();
     }
     else if (code == 301)
     {
@@ -1068,9 +1074,9 @@ QString EventListItem::get_text(QJsonObject obj)
     {
         int code = parameters.at(0).toObject().value("@code").toInt();
         QJsonArray mr_params = parameters.at(0).toObject().value("@parameters").toArray();
-        if (code >= 1 && code <= 45)
+        if (code >= 0 && code <= 45)
         {
-                text += " :              : $>" + this->text_move_routes.at(code-1);
+                text += " :              : $>" + this->text_move_routes.at(code);
                 if (code == 14)
                     text += QString("%1, %2").arg(mr_params.at(0).toInt()).arg(mr_params.at(1).toInt());
                 else if (code == 15)

@@ -727,6 +727,17 @@ QJsonObject Factory::create_page_graphic(QString character_name, int character_h
     return obj;
 }
 
+QJsonObject Factory::create_move_command(int code)
+{
+    QJsonObject obj;
+
+    obj.insert("@code", code);
+    obj.insert("@parameters", QJsonArray());
+    obj.insert("RXClass", "RPG::MoveCommand");
+
+    return obj;
+}
+
 QJsonObject Factory::create_move_route(bool repeat, bool skippable)
 {
     QJsonObject obj;
