@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QKeyEvent>
+#include <QComboBox>
 
 
 namespace Ui {
@@ -27,6 +28,8 @@ public:
 
 
     void setText(QString text);
+
+    QComboBox *combo();
 
 
 signals:

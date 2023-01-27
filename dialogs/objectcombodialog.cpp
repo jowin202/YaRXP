@@ -19,6 +19,11 @@ void ObjectComboDialog::setText(QString text)
     this->ui->text->setText(text);
 }
 
+QComboBox *ObjectComboDialog::combo()
+{
+    return this->ui->comboBox;
+}
+
 
 void ObjectComboDialog::on_button_ok_clicked()
 {

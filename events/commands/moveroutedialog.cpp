@@ -7,6 +7,7 @@
 
 #include "spinspindialog.h"
 #include "dialogs/audiodialog.h"
+#include "dialogs/imagedialog.h"
 #include "dialogs/listdialog.h"
 
 MoveRouteDialog::MoveRouteDialog(RPGDB *db, RPGMapController *mc, QJsonArray parameters, QWidget *parent) :
@@ -557,7 +558,23 @@ void MoveRouteDialog::on_button_always_on_top_off_clicked()
 
 void MoveRouteDialog::on_button_change_graphic_clicked()
 {
-//41
+    /*
+    ImageDialog *dialog = new ImageDialog(db,ImageDialog::CHARACTERS, "");
+    dialog->show();
+    connect(dialog, &ImageDialog::ok_clicked, [=](QString name)
+    {
+        QJsonArray p;
+        p.append(name);
+
+        int row = this->ui->listWidget->currentRow();
+        QJsonObject obj = Factory().create_move_command(41);
+        obj.insert("@parameters", p);
+        this->list.insert(row, obj);
+        this->fill_list();
+        this->ui->listWidget->setCurrentRow(row+1);
+    });
+    */
+
 }
 
 
@@ -692,7 +709,6 @@ void MoveRouteDialog::on_listWidget_itemDoubleClicked(QListWidgetItem *item)
     }
     else if (code == 27)
     {
-        int row = this->ui->listWidget->currentRow();
         QJsonArray a = this->list.at(row).toObject().value("@parameters").toArray();
         ListDialog *dialog = new ListDialog(db,0);
         dialog->switch_dialog();
@@ -713,7 +729,6 @@ void MoveRouteDialog::on_listWidget_itemDoubleClicked(QListWidgetItem *item)
     }
     else if(code == 28)
     {
-        int row = this->ui->listWidget->currentRow();
         QJsonArray a = this->list.at(row).toObject().value("@parameters").toArray();
         ListDialog *dialog = new ListDialog(db,0);
         dialog->switch_dialog();
@@ -751,7 +766,6 @@ void MoveRouteDialog::on_listWidget_itemDoubleClicked(QListWidgetItem *item)
         int v = QInputDialog::getInt(this, "Change Opacity", "Opacity:", a.at(0).toInt(),0,255, 1, &ok);
         if (ok)
         {
-            int row = this->ui->listWidget->currentRow();
             QJsonObject obj = this->list.at(row).toObject();
             QJsonArray p;
             p.append(v);
@@ -768,12 +782,36 @@ void MoveRouteDialog::on_listWidget_itemDoubleClicked(QListWidgetItem *item)
     }
     else if (code == 44)
     {
-
+        QJsonArray a = this->list.at(row).toObject().value("@parameters").toArray();
+        AudioDialog *dialog = new AudioDialog(this->db, a.at(0).toObject().value("@name").toString(), a.at(0).toObject().value("@volume").toInt(), a.at(0).toObject().value("@pitch").toInt(), AudioDialog::SE);
+        dialog->show();
+        connect(dialog, &AudioDialog::ok_clicked, [=](QString name, int volume, int pitch){
+            QJsonObject obj = this->list.at(row).toObject();
+            QJsonArray p;
+            p.append(Factory().create_audiofile(name,volume,pitch));
+            obj.insert("@parameters", p);
+            this->list.removeAt(row);
+            this->list.insert(row, obj);
+            this->fill_list();
+            this->ui->listWidget->setCurrentRow(row);
+        });
     }
     else if (code == 45)
     {
-
+        QJsonArray a = this->list.at(row).toObject().value("@parameters").toArray();
+        bool ok;
+        QString script = QInputDialog::getText(this, "Script", "",QLineEdit::Normal, a.at(0).toString(), &ok);
+        if (ok)
+        {
+            QJsonObject obj = this->list.at(row).toObject();
+            QJsonArray p;
+            p.append(script);
+            obj.insert("@parameters", p);
+            this->list.removeAt(row);
+            this->list.insert(row, obj);
+            this->fill_list();
+            this->ui->listWidget->setCurrentRow(row);
+        }
     }
-    this->fill_list();
 }
 

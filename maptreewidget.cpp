@@ -163,7 +163,7 @@ void MapTreeWidget::show_map_properties_dialog()
     if (this->currentItem()->text(2).toInt() < 0) return;
     if (this->selectedItems().size() <= 0)
         return;
-    MapPropertiesDialog *dialog = new MapPropertiesDialog(this->mic, this->currentItem()->text(2).toInt(), 0);
+    MapPropertiesDialog *dialog = new MapPropertiesDialog(this->db, this->mic, this->currentItem()->text(2).toInt(), 0);
     connect(dialog, SIGNAL(ok_clicked()), this, SLOT(list_maps()));
     dialog->show();
 }
@@ -181,7 +181,7 @@ void MapTreeWidget::create_new_map()
     if (current > 0)
         parent = this->mic->get_parent(current);
 
-    MapPropertiesDialog *dialog = new MapPropertiesDialog(this->mic, id, 0);
+    MapPropertiesDialog *dialog = new MapPropertiesDialog(this->db,this->mic, id, 0);
     connect(dialog, &MapPropertiesDialog::ok_clicked, this, [=](){
         this->mic->set_parent(id, parent); //parent is set after creation of the map
         this->list_maps();

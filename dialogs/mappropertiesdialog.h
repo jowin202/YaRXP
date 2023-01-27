@@ -10,7 +10,10 @@
 
 #include <QJsonObject>
 #include <QJsonDocument>
+#include <QJsonArray>
+#include <QAction>
 
+class RPGDB;
 class RPGMapInfoController;
 
 namespace Ui {
@@ -22,7 +25,7 @@ class MapPropertiesDialog : public QWidget
     Q_OBJECT
 
 public:
-    explicit MapPropertiesDialog(RPGMapInfoController *mic, int id, QWidget *parent = nullptr);
+    explicit MapPropertiesDialog(RPGDB *db, RPGMapInfoController *mic, int id, QWidget *parent = nullptr);
     ~MapPropertiesDialog();
 
     void keyPressEvent(QKeyEvent *event)
@@ -38,8 +41,7 @@ public:
     { item->setFlags(item->flags() & ~Qt::ItemIsEditable); }
 
 
-    void set_encounter_list_value(int row, int troop);
-
+    void fill_encounter_list();
 
 
 private slots:
@@ -48,10 +50,8 @@ private slots:
     void on_button_bgm_clicked();
     void on_button_bgs_clicked();
 
-    void update_troop(int val);
 
 
-    void on_table_encounters_itemDoubleClicked(QTableWidgetItem *item);
 
     void on_button_add_clicked();
 
@@ -69,6 +69,10 @@ private:
     bool create_new_map = false;
     RPGMapInfoController *mic;
     QJsonDocument *map;
+    RPGDB *db;
+
+    QJsonArray encounter_list;
+    QAction action_delete;
 
     int bgm_volume;
     int bgm_pitch;

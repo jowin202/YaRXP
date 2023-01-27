@@ -201,33 +201,6 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="0" colspan="2">
-       <widget class="QTableWidget" name="table_encounters">
-        <column>
-         <property name="text">
-          <string>Troops</string>
-         </property>
-        </column>
-        <column>
-         <property name="text">
-          <string>troop_id</string>
-         </property>
-        </column>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="QSpinBox" name="spin_steps">
-        <property name="minimum">
-         <number>1</number>
-        </property>
-        <property name="maximum">
-         <number>999</number>
-        </property>
-        <property name="value">
-         <number>30</number>
-        </property>
-       </widget>
-      </item>
       <item row="1" column="0" colspan="2">
        <layout class="QHBoxLayout" name="horizontalLayout_3">
         <item>
@@ -259,6 +232,22 @@
         </item>
        </layout>
       </item>
+      <item row="2" column="1">
+       <widget class="QSpinBox" name="spin_steps">
+        <property name="minimum">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <number>999</number>
+        </property>
+        <property name="value">
+         <number>30</number>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0" colspan="2">
+       <widget class="QListWidget" name="widget_encounters"/>
+      </item>
      </layout>
     </widget>
    </item>
@@ -276,7 +265,6 @@
   <tabstop>check_auto_change_bgs</tabstop>
   <tabstop>line_bgs</tabstop>
   <tabstop>button_bgs</tabstop>
-  <tabstop>table_encounters</tabstop>
   <tabstop>button_add</tabstop>
   <tabstop>button_del</tabstop>
   <tabstop>spin_steps</tabstop>

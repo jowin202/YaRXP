@@ -12,17 +12,23 @@
 #include "RXIO2/rpgmapcontroller.h"
 
 
-MapPropertiesDialog::MapPropertiesDialog(RPGMapInfoController *mic, int id, QWidget *parent) :
+MapPropertiesDialog::MapPropertiesDialog(RPGDB *db, RPGMapInfoController *mic, int id, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::MapPropertiesDialog)
 {
     ui->setupUi(this);
     this->mic = mic;
+    this->db = db;
     this->id = id;
 
-    this->ui->line_id->setText(QString::number(id));
 
+    this->ui->line_id->setText(QString::number(id));
     this->mic->get_db()->fill_combo(this->ui->combo_tileset, RPGDB::TILESETS, true, 3);
+
+    this->action_delete.setShortcut(Qt::Key_Delete);
+    this->action_delete.setShortcutContext(Qt::WidgetShortcut);
+    this->ui->widget_encounters->addAction(&this->action_delete);
+    connect(&this->action_delete, SIGNAL(triggered()), this, SLOT(on_button_del_clicked()));
 
 
 
@@ -45,13 +51,8 @@ MapPropertiesDialog::MapPropertiesDialog(RPGMapInfoController *mic, int id, QWid
             this->ui->spin_steps->setValue(map->object().value("@encounter_step").toInt());
             this->ui->combo_tileset->setCurrentIndex(map->object().value("@tileset_id").toInt()-1);
 
-            this->ui->table_encounters->setRowCount(map->object().value("@encounter_list").toArray().count());
-            for (int i = 0; i < map->object().value("@encounter_list").toArray().count(); i++)
-            {
-                int id = map->object().value("@encounter_list").toArray().at(i).toInt();
-                QString name = mic->get_db()->get_object_name(RPGDB::TROOPS, id);
-                this->ui->table_encounters->setItem(i,0, new QTableWidgetItem(QString("%1: %2").arg(id,3,10,QChar('0')).arg(name)));
-            }
+            this->encounter_list = map->object().value("@encounter_list").toArray();
+            this->fill_encounter_list();
 
             this->ui->spin_x->setValue(map->object().value("@width").toInt());
             this->ui->spin_y->setValue(map->object().value("@height").toInt());
@@ -70,8 +71,6 @@ MapPropertiesDialog::MapPropertiesDialog(RPGMapInfoController *mic, int id, QWid
         //dialog should have the default values
     }
 
-    this->ui->table_encounters->hideColumn(1);
-    this->ui->table_encounters->resizeColumnsToContents();
 }
 
 MapPropertiesDialog::~MapPropertiesDialog()
@@ -79,20 +78,14 @@ MapPropertiesDialog::~MapPropertiesDialog()
     delete ui;
 }
 
-void MapPropertiesDialog::set_encounter_list_value(int row, int troop)
+void MapPropertiesDialog::fill_encounter_list()
 {
-    Q_UNUSED(troop);
-    Q_UNUSED(row);
-    /*
-    QTableWidgetItem *item;
-    this->ui->table_encounters->setItem(row,0, item = new QTableWidgetItem(
-                                            system->datasource.get_obj_name_by_id(troop,
-                                                                                  RPGSystem::TROOPS, true, 3, false)));
-    this->set_readonly(item);
-    this->ui->table_encounters->setItem(row,1, item = new QTableWidgetItem(QString::number(troop)));
-    this->set_readonly(item);
-    */
+    this->ui->widget_encounters->clear();
+    for (int i = 0; i < this->encounter_list.count(); i++)
+        this->ui->widget_encounters->addItem(QString("%1: %2").arg(this->encounter_list.at(i).toInt(),3,10,QChar('0'))
+                                             .arg(db->get_object_name(RPGDB::TROOPS,this->encounter_list.at(i).toInt())));
 }
+
 
 
 
@@ -117,6 +110,7 @@ void MapPropertiesDialog::on_button_ok_clicked()
     mc.setDB(mic->get_db());
     mc.setMap(id, false);
     mc.set_jsonvalue("@encounter_step", this->ui->spin_steps->value());
+    mc.set_jsonvalue("@encounter_list", this->encounter_list);
     mc.set_jsonvalue("@autoplay_bgm", this->ui->check_auto_change_bgm->isChecked());
     mc.set_jsonvalue("@autoplay_bgs", this->ui->check_auto_change_bgs->isChecked());
     mc.set_jsonvalue("@bgm", Factory().create_audiofile(this->ui->line_bgm->text(), this->bgm_volume, this->bgm_pitch));
@@ -158,55 +152,21 @@ void MapPropertiesDialog::on_button_bgs_clicked()
 
 
 
-void MapPropertiesDialog::update_troop(int val)
-{
-    if (this->last_edited_troop_row >= 0)
-    {
-        this->set_encounter_list_value(this->last_edited_troop_row, val);
-    }
-    else
-    {
-        int rows = this->ui->table_encounters->rowCount();
-        this->ui->table_encounters->setRowCount(rows+1);
-
-        this->set_encounter_list_value(rows, val);
-    }
-
-    this->ui->table_encounters->resizeColumnsToContents();
-}
-
-
-void MapPropertiesDialog::on_table_encounters_itemDoubleClicked(QTableWidgetItem *item)
-{
-    Q_UNUSED(item);
-    /*
-    this->last_edited_troop_row = item->row();
-    int current = this->ui->table_encounters->item(item->row(), 1)->text().toInt();
-
-    ObjectComboDialog *dialog = new ObjectComboDialog;
-    dialog->setText("Troop:");
-    dialog->fillCombo(system, RPGSystem::TROOPS, true, 3, current, false);
-    connect(dialog, SIGNAL(ok_clicked(int)), this, SLOT(update_troop(int)));
-    dialog->show();
-    */
-}
-
-
 void MapPropertiesDialog::on_button_add_clicked()
 {
-    /*
-    this->last_edited_troop_row = -1;
-    int current = -1;
-
     ObjectComboDialog *dialog = new ObjectComboDialog;
     dialog->setText("Troop:");
-    dialog->fillCombo(system, RPGSystem::TROOPS, true, 3, current, false);
-    connect(dialog, SIGNAL(ok_clicked(int)), this, SLOT(update_troop(int)));
+    db->fill_combo(dialog->combo(), RPGDB::TROOPS, true, 3);
+    connect(dialog, &ObjectComboDialog::ok_clicked, [=](int id)
+    {
+        this->encounter_list.append(id);
+        this->fill_encounter_list();
+    });
     dialog->show();
-    */
 }
 
 void MapPropertiesDialog::on_button_del_clicked()
 {
-    this->ui->table_encounters->removeRow(this->ui->table_encounters->currentRow());
+    this->encounter_list.removeAt(this->ui->widget_encounters->currentRow());
+    this->fill_encounter_list();
 }
