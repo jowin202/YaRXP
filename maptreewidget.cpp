@@ -85,6 +85,7 @@ void MapTreeWidget::restore_order_and_parent(QTreeWidgetItem *item, int *current
 
 void MapTreeWidget::list_maps()
 {
+    int scroll = this->verticalScrollBar()->value();
     int last_id = -1;
     if (this->currentItem() != 0)
         last_id = this->currentItem()->text(2).toInt();
@@ -144,6 +145,8 @@ void MapTreeWidget::list_maps()
     //delete items
     for (int i = 0; i < items_to_delete.count(); i++)
         delete items_to_delete.at(i); //items cant be deleted while chosen
+
+    this->verticalScrollBar()->setValue(scroll);
 }
 
 void MapTreeWidget::clicked_at_item(QTreeWidgetItem *current_item)

@@ -8,6 +8,8 @@
 #include <QMessageBox>
 #include <QErrorMessage>
 
+#include <QScrollBar>
+
 #include <QJsonArray>
 #include <QJsonValue>
 #include <QJsonDocument>

@@ -157,6 +157,18 @@ void ImageChooserDialog::update_image()
 
 void ImageChooserDialog::on_button_ok_clicked()
 {
+    if (this->ui->list->currentRow() == 0)
+    {
+        this->tile_id = 0;
+        this->character_name = "";
+    }
+    else if (this->ui->list->currentRow() == 1)
+    {
+        this->character_name = "";
+    }
+    else if (this->ui->list->currentRow() > 1)
+        this->tile_id = 0;
+
     QString name = QString(character_name);
     name.chop(4);
     emit ok_clicked(name,
