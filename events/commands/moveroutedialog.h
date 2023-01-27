@@ -93,6 +93,8 @@ private slots:
 
     void do_delete();
 
+    void on_listWidget_itemDoubleClicked(QListWidgetItem *item);
+
 private:
     Ui::MoveRouteDialog *ui;
     RPGDB *db;

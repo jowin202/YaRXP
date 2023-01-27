@@ -563,7 +563,6 @@ void MoveRouteDialog::on_button_change_graphic_clicked()
 
 void MoveRouteDialog::on_button_opacity_clicked()
 {
-
     bool ok;
     int v = QInputDialog::getInt(this, "Change Opacity", "Opacity:", 255,0,255, 1, &ok);
     if (ok)
@@ -651,5 +650,130 @@ void MoveRouteDialog::do_delete()
         this->fill_list();
         this->ui->listWidget->setCurrentRow(row);
     }
+}
+
+
+void MoveRouteDialog::on_listWidget_itemDoubleClicked(QListWidgetItem *item)
+{
+    int row = this->ui->listWidget->indexFromItem(item).row();
+    int code = this->list.at(row).toObject().value("@code").toInt();
+
+    if (code == 14)
+    {
+        QJsonArray a = this->list.at(row).toObject().value("@parameters").toArray();
+        SpinSpinDialog *dialog = new SpinSpinDialog(14,a);
+        dialog->show();
+        connect(dialog, &SpinSpinDialog::ok_clicked, [=](QJsonArray p)
+        {
+            QJsonObject obj = this->list.at(row).toObject();
+            obj.insert("@parameters", p);
+            this->list.removeAt(row);
+            this->list.insert(row, obj);
+            this->fill_list();
+            this->ui->listWidget->setCurrentRow(row);
+        });
+    }
+    else if (code == 15)
+    {
+        QJsonArray a = this->list.at(row).toObject().value("@parameters").toArray();
+        bool ok;
+        int v = QInputDialog::getInt(this, "Wait", "Frames:", a.at(0).toInt(),0,999, 1, &ok);
+        if (ok)
+        {
+            QJsonArray p;
+            p.append(v);
+            QJsonObject obj = this->list.at(row).toObject();
+            obj.insert("@parameters", p);
+            this->list.removeAt(row);
+            this->list.insert(row, obj);
+            this->fill_list();
+            this->ui->listWidget->setCurrentRow(row);
+        }
+    }
+    else if (code == 27)
+    {
+        int row = this->ui->listWidget->currentRow();
+        QJsonArray a = this->list.at(row).toObject().value("@parameters").toArray();
+        ListDialog *dialog = new ListDialog(db,0);
+        dialog->switch_dialog();
+        dialog->setValue( a.at(0).toInt()-1 );
+        dialog->show();
+        connect(dialog, &ListDialog::ok_clicked, [=](int v)
+        {
+            QJsonArray a;
+            a.append(v+1);
+
+            QJsonObject obj = this->list.at(row).toObject();
+            obj.insert("@parameters", a);
+            this->list.removeAt(row);
+            this->list.insert(row, obj);
+            this->fill_list();
+            this->ui->listWidget->setCurrentRow(row);
+        });
+    }
+    else if(code == 28)
+    {
+        int row = this->ui->listWidget->currentRow();
+        QJsonArray a = this->list.at(row).toObject().value("@parameters").toArray();
+        ListDialog *dialog = new ListDialog(db,0);
+        dialog->switch_dialog();
+        dialog->setValue( a.at(0).toInt()-1 );
+        dialog->show();
+        connect(dialog, &ListDialog::ok_clicked, [=](int v)
+        {
+            QJsonArray a;
+            a.append(v+1);
+
+            QJsonObject obj = this->list.at(row).toObject();
+            obj.insert("@parameters", a);
+            this->list.removeAt(row);
+            this->list.insert(row, obj);
+            this->fill_list();
+            this->ui->listWidget->setCurrentRow(row);
+        });
+    }
+    else if (code == 29)
+    {
+
+    }
+    else if (code == 30)
+    {
+
+    }
+    else if (code == 41)
+    {
+
+    }
+    else if (code == 42)
+    {
+        QJsonArray a = this->list.at(row).toObject().value("@parameters").toArray();
+        bool ok;
+        int v = QInputDialog::getInt(this, "Change Opacity", "Opacity:", a.at(0).toInt(),0,255, 1, &ok);
+        if (ok)
+        {
+            int row = this->ui->listWidget->currentRow();
+            QJsonObject obj = this->list.at(row).toObject();
+            QJsonArray p;
+            p.append(v);
+            obj.insert("@parameters", p);
+            this->list.removeAt(row);
+            this->list.insert(row, obj);
+            this->fill_list();
+            this->ui->listWidget->setCurrentRow(row);
+        }
+    }
+    else if (code == 43)
+    {
+
+    }
+    else if (code == 44)
+    {
+
+    }
+    else if (code == 45)
+    {
+
+    }
+    this->fill_list();
 }
 
