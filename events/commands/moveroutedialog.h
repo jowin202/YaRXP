@@ -6,6 +6,8 @@
 #include <QKeyEvent>
 #include <QInputDialog>
 
+#include <QAction>
+
 class RPGDB;
 class RPGMapController;
 
@@ -22,6 +24,16 @@ public:
     ~MoveRouteDialog();
     void fill_list();
 
+
+    void keyPressEvent(QKeyEvent *e) {
+        if(e->key() == Qt::Key_Escape)
+            this->on_button_cancel_clicked();
+        else if (e->key() == Qt::Key_Return || e->key() == Qt::Key_Enter)
+            this->on_button_ok_clicked();
+    }
+
+signals:
+    void ok_clicked(QJsonArray);
 
 private slots:
     void on_button_move_down_clicked();
@@ -72,11 +84,19 @@ private slots:
     void on_button_play_se_clicked();
     void on_button_script_clicked();
 
+
+    void on_button_cancel_clicked();
+
+    void on_button_ok_clicked();
+
+    void do_delete();
+
 private:
     Ui::MoveRouteDialog *ui;
     RPGDB *db;
     QJsonArray list;
 
+    QAction action_delete;
 
     QStringList text_blend { "Normal", "Add", "Sub" };
     QStringList text_move_routes = { "", "Move Down", "Move Left", "Move Right", "Move Up",

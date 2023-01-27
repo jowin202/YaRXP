@@ -145,8 +145,32 @@ void EventListItem::edit_cell()
     }
     else if (code == 209)
     {
+        int row = parent->indexFromItem(this).row();
         MoveRouteDialog *dialog = new MoveRouteDialog(db, mc, parameters);
         dialog->show();
+        QObject::connect(dialog, &MoveRouteDialog::ok_clicked, [=](QJsonArray p){
+            this->obj.insert("@parameters", p);
+            this->update_text();
+
+            //delete all 509
+            for (int i = 1; dynamic_cast<EventListItem*>(parent->item(row+1)) != nullptr
+                 && ((EventListItem*)parent->item(row+1))->get_obj().value("@code").toInt() == 509; i++) {
+                delete parent->takeItem(row+1);
+            }
+
+            //create new
+            //-2 because ignoring the last one (empty)
+            for (int i = p.at(1).toObject().value("@list").toArray().count()-2; i >= 0; i--)
+            {
+                QJsonObject obj = QJsonObject(this->obj);
+                obj.insert("@code", 509);
+                QJsonArray a;
+                a.append(p.at(1).toObject().value("@list").toArray().at(i).toObject());
+                obj.insert("@parameters", a);
+                parent->insertItem(row+1,new EventListItem(parent,mc,mic,obj));
+            }
+
+        });
     }
     else if (code == 301)
     {

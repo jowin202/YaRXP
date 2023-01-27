@@ -21,6 +21,15 @@ MoveRouteDialog::MoveRouteDialog(RPGDB *db, RPGMapController *mc, QJsonArray par
     this->ui->listWidget->setDragDropMode(QAbstractItemView::InternalMove);
 
 
+
+    //this->action_delete.setText("Delete");
+    this->action_delete.setShortcut(Qt::Key_Delete);
+    this->action_delete.setShortcutContext(Qt::WidgetShortcut);
+    this->ui->listWidget->addAction(&this->action_delete);
+    connect(&this->action_delete, SIGNAL(triggered()), this, SLOT(do_delete()));
+
+
+
     QJsonObject events = mc->current_map()->object().value("@events").toObject();
 
     //THX to https://stackoverflow.com/questions/54427846/how-can-i-do-a-numeric-sort-of-a-qstringlist-in-qt-4-6-2-where-qcollator-is-not
@@ -49,6 +58,12 @@ MoveRouteDialog::MoveRouteDialog(RPGDB *db, RPGMapController *mc, QJsonArray par
     this->ui->check_repeat->setChecked(parameters.at(1).toObject().value("@repeat").toBool());
 
     this->list = parameters.at(1).toObject().value("@list").toArray();
+    //remove the last element here
+    for (int i = this->list.count()-1; i >= 0; i--)
+    {
+        if (this->list.at(i).toObject().value("@code").toInt() == 0)
+            this->list.removeAt(i);
+    }
     this->fill_list();
     this->ui->listWidget->setCurrentRow(this->ui->listWidget->count()-1);
 }
@@ -83,8 +98,8 @@ void MoveRouteDialog::fill_list()
         else if (code == 45)
             text += p.at(0).toString();
         this->ui->listWidget->addItem("@>" + this->text_move_routes.at(code) + text);
-
     }
+    this->ui->listWidget->addItem("@>"); //add last element manually;
 }
 
 void MoveRouteDialog::on_button_move_down_clicked()
@@ -532,5 +547,37 @@ void MoveRouteDialog::on_button_play_se_clicked()
 void MoveRouteDialog::on_button_script_clicked()
 {
     //45
+}
+
+
+
+
+void MoveRouteDialog::on_button_cancel_clicked()
+{
+    this->close();
+}
+
+
+void MoveRouteDialog::on_button_ok_clicked()
+{
+    this->list.append(Factory().create_move_command(0)); //append a "neutral" command at the end (RPGMaker compatible)
+    QJsonArray parameters;
+    parameters.append(this->ui->combo_event->currentData().toInt());
+    QJsonObject mvrt = Factory().create_move_route(this->ui->check_repeat->isChecked(), this->ui->check_skippable->isChecked());
+    mvrt.insert("@list", this->list);
+    parameters.append(mvrt);
+    emit ok_clicked(parameters);
+    this->close();
+}
+
+void MoveRouteDialog::do_delete()
+{
+    int row = this->ui->listWidget->currentRow();
+    if (row != this->ui->listWidget->count()-1) //cant delete the last one
+    {
+        this->list.removeAt(row);
+        this->fill_list();
+        this->ui->listWidget->setCurrentRow(row);
+    }
 }
 
