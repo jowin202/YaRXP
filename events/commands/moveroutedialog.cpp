@@ -55,28 +55,36 @@ MoveRouteDialog::MoveRouteDialog(RPGDB *db, RPGMapController *mc, QJsonArray par
 
 
 
-    QJsonObject events = mc->current_map()->object().value("@events").toObject();
 
-    //THX to https://stackoverflow.com/questions/54427846/how-can-i-do-a-numeric-sort-of-a-qstringlist-in-qt-4-6-2-where-qcollator-is-not
-    QStringList keys = events.keys();
-    keys.remove(keys.indexOf("RXClass"));
-
-    QMap<int, QString> m;
-    for (auto s : keys) m[s.toInt()] = s;
-    keys = QStringList(m.values());
-
-    this->ui->combo_event->addItem("Player", -1);
-    this->ui->combo_event->addItem("This event", 0);
-    if (parameters.at(0).toInt() == -1)
-        this->ui->combo_event->setCurrentIndex(0);
-    if (parameters.at(0).toInt() == 0)
-        this->ui->combo_event->setCurrentIndex(1);
-
-    for (QString key : keys)
+    if (parameters.at(0).toInt() == -404) //from event page. no event needed
     {
-        this->ui->combo_event->addItem(QString("%1: ").arg(key.toInt(), 3,10,QChar('0')) + events.value(key).toObject().value("@name").toString(), key.toInt());
-        if (parameters.at(0).toInt() == key.toInt())
-            this->ui->combo_event->setCurrentIndex(this->ui->combo_event->count()-1);
+        this->ui->combo_event->setEnabled(false);
+    }
+    else
+    {
+        QJsonObject events = mc->current_map()->object().value("@events").toObject();
+
+        //THX to https://stackoverflow.com/questions/54427846/how-can-i-do-a-numeric-sort-of-a-qstringlist-in-qt-4-6-2-where-qcollator-is-not
+        QStringList keys = events.keys();
+        keys.remove(keys.indexOf("RXClass"));
+
+        QMap<int, QString> m;
+        for (auto s : keys) m[s.toInt()] = s;
+        keys = QStringList(m.values());
+
+        this->ui->combo_event->addItem("Player", -1);
+        this->ui->combo_event->addItem("This event", 0);
+        if (parameters.at(0).toInt() == -1)
+            this->ui->combo_event->setCurrentIndex(0);
+        if (parameters.at(0).toInt() == 0)
+            this->ui->combo_event->setCurrentIndex(1);
+
+        for (QString key : keys)
+        {
+            this->ui->combo_event->addItem(QString("%1: ").arg(key.toInt(), 3,10,QChar('0')) + events.value(key).toObject().value("@name").toString(), key.toInt());
+            if (parameters.at(0).toInt() == key.toInt())
+                this->ui->combo_event->setCurrentIndex(this->ui->combo_event->count()-1);
+        }
     }
 
     this->ui->check_skippable->setChecked(parameters.at(1).toObject().value("@skippable").toBool());

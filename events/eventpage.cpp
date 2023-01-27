@@ -6,6 +6,7 @@
 #include "RXIO2/rpgmapcontroller.h"
 #include "RXIO2/rpgeventlistcontroller.h"
 #include "dialogs/imagedialog.h"
+#include "events/commands/moveroutedialog.h"
 
 EventPage::EventPage(QJsonObject page, RPGMapController *mc, QWidget *parent) :
     QWidget(parent),
@@ -15,7 +16,6 @@ EventPage::EventPage(QJsonObject page, RPGMapController *mc, QWidget *parent) :
 
     this->mc = mc;
     this->db = mc->getDB();
-    this->page = page;
 
 
     this->ui->check_switch1->setChecked(page.value("@condition").toObject().value("@switch1_valid").toBool());
@@ -83,6 +83,8 @@ EventPage::EventPage(QJsonObject page, RPGMapController *mc, QWidget *parent) :
         this->ui->radio_parallel_process->setChecked(true);
     }
 
+    this->move_route = page.value("@move_route").toObject();
+
     this->evc = new RPGEventListController(this->mc, this->ui->eventList);
     this->evc->fill_list(page.value("@list").toArray());
 }
@@ -134,19 +136,33 @@ QJsonObject EventPage::getPage()
                                                 this->ui->spin_variable->value()),
                 this->evc->get_list(),
                 this->ui->label_graphic->get_data_from_page(),
-                page.value("@move_route").toObject());
-}
-
-
-void EventPage::move_type_changed(int val)
-{
-    this->ui->button_move_route->setEnabled(val == 3); //only for move type == custom
+                this->move_route);
 }
 
 
 void EventPage::on_button_add_command_clicked()
 {
-    EventCommandDialog *evcommdia = new EventCommandDialog;
+    EventCommandDialog *evcommdia = new EventCommandDialog(this->ui->eventList,mc,0,this->ui->eventList->currentRow());
     evcommdia->show();
+}
+
+
+void EventPage::on_combo_move_type_currentIndexChanged(int index)
+{
+    this->ui->button_move_route->setEnabled(index == 3);
+}
+
+
+void EventPage::on_button_move_route_clicked()
+{
+    QJsonArray p;
+    p.append(-404); //see move route dialog
+    p.append(this->move_route);
+    MoveRouteDialog *dialog = new MoveRouteDialog(db,mc,p);
+    dialog->show();
+    connect(dialog, &MoveRouteDialog::ok_clicked, [=](QJsonArray p)
+    {
+       this->move_route = p.at(1).toObject();
+    });
 }
 

@@ -1,11 +1,20 @@
 #include "eventcommanddialog.h"
 #include "ui_eventcommanddialog.h"
 
-EventCommandDialog::EventCommandDialog(QWidget *parent) :
+#include "events/eventlistitem.h"
+#include "RXIO2/rpgmapcontroller.h"
+#include "RXIO2/rpgmapinfocontroller.h"
+#include "RXIO2/factory.h"
+
+EventCommandDialog::EventCommandDialog(QListWidget *list, RPGMapController *mc, RPGMapInfoController *mic, int current, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::EventCommandDialog)
 {
     ui->setupUi(this);
+    this->list = list;
+    this->mc = mc;
+    this->mic = mic;
+    this->current = current;
 }
 
 EventCommandDialog::~EventCommandDialog()
@@ -75,7 +84,9 @@ void EventCommandDialog::on_button_break_loop_clicked()
 
 void EventCommandDialog::on_button_event_processing_clicked()
 {
-
+    int indent = (dynamic_cast<EventListItem*>(list->item(current)) == nullptr ? 0 : ((EventListItem*)list->item(current))->get_obj().value("@indent").toInt());
+    list->insertItem(current, new EventListItem(list,mc,mic,Factory().create_event_command(115,indent,QJsonArray())));
+    this->close();
 }
 
 

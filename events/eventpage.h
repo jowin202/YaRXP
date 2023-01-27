@@ -29,14 +29,17 @@ public:
     QJsonObject getPage();
 
 private slots:
-    void move_type_changed(int val);
     void on_button_add_command_clicked();
+
+    void on_combo_move_type_currentIndexChanged(int index);
+
+    void on_button_move_route_clicked();
 
 private:
     Ui::EventPage *ui;
     RPGMapController *mc;
     RPGDB *db;
-    QJsonObject page;
+    QJsonObject move_route;
     RPGEventListController *evc;
 };
 

@@ -17,7 +17,7 @@ class RPGMapInfoController;
 class EventListItem : public QListWidgetItem
 {
 public:
-    EventListItem(QListWidget *item, RPGMapController *mc, RPGMapInfoController *mic, QJsonObject obj);
+    EventListItem(QListWidget *parent, RPGMapController *mc, RPGMapInfoController *mic, QJsonObject obj);
     QString get_text(QJsonObject obj);
     void setColor(int code);
 
