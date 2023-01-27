@@ -43,15 +43,6 @@ EventPage::EventPage(QJsonObject page, RPGMapController *mc, QWidget *parent) :
         this->ui->combo_self_switch->setCurrentIndex(3);
 
 
-    /*
-    obj.insert("@blend_type", blend_type);
-    obj.insert("@character_hue", character_hue);
-    obj.insert("@character_name", character_name);
-    obj.insert("@direction", direction);
-    obj.insert("@opacity", opacity);
-    obj.insert("@pattern", pattern);
-    obj.insert("@tile_id", tile_id);
-    */
     this->ui->label_graphic->set_data_from_page(this->db,
                                                 page.value("@graphic").toObject().value("@character_name").toString(),
                                                 page.value("@graphic").toObject().value("@character_hue").toInt(),
@@ -107,9 +98,6 @@ EventPage::EventPage(RPGMapController *mc, QWidget *parent):
     this->ui->widget_switch1->setSwitchWidget(db);
     this->ui->widget_switch2->setSwitchWidget(db);
     this->ui->widget_variable->setVariableWidget(db);
-
-    //TODO init list
-    //TODO init graphic
 }
 
 EventPage::~EventPage()
@@ -145,7 +133,7 @@ QJsonObject EventPage::getPage()
                                                 this->ui->widget_variable->getValue(),
                                                 this->ui->spin_variable->value()),
                 this->evc->get_list(),
-                page.value("@graphic").toObject(),
+                this->ui->label_graphic->get_data_from_page(),
                 page.value("@move_route").toObject());
 }
 

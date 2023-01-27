@@ -1,4 +1,5 @@
 #include "imagedialog.h"
+#include "imagechooserdialog.h"
 #include "imagedisplaywidget.h"
 
 #include "RXIO2/fileopener.h"
@@ -104,14 +105,41 @@ void ImageDisplayWidget::set_data_from_page(RPGDB *db, QString character_name, i
     this->update_image();
 }
 
+QJsonObject ImageDisplayWidget::get_data_from_page()
+{
+    return Factory().create_page_graphic(this->current_file, this->hue, this->blend_type, this->direction, this->opacity, this->pattern, this->tile_id);
+}
+
 void ImageDisplayWidget::mouseDoubleClickEvent(QMouseEvent *ev)
 {
     if (ev->button() == Qt::RightButton)
         return;
 
-    ImageDialog *dialog = new ImageDialog(db, mode, current_file);
-    dialog->set_hue(this->hue);
-    connect(dialog, SIGNAL(ok_clicked_with_hue(int)), this, SLOT(set_hue(int)));
-    connect(dialog, SIGNAL(ok_clicked(QString)), this, SLOT(set_current(QString)));
-    dialog->show();
+    if (mode == ImageDialog::EVENTPAGE)
+    {
+        ImageChooserDialog *dialog = new ImageChooserDialog(db, this->current_file, this->hue,
+                                                            this->pattern, this->direction,
+                                                            this->opacity, this->blend_type, this->tile_id,
+                                                            this->tileset_id);
+        connect(dialog, &ImageChooserDialog::ok_clicked,[=](QString current_file, int hue, int pattern, int direction, int opacity, int blend_type, int tile_id){
+            this->current_file = current_file;
+            this->hue = hue;
+            this->pattern = pattern;
+            this->direction = direction;
+            this->opacity = opacity;
+            this->blend_type = blend_type;
+            this->tile_id = tile_id;
+
+            this->update_image();
+        });
+        dialog->show();
+    }
+    else
+    {
+        ImageDialog *dialog = new ImageDialog(db, mode, current_file);
+        dialog->set_hue(this->hue);
+        connect(dialog, SIGNAL(ok_clicked_with_hue(int)), this, SLOT(set_hue(int)));
+        connect(dialog, SIGNAL(ok_clicked(QString)), this, SLOT(set_current(QString)));
+        dialog->show();
+    }
 }

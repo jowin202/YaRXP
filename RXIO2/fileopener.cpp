@@ -24,7 +24,7 @@ QString FileOpener::get_existing_directory()
 QImage FileOpener::get_image()
 {
     QDir dir(path);
-    QStringList filters = { name + ".jpg", name + ".png" };
+    QStringList filters = { name, name + ".jpg", name + ".png" };
     QFileInfoList files = dir.entryInfoList(filters, QDir::NoDotAndDotDot | QDir::Files);
 
 

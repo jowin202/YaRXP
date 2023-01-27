@@ -30,6 +30,7 @@ SOURCES += \
     RXIO2/writer.cpp \
     dialogs/audiodialog.cpp \
     dialogs/combodialog.cpp \
+    dialogs/imagechooserdialog.cpp \
     dialogs/imagedialog.cpp \
     dialogs/imagedisplaywidget.cpp \
     dialogs/listdialog.cpp \
@@ -139,6 +140,7 @@ HEADERS += \
     RXIO2/writer.h \
     dialogs/audiodialog.h \
     dialogs/combodialog.h \
+    dialogs/imagechooserdialog.h \
     dialogs/imagedialog.h \
     dialogs/imagedisplaywidget.h \
     dialogs/listdialog.h \
@@ -235,6 +237,7 @@ HEADERS += \
 FORMS += \
     dialogs/audiodialog.ui \
     dialogs/combodialog.ui \
+    dialogs/imagechooserdialog.ui \
     dialogs/imagedialog.ui \
     dialogs/listdialog.ui \
     dialogs/maplocationfinderdialog.ui \
