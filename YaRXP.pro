@@ -29,13 +29,13 @@ SOURCES += \
     RXIO2/rxexception.cpp \
     RXIO2/writer.cpp \
     dialogs/audiodialog.cpp \
+    dialogs/combodialog.cpp \
     dialogs/imagedialog.cpp \
     dialogs/imagedisplaywidget.cpp \
     dialogs/listdialog.cpp \
     dialogs/maplocationarea.cpp \
     dialogs/maplocationfinderdialog.cpp \
     dialogs/mappropertiesdialog.cpp \
-    dialogs/objectcombodialog.cpp \
     dialogs/switchvariablewidget.cpp \
     editors/abcbox.cpp \
     editors/abclist.cpp \
@@ -138,13 +138,13 @@ HEADERS += \
     RXIO2/rxexception.h \
     RXIO2/writer.h \
     dialogs/audiodialog.h \
+    dialogs/combodialog.h \
     dialogs/imagedialog.h \
     dialogs/imagedisplaywidget.h \
     dialogs/listdialog.h \
     dialogs/maplocationarea.h \
     dialogs/maplocationfinderdialog.h \
     dialogs/mappropertiesdialog.h \
-    dialogs/objectcombodialog.h \
     dialogs/switchvariablewidget.h \
     editors/abcbox.h \
     editors/abclist.h \
@@ -234,11 +234,11 @@ HEADERS += \
 
 FORMS += \
     dialogs/audiodialog.ui \
+    dialogs/combodialog.ui \
     dialogs/imagedialog.ui \
     dialogs/listdialog.ui \
     dialogs/maplocationfinderdialog.ui \
     dialogs/mappropertiesdialog.ui \
-    dialogs/objectcombodialog.ui \
     dialogs/switchvariablewidget.ui \
     editors/abcbox.ui \
     editors/abclist.ui \

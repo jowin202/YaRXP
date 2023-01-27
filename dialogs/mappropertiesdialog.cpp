@@ -3,7 +3,7 @@
 
 #include "audiodialog.h"
 
-#include "objectcombodialog.h"
+#include "combodialog.h"
 
 
 #include "RXIO2/rpgdb.h"
@@ -154,10 +154,10 @@ void MapPropertiesDialog::on_button_bgs_clicked()
 
 void MapPropertiesDialog::on_button_add_clicked()
 {
-    ObjectComboDialog *dialog = new ObjectComboDialog;
-    dialog->setText("Troop:");
+    ComboDialog *dialog = new ComboDialog;
+    dialog->setText("Add Encounter", "Troop:");
     db->fill_combo(dialog->combo(), RPGDB::TROOPS, true, 3);
-    connect(dialog, &ObjectComboDialog::ok_clicked, [=](int id)
+    connect(dialog, &ComboDialog::ok_clicked, [=](int id)
     {
         this->encounter_list.append(id);
         this->fill_encounter_list();
@@ -167,6 +167,8 @@ void MapPropertiesDialog::on_button_add_clicked()
 
 void MapPropertiesDialog::on_button_del_clicked()
 {
-    this->encounter_list.removeAt(this->ui->widget_encounters->currentRow());
+    int row = this->ui->widget_encounters->currentRow();
+    this->encounter_list.removeAt(row);
     this->fill_encounter_list();
+    this->ui->widget_encounters->setCurrentRow(row);
 }

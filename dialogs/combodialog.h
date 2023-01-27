@@ -1,5 +1,5 @@
-#ifndef OBJECTCOMBODIALOG_H
-#define OBJECTCOMBODIALOG_H
+#ifndef COMBODIALOG_H
+#define COMBODIALOG_H
 
 #include <QWidget>
 #include <QKeyEvent>
@@ -7,16 +7,16 @@
 
 
 namespace Ui {
-class ObjectComboDialog;
+class ComboDialog;
 }
 
-class ObjectComboDialog : public QWidget
+class ComboDialog : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit ObjectComboDialog(QWidget *parent = nullptr);
-    ~ObjectComboDialog();
+    explicit ComboDialog(QWidget *parent = nullptr);
+    ~ComboDialog();
 
     void keyPressEvent(QKeyEvent *event)
     {
@@ -27,7 +27,7 @@ public:
     }
 
 
-    void setText(QString text);
+    void setText(QString win_title, QString text);
 
     QComboBox *combo();
 
@@ -40,7 +40,7 @@ private slots:
     void on_button_cancel_clicked();
 
 private:
-    Ui::ObjectComboDialog *ui;
+    Ui::ComboDialog *ui;
 };
 
-#endif // OBJECTCOMBODIALOG_H
+#endif // COMBODIALOG_H

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>ObjectComboDialog</class>
- <widget class="QWidget" name="ObjectComboDialog">
+ <class>ComboDialog</class>
+ <widget class="QWidget" name="ComboDialog">
   <property name="windowModality">
    <enum>Qt::ApplicationModal</enum>
   </property>

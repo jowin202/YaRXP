@@ -9,6 +9,8 @@
 #include "dialogs/audiodialog.h"
 #include "dialogs/imagedialog.h"
 #include "dialogs/listdialog.h"
+#include "dialogs/combodialog.h"
+
 
 MoveRouteDialog::MoveRouteDialog(RPGDB *db, RPGMapController *mc, QJsonArray parameters, QWidget *parent) :
     QWidget(parent),
@@ -446,13 +448,55 @@ void MoveRouteDialog::on_button_switch_off_clicked()
 
 void MoveRouteDialog::on_button_change_speed_clicked()
 {
-//29
+    //29
+    ComboDialog *dialog = new ComboDialog;
+    dialog->setText("Change Speed", "Speed:");
+    dialog->combo()->addItem("1: Slowest", 1);
+    dialog->combo()->addItem("2: Slower", 2);
+    dialog->combo()->addItem("3: Slow", 3);
+    dialog->combo()->addItem("4: Fast", 4);
+    dialog->combo()->addItem("5: Faster", 5);
+    dialog->combo()->addItem("6: Fastest", 6);
+    dialog->combo()->setCurrentIndex(2);
+    dialog->show();
+
+    connect(dialog, &ComboDialog::ok_clicked, [=](int v){
+        int row = this->ui->listWidget->currentRow();
+        QJsonObject obj = Factory().create_move_command(29);
+        QJsonArray p;
+        p.append(v);
+        obj.insert("@parameters", p);
+        this->list.insert(row, obj);
+        this->fill_list();
+        this->ui->listWidget->setCurrentRow(row+1);
+    });
 }
 
 
 void MoveRouteDialog::on_button_change_freq_clicked()
 {
-//30
+    //30
+    ComboDialog *dialog = new ComboDialog;
+    dialog->setText("Change Freq", "Frequency:");
+    dialog->combo()->addItem("1: Lowest", 1);
+    dialog->combo()->addItem("2: Lower", 2);
+    dialog->combo()->addItem("3: Low", 3);
+    dialog->combo()->addItem("4: High", 4);
+    dialog->combo()->addItem("5: Higher", 5);
+    dialog->combo()->addItem("6: Highest", 6);
+    dialog->combo()->setCurrentIndex(2);
+    dialog->show();
+
+    connect(dialog, &ComboDialog::ok_clicked, [=](int v){
+        int row = this->ui->listWidget->currentRow();
+        QJsonObject obj = Factory().create_move_command(30);
+        QJsonArray p;
+        p.append(v);
+        obj.insert("@parameters", p);
+        this->list.insert(row, obj);
+        this->fill_list();
+        this->ui->listWidget->setCurrentRow(row+1);
+    });
 }
 
 
@@ -598,7 +642,25 @@ void MoveRouteDialog::on_button_opacity_clicked()
 
 void MoveRouteDialog::on_button_change_blending_clicked()
 {
-//43
+    //43
+    ComboDialog *dialog = new ComboDialog;
+    dialog->setText("Change Blending", "Blending:");
+    dialog->combo()->addItem("Normal", 0);
+    dialog->combo()->addItem("Add", 1);
+    dialog->combo()->addItem("Sub", 2);
+    dialog->combo()->setCurrentIndex(0);
+    dialog->show();
+
+    connect(dialog, &ComboDialog::ok_clicked, [=](int v){
+        int row = this->ui->listWidget->currentRow();
+        QJsonObject obj = Factory().create_move_command(43);
+        QJsonArray p;
+        p.append(v);
+        obj.insert("@parameters", p);
+        this->list.insert(row, obj);
+        this->fill_list();
+        this->ui->listWidget->setCurrentRow(row+1);
+    });
 }
 
 
@@ -749,11 +811,55 @@ void MoveRouteDialog::on_listWidget_itemDoubleClicked(QListWidgetItem *item)
     }
     else if (code == 29)
     {
+        QJsonArray a = this->list.at(row).toObject().value("@parameters").toArray();
+        ComboDialog *dialog = new ComboDialog;
+        dialog->setText("Change Speed", "Speed:");
+        dialog->combo()->addItem("1: Slowest", 1);
+        dialog->combo()->addItem("2: Slower", 2);
+        dialog->combo()->addItem("3: Slow", 3);
+        dialog->combo()->addItem("4: Fast", 4);
+        dialog->combo()->addItem("5: Faster", 5);
+        dialog->combo()->addItem("6: Fastest", 6);
+        dialog->combo()->setCurrentIndex(a.at(0).toInt()-1);
+        dialog->show();
 
+        connect(dialog, &ComboDialog::ok_clicked, [=](int v){
+            int row = this->ui->listWidget->currentRow();
+            QJsonObject obj = this->list.at(row).toObject();
+            QJsonArray p;
+            p.append(v);
+            obj.insert("@parameters", p);
+            this->list.removeAt(row);
+            this->list.insert(row, obj);
+            this->fill_list();
+            this->ui->listWidget->setCurrentRow(row);
+        });
     }
     else if (code == 30)
     {
+        QJsonArray a = this->list.at(row).toObject().value("@parameters").toArray();
+        ComboDialog *dialog = new ComboDialog;
+        dialog->setText("Change Freq", "Frequency:");
+        dialog->combo()->addItem("1: Lowest", 1);
+        dialog->combo()->addItem("2: Lower", 2);
+        dialog->combo()->addItem("3: Low", 3);
+        dialog->combo()->addItem("4: High", 4);
+        dialog->combo()->addItem("5: Higher", 5);
+        dialog->combo()->addItem("6: Highest", 6);
+        dialog->combo()->setCurrentIndex(a.at(0).toInt()-1);
+        dialog->show();
 
+        connect(dialog, &ComboDialog::ok_clicked, [=](int v){
+            int row = this->ui->listWidget->currentRow();
+            QJsonObject obj = this->list.at(row).toObject();
+            QJsonArray p;
+            p.append(v);
+            obj.insert("@parameters", p);
+            this->list.removeAt(row);
+            this->list.insert(row, obj);
+            this->fill_list();
+            this->ui->listWidget->setCurrentRow(row);
+        });
     }
     else if (code == 41)
     {
@@ -778,7 +884,26 @@ void MoveRouteDialog::on_listWidget_itemDoubleClicked(QListWidgetItem *item)
     }
     else if (code == 43)
     {
+        QJsonArray a = this->list.at(row).toObject().value("@parameters").toArray();
+        ComboDialog *dialog = new ComboDialog;
+        dialog->setText("Change Blending", "Blending:");
+        dialog->combo()->addItem("Normal", 0);
+        dialog->combo()->addItem("Add", 1);
+        dialog->combo()->addItem("Sub", 2);
+        dialog->combo()->setCurrentIndex(a.at(0).toInt());
+        dialog->show();
 
+        connect(dialog, &ComboDialog::ok_clicked, [=](int v){
+            int row = this->ui->listWidget->currentRow();
+            QJsonObject obj = this->list.at(row).toObject();
+            QJsonArray p;
+            p.append(v);
+            obj.insert("@parameters", p);
+            this->list.removeAt(row);
+            this->list.insert(row, obj);
+            this->fill_list();
+            this->ui->listWidget->setCurrentRow(row);
+        });
     }
     else if (code == 44)
     {
