@@ -1,4 +1,4 @@
-#ifndef MOVEROUTEDIALOG_H
+ #ifndef MOVEROUTEDIALOG_H
 #define MOVEROUTEDIALOG_H
 
 #include <QWidget>
@@ -7,6 +7,7 @@
 #include <QInputDialog>
 
 #include <QAction>
+#include <QListWidget>
 
 class RPGDB;
 class RPGMapController;
@@ -14,6 +15,7 @@ class RPGMapController;
 namespace Ui {
 class MoveRouteDialog;
 }
+
 
 class MoveRouteDialog : public QWidget
 {

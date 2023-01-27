@@ -222,10 +222,10 @@ void MapView::mousePressEvent(QMouseEvent *event)
 
         if (event->button() == Qt::LeftButton)
         {
-            this->event_left_button_for_moving = true;
             QJsonObject event = this->mc.event_on_pos(pos);
             if (event.contains("RXClass"))
             {
+                this->event_left_button_for_moving = true;
                 this->event_moving_from_pos.setX(event.value("@x").toInt());
                 this->event_moving_from_pos.setY(event.value("@y").toInt());
             }
@@ -268,9 +268,8 @@ void MapView::mouseReleaseEvent(QMouseEvent *event)
 
     if (opt.mode == EVENT)
     {
-        if (event->button() == Qt::LeftButton)
+        if (event->button() == Qt::LeftButton && event_left_button_for_moving && this->event_moving_from_pos != pos)
         {
-            this->event_left_button_for_moving = false;
             this->mc.move_event(this->event_moving_from_pos, pos);
             MapTile *tile;
             if ( (tile = ((MapTile*)this->scene()->itemAt(32*event_moving_from_pos,QTransform()))) != 0)
@@ -284,6 +283,7 @@ void MapView::mouseReleaseEvent(QMouseEvent *event)
             if ( (tile = ((MapTile*)this->scene()->itemAt(32*prev_marked_tile,QTransform()))) != 0)
                 tile->update();
         }
+        this->event_left_button_for_moving = false;
     }
 }
 

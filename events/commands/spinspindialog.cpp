@@ -21,7 +21,7 @@ SpinSpinDialog::SpinSpinDialog(int code, QJsonArray parameters, QWidget *parent)
         this->ui->spinBox->setValue(parameters.at(0).toInt());
         this->ui->spinBox_2->setValue(parameters.at(1).toInt());
     }
-    else //code == 233
+    else if (code == 233)
     {
         this->setWindowTitle("Rotate Picture");
         this->ui->label->setText("Number:");
@@ -31,6 +31,20 @@ SpinSpinDialog::SpinSpinDialog(int code, QJsonArray parameters, QWidget *parent)
         this->ui->spinBox->setMaximum(50);
         this->ui->spinBox_2->setMinimum(-90);
         this->ui->spinBox_2->setMaximum(90);
+
+        this->ui->spinBox->setValue(parameters.at(0).toInt());
+        this->ui->spinBox_2->setValue(parameters.at(1).toInt());
+    }
+    else if (code == 14) //move route command
+    {
+        this->setWindowTitle("Jump");
+        this->ui->label->setText("X:");
+        this->ui->label_2->setText("Y:");
+
+        this->ui->spinBox->setMinimum(-100);
+        this->ui->spinBox->setMaximum(100);
+        this->ui->spinBox_2->setMinimum(-100);
+        this->ui->spinBox_2->setMaximum(100);
 
         this->ui->spinBox->setValue(parameters.at(0).toInt());
         this->ui->spinBox_2->setValue(parameters.at(1).toInt());

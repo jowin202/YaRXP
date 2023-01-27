@@ -5,7 +5,9 @@
 #include "RXIO2/factory.h"
 #include "RXIO2/rpgmapcontroller.h"
 
+#include "spinspindialog.h"
 #include "dialogs/audiodialog.h"
+#include "dialogs/listdialog.h"
 
 MoveRouteDialog::MoveRouteDialog(RPGDB *db, RPGMapController *mc, QJsonArray parameters, QWidget *parent) :
     QWidget(parent),
@@ -19,10 +21,30 @@ MoveRouteDialog::MoveRouteDialog(RPGDB *db, RPGMapController *mc, QJsonArray par
     this->ui->listWidget->setFont(font);
 
     this->ui->listWidget->setDragDropMode(QAbstractItemView::InternalMove);
+    connect(this->ui->listWidget->model(), &QAbstractItemModel::rowsMoved, [=](const QModelIndex &sourceParent, int sourceStart, int sourceEnd, const QModelIndex &destinationParent, int destinationRow)
+    {
+        Q_UNUSED(sourceParent);
+        Q_UNUSED(destinationParent);
+        if (sourceStart != sourceEnd || sourceStart == this->ui->listWidget->count()-1 || destinationRow == this->ui->listWidget->count())
+        { //only single move and last row cannot be moved
+            this->fill_list(); //restore
+            return; //single selection
+        }
 
 
+        QJsonObject obj = list.at(sourceStart).toObject();
+        if (sourceStart < destinationRow)
+        {
+            list.insert(destinationRow, obj);
+            list.removeAt(sourceStart);
+        }
+        else if (sourceStart > destinationRow)
+        {
+            list.removeAt(sourceStart);
+            list.insert(destinationRow,obj);
+        }
+    });
 
-    //this->action_delete.setText("Delete");
     this->action_delete.setShortcut(Qt::Key_Delete);
     this->action_delete.setShortcutContext(Qt::WidgetShortcut);
     this->ui->listWidget->addAction(&this->action_delete);
@@ -234,13 +256,20 @@ void MoveRouteDialog::on_button_one_step_backward_clicked()
 
 void MoveRouteDialog::on_button_jump_clicked()
 {
-    qDebug() << "not implemented yet";
-    exit(3);
-    int row = this->ui->listWidget->currentRow();
-    QJsonObject obj = Factory().create_move_command(14);
-    this->list.insert(row, obj);
-    this->fill_list();
-    this->ui->listWidget->setCurrentRow(row+1);
+    QJsonArray a;
+    a.append(0);
+    a.append(0);
+    SpinSpinDialog *dialog = new SpinSpinDialog(14,a);
+    dialog->show();
+    connect(dialog, &SpinSpinDialog::ok_clicked, [=](QJsonArray p)
+    {
+        int row = this->ui->listWidget->currentRow();
+        QJsonObject obj = Factory().create_move_command(14);
+        obj.insert("@parameters", p);
+        this->list.insert(row, obj);
+        this->fill_list();
+        this->ui->listWidget->setCurrentRow(row+1);
+    });
 }
 
 
@@ -374,13 +403,43 @@ void MoveRouteDialog::on_button_turn_away_from_player_clicked()
 
 void MoveRouteDialog::on_button_switch_on_clicked()
 {
-//27
+    ListDialog *dialog = new ListDialog(db,0);
+    dialog->switch_dialog();
+    //dialog->setValue( current );
+    dialog->show();
+    connect(dialog, &ListDialog::ok_clicked, [=](int v)
+    {
+        QJsonArray a;
+        a.append(v+1);
+
+        int row = this->ui->listWidget->currentRow();
+        QJsonObject obj = Factory().create_move_command(27);
+        obj.insert("@parameters", a);
+        this->list.insert(row, obj);
+        this->fill_list();
+        this->ui->listWidget->setCurrentRow(row+1);
+    });
 }
 
 
 void MoveRouteDialog::on_button_switch_off_clicked()
 {
-//28
+    ListDialog *dialog = new ListDialog(db,0);
+    dialog->switch_dialog();
+    //dialog->setValue( current );
+    dialog->show();
+    connect(dialog, &ListDialog::ok_clicked, [=](int v)
+    {
+        QJsonArray a;
+        a.append(v+1);
+
+        int row = this->ui->listWidget->currentRow();
+        QJsonObject obj = Factory().create_move_command(28);
+        obj.insert("@parameters", a);
+        this->list.insert(row, obj);
+        this->fill_list();
+        this->ui->listWidget->setCurrentRow(row+1);
+    });
 }
 
 
@@ -547,6 +606,19 @@ void MoveRouteDialog::on_button_play_se_clicked()
 void MoveRouteDialog::on_button_script_clicked()
 {
     //45
+    bool ok;
+    QString script = QInputDialog::getText(this, "Script", "",QLineEdit::Normal, "", &ok);
+    if (ok)
+    {
+        int row = this->ui->listWidget->currentRow();
+        QJsonObject obj = Factory().create_move_command(45);
+        QJsonArray p;
+        p.append(script);
+        obj.insert("@parameters", p);
+        this->list.insert(row, obj);
+        this->fill_list();
+        this->ui->listWidget->setCurrentRow(row+1);
+    }
 }
 
 
