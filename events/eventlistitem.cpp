@@ -182,8 +182,10 @@ void EventListItem::edit_cell()
         p.append(parameters.at(0).toInt());
         bool can_escape = false;
         bool can_lose = false;
+        int pos_601 = -1;
         int pos_602 = -1;
         int pos_603 = -1;
+        int pos_604 = -1;
         int depth = 0;
         int row = parent->indexFromItem(this).row();
         for (int i = 1; dynamic_cast<EventListItem*>(parent->item(row+i)) != nullptr; i++)
@@ -202,15 +204,18 @@ void EventListItem::edit_cell()
                 continue;
 
 
+            if (((EventListItem*)parent->item(row+i))->get_obj().value("@code").toInt() == 601)
+            {pos_601 = row+i; }
             if (((EventListItem*)parent->item(row+i))->get_obj().value("@code").toInt() == 602)
             {can_escape = true; pos_602 = row+i; }
             if (((EventListItem*)parent->item(row+i))->get_obj().value("@code").toInt() == 603)
             {can_lose = true; pos_603 = row+i; }
             if (((EventListItem*)parent->item(row+i))->get_obj().value("@code").toInt() == 604)
-                break;
+            { pos_604 = row+i; break; }
         }
         p.append(can_escape);
         p.append(can_lose);
+
 
 
         BattleProcessingDialog *dialog = new BattleProcessingDialog(db,p);
@@ -219,40 +224,60 @@ void EventListItem::edit_cell()
             this->obj.insert("@parameters", p);
             this->update_text();
 
+
+            int newpos_604 = pos_604; //can be changed
+
+
             //both unchecked, delete all
             if (!p.at(1).toBool() && !p.at(2).toBool()
                     && row+1 < parent->count() && dynamic_cast<EventListItem*>(parent->item(row+1)) != nullptr
                     && ((EventListItem*)parent->item(row+1))->get_obj().value("@code").toInt() == 601)
             {
-                while (row+1 < parent->count() && dynamic_cast<EventListItem*>(parent->item(row+1)) != nullptr
-                       && ((EventListItem*)parent->item(row+1))->get_obj().value("@code").toInt() != 604)
+                for (int i = 0; i < (pos_604-pos_601)+1; i++)
                     delete parent->takeItem(row+1);
-                delete parent->takeItem(row+1); //delete also the 604 row
             }
             //escape unchecked, delete 602
             else if (!p.at(1).toBool() && p.at(2).toBool() && pos_602 >= 0)
             {
-                while (pos_602 < parent->count() && dynamic_cast<EventListItem*>(parent->item(pos_602)) != nullptr
-                       && ((EventListItem*)parent->item(pos_602))->get_obj().value("@code").toInt() != 603
-                       && ((EventListItem*)parent->item(pos_602))->get_obj().value("@code").toInt() != 604)
-                    delete parent->takeItem(pos_602);
+                if (pos_603 == -1)
+                {//delete from 602 to 604
+                    for (int i = 0; i < (pos_604-pos_602); i++)
+                    {
+                        delete parent->takeItem(pos_602);
+                        newpos_604--;
+                    }
+                }
+                else
+                {//delete from 602 to 603
+                    for (int i = 0; i < (pos_603-pos_602); i++)
+                    {
+                        delete parent->takeItem(pos_602);
+                        newpos_604--;
+                    }
+                }
             }
             //can lose unchecked unchecked, delete 603
             else if (p.at(1).toBool() && !p.at(2).toBool() && pos_603 >= 0)
             {
-                while (pos_603 < parent->count() && dynamic_cast<EventListItem*>(parent->item(pos_603)) != nullptr
-                       && ((EventListItem*)parent->item(pos_603))->get_obj().value("@code").toInt() != 602
-                       && ((EventListItem*)parent->item(pos_603))->get_obj().value("@code").toInt() != 604)
+                for (int i = 0; i < (pos_604-pos_603); i++)
+                {
                     delete parent->takeItem(pos_603);
+                    newpos_604--;
+                }
             }
 
+
+
+            int newpos_601 = -1;
+            QJsonObject obj_new;
 
             //if one is checked, and there is the "win" branch, create it
             if ((p.at(1).toBool() || p.at(2).toBool())
                     && row+1 < parent->count() && dynamic_cast<EventListItem*>(parent->item(row+1)) != nullptr
                     && ((EventListItem*)parent->item(row+1))->get_obj().value("@code").toInt() != 601)
             {
-                QJsonObject obj_new;
+                newpos_601 = row+1;
+                newpos_604 = row+3;
 
                 //inverse order
                 obj_new = QJsonObject(this->obj);
@@ -272,36 +297,36 @@ void EventListItem::edit_cell()
                 parent->insertItem(row+1,new EventListItem(parent,mc,mic, obj_new));
             }
 
-            /*
-                if (p.at(2).toBool())
-                {
-                    obj_new = QJsonObject(this->obj);
-                    obj_new.insert("@code", 0);
-                    obj_new.insert("@indent", this->obj.value("@indent").toInt()+1);
-                    obj_new.insert("@parameters", QJsonArray());
-                    parent->insertItem(row+1,new EventListItem(parent,mc,mic, obj_new));
 
-                    obj_new = QJsonObject(this->obj);
-                    obj_new.insert("@code", 603);
-                    obj_new.insert("@parameters", QJsonArray());
-                    parent->insertItem(row+1,new EventListItem(parent,mc,mic, obj_new));
-                }
-                if (p.at(1).toBool())
-                {
-                    obj_new = QJsonObject(this->obj);
-                    obj_new.insert("@code", 0);
-                    obj_new.insert("@indent", this->obj.value("@indent").toInt()+1);
-                    obj_new.insert("@parameters", QJsonArray());
-                    parent->insertItem(row+1,new EventListItem(parent,mc,mic, obj_new));
+            int pos = (newpos_601 == -1 ? pos_601 : newpos_601)+2;
+            int pos2 = newpos_604;
+            if (p.at(1).toBool() && pos_602 == -1)
+            {
+                obj_new = QJsonObject(this->obj);
+                obj_new.insert("@code", 0);
+                obj_new.insert("@indent", this->obj.value("@indent").toInt()+1);
+                obj_new.insert("@parameters", QJsonArray());
+                parent->insertItem(pos,new EventListItem(parent,mc,mic, obj_new));
 
-                    obj_new = QJsonObject(this->obj);
-                    obj_new.insert("@code", 602);
-                    obj_new.insert("@parameters", QJsonArray());
-                    parent->insertItem(row+1,new EventListItem(parent,mc,mic, obj_new));
-                }
-                */
+                obj_new = QJsonObject(this->obj);
+                obj_new.insert("@code", 602);
+                obj_new.insert("@parameters", QJsonArray());
+                parent->insertItem(pos,new EventListItem(parent,mc,mic, obj_new));
+            }
 
-            //TODO
+            if (p.at(2).toBool() && pos_603 == -1)
+            {
+                obj_new = QJsonObject(this->obj);
+                obj_new.insert("@code", 0);
+                obj_new.insert("@indent", this->obj.value("@indent").toInt()+1);
+                obj_new.insert("@parameters", QJsonArray());
+                parent->insertItem(pos2,new EventListItem(parent,mc,mic, obj_new));
+
+                obj_new = QJsonObject(this->obj);
+                obj_new.insert("@code", 603);
+                obj_new.insert("@parameters", QJsonArray());
+                parent->insertItem(pos2,new EventListItem(parent,mc,mic, obj_new));
+            }
         });
     }
     else if (code == 302)
