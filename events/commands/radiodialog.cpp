@@ -50,7 +50,7 @@ void RadioDialog::on_button_ok_clicked()
         array.append(0);
     else
         array.append(1);
-    emit ok_clicked(array);
     this->close();
+    emit ok_clicked(array);
 }
 

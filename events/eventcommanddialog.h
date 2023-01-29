@@ -117,6 +117,7 @@ private:
     RPGMapInfoController *mic;
     QListWidget *list;
     int current;
+    int indent = 0;
 };
 
 #endif // EVENTCOMMANDDIALOG_H

@@ -17,6 +17,7 @@ ShowTextDialog::ShowTextDialog(QWidget *parent, int code) :
         this->ui->plainTextEdit->setFont(font);
         this->setWindowTitle("Script");
     }
+    this->ui->plainTextEdit->setFocus();
 }
 
 ShowTextDialog::~ShowTextDialog()
@@ -32,8 +33,8 @@ void ShowTextDialog::setString(QString text)
 
 void ShowTextDialog::on_button_ok_clicked()
 {
-    emit ok_clicked(this->ui->plainTextEdit->toPlainText());
     this->close();
+    emit ok_clicked(this->ui->plainTextEdit->toPlainText());
 }
 
 void ShowTextDialog::on_button_cancel_clicked()
