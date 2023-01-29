@@ -124,7 +124,17 @@ void EventCommandDialog::on_button_button_input_processing_clicked()
 
 void EventCommandDialog::on_button_wait_clicked()
 {
+    QString text1 = "Wait";
+    QString text2 = "Frames:";
 
+    bool ok;
+    int v = QInputDialog::getInt(this, text1, text2, 20,1,999, 1, &ok);
+    if (ok){
+        QJsonArray newparams;
+        newparams.append(v);
+        list->insertItem(current, new EventListItem(list,mc,mic,Factory().create_event_command(106,indent,newparams)));
+        this->close();
+    }
 }
 
 
@@ -199,13 +209,27 @@ void EventCommandDialog::on_button_call_common_event_clicked()
 
 void EventCommandDialog::on_button_label_clicked()
 {
-
+    bool ok;
+    QString label = QInputDialog::getText(this, "Label", "Label:", QLineEdit::Normal, "", &ok);
+    if (ok){
+        QJsonArray newparams;
+        newparams.append(label);
+        list->insertItem(current, new EventListItem(list,mc,mic,Factory().create_event_command(118,indent,newparams)));
+        this->close();
+    }
 }
 
 
 void EventCommandDialog::on_button_jump_to_label_clicked()
 {
-
+    bool ok;
+    QString label = QInputDialog::getText(this, "Jump to Label", "Jump to Label:", QLineEdit::Normal, "", &ok);
+    if (ok){
+        QJsonArray newparams;
+        newparams.append(label);
+        list->insertItem(current, new EventListItem(list,mc,mic,Factory().create_event_command(119,indent,newparams)));
+        this->close();
+    }
 }
 
 
@@ -235,25 +259,64 @@ void EventCommandDialog::on_button_control_timer_clicked()
 
 void EventCommandDialog::on_button_change_gold_clicked()
 {
-
+    QJsonArray parameters;
+    parameters.append(0);
+    parameters.append(0);
+    parameters.append(1);
+    IncreaseDecreaseDialog *dialog = new IncreaseDecreaseDialog(this->db, 125, parameters);
+    dialog->show();
+    QObject::connect(dialog, &IncreaseDecreaseDialog::ok_clicked, [=](QJsonArray parameters) {
+        list->insertItem(current, new EventListItem(list,mc,mic,Factory().create_event_command(125,indent,parameters)));
+        this->close();
+    });
 }
 
 
 void EventCommandDialog::on_button_change_items_clicked()
 {
-
+    QJsonArray parameters;
+    parameters.append(1);
+    parameters.append(0);
+    parameters.append(0);
+    parameters.append(1);
+    IncreaseDecreaseDialog *dialog = new IncreaseDecreaseDialog(this->db, 126, parameters);
+    dialog->show();
+    QObject::connect(dialog, &IncreaseDecreaseDialog::ok_clicked, [=](QJsonArray parameters) {
+        list->insertItem(current, new EventListItem(list,mc,mic,Factory().create_event_command(126,indent,parameters)));
+        this->close();
+    });
 }
 
 
 void EventCommandDialog::on_button_change_weapons_clicked()
 {
-
+    QJsonArray parameters;
+    parameters.append(1);
+    parameters.append(0);
+    parameters.append(0);
+    parameters.append(1);
+    IncreaseDecreaseDialog *dialog = new IncreaseDecreaseDialog(this->db, 127, parameters);
+    dialog->show();
+    QObject::connect(dialog, &IncreaseDecreaseDialog::ok_clicked, [=](QJsonArray parameters) {
+        list->insertItem(current, new EventListItem(list,mc,mic,Factory().create_event_command(127,indent,parameters)));
+        this->close();
+    });
 }
 
 
 void EventCommandDialog::on_button_change_armor_clicked()
 {
-
+    QJsonArray parameters;
+    parameters.append(1);
+    parameters.append(0);
+    parameters.append(0);
+    parameters.append(1);
+    IncreaseDecreaseDialog *dialog = new IncreaseDecreaseDialog(this->db, 128, parameters);
+    dialog->show();
+    QObject::connect(dialog, &IncreaseDecreaseDialog::ok_clicked, [=](QJsonArray parameters) {
+        list->insertItem(current, new EventListItem(list,mc,mic,Factory().create_event_command(128,indent,parameters)));
+        this->close();
+    });
 }
 
 
@@ -456,7 +519,17 @@ void EventCommandDialog::on_button_change_picture_color_tone_clicked()
 
 void EventCommandDialog::on_button_erase_picture_clicked()
 {
+    QString text1 = "Erase Picture";
+    QString text2 = "Pic. No.:";
 
+    bool ok;
+    int v = QInputDialog::getInt(this, text1, text2, 1,1,999, 1, &ok);
+    if (ok){
+        QJsonArray newparams;
+        newparams.append(v);
+        list->insertItem(current, new EventListItem(list,mc,mic,Factory().create_event_command(235,indent,newparams)));
+        this->close();
+    }
 }
 
 
@@ -482,7 +555,17 @@ void EventCommandDialog::on_button_play_bgm_clicked()
 
 void EventCommandDialog::on_button_fade_out_bgm_clicked()
 {
+    QString text1 = "Fade Out BGM";
+    QString text2 = "Time in sec:";
 
+    bool ok;
+    int v = QInputDialog::getInt(this, text1, text2, 10,1,999, 1, &ok);
+    if (ok){
+        QJsonArray newparams;
+        newparams.append(v);
+        list->insertItem(current, new EventListItem(list,mc,mic,Factory().create_event_command(242,indent,newparams)));
+        this->close();
+    }
 }
 
 
@@ -502,7 +585,17 @@ void EventCommandDialog::on_button_play_bgs_clicked()
 
 void EventCommandDialog::on_button_fade_out_bgs_clicked()
 {
+    QString text1 = "Fade Out BGS";
+    QString text2 = "Time in sec:";
 
+    bool ok;
+    int v = QInputDialog::getInt(this, text1, text2, 10,1,999, 1, &ok);
+    if (ok){
+        QJsonArray newparams;
+        newparams.append(v);
+        list->insertItem(current, new EventListItem(list,mc,mic,Factory().create_event_command(246,indent,newparams)));
+        this->close();
+    }
 }
 
 
@@ -550,7 +643,8 @@ void EventCommandDialog::on_button_play_se_clicked()
 
 void EventCommandDialog::on_button_stop_se_clicked()
 {
-
+    list->insertItem(current, new EventListItem(list,mc,mic,Factory().create_event_command(251,indent,QJsonArray())));
+    this->close();
 }
 
 
@@ -574,13 +668,34 @@ void EventCommandDialog::on_battle_input_name_processing_clicked()
 
 void EventCommandDialog::on_button_change_hp_clicked()
 {
-
+    QJsonArray parameters;
+    parameters.append(0);
+    parameters.append(0);
+    parameters.append(0);
+    parameters.append(1);
+    parameters.append(false);
+    IncreaseDecreaseDialog *dialog = new IncreaseDecreaseDialog(this->db, 311, parameters);
+    dialog->show();
+    QObject::connect(dialog, &IncreaseDecreaseDialog::ok_clicked, [=](QJsonArray parameters) {
+        list->insertItem(current, new EventListItem(list,mc,mic,Factory().create_event_command(311,indent,parameters)));
+        this->close();
+    });
 }
 
 
 void EventCommandDialog::on_button_change_sp_clicked()
 {
-
+    QJsonArray parameters;
+    parameters.append(0);
+    parameters.append(0);
+    parameters.append(0);
+    parameters.append(1);
+    IncreaseDecreaseDialog *dialog = new IncreaseDecreaseDialog(this->db, 312, parameters);
+    dialog->show();
+    QObject::connect(dialog, &IncreaseDecreaseDialog::ok_clicked, [=](QJsonArray parameters) {
+        list->insertItem(current, new EventListItem(list,mc,mic,Factory().create_event_command(312,indent,parameters)));
+        this->close();
+    });
 }
 
 
@@ -598,19 +713,50 @@ void EventCommandDialog::on_button_recover_all_clicked()
 
 void EventCommandDialog::on_button_change_exp_clicked()
 {
-
+    QJsonArray parameters;
+    parameters.append(0);
+    parameters.append(0);
+    parameters.append(0);
+    parameters.append(1);
+    IncreaseDecreaseDialog *dialog = new IncreaseDecreaseDialog(this->db, 315, parameters);
+    dialog->show();
+    QObject::connect(dialog, &IncreaseDecreaseDialog::ok_clicked, [=](QJsonArray parameters) {
+        list->insertItem(current, new EventListItem(list,mc,mic,Factory().create_event_command(315,indent,parameters)));
+        this->close();
+    });
 }
 
 
 void EventCommandDialog::on_button_change_level_clicked()
 {
-
+    QJsonArray parameters;
+    parameters.append(0);
+    parameters.append(0);
+    parameters.append(0);
+    parameters.append(1);
+    IncreaseDecreaseDialog *dialog = new IncreaseDecreaseDialog(this->db, 316, parameters);
+    dialog->show();
+    QObject::connect(dialog, &IncreaseDecreaseDialog::ok_clicked, [=](QJsonArray parameters) {
+        list->insertItem(current, new EventListItem(list,mc,mic,Factory().create_event_command(316,indent,parameters)));
+        this->close();
+    });
 }
 
 
 void EventCommandDialog::on_button_change_parameters_clicked()
 {
-
+    QJsonArray parameters;
+    parameters.append(1);
+    parameters.append(0);
+    parameters.append(0);
+    parameters.append(0);
+    parameters.append(1);
+    IncreaseDecreaseDialog *dialog = new IncreaseDecreaseDialog(this->db, 317, parameters);
+    dialog->show();
+    QObject::connect(dialog, &IncreaseDecreaseDialog::ok_clicked, [=](QJsonArray parameters) {
+        list->insertItem(current, new EventListItem(list,mc,mic,Factory().create_event_command(317,indent,parameters)));
+        this->close();
+    });
 }
 
 
@@ -645,13 +791,34 @@ void EventCommandDialog::on_button_change_actor_graphic_clicked()
 
 void EventCommandDialog::on_button_change_enemy_hp_clicked()
 {
-
+    QJsonArray parameters;
+    parameters.append(-1);
+    parameters.append(0);
+    parameters.append(0);
+    parameters.append(1);
+    parameters.append(false);
+    IncreaseDecreaseDialog *dialog = new IncreaseDecreaseDialog(this->db, 331, parameters);
+    dialog->show();
+    QObject::connect(dialog, &IncreaseDecreaseDialog::ok_clicked, [=](QJsonArray parameters) {
+        list->insertItem(current, new EventListItem(list,mc,mic,Factory().create_event_command(331,indent,parameters)));
+        this->close();
+    });
 }
 
 
 void EventCommandDialog::on_button_change_enemy_sp_clicked()
 {
-
+    QJsonArray parameters;
+    parameters.append(-1);
+    parameters.append(0);
+    parameters.append(0);
+    parameters.append(1);
+    IncreaseDecreaseDialog *dialog = new IncreaseDecreaseDialog(this->db, 332, parameters);
+    dialog->show();
+    QObject::connect(dialog, &IncreaseDecreaseDialog::ok_clicked, [=](QJsonArray parameters) {
+        list->insertItem(current, new EventListItem(list,mc,mic,Factory().create_event_command(332,indent,parameters)));
+        this->close();
+    });
 }
 
 

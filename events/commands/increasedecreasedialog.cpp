@@ -85,9 +85,9 @@ IncreaseDecreaseDialog::IncreaseDecreaseDialog(RPGDB *db, int code, QJsonArray p
             this->setWindowTitle("Change HP");
         else if (code == 312)
             this->setWindowTitle("Change SP");
-        else if (code == 313)
+        else if (code == 315)
             this->setWindowTitle("Change EXP");
-        else if (code == 314)
+        else if (code == 316)
             this->setWindowTitle("Change Level");
         this->ui->label->setText("Actor:");
 
@@ -190,6 +190,8 @@ void IncreaseDecreaseDialog::on_button_cancel_clicked()
 
 void IncreaseDecreaseDialog::on_button_ok_clicked()
 {
+    this->close();
+
     if (code == 125) //change gold
     {
         QJsonArray parameters;
@@ -264,6 +266,5 @@ void IncreaseDecreaseDialog::on_button_ok_clicked()
     }
 
 
-    this->close();
 }
 
