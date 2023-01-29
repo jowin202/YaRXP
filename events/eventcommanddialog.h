@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QListWidget>
 
+class RPGDB;
 class RPGMapController;
 class RPGMapInfoController;
 
@@ -16,7 +17,7 @@ class EventCommandDialog : public QWidget
     Q_OBJECT
 
 public:
-    explicit EventCommandDialog(QListWidget *list, RPGMapController *mc, RPGMapInfoController *mic, int current, QWidget *parent = nullptr);
+    explicit EventCommandDialog(QListWidget *list, RPGDB *db, RPGMapController *mc, RPGMapInfoController *mic, int current, QWidget *parent = nullptr);
     ~EventCommandDialog();
 
 private slots:
@@ -113,6 +114,7 @@ private slots:
 
 private:
     Ui::EventCommandDialog *ui;
+    RPGDB *db;
     RPGMapController *mc;
     RPGMapInfoController *mic;
     QListWidget *list;

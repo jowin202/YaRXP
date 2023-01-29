@@ -268,7 +268,6 @@ void EventListItem::edit_cell()
 
 
 
-            int newpos_601 = -1;
             QJsonObject obj_new;
 
             //if one is checked, and there is the "win" branch, create it
@@ -276,7 +275,7 @@ void EventListItem::edit_cell()
                     && row+1 < parent->count() && dynamic_cast<EventListItem*>(parent->item(row+1)) != nullptr
                     && ((EventListItem*)parent->item(row+1))->get_obj().value("@code").toInt() != 601)
             {
-                newpos_601 = row+1;
+                //newpos_601 = row+1;
                 newpos_604 = row+3;
 
                 //inverse order
@@ -298,8 +297,22 @@ void EventListItem::edit_cell()
             }
 
 
-            int pos = (newpos_601 == -1 ? pos_601 : newpos_601)+2;
-            int pos2 = newpos_604;
+
+            if (p.at(2).toBool() && pos_603 == -1)
+            {
+                obj_new = QJsonObject(this->obj);
+                obj_new.insert("@code", 0);
+                obj_new.insert("@indent", this->obj.value("@indent").toInt()+1);
+                obj_new.insert("@parameters", QJsonArray());
+                parent->insertItem(newpos_604,new EventListItem(parent,mc,mic, obj_new));
+
+                obj_new = QJsonObject(this->obj);
+                obj_new.insert("@code", 603);
+                obj_new.insert("@parameters", QJsonArray());
+                parent->insertItem(newpos_604,new EventListItem(parent,mc,mic, obj_new));
+            }
+
+            int pos = (pos_603 != -1 ? pos_603 : newpos_604);
             if (p.at(1).toBool() && pos_602 == -1)
             {
                 obj_new = QJsonObject(this->obj);
@@ -314,19 +327,7 @@ void EventListItem::edit_cell()
                 parent->insertItem(pos,new EventListItem(parent,mc,mic, obj_new));
             }
 
-            if (p.at(2).toBool() && pos_603 == -1)
-            {
-                obj_new = QJsonObject(this->obj);
-                obj_new.insert("@code", 0);
-                obj_new.insert("@indent", this->obj.value("@indent").toInt()+1);
-                obj_new.insert("@parameters", QJsonArray());
-                parent->insertItem(pos2,new EventListItem(parent,mc,mic, obj_new));
 
-                obj_new = QJsonObject(this->obj);
-                obj_new.insert("@code", 603);
-                obj_new.insert("@parameters", QJsonArray());
-                parent->insertItem(pos2,new EventListItem(parent,mc,mic, obj_new));
-            }
         });
     }
     else if (code == 302)
@@ -531,7 +532,6 @@ void EventListItem::edit_cell()
             this->obj.insert("@parameters", param);
             this->update_text();
         });
-
     }
     else if (code == 105 || code == 117 || code == 314 || code == 334 || code == 335) //single combo box
     {

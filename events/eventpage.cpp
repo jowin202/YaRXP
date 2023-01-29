@@ -142,7 +142,7 @@ QJsonObject EventPage::getPage()
 
 void EventPage::on_button_add_command_clicked()
 {
-    EventCommandDialog *evcommdia = new EventCommandDialog(this->ui->eventList,mc,0,this->ui->eventList->currentRow());
+    EventCommandDialog *evcommdia = new EventCommandDialog(this->ui->eventList,db,mc,0,this->ui->eventList->currentRow());
     evcommdia->show();
 }
 

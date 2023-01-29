@@ -44,12 +44,13 @@
 #include "dialogs/audiodialog.h"
 #include "dialogs/imagedialog.h"
 
-EventCommandDialog::EventCommandDialog(QListWidget *list, RPGMapController *mc, RPGMapInfoController *mic, int current, QWidget *parent) :
+EventCommandDialog::EventCommandDialog(QListWidget *list, RPGDB *db, RPGMapController *mc, RPGMapInfoController *mic, int current, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::EventCommandDialog)
 {
     ui->setupUi(this);
     this->list = list;
+    this->db = db;
     this->mc = mc;
     this->mic = mic;
     this->current = current;
@@ -270,13 +271,29 @@ void EventCommandDialog::on_button_change_windowskin_clicked()
 
 void EventCommandDialog::on_button_change_battle_bgm_clicked()
 {
-
+    int type = AudioDialog::BGM;
+    AudioDialog *dialog = new AudioDialog(this->db, "", 100, 100, type);
+    dialog->show();
+    QObject::connect(dialog, &AudioDialog::ok_clicked, [=](QString name, int volume, int pitch){
+        QJsonArray param;
+        param.append(Factory().create_audiofile(name, volume,pitch));
+        list->insertItem(current, new EventListItem(list,mc,mic,Factory().create_event_command(132,indent,param)));
+        this->close();
+    });
 }
 
 
 void EventCommandDialog::on_button_change_battle_end_me_clicked()
 {
-
+    int type = AudioDialog::ME;
+    AudioDialog *dialog = new AudioDialog(this->db, "", 100, 100, type);
+    dialog->show();
+    QObject::connect(dialog, &AudioDialog::ok_clicked, [=](QString name, int volume, int pitch){
+        QJsonArray param;
+        param.append(Factory().create_audiofile(name, volume,pitch));
+        list->insertItem(current, new EventListItem(list,mc,mic,Factory().create_event_command(133,indent,param)));
+        this->close();
+    });
 }
 
 
@@ -377,13 +394,15 @@ void EventCommandDialog::on_button_set_move_route_clicked()
 
 void EventCommandDialog::on_button_wait_for_move_completition_clicked()
 {
-
+    list->insertItem(current, new EventListItem(list,mc,mic,Factory().create_event_command(210,indent,QJsonArray())));
+    this->close();
 }
 
 
 void EventCommandDialog::on_button_prepare_transition_clicked()
 {
-
+    list->insertItem(current, new EventListItem(list,mc,mic,Factory().create_event_command(221,indent,QJsonArray())));
+    this->close();
 }
 
 
@@ -449,7 +468,15 @@ void EventCommandDialog::on_button_set_weather_effects_clicked()
 
 void EventCommandDialog::on_button_play_bgm_clicked()
 {
-
+    int type = AudioDialog::BGM;
+    AudioDialog *dialog = new AudioDialog(this->db, "", 100, 100, type);
+    dialog->show();
+    QObject::connect(dialog, &AudioDialog::ok_clicked, [=](QString name, int volume, int pitch){
+        QJsonArray param;
+        param.append(Factory().create_audiofile(name, volume,pitch));
+        list->insertItem(current, new EventListItem(list,mc,mic,Factory().create_event_command(241,indent,param)));
+        this->close();
+    });
 }
 
 
@@ -461,7 +488,15 @@ void EventCommandDialog::on_button_fade_out_bgm_clicked()
 
 void EventCommandDialog::on_button_play_bgs_clicked()
 {
-
+    int type = AudioDialog::BGS;
+    AudioDialog *dialog = new AudioDialog(this->db, "", 100, 100, type);
+    dialog->show();
+    QObject::connect(dialog, &AudioDialog::ok_clicked, [=](QString name, int volume, int pitch){
+        QJsonArray param;
+        param.append(Factory().create_audiofile(name, volume,pitch));
+        list->insertItem(current, new EventListItem(list,mc,mic,Factory().create_event_command(245,indent,param)));
+        this->close();
+    });
 }
 
 
@@ -473,25 +508,43 @@ void EventCommandDialog::on_button_fade_out_bgs_clicked()
 
 void EventCommandDialog::on_button_memorize_bgm_clicked()
 {
-
+    list->insertItem(current, new EventListItem(list,mc,mic,Factory().create_event_command(247,indent,QJsonArray())));
+    this->close();
 }
 
 
 void EventCommandDialog::on_button_restore_bgm_clicked()
 {
-
+    list->insertItem(current, new EventListItem(list,mc,mic,Factory().create_event_command(248,indent,QJsonArray())));
+    this->close();
 }
 
 
 void EventCommandDialog::on_button_play_me_clicked()
 {
-
+    int type = AudioDialog::ME;
+    AudioDialog *dialog = new AudioDialog(this->db, "", 100, 100, type);
+    dialog->show();
+    QObject::connect(dialog, &AudioDialog::ok_clicked, [=](QString name, int volume, int pitch){
+        QJsonArray param;
+        param.append(Factory().create_audiofile(name, volume,pitch));
+        list->insertItem(current, new EventListItem(list,mc,mic,Factory().create_event_command(249,indent,param)));
+        this->close();
+    });
 }
 
 
 void EventCommandDialog::on_button_play_se_clicked()
 {
-
+    int type = AudioDialog::SE;
+    AudioDialog *dialog = new AudioDialog(this->db, "", 100, 100, type);
+    dialog->show();
+    QObject::connect(dialog, &AudioDialog::ok_clicked, [=](QString name, int volume, int pitch){
+        QJsonArray param;
+        param.append(Factory().create_audiofile(name, volume,pitch));
+        list->insertItem(current, new EventListItem(list,mc,mic,Factory().create_event_command(250,indent,param)));
+        this->close();
+    });
 }
 
 

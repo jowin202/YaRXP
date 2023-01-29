@@ -59,9 +59,9 @@ void AudioDialog::on_button_ok_clicked()
     if (this->ui->list->currentItem() == 0)
         return; // do nothing
 
+    this->close();
     if (this->ui->list->currentItem()!= 0)
         emit ok_clicked(this->ui->list->currentItem()->text().chopped(4),this->ui->slider_volume->value(), this->ui->slider_pitch->value());
-    this->close();
 }
 
 void AudioDialog::on_button_cancel_clicked()
