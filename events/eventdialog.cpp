@@ -14,6 +14,19 @@ EventDialog::EventDialog(RPGMapController *mc, QJsonObject event, QWidget *paren
     this->event = event;
     this->mc = mc;
 
+    /*
+    //for Debugging
+    QJsonObject event_copy = QJsonObject(event);
+    event_copy.remove("@name");
+    event_copy.remove("@x");
+    event_copy.remove("@y");
+    event_copy.remove("@id");
+    QCryptographicHash hash(QCryptographicHash::Sha3_256);
+    hash.addData(QJsonDocument(event_copy).toJson(QJsonDocument::Compact));
+    qDebug() << hash.result().toHex();
+    */
+
+
     this->setWindowTitle(QString("YaRXP - Event %1").arg(event.value("@id").toInt(),3,10,QChar('0')));
     QJsonArray pages = event.value("@pages").toArray();
 

@@ -833,8 +833,6 @@ void EventListItem::edit_cell()
                         delete parent->takeItem(row+i);
                     break;
                 }
-
-
             }
         });
 
@@ -1078,7 +1076,7 @@ QString EventListItem::get_text(QJsonObject obj)
                                                 "This event, " :
                                                 "[" + mc->current_map()->object().value("@events").toObject().value(QString::number(parameters.at(0).toInt())).toObject().value("@name").toString() +"], ")
                 + (parameters.at(1).toInt() == 0 ? QString("(%1,%2)").arg(parameters.at(2).toInt(),3,10,QChar('0')).arg(parameters.at(3).toInt(),3,10,QChar('0')) :
-                  (parameters.at(1).toInt() == 1 ? QString("Variable [%1:%2]").arg(parameters.at(2).toInt(),4,10,QChar('0')).arg(parameters.at(3).toInt(),4,10,QChar('0')) :
+                  (parameters.at(1).toInt() == 1 ? QString("Variable [%1][%2]").arg(parameters.at(2).toInt(),4,10,QChar('0')).arg(parameters.at(3).toInt(),4,10,QChar('0')) :
                                                    QString("Switch with [%1]").arg(mc->current_map()->object().value("@events").toObject().value(QString::number(parameters.at(2).toInt())).toObject().value("@name").toString())))
                 + (parameters.at(4).toInt() != 0 ? ", " +this->text_directions.at(parameters.at(4).toInt()/2-1) : "");
     else if (code == 203)

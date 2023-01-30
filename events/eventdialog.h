@@ -7,6 +7,7 @@
 #include <QJsonDocument>
 #include <QJsonValue>
 #include <QJsonArray>
+//#include <QCryptographicHash>
 #include "eventpage.h"
 
 class RPGMapController;

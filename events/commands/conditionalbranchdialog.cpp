@@ -368,9 +368,8 @@ void ConditionalBranchDialog::on_button_ok_clicked()
         p.append(this->ui->line_script->text());
     }
 
-    emit ok_clicked(p, this->ui->check_else_branch->isChecked());
-
     this->close();
+    emit ok_clicked(p, this->ui->check_else_branch->isChecked());
 }
 
 

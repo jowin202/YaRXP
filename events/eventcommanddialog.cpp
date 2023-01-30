@@ -240,7 +240,29 @@ void EventCommandDialog::on_button_comment_clicked()
 
 void EventCommandDialog::on_button_conditional_branch_clicked()
 {
+    QJsonArray parameters;
+    parameters.append(0);
+    parameters.append(1);
+    parameters.append(0);
+    ConditionalBranchDialog *dialog = new ConditionalBranchDialog(db, mc, parameters, true);
+    dialog->show();
+    QObject::connect(dialog, &ConditionalBranchDialog::ok_clicked, [=](QJsonArray p, bool else_branch) {
+        list->insertItem(current, new EventListItem(list,mc,mic,Factory().create_event_command(111,indent,p)));
 
+        //end branch
+        list->insertItem(current+1, new EventListItem(list, mc, mic, Factory().create_event_command(412,indent, QJsonArray())));
+
+        //else
+        if (else_branch)
+        {
+            list->insertItem(current+1, new EventListItem(list, mc, mic, Factory().create_event_command(0,indent+1, QJsonArray())));
+            list->insertItem(current+1, new EventListItem(list, mc, mic, Factory().create_event_command(411,indent, QJsonArray())));
+        }
+
+        //if branch
+        list->insertItem(current+1, new EventListItem(list, mc, mic, Factory().create_event_command(0,indent+1, QJsonArray())));
+        this->close();
+    });
 }
 
 
@@ -444,7 +466,7 @@ void EventCommandDialog::on_button_change_party_member_clicked()
     QJsonArray parameters;
     parameters.append(1);
     parameters.append(0);
-    parameters.append(0);
+    parameters.append(1);
     ChangePartyMemberDialog *dialog = new ChangePartyMemberDialog(db,parameters);
     dialog->show();
     QObject::connect(dialog, &ChangePartyMemberDialog::ok_clicked, [=](QJsonArray p) {
