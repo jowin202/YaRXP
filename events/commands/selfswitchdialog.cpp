@@ -52,7 +52,7 @@ void SelfSwitchDialog::on_button_ok_clicked()
     else
         p.append(1);
 
-    emit ok_clicked(p);
     this->close();
+    emit ok_clicked(p);
 }
 

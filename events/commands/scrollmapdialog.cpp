@@ -28,7 +28,7 @@ void ScrollMapDialog::on_button_ok_clicked()
     p.append((this->ui->combo_dir->currentIndex()+1)*2);
     p.append(this->ui->spin_dist->value());
     p.append(this->ui->combo_speed->currentIndex()+1);
-    emit ok_clicked(p);
     this->close();
+    emit ok_clicked(p);
 }
 

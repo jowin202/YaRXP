@@ -106,7 +106,7 @@ void ComboComboDialog::on_button_ok_clicked()
         p.append(this->ui->comboBox_2->currentIndex()+1);
     }
 
-    emit ok_clicked(p);
     this->close();
+    emit ok_clicked(p);
 }
 

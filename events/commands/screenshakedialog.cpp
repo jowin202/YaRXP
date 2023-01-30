@@ -29,7 +29,7 @@ void ScreenShakeDialog::on_button_ok_clicked()
     p.append(this->ui->spin_speed->value());
     p.append(this->ui->spin_time->value());
 
-    emit ok_clicked(p);
     this->close();
+    emit ok_clicked(p);
 }
 

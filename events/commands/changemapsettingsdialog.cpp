@@ -75,8 +75,8 @@ void ChangeMapSettingsDialog::on_button_ok_clicked()
         p.append(2);
         p.append(this->ui->line_battleback->text());
     }
-    emit ok_clicked(p);
     this->close();
+    emit ok_clicked(p);
 }
 
 
@@ -85,7 +85,8 @@ void ChangeMapSettingsDialog::on_button_panorama_clicked()
     ImageDialog *dialog = new ImageDialog(db, ImageDialog::PANOMRAMAS, this->ui->line_panorama->text());
     dialog->set_hue(this->hue);
     connect(dialog, &ImageDialog::ok_clicked, [=](QString name) { this->ui->line_panorama->setText(name);});
-    connect(dialog, &ImageDialog::ok_clicked_with_hue, [=](int hue) { this->hue = hue;});
+    connect(dialog, &ImageDialog::ok_clicked_with_hue, [=](int hue) {
+        this->hue = hue;});
     dialog->show();
 }
 

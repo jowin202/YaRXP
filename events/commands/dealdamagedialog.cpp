@@ -66,8 +66,8 @@ void DealDamageDialog::on_button_ok_clicked()
         p.append(this->ui->variable_widget->getValue());
     }
 
-    emit ok_clicked(p);
     this->close();
+    emit ok_clicked(p);
 }
 
 

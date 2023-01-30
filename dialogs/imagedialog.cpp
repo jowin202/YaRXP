@@ -189,11 +189,10 @@ void ImageDialog::on_button_ok_clicked()
         if (this->ui->list->currentRow() == 0)
             emit ok_clicked("");
         else
-        {
-            if (this->visible_hue)
-                emit ok_clicked_with_hue(this->ui->slider_hue->value());
-            emit ok_clicked(QString(this->ui->list->currentItem()->text()).chopped(4));   
-        }
+            emit ok_clicked(QString(this->ui->list->currentItem()->text()).chopped(4));
+
+    if (this->visible_hue)
+        emit ok_clicked_with_hue(this->ui->slider_hue->value());
     }
 
 }

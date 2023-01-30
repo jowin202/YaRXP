@@ -724,8 +724,8 @@ void MoveRouteDialog::on_button_ok_clicked()
     QJsonObject mvrt = Factory().create_move_route(this->ui->check_repeat->isChecked(), this->ui->check_skippable->isChecked());
     mvrt.insert("@list", this->list);
     parameters.append(mvrt);
-    emit ok_clicked(parameters);
     this->close();
+    emit ok_clicked(parameters);
 }
 
 void MoveRouteDialog::do_delete()

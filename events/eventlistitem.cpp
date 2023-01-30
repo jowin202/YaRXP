@@ -170,7 +170,6 @@ void EventListItem::edit_cell()
                 obj.insert("@parameters", a);
                 parent->insertItem(row+1,new EventListItem(parent,mc,mic,obj));
             }
-
         });
     }
     else if (code == 301)
@@ -1116,7 +1115,7 @@ QString EventListItem::get_text(QJsonObject obj)
         text += "@>Set Move Route: " + QString(parameters.at(0).toInt() == -1 ? "Player" :
                                        (parameters.at(0).toInt() == 0 ? "This event" :
                                                                         "[" +mc->current_map()->object().value("@events").toObject().value(QString::number(parameters.at(0).toInt())).toObject().value("@name").toString() + "]"));
-        if (parameters.at(1).toObject().value("@repeat").toBool() || parameters.at(1).toObject().value("@repeat").toBool() )
+        if (parameters.at(1).toObject().value("@repeat").toBool() || parameters.at(1).toObject().value("@skippable").toBool() )
         {
             text += " (";
             if (parameters.at(1).toObject().value("@repeat").toBool())
