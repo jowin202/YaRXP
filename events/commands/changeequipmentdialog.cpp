@@ -153,8 +153,8 @@ void ChangeEquipmentDialog::on_button_ok_clicked()
         p.append(this->ui->combo_accessory->currentData().toInt());
     }
 
-    emit ok_clicked(p);
     this->close();
+    emit ok_clicked(p);
 }
 
 

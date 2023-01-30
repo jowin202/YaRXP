@@ -41,8 +41,8 @@ void ChangeActorGraphicDialog::on_button_ok_clicked()
     p.append(this->hue1);
     p.append(this->ui->line_battler->text());
     p.append(this->hue2);
-    emit ok_clicked(p);
     this->close();
+    emit ok_clicked(p);
 }
 
 

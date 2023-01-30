@@ -29,7 +29,7 @@ void ChangeActorNameDialog::on_button_ok_clicked()
     QJsonArray p;
     p.append(this->ui->combo_actor->currentIndex()+1);
     p.append(this->ui->line_name->text());
-    emit ok_clicked(p);
     this->close();
+    emit ok_clicked(p);
 }
 

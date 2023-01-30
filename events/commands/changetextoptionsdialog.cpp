@@ -1,20 +1,12 @@
 #include "changetextoptionsdialog.h"
 #include "ui_changetextoptionsdialog.h"
 
-ChangeTextOptionsDialog::ChangeTextOptionsDialog(QWidget *parent) :
+ChangeTextOptionsDialog::ChangeTextOptionsDialog(QJsonArray parameters, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::ChangeTextOptionsDialog)
 {
     ui->setupUi(this);
-}
 
-ChangeTextOptionsDialog::~ChangeTextOptionsDialog()
-{
-    delete ui;
-}
-
-void ChangeTextOptionsDialog::setParameters(QJsonArray parameters)
-{
     if (parameters.at(0).toInt() == 0) this->ui->radio_pos_top->setChecked(true);
     else if (parameters.at(0).toInt() == 1) this->ui->radio_pos_middle->setChecked(true);
     else if (parameters.at(0).toInt() == 2) this->ui->radio_pos_bottom->setChecked(true);
@@ -22,6 +14,12 @@ void ChangeTextOptionsDialog::setParameters(QJsonArray parameters)
     if (parameters.at(1).toInt() == 0) this->ui->radio_win_show->setChecked(true);
     else if (parameters.at(1).toInt() == 1) this->ui->radio_win_hide->setChecked(true);
 }
+
+ChangeTextOptionsDialog::~ChangeTextOptionsDialog()
+{
+    delete ui;
+}
+
 
 void ChangeTextOptionsDialog::on_button_ok_clicked()
 {
@@ -34,8 +32,8 @@ void ChangeTextOptionsDialog::on_button_ok_clicked()
     if (this->ui->radio_win_show->isChecked()) parameters.append(0);
     else if (this->ui->radio_win_hide->isChecked()) parameters.append(1);
 
-    emit ok_clicked(parameters);
     this->close();
+    emit ok_clicked(parameters);
 }
 
 

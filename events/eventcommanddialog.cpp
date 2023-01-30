@@ -114,6 +114,16 @@ void EventCommandDialog::on_button_input_number_clicked()
 
 void EventCommandDialog::on_button_change_text_options_clicked()
 {
+    QJsonArray parameters;
+    parameters.append(0);
+    parameters.append(0);
+
+    ChangeTextOptionsDialog *dialog = new ChangeTextOptionsDialog(parameters);
+    dialog->show();
+    QObject::connect(dialog, &ChangeTextOptionsDialog::ok_clicked, [=](QJsonArray parameters) {
+        list->insertItem(current, new EventListItem(list,mc,mic,Factory().create_event_command(104,indent,parameters)));
+        this->close();
+    });
 
 }
 
@@ -185,7 +195,10 @@ void EventCommandDialog::on_button_conditional_branch_clicked()
 
 void EventCommandDialog::on_button_loop_clicked()
 {
-
+    list->insertItem(current, new EventListItem(list,mc,mic,Factory().create_event_command(413,indent,QJsonArray())));
+    list->insertItem(current, new EventListItem(list,mc,mic,Factory().create_event_command(0,indent+1,QJsonArray())));
+    list->insertItem(current, new EventListItem(list,mc,mic,Factory().create_event_command(112,indent,QJsonArray())));
+    this->close();
 }
 
 
@@ -1027,11 +1040,11 @@ void EventCommandDialog::on_button_change_parameters_clicked()
 
 void EventCommandDialog::on_button_change_skills_clicked()
 {
-    QJsonArray p;
-    p.append(1);
-    p.append(0);
-    p.append(1);
-    ChangeStateDialog *dialog = new ChangeStateDialog(db, 318, p);
+    QJsonArray parameters;
+    parameters.append(1);
+    parameters.append(0);
+    parameters.append(1);
+    ChangeStateDialog *dialog = new ChangeStateDialog(db, 318, parameters);
     dialog->show();
     QObject::connect(dialog, &ChangeStateDialog::ok_clicked, [=](QJsonArray p) {
         list->insertItem(current, new EventListItem(list,mc,mic,Factory().create_event_command(318,indent,p)));
@@ -1042,12 +1055,30 @@ void EventCommandDialog::on_button_change_skills_clicked()
 
 void EventCommandDialog::on_button_change_equipment_clicked()
 {
-
+    QJsonArray parameters;
+    parameters.append(1);
+    parameters.append(0);
+    parameters.append(0);
+    ChangeEquipmentDialog *dialog = new ChangeEquipmentDialog(db, parameters);
+    dialog->show();
+    connect(dialog, &ChangeEquipmentDialog::ok_clicked, [=](QJsonArray p) {
+        list->insertItem(current, new EventListItem(list,mc,mic,Factory().create_event_command(319,indent,p)));
+        this->close();
+    });
 }
 
 
 void EventCommandDialog::on_button_change_actor_name_clicked()
 {
+    QJsonArray parameters;
+    parameters.append(1);
+    parameters.append("");
+    ChangeActorNameDialog *dialog = new ChangeActorNameDialog(db, parameters);
+         dialog->show();
+         QObject::connect(dialog, &ChangeActorNameDialog::ok_clicked, [=](QJsonArray p) {
+             list->insertItem(current, new EventListItem(list,mc,mic,Factory().create_event_command(320,indent,p)));
+             this->close();
+         });
 
 }
 
@@ -1068,7 +1099,18 @@ void EventCommandDialog::on_button_change_actor_class_clicked()
 
 void EventCommandDialog::on_button_change_actor_graphic_clicked()
 {
-
+    QJsonArray parameters;
+    parameters.append(1);
+    parameters.append("");
+    parameters.append(0);
+    parameters.append("");
+    parameters.append(0);
+    ChangeActorGraphicDialog *dialog = new ChangeActorGraphicDialog(db, parameters);
+    dialog->show();
+    QObject::connect(dialog, &ChangeActorGraphicDialog::ok_clicked, [=](QJsonArray p) {
+        list->insertItem(current, new EventListItem(list,mc,mic,Factory().create_event_command(322,indent,p)));
+        this->close();
+    });
 }
 
 void EventCommandDialog::on_button_change_enemy_hp_clicked()

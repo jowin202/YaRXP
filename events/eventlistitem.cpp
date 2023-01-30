@@ -472,8 +472,7 @@ void EventListItem::edit_cell()
     }
     else if (code == 104)
     {
-        ChangeTextOptionsDialog *dialog = new ChangeTextOptionsDialog;
-        dialog->setParameters(parameters);
+        ChangeTextOptionsDialog *dialog = new ChangeTextOptionsDialog(parameters);
         dialog->show();
         QObject::connect(dialog, &ChangeTextOptionsDialog::ok_clicked, [=](QJsonArray parameters) {
             this->obj.insert("@parameters", parameters);

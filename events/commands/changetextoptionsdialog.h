@@ -15,10 +15,9 @@ class ChangeTextOptionsDialog : public QWidget
     Q_OBJECT
 
 public:
-    explicit ChangeTextOptionsDialog(QWidget *parent = nullptr);
+    explicit ChangeTextOptionsDialog(QJsonArray parameters, QWidget *parent = nullptr);
     ~ChangeTextOptionsDialog();
 
-    void setParameters(QJsonArray parameters);
 
     void keyPressEvent(QKeyEvent *e) {
         if(e->key() == Qt::Key_Escape)
