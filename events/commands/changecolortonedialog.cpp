@@ -82,7 +82,7 @@ void ChangeColorToneDialog::on_button_ok_clicked()
     p.append(Factory().create_color_tone(this->ui->spin_red->value(), this->ui->spin_green->value(), this->ui->spin_blue->value(), this->ui->spin_gray->value(),code!=224));
     p.append(this->ui->spin_time->value());
 
-    emit ok_clicked(p);
     this->close();
+    emit ok_clicked(p);
 }
 

@@ -17,7 +17,7 @@ class EventCommandDialog : public QWidget
     Q_OBJECT
 
 public:
-    explicit EventCommandDialog(QListWidget *list, RPGDB *db, RPGMapController *mc, RPGMapInfoController *mic, int current, QWidget *parent = nullptr);
+    explicit EventCommandDialog(QListWidget *list, RPGDB *db, RPGMapController *mc, int current, QWidget *parent = nullptr);
     ~EventCommandDialog();
 
 private slots:

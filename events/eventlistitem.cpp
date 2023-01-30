@@ -38,6 +38,7 @@
 #include "commands/seteventlocationdialog.h"
 #include "commands/battleprocessingdialog.h"
 #include "commands/moveroutedialog.h"
+#include "commands/buttoninputprocessingdialog.h"
 
 #include "dialogs/audiodialog.h"
 #include "dialogs/imagedialog.h"
@@ -480,6 +481,15 @@ void EventListItem::edit_cell()
             this->update_text();
         });
     }
+    else if (code == 105)
+    {
+        ButtonInputProcessingDialog *dialog = new ButtonInputProcessingDialog(db, parameters);
+        dialog->show();
+        QObject::connect(dialog, &ButtonInputProcessingDialog::ok_clicked, [=](QJsonArray parameters) {
+            this->obj.insert("@parameters", parameters);
+            this->update_text();
+        });
+    }
     else if (code == 106 || code == 235 || code == 242 || code == 246)
     {
         QString text1;
@@ -533,7 +543,7 @@ void EventListItem::edit_cell()
             this->update_text();
         });
     }
-    else if (code == 105 || code == 117 || code == 314 || code == 334 || code == 335) //single combo box
+    else if (code == 117 || code == 314 || code == 334 || code == 335) //single combo box
     {
         SingleComboDialog *dialog = new SingleComboDialog(this->db, code, parameters.at(0).toInt());
         dialog->show();

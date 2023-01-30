@@ -17,7 +17,6 @@ TransferPlayerDialog::TransferPlayerDialog(RPGDB *db, QJsonArray parameters, QWi
     this->ui->widget_var_x->setVariableWidget(db);
     this->ui->widget_var_y->setVariableWidget(db);
 
-    //qDebug() << parameters;
 
     if (parameters.at(0).toInt() == 0)
     {

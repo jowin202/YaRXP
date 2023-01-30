@@ -9,18 +9,7 @@ SingleComboDialog::SingleComboDialog(RPGDB *db, int code, int current, QWidget *
 {
     ui->setupUi(this);
     this->code = code;
-    if (code == 105)
-    {
-        this->setWindowTitle("Button Input Processing");
-        this->ui->label->setText("Variable for Button Code: ");
-        for (int i = 1; i < db->get_variable_names().count(); i++)
-        {
-            this->ui->comboBox->addItem(QString("%1: %2").arg(i,4,10,QChar('0')).arg(db->get_variable_name(i)), i);
-            if (i == current)
-                this->ui->comboBox->setCurrentIndex(this->ui->comboBox->count()-1);
-        }
-    }
-    else if (code == 117)
+    if (code == 117)
     {
         this->setWindowTitle("Call Common Event");
         this->ui->label->setText("Common Event: ");
@@ -65,11 +54,11 @@ void SingleComboDialog::on_button_cancel_clicked()
 void SingleComboDialog::on_button_ok_clicked()
 {
     QJsonArray array;
-    if (code == 105 || code == 117) array.append(this->ui->comboBox->currentData().toInt());
+    if (code == 117) array.append(this->ui->comboBox->currentData().toInt());
     else if (code == 314 || code == 335) array.append(this->ui->comboBox->currentIndex());
     else //if (code == 334)
         array.append(this->ui->comboBox->currentIndex()-1); //subtract -1 because of decoding
-    emit ok_clicked(array);
     this->close();
+    emit ok_clicked(array);
 }
 

@@ -176,6 +176,7 @@ void ImageDialog::update_image()
 void ImageDialog::on_button_ok_clicked()
 {
 
+    this->close();
     if (this->mode == FOGS)
         emit ok_clicked_with_fog_options(this->ui->spin_sx->value(),
                                          this->ui->spin_sy->value(),
@@ -195,7 +196,6 @@ void ImageDialog::on_button_ok_clicked()
         }
     }
 
-    this->close();
 }
 
 void ImageDialog::on_button_cancel_clicked()

@@ -34,6 +34,8 @@ ChangeStateDialog::ChangeStateDialog(RPGDB *db, int code, QJsonArray parameters,
     {
         this->setWindowTitle("Change Skills");
         this->ui->label_2->setText("Skill:");
+        this->ui->radio_add->setText("Learn");
+        this->ui->radio_remove->setText("Forget");
         db->fill_combo(this->ui->comboBox, RPGDB::ACTORS, true, 3);
         this->ui->comboBox->setCurrentIndex(parameters.at(0).toInt()-1);
 
@@ -74,8 +76,7 @@ void ChangeStateDialog::on_button_ok_clicked()
         p.append(1);
 
     p.append(this->ui->combo_state->currentIndex()+1);
-    emit ok_clicked(p);
-
     this->close();
+    emit ok_clicked(p);
 }
 

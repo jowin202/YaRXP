@@ -41,11 +41,12 @@
 #include "commands/seteventlocationdialog.h"
 #include "commands/battleprocessingdialog.h"
 #include "commands/moveroutedialog.h"
+#include "commands/buttoninputprocessingdialog.h"
 
 #include "dialogs/audiodialog.h"
 #include "dialogs/imagedialog.h"
 
-EventCommandDialog::EventCommandDialog(QListWidget *list, RPGDB *db, RPGMapController *mc, RPGMapInfoController *mic, int current, QWidget *parent) :
+EventCommandDialog::EventCommandDialog(QListWidget *list, RPGDB *db, RPGMapController *mc, int current, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::EventCommandDialog)
 {
@@ -53,7 +54,7 @@ EventCommandDialog::EventCommandDialog(QListWidget *list, RPGDB *db, RPGMapContr
     this->list = list;
     this->db = db;
     this->mc = mc;
-    this->mic = mic;
+    this->mic = new RPGMapInfoController(db);
     this->current = current;
 
     if (dynamic_cast<EventListItem*>(list->item(current)) != nullptr)
@@ -119,7 +120,14 @@ void EventCommandDialog::on_button_change_text_options_clicked()
 
 void EventCommandDialog::on_button_button_input_processing_clicked()
 {
-
+    QJsonArray p;
+    p.append(1);
+    ButtonInputProcessingDialog *dialog = new ButtonInputProcessingDialog(db, p);
+    dialog->show();
+    QObject::connect(dialog, &ButtonInputProcessingDialog::ok_clicked, [=](QJsonArray parameters) {
+        list->insertItem(current, new EventListItem(list,mc,mic,Factory().create_event_command(105,indent,parameters)));
+        this->close();
+    });
 }
 
 
@@ -204,7 +212,12 @@ void EventCommandDialog::on_button_erase_event_clicked()
 
 void EventCommandDialog::on_button_call_common_event_clicked()
 {
-
+    SingleComboDialog *dialog = new SingleComboDialog(this->db, 117, 1);
+    dialog->show();
+    QObject::connect(dialog, &SingleComboDialog::ok_clicked, [=](QJsonArray parameters) {
+        list->insertItem(current, new EventListItem(list,mc,mic,Factory().create_event_command(117,indent,parameters)));
+        this->close();
+    });
 }
 
 
@@ -329,7 +342,14 @@ void EventCommandDialog::on_button_change_party_member_clicked()
 
 void EventCommandDialog::on_button_change_windowskin_clicked()
 {
-
+    ImageDialog *dialog = new ImageDialog(db, ImageDialog::WINDOWSKINS, "");
+    dialog->show();
+    connect(dialog, &ImageDialog::ok_clicked, [=](QString img) {
+        QJsonArray p;
+        p.append(img);
+        list->insertItem(current, new EventListItem(list,mc,mic,Factory().create_event_command(131,indent,p)));
+        this->close();
+    });
 }
 
 
@@ -407,7 +427,7 @@ void EventCommandDialog::on_button_transfer_player_clicked()
     parameters.append(0);
     TransferPlayerDialog *dialog = new TransferPlayerDialog(db,parameters);
     dialog->show();
-    QObject::connect(dialog, &TransferPlayerDialog::ok_clicked, [=](QJsonArray p) {
+    connect(dialog, &TransferPlayerDialog::ok_clicked, [=](QJsonArray p) {
         list->insertItem(current, new EventListItem(list,mc,mic,Factory().create_event_command(201,indent,p)));
         this->close();
     });
@@ -416,7 +436,18 @@ void EventCommandDialog::on_button_transfer_player_clicked()
 
 void EventCommandDialog::on_button_set_event_location_clicked()
 {
-
+    QJsonArray parameters;
+    parameters.append(0);
+    parameters.append(0);
+    parameters.append(0);
+    parameters.append(0);
+    parameters.append(0);
+    SetEventLocationDialog *dialog = new SetEventLocationDialog(db,mc,parameters);
+    dialog->show();
+    connect(dialog, &SetEventLocationDialog::ok_clicked, [=](QJsonArray p) {
+        list->insertItem(current, new EventListItem(list,mc,mic,Factory().create_event_command(202,indent,p)));
+        this->close();
+    });
 }
 
 
@@ -434,7 +465,15 @@ void EventCommandDialog::on_button_change_map_settings_clicked()
 
 void EventCommandDialog::on_button_change_color_fog_tone_clicked()
 {
-
+    QJsonArray parameters;
+    parameters.append(Factory().create_color_tone(0,0,0,0,true));
+    parameters.append(20);
+    ChangeColorToneDialog *dialog = new ChangeColorToneDialog(db, 205, parameters);
+    dialog->show();
+    connect(dialog, &ChangeColorToneDialog::ok_clicked, [=](QJsonArray p) {
+        list->insertItem(current, new EventListItem(list,mc,mic,Factory().create_event_command(205,indent,p)));
+        this->close();
+    });
 }
 
 
@@ -492,19 +531,42 @@ void EventCommandDialog::on_button_prepare_transition_clicked()
 
 void EventCommandDialog::on_button_execute_transition_clicked()
 {
-
+    ImageDialog *dialog = new ImageDialog(db, ImageDialog::TRANSITIONS, "");
+    dialog->show();
+    connect(dialog, &ImageDialog::ok_clicked, [=](QString img) {
+        QJsonArray p;
+        p.append(img);
+        list->insertItem(current, new EventListItem(list,mc,mic,Factory().create_event_command(222,indent,p)));
+        this->close();
+    });
 }
 
 
 void EventCommandDialog::on_button_change_screen_color_tone_clicked()
 {
-
+    QJsonArray parameters;
+    parameters.append(Factory().create_color_tone(0,0,0,0,true));
+    parameters.append(20);
+    ChangeColorToneDialog *dialog = new ChangeColorToneDialog(db, 223, parameters);
+    dialog->show();
+    connect(dialog, &ChangeColorToneDialog::ok_clicked, [=](QJsonArray p) {
+        list->insertItem(current, new EventListItem(list,mc,mic,Factory().create_event_command(223,indent,p)));
+        this->close();
+    });
 }
 
 
 void EventCommandDialog::on_button_screen_flash_clicked()
 {
-
+    QJsonArray parameters;
+    parameters.append(Factory().create_color_tone(255,255,255,255,false));
+    parameters.append(10);
+    ChangeColorToneDialog *dialog = new ChangeColorToneDialog(db, 224, parameters);
+    dialog->show();
+    connect(dialog, &ChangeColorToneDialog::ok_clicked, [=](QJsonArray p) {
+        list->insertItem(current, new EventListItem(list,mc,mic,Factory().create_event_command(224,indent,p)));
+        this->close();
+    });
 }
 
 
@@ -576,7 +638,16 @@ void EventCommandDialog::on_button_rotate_picture_clicked()
 
 void EventCommandDialog::on_button_change_picture_color_tone_clicked()
 {
-
+    QJsonArray parameters;
+    parameters.append(1);
+    parameters.append(Factory().create_color_tone(0,0,0,0,true));
+    parameters.append(20);
+    ChangeColorToneDialog *dialog = new ChangeColorToneDialog(db, 234, parameters);
+    dialog->show();
+    connect(dialog, &ChangeColorToneDialog::ok_clicked, [=](QJsonArray p) {
+        list->insertItem(current, new EventListItem(list,mc,mic,Factory().create_event_command(234,indent,p)));
+        this->close();
+    });
 }
 
 
@@ -773,13 +844,27 @@ void EventCommandDialog::on_button_change_sp_clicked()
 
 void EventCommandDialog::on_button_change_state_clicked()
 {
-
+    QJsonArray p;
+    p.append(0);
+    p.append(0);
+    p.append(1);
+    ChangeStateDialog *dialog = new ChangeStateDialog(db, 313, p);
+    dialog->show();
+    QObject::connect(dialog, &ChangeStateDialog::ok_clicked, [=](QJsonArray p) {
+        list->insertItem(current, new EventListItem(list,mc,mic,Factory().create_event_command(313,indent,p)));
+        this->close();
+    });
 }
 
 
 void EventCommandDialog::on_button_recover_all_clicked()
 {
-
+    SingleComboDialog *dialog = new SingleComboDialog(this->db, 314, 0);
+    dialog->show();
+    QObject::connect(dialog, &SingleComboDialog::ok_clicked, [=](QJsonArray parameters) {
+        list->insertItem(current, new EventListItem(list,mc,mic,Factory().create_event_command(314,indent,parameters)));
+        this->close();
+    });
 }
 
 
@@ -834,7 +919,16 @@ void EventCommandDialog::on_button_change_parameters_clicked()
 
 void EventCommandDialog::on_button_change_skills_clicked()
 {
-
+    QJsonArray p;
+    p.append(1);
+    p.append(0);
+    p.append(1);
+    ChangeStateDialog *dialog = new ChangeStateDialog(db, 318, p);
+    dialog->show();
+    QObject::connect(dialog, &ChangeStateDialog::ok_clicked, [=](QJsonArray p) {
+        list->insertItem(current, new EventListItem(list,mc,mic,Factory().create_event_command(318,indent,p)));
+        this->close();
+    });
 }
 
 
@@ -896,19 +990,38 @@ void EventCommandDialog::on_button_change_enemy_sp_clicked()
 
 void EventCommandDialog::on_button_change_enemy_state_clicked()
 {
-
+    QJsonArray p;
+    p.append(-1);
+    p.append(0);
+    p.append(1);
+    ChangeStateDialog *dialog = new ChangeStateDialog(db, 333, p);
+    dialog->show();
+    QObject::connect(dialog, &ChangeStateDialog::ok_clicked, [=](QJsonArray p) {
+        list->insertItem(current, new EventListItem(list,mc,mic,Factory().create_event_command(333,indent,p)));
+        this->close();
+    });
 }
 
 
 void EventCommandDialog::on_button_enemy_recover_all_clicked()
 {
-
+    SingleComboDialog *dialog = new SingleComboDialog(this->db, 334, -1);
+    dialog->show();
+    QObject::connect(dialog, &SingleComboDialog::ok_clicked, [=](QJsonArray parameters) {
+        list->insertItem(current, new EventListItem(list,mc,mic,Factory().create_event_command(334,indent,parameters)));
+        this->close();
+    });
 }
 
 
 void EventCommandDialog::on_button_enemy_appearance_clicked()
 {
-
+    SingleComboDialog *dialog = new SingleComboDialog(this->db, 335, 0);
+    dialog->show();
+    QObject::connect(dialog, &SingleComboDialog::ok_clicked, [=](QJsonArray parameters) {
+        list->insertItem(current, new EventListItem(list,mc,mic,Factory().create_event_command(335,indent,parameters)));
+        this->close();
+    });
 }
 
 
