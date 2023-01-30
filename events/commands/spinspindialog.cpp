@@ -67,7 +67,7 @@ void SpinSpinDialog::on_button_ok_clicked()
     QJsonArray p;
     p.append(this->ui->spinBox->value());
     p.append(this->ui->spinBox_2->value());
-    emit ok_clicked(p);
     this->close();
+    emit ok_clicked(p);
 }
 

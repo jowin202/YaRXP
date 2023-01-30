@@ -4,6 +4,7 @@
 #include "events/eventlistitem.h"
 #include "RXIO2/rpgmapcontroller.h"
 #include "RXIO2/rpgmapinfocontroller.h"
+#include "RXIO2/rpgdb.h"
 #include "RXIO2/factory.h"
 
 
@@ -397,7 +398,19 @@ void EventCommandDialog::on_button_change_encounter_clicked()
 
 void EventCommandDialog::on_button_transfer_player_clicked()
 {
-
+    QJsonArray parameters;
+    parameters.append(0);
+    parameters.append(mc->get_current_map_id());
+    parameters.append(0);
+    parameters.append(0);
+    parameters.append(0);
+    parameters.append(0);
+    TransferPlayerDialog *dialog = new TransferPlayerDialog(db,parameters);
+    dialog->show();
+    QObject::connect(dialog, &TransferPlayerDialog::ok_clicked, [=](QJsonArray p) {
+        list->insertItem(current, new EventListItem(list,mc,mic,Factory().create_event_command(201,indent,p)));
+        this->close();
+    });
 }
 
 
@@ -427,7 +440,15 @@ void EventCommandDialog::on_button_change_color_fog_tone_clicked()
 
 void EventCommandDialog::on_button_change_fog_opacity_clicked()
 {
-
+    QJsonArray parameters;
+    parameters.append(64);
+    parameters.append(20);
+    SpinSpinDialog *dialog = new SpinSpinDialog(206, parameters);
+    dialog->show();
+    QObject::connect(dialog, &SpinSpinDialog::ok_clicked, [=](QJsonArray p) {
+        list->insertItem(current, new EventListItem(list,mc,mic,Factory().create_event_command(206,indent,p)));
+        this->close();
+    });
 }
 
 
@@ -495,19 +516,61 @@ void EventCommandDialog::on_button_screen_shake_clicked()
 
 void EventCommandDialog::on_button_show_picture_clicked()
 {
+    QJsonArray parameters;
+    parameters.append(1);
+    parameters.append("");
+    parameters.append(0);
+    parameters.append(0);
+    parameters.append(0);
+    parameters.append(0);
+    parameters.append(100);
+    parameters.append(100);
+    parameters.append(255);
+    parameters.append(0);
 
+    PictureDialog *dialog = new PictureDialog(db, 231, parameters);
+    dialog->show();
+    connect(dialog, &PictureDialog::ok_clicked, [=](QJsonArray p) {
+        list->insertItem(current, new EventListItem(list,mc,mic,Factory().create_event_command(231,indent,p)));
+        this->close();
+    });
 }
 
 
 void EventCommandDialog::on_button_move_picture_clicked()
 {
+    QJsonArray parameters;
+    parameters.append(1);
+    parameters.append(20);
+    parameters.append(0);
+    parameters.append(0);
+    parameters.append(0);
+    parameters.append(0);
+    parameters.append(100);
+    parameters.append(100);
+    parameters.append(255);
+    parameters.append(0);
 
+    PictureDialog *dialog = new PictureDialog(db, 232, parameters);
+    dialog->show();
+    connect(dialog, &PictureDialog::ok_clicked, [=](QJsonArray p) {
+        list->insertItem(current, new EventListItem(list,mc,mic,Factory().create_event_command(232,indent,p)));
+        this->close();
+    });
 }
 
 
 void EventCommandDialog::on_button_rotate_picture_clicked()
 {
-
+    QJsonArray parameters;
+    parameters.append(1);
+    parameters.append(5);
+    SpinSpinDialog *dialog = new SpinSpinDialog(233, parameters);
+    dialog->show();
+    QObject::connect(dialog, &SpinSpinDialog::ok_clicked, [=](QJsonArray p) {
+        list->insertItem(current, new EventListItem(list,mc,mic,Factory().create_event_command(233,indent,p)));
+        this->close();
+    });
 }
 
 
@@ -535,7 +598,16 @@ void EventCommandDialog::on_button_erase_picture_clicked()
 
 void EventCommandDialog::on_button_set_weather_effects_clicked()
 {
-
+    QJsonArray parameters;
+    parameters.append(0);
+    parameters.append(5);
+    parameters.append(0);
+    WeatherDialog *dialog = new WeatherDialog(parameters);
+    dialog->show();
+    QObject::connect(dialog, &WeatherDialog::ok_clicked, [=](QJsonArray p) {
+        list->insertItem(current, new EventListItem(list,mc,mic,Factory().create_event_command(236,indent,p)));
+        this->close();
+    });
 }
 
 

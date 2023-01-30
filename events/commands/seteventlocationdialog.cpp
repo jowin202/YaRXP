@@ -98,8 +98,8 @@ void SetEventLocationDialog::on_button_ok_clicked()
 
     p.append(this->ui->combo_direction->currentIndex()*2);
 
-    emit ok_clicked(p);
     this->close();
+    emit ok_clicked(p);
 }
 
 

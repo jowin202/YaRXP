@@ -14,7 +14,7 @@ class WeatherDialog : public QWidget
     Q_OBJECT
 
 public:
-    explicit WeatherDialog(int code, QJsonArray parameters, QWidget *parent = nullptr);
+    explicit WeatherDialog(QJsonArray parameters, QWidget *parent = nullptr);
     ~WeatherDialog();
     void keyPressEvent(QKeyEvent *e) {
         if(e->key() == Qt::Key_Escape)

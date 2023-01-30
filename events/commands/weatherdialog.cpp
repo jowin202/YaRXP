@@ -1,13 +1,12 @@
 #include "weatherdialog.h"
 #include "ui_weatherdialog.h"
 
-WeatherDialog::WeatherDialog(int code, QJsonArray parameters, QWidget *parent) :
+WeatherDialog::WeatherDialog(QJsonArray parameters, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::WeatherDialog)
 {
     ui->setupUi(this);
 
-    Q_UNUSED(code);
 
     if (parameters.at(0).toInt() == 0)
         this->ui->radio_none->setChecked(true);
@@ -56,7 +55,7 @@ void WeatherDialog::on_button_ok_clicked()
     p.append(this->ui->spin_time->value());
 
 
-    emit ok_clicked(p);
     this->close();
+    emit ok_clicked(p);
 }
 

@@ -226,7 +226,7 @@
      <item row="0" column="0" rowspan="3" colspan="3">
       <widget class="QStackedWidget" name="stackedWidget">
        <property name="currentIndex">
-        <number>0</number>
+        <number>1</number>
        </property>
        <widget class="QWidget" name="page">
         <layout class="QGridLayout" name="gridLayout_6">
@@ -260,6 +260,9 @@
          </item>
          <item row="1" column="0">
           <widget class="QSpinBox" name="spin_pic_num">
+           <property name="minimum">
+            <number>1</number>
+           </property>
            <property name="maximum">
             <number>50</number>
            </property>
@@ -290,7 +293,14 @@
           </widget>
          </item>
          <item row="1" column="1">
-          <widget class="QSpinBox" name="spin_time"/>
+          <widget class="QSpinBox" name="spin_time">
+           <property name="minimum">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <number>1000</number>
+           </property>
+          </widget>
          </item>
          <item row="1" column="2">
           <widget class="QLabel" name="label_12">
@@ -320,7 +330,11 @@
           </widget>
          </item>
          <item row="1" column="0">
-          <widget class="QSpinBox" name="spin_pic_num_2"/>
+          <widget class="QSpinBox" name="spin_pic_num_2">
+           <property name="minimum">
+            <number>1</number>
+           </property>
+          </widget>
          </item>
         </layout>
        </widget>

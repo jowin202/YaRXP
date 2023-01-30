@@ -43,7 +43,7 @@ void ChangePartyMemberDialog::on_button_ok_clicked()
     else
         p.append(0);
 
-    ok_clicked(p);
     this->close();
+    emit ok_clicked(p);
 }
 

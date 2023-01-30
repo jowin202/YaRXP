@@ -71,8 +71,8 @@ void TransferPlayerDialog::on_button_ok_clicked()
     p.append(this->ui->combo_direction->currentIndex()*2);
     p.append(this->ui->combo_fade->currentIndex());
 
-    emit ok_clicked(p);
     this->close();
+    emit ok_clicked(p);
 }
 
 

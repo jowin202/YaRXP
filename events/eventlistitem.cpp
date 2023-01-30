@@ -597,7 +597,7 @@ void EventListItem::edit_cell()
     }
     else if (code == 236) //weather
     {
-        WeatherDialog *dialog = new WeatherDialog(code, parameters);
+        WeatherDialog *dialog = new WeatherDialog(parameters);
         dialog->show();
         QObject::connect(dialog, &WeatherDialog::ok_clicked, [=](QJsonArray p) {
             this->obj.insert("@parameters", p);
