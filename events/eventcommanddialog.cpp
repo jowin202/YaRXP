@@ -14,7 +14,7 @@
 #include "commands/singlecombodialog.h"
 #include "commands/increasedecreasedialog.h"
 #include "commands/changestatedialog.h"
-#include "commands/combospindialog.h"
+#include "commands/nameinputprocessingdialog.h"
 #include "commands/changecolortonedialog.h"
 #include "commands/combocombodialog.h"
 #include "commands/weatherdialog.h"
@@ -42,6 +42,7 @@
 #include "commands/battleprocessingdialog.h"
 #include "commands/moveroutedialog.h"
 #include "commands/buttoninputprocessingdialog.h"
+#include "commands/inputnumberdialog.h"
 
 #include "dialogs/audiodialog.h"
 #include "dialogs/imagedialog.h"
@@ -103,12 +104,63 @@ void EventCommandDialog::on_button_show_text_clicked()
 
 void EventCommandDialog::on_button_show_choices_clicked()
 {
+    QJsonArray parameters;
+    QJsonArray stringlist;
+    stringlist.append("Yes");
+    stringlist.append("No");
+    parameters.append(stringlist);
+    parameters.append(2);
+    ChoicesDialog *dialog = new ChoicesDialog(parameters);
+    dialog->show();
+    QObject::connect(dialog, &ChoicesDialog::ok_clicked, [=](QJsonArray p) {
+        list->insertItem(current, new EventListItem(list,mc,mic,Factory().create_event_command(102,indent,p)));
+
+        //branch end
+        list->insertItem(current+1, new EventListItem(list,mc,mic,Factory().create_event_command(404,indent, QJsonArray())));
+
+        //else
+        if (p.at(1).toInt() == 5)
+        {
+            //create 403
+            list->insertItem(current+1, new EventListItem(list,mc,mic,Factory().create_event_command(0,indent+1, QJsonArray())));
+            list->insertItem(current+1, new EventListItem(list,mc,mic,Factory().create_event_command(403,indent, QJsonArray())));
+        }
+
+
+
+        QJsonArray choices = p.at(0).toArray();
+        while (choices.count() > 0)
+        {
+            //create more choices 402
+            list->insertItem(current+1, new EventListItem(list,mc,mic,Factory().create_event_command(0,indent+1, QJsonArray())));
+            QJsonArray item_p = QJsonArray();
+            item_p.append(choices.count()-1);
+            item_p.append(p.at(0).toArray().at(choices.count()-1).toString());
+            list->insertItem(current+1, new EventListItem(list,mc,mic,Factory().create_event_command(402,indent, item_p)));
+            choices.removeLast();
+        }
+
+
+        this->close();
+
+
+    });
 }
 
 
 void EventCommandDialog::on_button_input_number_clicked()
 {
 
+    QJsonArray parameters;
+    parameters.append(1);
+    parameters.append(1);
+
+    InputNumberDialog *dialog = new InputNumberDialog(db,parameters);
+    dialog->show();
+    QObject::connect(dialog, &InputNumberDialog::ok_clicked, [=](QJsonArray parameters) {
+        list->insertItem(current, new EventListItem(list,mc,mic,Factory().create_event_command(103,indent,parameters)));
+        this->close();
+    });
 }
 
 
@@ -124,7 +176,6 @@ void EventCommandDialog::on_button_change_text_options_clicked()
         list->insertItem(current, new EventListItem(list,mc,mic,Factory().create_event_command(104,indent,parameters)));
         this->close();
     });
-
 }
 
 
@@ -914,18 +965,68 @@ void EventCommandDialog::on_button_stop_se_clicked()
 
 void EventCommandDialog::on_button_battle_processing_clicked()
 {
+    QJsonArray parameters;
+    parameters.append(1);
+    parameters.append(false);
+    parameters.append(false);
+    BattleProcessingDialog *dialog = new BattleProcessingDialog(db,parameters);
+    dialog->show();
+    QObject::connect(dialog, &BattleProcessingDialog::ok_clicked, [=](QJsonArray p) {
+        list->insertItem(current, new EventListItem(list,mc,mic,Factory().create_event_command(301,indent,p)));
 
+        if (p.at(1).toBool() || p.at(2).toBool())
+        {
+            //inverse order
+            list->insertItem(current+1,new EventListItem(list,mc,mic, Factory().create_event_command(604,indent,QJsonArray())));
+
+            if (p.at(2).toBool())
+            {
+                list->insertItem(current+1,new EventListItem(list,mc,mic, Factory().create_event_command(0,indent+1,QJsonArray())));
+                list->insertItem(current+1,new EventListItem(list,mc,mic, Factory().create_event_command(603,indent,QJsonArray())));
+            }
+
+            if (p.at(1).toBool())
+            {
+                list->insertItem(current+1,new EventListItem(list,mc,mic, Factory().create_event_command(0,indent+1,QJsonArray())));
+                list->insertItem(current+1,new EventListItem(list,mc,mic, Factory().create_event_command(602,indent,QJsonArray())));
+            }
+
+            list->insertItem(current+1,new EventListItem(list,mc,mic, Factory().create_event_command(0,indent+1,QJsonArray())));
+            list->insertItem(current+1,new EventListItem(list,mc,mic, Factory().create_event_command(601,indent,QJsonArray())));
+
+        }
+        this->close();
+    });
 }
 
 
 void EventCommandDialog::on_battle_shop_processing_clicked()
 {
+    ShopProcessingDialog *dialog = new ShopProcessingDialog(db,QJsonArray());
+    dialog->show();
+    QObject::connect(dialog, &ShopProcessingDialog::ok_clicked, [=](QJsonArray shop_params) {
+        list->insertItem(current, new EventListItem(list,mc,mic,Factory().create_event_command(302,indent,shop_params.at(0).toArray())));
 
+        for (int i = shop_params.count()-1; i > 0; i--)
+        {
+            list->insertItem(current+1,new EventListItem(list,mc,mic, Factory().create_event_command(605,indent,shop_params.at(i).toArray())));
+        }
+        this->close();
+    });
 }
 
 
 void EventCommandDialog::on_battle_input_name_processing_clicked()
 {
+    QJsonArray parameters;
+    parameters.append(1);
+    parameters.append(6);
+    NameInputProcessingDialog *dialog = new NameInputProcessingDialog(db, parameters);
+    dialog->show();
+    connect(dialog, &NameInputProcessingDialog::ok_clicked, [=](QJsonArray p) {
+        list->insertItem(current, new EventListItem(list,mc,mic,Factory().create_event_command(303,indent,p)));
+        this->close();
+    });
 
 }
 

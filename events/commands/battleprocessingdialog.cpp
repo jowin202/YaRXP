@@ -28,8 +28,8 @@ void BattleProcessingDialog::on_button_ok_clicked()
     p.append(this->ui->check_escape->isChecked());
     p.append(this->ui->check_can_lose->isChecked());
 
-    emit ok_clicked(p);
     this->close();
+    emit ok_clicked(p);
 }
 
 

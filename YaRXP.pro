@@ -89,12 +89,13 @@ SOURCES += \
     events/commands/changestatedialog.cpp \
     events/commands/changetextoptionsdialog.cpp \
     events/commands/combocombodialog.cpp \
-    events/commands/combospindialog.cpp \
     events/commands/controlswitchesdialog.cpp \
     events/commands/controlvariablesdialog.cpp \
     events/commands/dealdamagedialog.cpp \
     events/commands/forceactiondialog.cpp \
     events/commands/increasedecreasedialog.cpp \
+    events/commands/inputnumberdialog.cpp \
+    events/commands/nameinputprocessingdialog.cpp \
     events/commands/picturedialog.cpp \
     events/commands/radiodialog.cpp \
     events/commands/screenshakedialog.cpp \
@@ -200,12 +201,13 @@ HEADERS += \
     events/commands/changestatedialog.h \
     events/commands/changetextoptionsdialog.h \
     events/commands/combocombodialog.h \
-    events/commands/combospindialog.h \
     events/commands/controlswitchesdialog.h \
     events/commands/controlvariablesdialog.h \
     events/commands/dealdamagedialog.h \
     events/commands/forceactiondialog.h \
     events/commands/increasedecreasedialog.h \
+    events/commands/inputnumberdialog.h \
+    events/commands/nameinputprocessingdialog.h \
     events/commands/picturedialog.h \
     events/commands/radiodialog.h \
     events/commands/screenshakedialog.h \
@@ -287,12 +289,13 @@ FORMS += \
     events/commands/changestatedialog.ui \
     events/commands/changetextoptionsdialog.ui \
     events/commands/combocombodialog.ui \
-    events/commands/combospindialog.ui \
     events/commands/controlswitchesdialog.ui \
     events/commands/controlvariablesdialog.ui \
     events/commands/dealdamagedialog.ui \
     events/commands/forceactiondialog.ui \
     events/commands/increasedecreasedialog.ui \
+    events/commands/inputnumberdialog.ui \
+    events/commands/nameinputprocessingdialog.ui \
     events/commands/picturedialog.ui \
     events/commands/radiodialog.ui \
     events/commands/screenshakedialog.ui \

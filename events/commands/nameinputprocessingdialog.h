@@ -1,5 +1,5 @@
-#ifndef COMBOSPINDIALOG_H
-#define COMBOSPINDIALOG_H
+#ifndef NAMEINPUTPROCESSINGDIALOG_H
+#define NAMEINPUTPROCESSINGDIALOG_H
 
 #include <QWidget>
 #include <QJsonArray>
@@ -8,17 +8,16 @@
 class RPGDB;
 
 namespace Ui {
-class ComboSpinDialog;
+class NameInputProcessingDialog;
 }
 
-class ComboSpinDialog : public QWidget
+class NameInputProcessingDialog : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit ComboSpinDialog(RPGDB *db, int code, QJsonArray parameters, QWidget *parent = nullptr);
-    ~ComboSpinDialog();
-
+    explicit NameInputProcessingDialog(RPGDB *db, QJsonArray parameters, QWidget *parent = nullptr);
+    ~NameInputProcessingDialog();
 
     void keyPressEvent(QKeyEvent *e) {
         if(e->key() == Qt::Key_Escape)
@@ -37,7 +36,7 @@ private slots:
     void on_button_ok_clicked();
 
 private:
-    Ui::ComboSpinDialog *ui;
+    Ui::NameInputProcessingDialog *ui;
 };
 
-#endif // COMBOSPINDIALOG_H
+#endif // NAMEINPUTPROCESSINGDIALOG_H

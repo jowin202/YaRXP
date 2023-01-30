@@ -11,7 +11,7 @@
 #include "commands/singlecombodialog.h"
 #include "commands/increasedecreasedialog.h"
 #include "commands/changestatedialog.h"
-#include "commands/combospindialog.h"
+#include "commands/nameinputprocessingdialog.h"
 #include "commands/changecolortonedialog.h"
 #include "commands/combocombodialog.h"
 #include "commands/weatherdialog.h"
@@ -39,6 +39,7 @@
 #include "commands/battleprocessingdialog.h"
 #include "commands/moveroutedialog.h"
 #include "commands/buttoninputprocessingdialog.h"
+#include "commands/inputnumberdialog.h"
 
 #include "dialogs/audiodialog.h"
 #include "dialogs/imagedialog.h"
@@ -227,7 +228,6 @@ void EventListItem::edit_cell()
 
             int newpos_604 = pos_604; //can be changed
 
-
             //both unchecked, delete all
             if (!p.at(1).toBool() && !p.at(2).toBool()
                     && row+1 < parent->count() && dynamic_cast<EventListItem*>(parent->item(row+1)) != nullptr
@@ -267,7 +267,6 @@ void EventListItem::edit_cell()
             }
 
 
-
             QJsonObject obj_new;
 
             //if one is checked, and there is the "win" branch, create it
@@ -295,8 +294,6 @@ void EventListItem::edit_cell()
                 obj_new.insert("@parameters", QJsonArray());
                 parent->insertItem(row+1,new EventListItem(parent,mc,mic, obj_new));
             }
-
-
 
             if (p.at(2).toBool() && pos_603 == -1)
             {
@@ -326,8 +323,6 @@ void EventListItem::edit_cell()
                 obj_new.insert("@parameters", QJsonArray());
                 parent->insertItem(pos,new EventListItem(parent,mc,mic, obj_new));
             }
-
-
         });
     }
     else if (code == 302)
@@ -467,7 +462,6 @@ void EventListItem::edit_cell()
                     return; //when reaching 403 or 404 and else branch handling is finished, we can stop
                 }
             }
-
         });
     }
     else if (code == 104)
@@ -576,11 +570,20 @@ void EventListItem::edit_cell()
             this->update_text();
         });
     }
-    else if (code == 103 || code == 303) //Input Number Processing, Name Input Processing
+    else if (code == 303) //Name Input Processing
     {
-        ComboSpinDialog *dialog = new ComboSpinDialog(db, code, parameters);
+        NameInputProcessingDialog *dialog = new NameInputProcessingDialog(db, parameters);
         dialog->show();
-        QObject::connect(dialog, &ComboSpinDialog::ok_clicked, [=](QJsonArray p) {
+        QObject::connect(dialog, &NameInputProcessingDialog::ok_clicked, [=](QJsonArray p) {
+            this->obj.insert("@parameters", p);
+            this->update_text();
+        });
+    }
+    else if (code == 103) //Input Number
+    {
+        InputNumberDialog *dialog = new InputNumberDialog(db, parameters);
+        dialog->show();
+        QObject::connect(dialog, &InputNumberDialog::ok_clicked, [=](QJsonArray p) {
             this->obj.insert("@parameters", p);
             this->update_text();
         });

@@ -79,8 +79,8 @@ void ChoicesDialog::on_button_ok_clicked()
     else if (this->ui->radioButton_6->isChecked())
         p.append(5);
 
-    emit ok_clicked(p);
     this->close();
+    emit ok_clicked(p);
 }
 
 

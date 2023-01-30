@@ -43,8 +43,8 @@ ShopProcessingDialog::~ShopProcessingDialog()
 
 void ShopProcessingDialog::on_button_ok_clicked()
 {
-    emit ok_clicked(this->shop_params);
     this->close();
+    emit ok_clicked(this->shop_params);
 }
 
 
