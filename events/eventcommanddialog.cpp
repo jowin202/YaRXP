@@ -56,6 +56,10 @@ EventCommandDialog::EventCommandDialog(QListWidget *list, RPGDB *db, RPGMapContr
     this->db = db;
     this->mc = mc;
     this->mic = new RPGMapInfoController(db);
+
+    if (current < 0)
+        current = list->count()-1;
+
     this->current = current;
 
     if (dynamic_cast<EventListItem*>(list->item(current)) != nullptr)

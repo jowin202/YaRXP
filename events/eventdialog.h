@@ -7,6 +7,7 @@
 #include <QJsonDocument>
 #include <QJsonValue>
 #include <QJsonArray>
+#include <QSettings>
 //#include <QCryptographicHash>
 #include "eventpage.h"
 
@@ -41,6 +42,10 @@ private slots:
     void on_button_ok_clicked();
     void on_button_cancel_clicked();
     void on_button_apply_clicked();
+
+    void on_button_copy_clicked();
+
+    void on_button_paste_clicked();
 
 private:
     Ui::EventDialog *ui;

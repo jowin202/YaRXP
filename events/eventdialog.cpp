@@ -97,3 +97,25 @@ void EventDialog::on_button_apply_clicked()
     mc->set_event_by_id(id, this->event);
     this->do_numbers_of_tabs_right();
 }
+
+void EventDialog::on_button_copy_clicked()
+{
+    QJsonDocument doc(((EventPage*)this->ui->tab_widget->currentWidget())->getPage());
+    QSettings settings;
+    settings.setValue("copied_event_page", doc.toJson(QJsonDocument::Compact));
+}
+
+
+void EventDialog::on_button_paste_clicked()
+{
+    QSettings settings;
+    QByteArray json = settings.value("copied_event_page").toByteArray();
+
+    QJsonParseError err;
+    QJsonDocument doc = QJsonDocument::fromJson(json, &err);
+    if (err.error != QJsonParseError::NoError) return;
+
+    this->ui->tab_widget->insertTab(this->ui->tab_widget->currentIndex(), new EventPage(doc.object(), mc), QString());
+    this->do_numbers_of_tabs_right();
+}
+
