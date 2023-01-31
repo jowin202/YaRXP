@@ -13,6 +13,7 @@ public:
 
     QString get_existing_directory();
     QImage get_image();
+    QString get_audio();
     QString get_existing_file();
 
 private:

@@ -91,6 +91,10 @@ public:
     QString project_dir;
     QString data_dir;
     QString audio_dir;
+    QString bgm_dir;
+    QString bgs_dir;
+    QString me_dir;
+    QString se_dir;
     QString graphics_dir;
     QString tileset_dir;
     QString autotiles_dir;

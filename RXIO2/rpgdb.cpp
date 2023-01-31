@@ -19,6 +19,12 @@ void RPGDB::load_project(QString dir)
     this->project_dir = dir;
     this->data_dir = FileOpener(this->project_dir, "data").get_existing_directory();
     this->audio_dir = FileOpener(this->project_dir, "audio").get_existing_directory();
+
+    this->audio_dir = FileOpener(this->project_dir, "audio").get_existing_directory();
+    this->bgm_dir = FileOpener(this->audio_dir, "bgm").get_existing_directory();
+    this->bgs_dir = FileOpener(this->audio_dir, "bgs").get_existing_directory();
+    this->me_dir = FileOpener(this->audio_dir, "me").get_existing_directory();
+    this->se_dir = FileOpener(this->audio_dir, "se").get_existing_directory();
     this->graphics_dir = FileOpener(this->project_dir, "graphics").get_existing_directory();
     this->tileset_dir = FileOpener(this->graphics_dir, "tilesets").get_existing_directory();
     this->autotiles_dir = FileOpener(this->graphics_dir, "autotiles").get_existing_directory();

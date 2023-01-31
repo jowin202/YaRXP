@@ -2,12 +2,15 @@
 #include "ui_audiodialog.h"
 
 #include "RXIO2/rpgdb.h"
+#include "RXIO2/fileopener.h"
 
 AudioDialog::AudioDialog(RPGDB *db, QString name, int volume, int pitch, int mode, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::AudioDialog)
 {
     ui->setupUi(this);
+    player.setAudioOutput(&this->audio_out);
+
 
     this->db = db;
     this->mode = mode;
@@ -20,12 +23,24 @@ AudioDialog::AudioDialog(RPGDB *db, QString name, int volume, int pitch, int mod
 
     switch(mode)
     {
-    case BGM: music_type = "BGM"; break;
-    case BGS: music_type = "BGS"; break;
-    case ME: music_type = "ME"; break;
-    case SE: music_type = "SE"; break;
+    case BGM:
+        this->setWindowTitle("BGM");
+        this->directory = db->bgm_dir;
+        break;
+    case BGS:
+        this->setWindowTitle("BGS");
+        this->directory = db->bgs_dir;
+        break;
+    case ME:
+        this->setWindowTitle("ME");
+        this->directory = db->me_dir;
+        break;
+    case SE:
+        this->setWindowTitle("SE");
+        this->directory = db->se_dir;
+        break;
     }
-    this->setWindowTitle(music_type);
+
 
     this->update_audio_list();
 }
@@ -39,13 +54,12 @@ void AudioDialog::update_audio_list()
 {
     this->ui->list->clear();
     this->ui->list->addItem("(None)");
-    QDir music_dir(this->db->project_dir + "Audio" + QDir::separator() + music_type);
+    QDir music_dir(this->directory);
 
 
-    QStringList entries = music_dir.entryList(QDir::Filter::NoFilter, QDir::SortFlag::Name);
+    QStringList entries = music_dir.entryList(QDir::Filter::Files | QDir::Filter::NoDotAndDotDot, QDir::SortFlag::Name);
     for (QString entry : entries)
     {
-        if (entry == "." || entry == "..") continue;
         this->ui->list->addItem(entry);
         if (this->name == entry.chopped(4))
         {
@@ -71,16 +85,16 @@ void AudioDialog::on_button_cancel_clicked()
 
 void AudioDialog::on_button_play_clicked()
 {
-    QMediaPlayer *player = new QMediaPlayer(this);
-    connect(player, &QMediaPlayer::errorOccurred, this, [=](QMediaPlayer::Error error, const QString &errorString){ qDebug() << error << errorString; });
 
-    player->setSource(QUrl::fromLocalFile(db->project_dir + "Audio" + QDir::separator() +  music_type + QDir::separator() + this->ui->list->currentItem()->text()));
-    player->play();
+    connect(&player, &QMediaPlayer::errorOccurred, this, [=](QMediaPlayer::Error error, const QString &errorString){ qDebug() << error << errorString; });
+
+    player.setSource(QUrl::fromLocalFile(FileOpener(this->directory,this->ui->list->currentItem()->text()).get_audio()));
+    player.play();
 }
 
 void AudioDialog::on_button_stop_clicked()
 {
-
+    player.stop();
 }
 
 void AudioDialog::on_list_doubleClicked(const QModelIndex &index)
@@ -89,18 +103,3 @@ void AudioDialog::on_list_doubleClicked(const QModelIndex &index)
         this->on_button_ok_clicked();
 }
 
-void AudioDialog::on_button_import_clicked()
-{
-    //TODO : Check this
-    QStringList files = QFileDialog::getOpenFileNames(this, "Choose files", QDir::currentPath(), "");
-
-    for (int i = 0; i < files.length(); i++)
-    {
-        if (QFile::exists(files.at(i)))
-        {
-            QFile::copy(files.at(i), db->project_dir + "Audio" + QDir::separator() + music_type + QDir::separator());
-        }
-    }
-
-    this->update_audio_list();
-}

@@ -35,6 +35,20 @@ QImage FileOpener::get_image()
     return QImage(fullpath);
 }
 
+QString FileOpener::get_audio()
+{
+    QDir dir(path);
+    QStringList filters = { name, name + ".wav", name + ".mp3", name + ".ogg", name + ".mid" };
+    QFileInfoList files = dir.entryInfoList(filters, QDir::NoDotAndDotDot | QDir::Files);
+
+
+    if (files.length() == 0) return "";
+
+    QString fullpath = files.at(0).absoluteFilePath();
+
+    return fullpath;
+}
+
 QString FileOpener::get_existing_file()
 {
     QDir dir(path);

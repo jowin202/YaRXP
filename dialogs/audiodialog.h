@@ -10,6 +10,7 @@
 #include <QSoundEffect>
 
 #include <QMediaPlayer>
+#include <QAudioOutput>
 
 
 namespace Ui {
@@ -48,14 +49,15 @@ private slots:
 
     void on_list_doubleClicked(const QModelIndex &index);
 
-    void on_button_import_clicked();
 
 private:
     Ui::AudioDialog *ui;
     RPGDB *db;
     QString name;
     int mode = -1;
-    QString music_type;
+    QString directory;
+    QMediaPlayer player;
+    QAudioOutput audio_out;
 };
 
 #endif // AUDIODIALOG_H
