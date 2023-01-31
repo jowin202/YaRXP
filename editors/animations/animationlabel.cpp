@@ -160,9 +160,6 @@ void AnimationLabel::update(int frame)
         }
     }
 
-
-
-
     painter.end();
     this->setPixmap(QPixmap::fromImage(img));
 }
@@ -193,6 +190,8 @@ void AnimationLabel::set_animation_graphic(QString name, int hue)
         this->current_animation_graphic = name;
         this->current_frame = -1;
     }
+    else
+        this->current_animation_graphic = "";
 
 }
 
@@ -208,6 +207,82 @@ void AnimationLabel::mousePressEvent(QMouseEvent *e)
         {
             this->current_rectangle = i.key();
             this->update(this->current_frame);
+            this->is_moving = true;
+            return;
         }
     }
+
+    //if reached here, insert pattern
+    if (this->current_animation_graphic == "") return; //but only if pattern available
+    if (qAbs((e->pos().x()-4)/4 * 8 - 320) > 320)
+        return;
+    if (qAbs((e->pos().y()-36)/4 * 8 - 160) > 160)
+        return;
+
+    x = (e->pos().x()-4)/4 * 8 - 320;
+    y = (e->pos().y()-36)/4 * 8 - 160;
+
+    int max_cell = ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray().at(current_frame).toObject().value("@cell_max").toInt();
+
+    QJsonArray cell_values = ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray().at(current_frame).toObject().value("@cell_data").toObject().value("values").toArray();
+    cell_values.insert(8*max_cell, 0);   //blending
+    cell_values.insert(7*max_cell, 255);   //opacity
+    cell_values.insert(6*max_cell, 0);   //flip
+    cell_values.insert(5*max_cell, 0);   //angle
+    cell_values.insert(4*max_cell, 100); //zoom
+    cell_values.insert(3*max_cell,y);
+    cell_values.insert(2*max_cell,x);
+    cell_values.insert(1*max_cell,pattern);
+
+    QJsonObject cell_data = ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray().at(current_frame).toObject().value("@cell_data").toObject();
+    cell_data.insert("values", cell_values);
+
+    QJsonObject thisframe = ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray().at(current_frame).toObject();
+    thisframe.insert("@cell_data", cell_data);
+    thisframe.insert("@cell_max", max_cell+1);
+
+    QJsonArray frame_array = ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray();
+    frame_array.removeAt(current_frame);
+    frame_array.insert(current_frame, thisframe);
+
+    ec->obj_set_jsonvalue(RPGDB::ANIMATIONS, "@frames", frame_array);
+    this->update(current_frame);
+}
+
+void AnimationLabel::mouseMoveEvent(QMouseEvent *e)
+{
+    Q_UNUSED(e);
+    if (is_moving)
+    {
+        if (qAbs((e->pos().x()-4)/4 * 8 - 320) <= 320)
+            x = (e->pos().x()-4)/4 * 8 - 320;
+        if (qAbs((e->pos().y()-36)/4 * 8 - 160) <= 160)
+            y = (e->pos().y()-36)/4 * 8 - 160;
+
+        int max_cell = ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray().at(current_frame).toObject().value("@cell_max").toInt();
+        QJsonArray cell_values = ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray().at(current_frame).toObject().value("@cell_data").toObject().value("values").toArray();
+        cell_values.removeAt(1*max_cell+current_rectangle);
+        cell_values.insert(1*max_cell+current_rectangle,x);
+        cell_values.removeAt(2*max_cell+current_rectangle);
+        cell_values.insert(2*max_cell+current_rectangle,y);
+
+        QJsonObject cell_data = ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray().at(current_frame).toObject().value("@cell_data").toObject();
+        cell_data.insert("values", cell_values);
+
+        QJsonObject thisframe = ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray().at(current_frame).toObject();
+        thisframe.insert("@cell_data", cell_data);
+
+        QJsonArray frame_array = ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray();
+        frame_array.removeAt(current_frame);
+        frame_array.insert(current_frame, thisframe);
+
+        ec->obj_set_jsonvalue(RPGDB::ANIMATIONS, "@frames", frame_array);
+        this->update(current_frame);
+    }
+}
+
+void AnimationLabel::mouseReleaseEvent(QMouseEvent *e)
+{
+    Q_UNUSED(e);
+    this->is_moving = false;
 }

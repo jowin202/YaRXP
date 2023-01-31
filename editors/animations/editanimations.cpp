@@ -43,6 +43,8 @@ void EditAnimations::setEC(RPGEditorController *ec)
     });
 
 
+    //click on the preview to set pattern for the label
+    connect(this->ui->graphic_preview_label, SIGNAL(cell_chosen(int)), this->ui->animation_label, SLOT(set_pattern(int)));
 }
 
 void EditAnimations::on_button_animation_clicked()

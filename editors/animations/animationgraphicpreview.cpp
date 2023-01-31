@@ -22,7 +22,16 @@ void AnimationGraphicPreview::update()
     if (this->db == 0) return;
 
     QImage img = FileOpener(this->db->animations_dir, filename).get_image();
-    if (img.isNull()) return;
+    if (img.isNull())
+    {
+        QImage bg(96, 96, QImage::Format_ARGB32_Premultiplied);
+        QPainter painter(&bg);
+        painter.setPen(Qt::black);
+        painter.fillRect(0,0,bg.width(),bg.height(),db->transparent);
+        painter.end();
+        this->setPixmap(QPixmap::fromImage(bg));
+        return;
+    }
     img = img.scaled(img.width()/2, img.height()/2);
     img.convertTo(QImage::Format_ARGB32_Premultiplied);
     for (int y = 0; y < img.height(); y++)

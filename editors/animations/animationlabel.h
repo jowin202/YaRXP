@@ -21,6 +21,11 @@ public:
     void set_animation_graphic(QString name, int hue);
 
     void mousePressEvent(QMouseEvent *e);
+    void mouseMoveEvent(QMouseEvent *e);
+    void mouseReleaseEvent(QMouseEvent *e);
+
+public slots:
+    void set_pattern(int p) { this->pattern = p;}
 
 private:
     int current_frame = -1;
@@ -32,6 +37,12 @@ private:
 
     QMap<int,QRect> current_red_rectangles;
     int current_rectangle = -1;
+    bool is_moving = false;
+
+    int x=0;//internal use only
+    int y=0;
+
+    int pattern = 0;
 
 };
 
