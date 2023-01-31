@@ -89,8 +89,17 @@ void AnimationLabel::update(int frame)
                 int x = values.at(cell_max+i).toInt()/2;
                 int y = values.at(2*cell_max+i).toInt()/2;
                 int zoom = values.at(3*cell_max+i).toInt();
+                int angle = values.at(4*cell_max+i).toInt();
 
                 int size = qRound(96*zoom/100.0);
+
+
+                if (angle != 0)
+                {
+                    qreal scale = (qCos(qAbs(angle)/180.0 * 3.1415926)+qSin(qAbs(angle)/180.0 * 3.1415926));
+                    size = qRound(size*scale);
+                }
+
                 painter.drawRect(img.width()/2-size/2+x,img.height()/2-size/2+y,size-1,size-1);
             }
         }
@@ -111,21 +120,32 @@ void AnimationLabel::update(int frame)
                 int x = values.at(cell_max+i).toInt()/2;
                 int y = values.at(2*cell_max+i).toInt()/2;
                 int zoom = values.at(3*cell_max+i).toInt();
-                //int angle = values.at(4*cell_max+i).toInt();
+                int angle = values.at(4*cell_max+i).toInt();
                 int flip = values.at(5*cell_max+i).toInt();
                 int opacity = values.at(6*cell_max+i).toInt();
                 //int blending = values.at(7*cell_max+i).toInt();
 
-                painter.setOpacity(opacity/255.0);
                 int size = qRound(96*zoom/100.0);
                 if (!this->animation_graphic.isNull() && pattern >= 0)
                 {
                     QImage graphic = animation_graphic.copy(QRect((pattern%5)*96,(pattern/5)*96,95,95));
                     if (flip == 1)
                         graphic.mirror(true,false);
+
+                    if (angle != 0)
+                    {
+                        qreal scale = (qCos(qAbs(angle)/180.0 * 3.1415926)+qSin(qAbs(angle)/180.0 * 3.1415926));
+                        size = qRound(size*scale);
+                        QTransform tr;
+                        tr.scale(scale,scale);
+                        tr.rotate(-angle);
+                        QPixmap pix = QPixmap::fromImage(graphic);
+                        graphic = pix.transformed(tr).toImage();
+                    }
+                    painter.setOpacity(opacity/255.0);
                     painter.drawImage(QRect(img.width()/2-size/2+x,img.height()/2-size/2+y,size-1,size-1),
                                       graphic);
-                    //qDebug() << this->animation_graphic.isNull() << animation_graphic.size();
+                    painter.setOpacity(1);
                 }
                 painter.drawRect(img.width()/2-size/2+x,img.height()/2-size/2+y,size-1,size-1);
             }
