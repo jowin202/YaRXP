@@ -128,7 +128,7 @@ void AnimationLabel::update(int frame)
                 int size = qRound(96*zoom/100.0);
                 if (!this->animation_graphic.isNull() && pattern >= 0)
                 {
-                    QImage graphic = animation_graphic.copy(QRect((pattern%5)*96,(pattern/5)*96,95,95));
+                    QImage graphic = animation_graphic.copy(QRect((pattern%5)*192,(pattern/5)*192,191,191));
                     if (flip == 1)
                         graphic.mirror(true,false);
 
@@ -142,6 +142,7 @@ void AnimationLabel::update(int frame)
                         QPixmap pix = QPixmap::fromImage(graphic);
                         graphic = pix.transformed(tr).toImage();
                     }
+
                     painter.setOpacity(opacity/255.0);
                     painter.drawImage(QRect(img.width()/2-size/2+x,img.height()/2-size/2+y,size-1,size-1),
                                       graphic);
@@ -167,7 +168,7 @@ void AnimationLabel::set_animation_graphic(QString name, int hue)
 
     if (!this->animation_graphic.isNull())
     {
-        this->animation_graphic = animation_graphic.scaled(animation_graphic.width()/2, animation_graphic.height()/2);
+        //this->animation_graphic = animation_graphic.scaled(animation_graphic.width()/2, animation_graphic.height()/2);
         //adjust hue
         animation_graphic.convertTo(QImage::Format_ARGB32_Premultiplied);
         for (int y = 0; y < animation_graphic.height(); y++)
