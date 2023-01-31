@@ -7,7 +7,7 @@
 
 #include "spinspindialog.h"
 #include "dialogs/audiodialog.h"
-#include "dialogs/imagedialog.h"
+#include "dialogs/imagechooserdialog.h"
 #include "dialogs/listdialog.h"
 #include "dialogs/combodialog.h"
 
@@ -610,13 +610,19 @@ void MoveRouteDialog::on_button_always_on_top_off_clicked()
 
 void MoveRouteDialog::on_button_change_graphic_clicked()
 {
-    /*
-    ImageDialog *dialog = new ImageDialog(db,ImageDialog::CHARACTERS, "");
+    ImageChooserDialog *dialog = new ImageChooserDialog(db, "", 0, 0, 2, 255, 0, 0, 0);
     dialog->show();
-    connect(dialog, &ImageDialog::ok_clicked, [=](QString name)
+
+    connect(dialog, &ImageChooserDialog::ok_clicked, [=](QString name, int hue, int pattern, int direction, int opacity, int blend, int tile_id)
     {
         QJsonArray p;
         p.append(name);
+        p.append(hue);
+        p.append(direction);
+        p.append(pattern);
+        Q_UNUSED(opacity);
+        Q_UNUSED(blend);
+        Q_UNUSED(tile_id);
 
         int row = this->ui->listWidget->currentRow();
         QJsonObject obj = Factory().create_move_command(41);
@@ -625,8 +631,6 @@ void MoveRouteDialog::on_button_change_graphic_clicked()
         this->fill_list();
         this->ui->listWidget->setCurrentRow(row+1);
     });
-    */
-
 }
 
 
@@ -871,7 +875,29 @@ void MoveRouteDialog::on_listWidget_itemDoubleClicked(QListWidgetItem *item)
     }
     else if (code == 41)
     {
+        QJsonArray a = this->list.at(row).toObject().value("@parameters").toArray();
+        ImageChooserDialog *dialog = new ImageChooserDialog(db, a.at(0).toString(), a.at(1).toInt(), a.at(3).toInt(), a.at(2).toInt(), 255, 0, 0, 0);
+        dialog->show();
 
+        connect(dialog, &ImageChooserDialog::ok_clicked, [=](QString name, int hue, int pattern, int direction, int opacity, int blend, int tile_id)
+        {
+            QJsonArray p;
+            p.append(name);
+            p.append(hue);
+            p.append(direction);
+            p.append(pattern);
+            Q_UNUSED(opacity);
+            Q_UNUSED(blend);
+            Q_UNUSED(tile_id);
+
+            int row = this->ui->listWidget->currentRow();
+            QJsonObject obj = Factory().create_move_command(41);
+            obj.insert("@parameters", p);
+            this->list.removeAt(row);
+            this->list.insert(row, obj);
+            this->fill_list();
+            this->ui->listWidget->setCurrentRow(row);
+        });
     }
     else if (code == 42)
     {

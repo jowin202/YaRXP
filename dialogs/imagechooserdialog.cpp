@@ -19,6 +19,11 @@ ImageChooserDialog::ImageChooserDialog(RPGDB *db, QString character_name, int ch
     this->tile_id = tile_id;
     this->tileset_id = tileset_id;
 
+    if (tileset_id == 0) //called from moveroute
+    {
+        this->ui->groupBox->setVisible(false);
+    }
+
 
     this->ui->graphicsView->setScene(new QGraphicsScene);
     this->ui->graphicsView->setAlignment(Qt::AlignLeft | Qt::AlignTop);
@@ -39,7 +44,7 @@ ImageChooserDialog::ImageChooserDialog(RPGDB *db, QString character_name, int ch
 
     connect(this->ui->graphicsView, &CustomGraphicsView::clicked, [=](int x, int y)
     {
-        if (this->ui->list->currentRow() == 1)
+        if (this->ui->list->currentRow() == 1 && tileset_id > 0)
         {
             this->tile_id = 384 + 8*y + x;
         }
@@ -49,6 +54,7 @@ ImageChooserDialog::ImageChooserDialog(RPGDB *db, QString character_name, int ch
             this->direction = 2*(y+1);
         }
     });
+    connect(this->ui->graphicsView, SIGNAL(doubleclicked()), this, SLOT(on_button_ok_clicked()));
 }
 
 ImageChooserDialog::~ImageChooserDialog()
@@ -61,8 +67,8 @@ void ImageChooserDialog::update_image_list()
     this->ui->list->clear();
     this->ui->list->addItem("(None)");
 
-    //TODO: not in moveroute graphic
-    this->ui->list->addItem("(Tileset)");
+    if (tileset_id > 0)
+        this->ui->list->addItem("(Tileset)");
 
 
     QDir pics_dir(this->db->character_dir);
@@ -84,11 +90,11 @@ void ImageChooserDialog::update_image()
     {
         this->ui->graphicsView->scene()->clear();
         this->ui->graphicsView->scene()->setSceneRect(0,0,32,32);
-        this->ui->graphicsView->rectangle = new Rectangle(32, 32);
+        this->ui->graphicsView->rectangle = new Rectangle(32, 32, false);
         this->ui->graphicsView->rectangle->setPos(0,0);
         this->ui->graphicsView->scene()->addItem(this->ui->graphicsView->rectangle);
     }
-    else if(this->ui->list->currentRow() == 1)
+    else if(this->ui->list->currentRow() == 1 && tileset_id > 0)
     {
         //tileset
         QJsonObject current = db->get_tileset_by_id(tileset_id);
@@ -114,14 +120,14 @@ void ImageChooserDialog::update_image()
             this->ui->graphicsView->scene()->clear();
             this->ui->graphicsView->scene()->addItem(background);
             this->ui->graphicsView->scene()->setSceneRect(0,0,img.width(),img.height());
-            this->ui->graphicsView->rectangle = new Rectangle(32, 32);
+            this->ui->graphicsView->rectangle = new Rectangle(32, 32, true);
             this->ui->graphicsView->rectangle->setPos(0,0);
             this->ui->graphicsView->scene()->addItem(this->ui->graphicsView->rectangle);
             this->ui->graphicsView->centerOn(this->ui->graphicsView->rectangle);
         }
 
     }
-    else if (this->ui->list->currentRow() > 1)
+    else // not zero and not tileset
     {
         //images
         this->character_name = this->ui->list->currentItem()->text();
@@ -147,7 +153,7 @@ void ImageChooserDialog::update_image()
             this->ui->graphicsView->scene()->clear();
             this->ui->graphicsView->scene()->addItem(background);
             this->ui->graphicsView->scene()->setSceneRect(0,0,img.width(),img.height());
-            this->ui->graphicsView->rectangle = new Rectangle(img.width()/4, img.height()/4);
+            this->ui->graphicsView->rectangle = new Rectangle(img.width()/4, img.height()/4, false);
             this->ui->graphicsView->rectangle->setPos(img.width()/4 * pattern, img.height()/4 * (direction/2-1));
             this->ui->graphicsView->scene()->addItem(this->ui->graphicsView->rectangle);
             //this->centerOn(rectangle);
@@ -162,22 +168,22 @@ void ImageChooserDialog::on_button_ok_clicked()
         this->tile_id = 0;
         this->character_name = "";
     }
-    else if (this->ui->list->currentRow() == 1)
+    else if (this->ui->list->currentRow() == 1 && tileset_id > 0)
     {
         this->character_name = "";
     }
-    else if (this->ui->list->currentRow() > 1)
+    else //not tileset and not zero
         this->tile_id = 0;
 
     QString name = QString(character_name);
     name.chop(4);
+    this->close();
     emit ok_clicked(name,
                     this->ui->slider_hue->value(),
                     pattern,
                     direction,
                     this->ui->spin_opacity->value(),
                     this->ui->combo_blending->currentIndex(), tile_id);
-    this->close();
 }
 
 

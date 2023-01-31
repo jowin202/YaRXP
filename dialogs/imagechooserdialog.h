@@ -14,10 +14,11 @@ class RPGDB;
 class Rectangle : public QGraphicsItem
 {
 public:
-    Rectangle(int w, int h)
+    Rectangle(int w, int h, bool tileset)
     {
         this->w = w;
         this->h = h;
+        this->tileset = tileset;
     }
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) override {
@@ -37,6 +38,7 @@ public:
 
     int w = 32;
     int h = 32;
+    bool tileset;
 };
 
 class CustomGraphicsView : public QGraphicsView
@@ -54,14 +56,25 @@ public:
 
         if (rectangle != 0)
         {
+            if (rectangle->tileset && pos.x()/rectangle->w >= 8)
+                return;
+            if (!rectangle->tileset && (pos.x()/rectangle->w >= 4 || pos.y()/rectangle->h >= 4))
+                return;
             this->rectangle->setPos(((int)pos.x()/rectangle->w)*rectangle->w, ((int)pos.y()/rectangle->h)*rectangle->h);
             emit clicked(pos.x()/rectangle->w, pos.y()/rectangle->h);
         }
+    }
+
+    void mouseDoubleClickEvent(QMouseEvent *e)
+    {
+        Q_UNUSED(e);
+        emit doubleclicked();
     }
     Rectangle *rectangle = 0;
 
 signals:
     void clicked(int,int);
+    void doubleclicked();
 };
 
 namespace Ui {
@@ -88,15 +101,14 @@ public:
 
 signals:
     void ok_clicked(QString, int, int, int, int, int, int);
+
+
 private slots:
     void update_image_list();
     void update_image();
-
     void on_button_ok_clicked();
     void on_button_cancel_clicked();
-
     void on_list_currentRowChanged(int currentRow);
-
     void on_slider_hue_sliderMoved(int position);
 
 private:
