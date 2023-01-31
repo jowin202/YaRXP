@@ -14,6 +14,8 @@ void AnimationLabel::update(int frame)
     QPainter painter(&img);
     painter.fillRect(0,0,img.width(),img.height(), Qt::black);
 
+    this->current_frame = frame;
+    this->current_red_rectangles.clear();
 
     if (ec != 0)
     {
@@ -112,7 +114,6 @@ void AnimationLabel::update(int frame)
             int cell_max = current_frame.value("@cell_max").toInt();
             QJsonArray values = cell_data.value("values").toArray();
 
-            painter.setPen(Qt::red);
             for (int i = 0; i < cell_max; i++)
             {
                 int pattern = values.at(i).toInt();
@@ -148,7 +149,13 @@ void AnimationLabel::update(int frame)
                                       graphic);
                     painter.setOpacity(1);
                 }
-                painter.drawRect(img.width()/2-size/2+x,img.height()/2-size/2+y,size-1,size-1);
+                if (i == this->current_rectangle)
+                    painter.setPen(Qt::white);
+                else
+                    painter.setPen(Qt::red);
+                QRect rect(img.width()/2-size/2+x,img.height()/2-size/2+y,size-1,size-1);
+                painter.drawRect(rect);
+                this->current_red_rectangles.insert(i,rect);
             }
         }
     }
@@ -184,6 +191,23 @@ void AnimationLabel::set_animation_graphic(QString name, int hue)
 
         this->current_hue = hue;
         this->current_animation_graphic = name;
+        this->current_frame = -1;
     }
 
+}
+
+void AnimationLabel::mousePressEvent(QMouseEvent *e)
+{
+    if (this->current_frame == -1)
+        return;
+
+    QMapIterator<int, QRect> i(this->current_red_rectangles);
+    while (i.hasNext()) {
+        i.next();
+        if (i.value().contains(e->pos()))
+        {
+            this->current_rectangle = i.key();
+            this->update(this->current_frame);
+        }
+    }
 }
