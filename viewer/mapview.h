@@ -196,6 +196,7 @@ public slots:
             menu.addAction(&this->action_delete);
             menu.addSeparator();
             menu.addAction(&this->action_set_start);
+            menu.addAction(&this->action_follow_teleport);
             menu.exec(this->mapToGlobal(pos));
         }
     }
@@ -249,6 +250,7 @@ private:
     QAction action_paste;
     QAction action_delete;
     QAction action_set_start;
+    QAction action_follow_teleport;
 
 
 };

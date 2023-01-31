@@ -20,10 +20,10 @@ MapView::MapView(QWidget *parent) : QGraphicsView(parent)
 
     this->action_newevent.setText("New Event");
     this->action_newevent.setShortcut(Qt::Key_Enter);
-    connect(&this->action_newevent, &QAction::triggered, this, [=]{ if (opt.mode == EVENT) this->edit_event_on_pos(opt.marked_tile);});
+    connect(&this->action_newevent, &QAction::triggered, [=]{ if (opt.mode == EVENT) this->edit_event_on_pos(opt.marked_tile);});
     this->action_editevent.setText("Edit Event");
     this->action_editevent.setShortcut(Qt::Key_Return);
-    connect(&this->action_editevent, &QAction::triggered, this, [=]{ if (opt.mode == EVENT) this->edit_event_on_pos(opt.marked_tile);});
+    connect(&this->action_editevent, &QAction::triggered, [=]{ if (opt.mode == EVENT) this->edit_event_on_pos(opt.marked_tile);});
     this->addAction(&this->action_editevent); //return should work
     this->action_cut.setText("Cut");
     this->action_cut.setShortcut(QKeySequence(tr("Ctrl+X")));
@@ -38,6 +38,26 @@ MapView::MapView(QWidget *parent) : QGraphicsView(parent)
     this->action_delete.setShortcut(Qt::Key_Delete);
     connect(&this->action_delete, SIGNAL(triggered()), this, SLOT(do_delete()));
     this->action_set_start.setText("Set Starting Pos");
+    this->action_follow_teleport.setText("Follow Teleport");
+    this->action_follow_teleport.setShortcut(Qt::Key_F12);
+    this->addAction(&this->action_follow_teleport);
+    connect(&this->action_follow_teleport, &QAction::triggered, [=]()
+    {
+        QJsonObject event = this->mc.event_on_pos(opt.marked_tile);
+        for (int p = 0; p < event.value("@pages").toArray().count(); p++)
+        {
+            for (int c = 0; c < event.value("@pages").toArray().at(p).toObject().value("@list").toArray().count(); c++)
+            {
+                if (event.value("@pages").toArray().at(p).toObject().value("@list").toArray().at(c).toObject().value("@code").toInt() == 201
+                        && event.value("@pages").toArray().at(p).toObject().value("@list").toArray().at(c).toObject().value("@parameters").toArray().at(0).toInt() == 0)
+                {
+                    //qDebug() << "Page" << p+1 << "Line" << c << event.value("@pages").toArray().at(p).toObject().value("@list").toArray().at(c).toObject().value("@parameters").toArray();
+                    this->set_map(event.value("@pages").toArray().at(p).toObject().value("@list").toArray().at(c).toObject().value("@parameters").toArray().at(1).toInt());
+                    return;
+                }
+            }
+        }
+    });
 
     connect(this, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(prepare_context_menu(QPoint)));
 
