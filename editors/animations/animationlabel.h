@@ -24,6 +24,8 @@ public:
     void mouseMoveEvent(QMouseEvent *e);
     void mouseReleaseEvent(QMouseEvent *e);
 
+    void mouseDoubleClickEvent(QMouseEvent *e);
+
 public slots:
     void set_pattern(int p) { this->pattern = p;}
 

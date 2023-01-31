@@ -2,6 +2,7 @@
 #include "RXIO2/fileopener.h"
 #include "RXIO2/rpgeditorcontroller.h"
 #include "animationlabel.h"
+#include "cellpropertiesdialog.h"
 
 AnimationLabel::AnimationLabel(QWidget *parent) : QLabel(parent)
 {
@@ -285,4 +286,39 @@ void AnimationLabel::mouseReleaseEvent(QMouseEvent *e)
 {
     Q_UNUSED(e);
     this->is_moving = false;
+}
+
+void AnimationLabel::mouseDoubleClickEvent(QMouseEvent *e)
+{
+    if (this->current_frame == -1)
+        return;
+
+    QMapIterator<int, QRect> i(this->current_red_rectangles);
+    while (i.hasNext()) {
+        i.next();
+        if (i.value().contains(e->pos()))
+        {
+            this->current_rectangle = i.key();
+            int max_cell = ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray().at(current_frame).toObject().value("@cell_max").toInt();
+            QJsonArray cell_values = ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray().at(current_frame).toObject().value("@cell_data").toObject().value("values").toArray();
+            CellPropertiesDialog *dialog = new CellPropertiesDialog(cell_values, this->current_rectangle, max_cell);
+            dialog->show();
+            connect(dialog, &CellPropertiesDialog::ok_clicked, [=](QJsonArray cell_values)
+            {
+                QJsonObject cell_data = ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray().at(current_frame).toObject().value("@cell_data").toObject();
+                cell_data.insert("values", cell_values);
+
+                QJsonObject thisframe = ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray().at(current_frame).toObject();
+                thisframe.insert("@cell_data", cell_data);
+
+                QJsonArray frame_array = ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray();
+                frame_array.removeAt(current_frame);
+                frame_array.insert(current_frame, thisframe);
+
+                ec->obj_set_jsonvalue(RPGDB::ANIMATIONS, "@frames", frame_array);
+                this->update(current_frame);
+            });
+            return;
+        }
+    }
 }
