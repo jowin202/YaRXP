@@ -117,6 +117,7 @@ SOURCES += \
     events/eventlistitem.cpp \
     events/eventpage.cpp \
     events/commands/moveroutedialog.cpp \
+    import/importdialog.cpp \
     main.cpp \
     mainwindow.cpp \
     viewer/maprectangle.cpp \
@@ -229,6 +230,7 @@ HEADERS += \
     events/eventlistitem.h \
     events/eventpage.h \
     events/commands/moveroutedialog.h \
+    import/importdialog.h \
     mainwindow.h \
     viewer/maprectangle.h \
     viewer/mapselectrectangle.h \
@@ -316,6 +318,7 @@ FORMS += \
     events/eventdialog.ui \
     events/eventpage.ui \
     events/commands/moveroutedialog.ui \
+    import/importdialog.ui \
     mainwindow.ui
 
 # Default rules for deployment.

@@ -3,6 +3,8 @@
 #include "RXIO2/rpgdb.h"
 #include "RXIO2/rpgmapinfocontroller.h"
 
+#include "import/importdialog.h"
+
 MapTreeWidget::MapTreeWidget(QWidget *parent) : QTreeWidget(parent)
 {
     connect(this, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)), this, SLOT(clicked_at_item(QTreeWidgetItem*)));
@@ -33,6 +35,8 @@ MapTreeWidget::MapTreeWidget(QWidget *parent) : QTreeWidget(parent)
     connect(&action5, SIGNAL(triggered()), this, SLOT(delete_map()));
     action6.setText("&Import");
     action6.setShortcutContext(Qt::WidgetShortcut);
+    connect(&action6, &QAction::triggered, [=](){ ImportDialog *dialog = new ImportDialog(db); dialog->show();});
+
 
 
     menu.addAction(&action1);
