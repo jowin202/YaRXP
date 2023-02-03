@@ -69,7 +69,7 @@ void TilesetCompare::run()
     this->map.insert("@data",map_data);
 
     emit progress(id_collection.count());
-    emit finished(this->map);
+    emit has_result(this->map);
 }
 
 int TilesetCompare::find_tile_in_tileset(QImage tileset, QImage autotiles, QImage tile)

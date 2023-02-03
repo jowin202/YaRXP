@@ -242,13 +242,13 @@ void ImportDialog::on_button_adjust_clicked()
     TilesetCompare *compare = new TilesetCompare(tileset_img_new, tileset_img_orig, autotiles_new, autotiles_orig, map);
     connect(compare, SIGNAL(progress_start(int)), this->ui->progressBar, SLOT(setMaximum(int)));
     connect(compare, SIGNAL(progress(int)), this->ui->progressBar, SLOT(setValue(int)));
-    connect(compare, &TilesetCompare::finished, [=](QJsonObject map)
+    connect(compare, &TilesetCompare::has_result, [=](QJsonObject map)
     {
         this->adjusted_map = map;
         this->adjusted = true;
         this->display_maps();
     });
-    connect(compare, SIGNAL(finished(QJsonObject)), compare, SLOT(deleteLater()));
+    connect(compare, SIGNAL(finished()), compare, SLOT(deleteLater()));
     compare->start();
 }
 

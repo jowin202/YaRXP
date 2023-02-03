@@ -18,11 +18,36 @@ RPGEventListController::RPGEventListController(RPGMapController *mc, QListWidget
     font.setStyleHint(QFont::TypeWriter);
     listwidget->setFont(font);
 
-    listwidget->setDragDropMode(QAbstractItemView::InternalMove);
+    //listwidget->setDragDropMode(QAbstractItemView::InternalMove);
 
     connect(listwidget, &QListWidget::itemDoubleClicked, this, [=](QListWidgetItem *item) {
         if (dynamic_cast<EventListItem*>(item) != nullptr)
             ((EventListItem*)item)->edit_cell();
+    });
+
+
+    this->action_delete.setShortcut(Qt::Key_Delete);
+    this->action_delete.setShortcutContext(Qt::WidgetShortcut);
+    listwidget->addAction(&this->action_delete);
+    connect(&this->action_delete, &QAction::triggered, [=]()
+    {
+        int row = listwidget->currentRow();
+        if (row >= 0 && dynamic_cast<EventListItem*>(listwidget->item(row)) != nullptr)
+        {
+            int code = dynamic_cast<EventListItem*>(listwidget->item(row))->get_obj().value("@code").toInt();
+            if (code == 0 || code == 509) return; //cant delete this
+
+            if (code == 101 || code == 108 || code == 209 || code == 355)
+            {
+                delete listwidget->takeItem(row);
+                while (dynamic_cast<EventListItem*>(listwidget->item(row)) != nullptr &&
+                       dynamic_cast<EventListItem*>(listwidget->item(row))->get_obj().value("@code").toInt() == code+300)
+                    delete listwidget->takeItem(row);
+
+            }
+            else //delete the rest
+                delete listwidget->takeItem(row);
+        }
     });
 }
 

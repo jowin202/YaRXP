@@ -19,7 +19,7 @@ public:
     int find_tile_in_tileset(QImage tileset, QImage autotiles, QImage tile);
 
 signals:
-    void finished(QJsonObject);
+    void has_result(QJsonObject);
     void progress_start(int);
     void progress(int);
 

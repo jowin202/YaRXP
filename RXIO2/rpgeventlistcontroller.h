@@ -2,6 +2,7 @@
 #define RPGEVENTLISTCONTROLLER_H
 
 #include <QObject>
+#include <QAction>
 #include <QListWidget>
 
 class RPGDB;
@@ -30,6 +31,7 @@ private:
     RPGMapInfoController *mic;
     QListWidget *listwidget;
 
+    QAction action_delete;
 
 signals:
 
