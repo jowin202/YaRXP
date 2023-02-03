@@ -20,7 +20,8 @@ public:
 
 signals:
     void finished(QJsonObject);
-    void progress(int,int);
+    void progress_start(int);
+    void progress(int);
 
 private:
     QImage tileset1;

@@ -42,8 +42,8 @@ private:
     Ui::ImportDialog *ui;
     RPGDB *db;
     RPGDB *secondary_db = 0;
-    bool adjusted = false;
 
+    bool adjusted = false;
     QJsonObject adjusted_map;
 
     int id;

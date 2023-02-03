@@ -13,7 +13,6 @@ TilesetCompare::TilesetCompare(QImage tileset1, QImage tileset2, QImage autotile
 
 TilesetCompare::~TilesetCompare()
 {
-qDebug() << "destructor";
 }
 
 void TilesetCompare::run()
@@ -24,6 +23,7 @@ void TilesetCompare::run()
     QSet<int> id_collection;
     for (int i = 0; i < values.count(); i++)
         id_collection.insert(values.at(i).toInt());
+    emit progress_start(id_collection.count());
 
     QMap<int,int> id_transform;
 
@@ -49,7 +49,7 @@ void TilesetCompare::run()
         int new_id = this->find_tile_in_tileset(tileset1, autotiles1, tile);
         if (new_id >= 0)
             id_transform.insert(value,new_id);
-        emit progress(id_transform.size(),id_collection.count());
+        emit progress(id_transform.size());
     }
 
 
@@ -68,6 +68,7 @@ void TilesetCompare::run()
     map_data.insert("values", values);
     this->map.insert("@data",map_data);
 
+    emit progress(id_collection.count());
     emit finished(this->map);
 }
 

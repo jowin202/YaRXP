@@ -124,7 +124,6 @@ void ImportDialog::display_maps()
 
 void ImportDialog::draw_map_to_label(RPGDB *currentdb, QLabel *target, QJsonObject tileset, QJsonObject map)
 {
-    qDebug() << "begin: " << "draw_map_to_label";
     QJsonObject map_data = map.value("@data").toObject();
     int width = map_data.value("x").toInt(10);
     int height = map_data.value("y").toInt(10);
@@ -160,12 +159,10 @@ void ImportDialog::draw_map_to_label(RPGDB *currentdb, QLabel *target, QJsonObje
     }
     painter.end();
     target->setPixmap(QPixmap::fromImage(img));
-    qDebug() << "end: " << "draw_map_to_label";
 }
 
 QImage ImportDialog::get_autotiles_image(RPGDB *currentdb, QJsonObject tileset)
 {
-    qDebug() << "begin:" << "get_autotile_image";
     QImage result(8*32,6*32*8, QImage::Format_ARGB32_Premultiplied);
 
     for (int y = 0; y < result.height(); y++)
@@ -181,7 +178,6 @@ QImage ImportDialog::get_autotiles_image(RPGDB *currentdb, QJsonObject tileset)
         painter.drawImage(0,6*32*(i+1),Autotileset(FileOpener(currentdb->autotiles_dir, autotile_names.at(i).toString()).get_image()).get_full_tileset());
     }
     painter.end();
-    qDebug() << "end:" << "get_autotile_image";
     return result;
 }
 
@@ -226,8 +222,6 @@ void ImportDialog::on_button_import_clicked()
 
 void ImportDialog::on_button_adjust_clicked()
 {
-    qDebug() << "begin:" << "button_adjust";
-
     QJsonObject map = secondary_db->get_mapfile_by_id(id)->object();
     if (map.value("RXClass").toString() != "RPG::Map")
         return;
@@ -246,23 +240,15 @@ void ImportDialog::on_button_adjust_clicked()
 
 
     TilesetCompare *compare = new TilesetCompare(tileset_img_new, tileset_img_orig, autotiles_new, autotiles_orig, map);
-    connect(compare, &TilesetCompare::progress, [=](int a, int b)
-    {
-        this->ui->progressBar->setMaximum(b);
-        this->ui->progressBar->setValue(a);
-    });
+    connect(compare, SIGNAL(progress_start(int)), this->ui->progressBar, SLOT(setMaximum(int)));
+    connect(compare, SIGNAL(progress(int)), this->ui->progressBar, SLOT(setValue(int)));
     connect(compare, &TilesetCompare::finished, [=](QJsonObject map)
     {
-        qDebug() << "begin:" << "signal finished";
         this->adjusted_map = map;
         this->adjusted = true;
-        this->ui->progressBar->setMaximum(100);
-        this->ui->progressBar->setValue(100);
         this->display_maps();
-        qDebug() << "end:" << "signal finished";
     });
     connect(compare, SIGNAL(finished(QJsonObject)), compare, SLOT(deleteLater()));
     compare->start();
-    qDebug() << "end:" << "button_adjust";
 }
 
