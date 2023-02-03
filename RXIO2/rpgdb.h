@@ -61,12 +61,17 @@ public:
             qDebug() << "Error: ID already exists";
             return 0;
         }
-        else
+        this->map_files.insert(id, Factory().create_new_map());
+        return this->map_files.value(id);
+    }
+    QJsonDocument *create_mapfile_from_object_with_id(int id, QJsonObject map) {
+        if (this->map_files.contains(id))
         {
-            this->map_files.insert(id, Factory().create_new_map());
-            return this->map_files.value(id);
+            qDebug() << "Error: ID already exists";
+            return 0;
         }
-        return 0;
+        this->map_files.insert(id, new QJsonDocument(map));
+        return this->map_files.value(id);
     }
 
     //switches and variables

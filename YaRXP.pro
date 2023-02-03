@@ -118,6 +118,7 @@ SOURCES += \
     events/eventpage.cpp \
     events/commands/moveroutedialog.cpp \
     import/importdialog.cpp \
+    import/tilesetcompare.cpp \
     main.cpp \
     mainwindow.cpp \
     viewer/maprectangle.cpp \
@@ -231,6 +232,7 @@ HEADERS += \
     events/eventpage.h \
     events/commands/moveroutedialog.h \
     import/importdialog.h \
+    import/tilesetcompare.h \
     mainwindow.h \
     viewer/maprectangle.h \
     viewer/mapselectrectangle.h \

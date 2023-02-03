@@ -35,7 +35,11 @@ MapTreeWidget::MapTreeWidget(QWidget *parent) : QTreeWidget(parent)
     connect(&action5, SIGNAL(triggered()), this, SLOT(delete_map()));
     action6.setText("&Import");
     action6.setShortcutContext(Qt::WidgetShortcut);
-    connect(&action6, &QAction::triggered, [=](){ ImportDialog *dialog = new ImportDialog(db); dialog->show();});
+    connect(&action6, &QAction::triggered, [=](){
+        ImportDialog *dialog = new ImportDialog(db);
+        connect(dialog, SIGNAL(finished()), this, SLOT(list_maps()));
+        dialog->show();
+    });
 
 
 

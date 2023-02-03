@@ -6,6 +6,10 @@
 #include "RXIO2/rpgmapcontroller.h"
 #include "RXIO2/rpgmapinfocontroller.h"
 
+#include "RXIO2/autotileset.h"
+
+#include "tilesetcompare.h"
+
 ImportDialog::ImportDialog(RPGDB *db, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::ImportDialog)
@@ -14,10 +18,17 @@ ImportDialog::ImportDialog(RPGDB *db, QWidget *parent) :
     this->db = db;
     this->db->fill_combo(this->ui->combo_tileset,RPGDB::TILESETS, true, 3);
     this->ui->combo_tileset->setCurrentIndex(0);
-    connect(this->ui->combo_tileset, &QComboBox::currentIndexChanged, [=](){ this->display_map(); });
+    connect(this->ui->combo_tileset, &QComboBox::currentIndexChanged, [=](){ this->display_maps(); });
 
     this->ui->treeWidget->hideColumn(1);
     this->ui->treeWidget->hideColumn(2);
+
+    this->ui->splitter_2->setSizes(QList<int>() << 100 << 500);
+
+    connect(this->ui->scrollArea->verticalScrollBar(), SIGNAL(valueChanged(int)), this->ui->scrollArea_2->verticalScrollBar(), SLOT(setValue(int)));
+    connect(this->ui->scrollArea->horizontalScrollBar(), SIGNAL(valueChanged(int)), this->ui->scrollArea_2->horizontalScrollBar(), SLOT(setValue(int)));
+    connect(this->ui->scrollArea_2->verticalScrollBar(), SIGNAL(valueChanged(int)), this->ui->scrollArea->verticalScrollBar(), SLOT(setValue(int)));
+    connect(this->ui->scrollArea_2->horizontalScrollBar(), SIGNAL(valueChanged(int)), this->ui->scrollArea->horizontalScrollBar(), SLOT(setValue(int)));
 }
 
 ImportDialog::~ImportDialog()
@@ -82,37 +93,50 @@ void ImportDialog::list_maps()
     this->ui->treeWidget->sortItems(1,Qt::SortOrder::AscendingOrder);
 }
 
-void ImportDialog::display_map()
+void ImportDialog::display_maps()
 {
+    if (secondary_db->get_mapfile_by_id(id) == 0)
+        return;
     QJsonObject map = secondary_db->get_mapfile_by_id(id)->object();
     if (map.value("RXClass").toString() != "RPG::Map")
         return;
 
-    QJsonObject tileset_orig = secondary_db->get_tileset_by_id(map.value("@tileset_id").toInt());
-    QJsonObject tileset_new = db->get_tileset_by_id(this->ui->combo_tileset->currentData().toInt());
 
-    if (tileset_orig.value("RXClass").toString() != "RPG::Tileset" && tileset_new.value("RXClass").toString() != "RPG::Tileset")
-        return;
+    this->draw_map_to_label(secondary_db,this->ui->label_before,
+                            secondary_db->get_tileset_by_id(map.value("@tileset_id").toInt()),
+                            secondary_db->get_mapfile_by_id(id)->object());
 
-    QImage tileset_img = FileOpener(db->tileset_dir,tileset_new.value("@tileset_name").toString()).get_image();
+    if (adjusted)
+    {
+        this->draw_map_to_label(db,this->ui->label_after,
+                                db->get_tileset_by_id(this->ui->combo_tileset->currentData().toInt()),
+                                adjusted_map);
 
-    RPGMapController mc;
-    mc.setDB(secondary_db);
-    mc.setMap(id);
+    }
+    else
+    {
+        this->draw_map_to_label(db,this->ui->label_after,
+                                db->get_tileset_by_id(this->ui->combo_tileset->currentData().toInt()),
+                                secondary_db->get_mapfile_by_id(id)->object());
+    }
 
+}
 
+void ImportDialog::draw_map_to_label(RPGDB *currentdb, QLabel *target, QJsonObject tileset, QJsonObject map)
+{
+    qDebug() << "begin: " << "draw_map_to_label";
     QJsonObject map_data = map.value("@data").toObject();
-    int width = map_data.value("x").toInt();
-    int height = map_data.value("y").toInt();
+    int width = map_data.value("x").toInt(10);
+    int height = map_data.value("y").toInt(10);
 
-    QImage img_orig(width*32,height*32,QImage::Format_ARGB32_Premultiplied);
-    QImage img_new(width*32,height*32,QImage::Format_ARGB32_Premultiplied);
-    QPainter painter_orig;
-    QPainter painter_new;
-    painter_orig.begin(&img_orig);
-    painter_new.begin(&img_new);
-    painter_orig.fillRect(0,0,img_orig.width(), img_orig.height(), Qt::black);
-    painter_new.fillRect(0,0,img_new.width(), img_new.height(), Qt::black);
+    QImage tileset_img = FileOpener(currentdb->tileset_dir,tileset.value("@tileset_name").toString()).get_image();
+    QImage autotiles_img = this->get_autotiles_image(currentdb,tileset);
+
+
+    QImage img(width*32,height*32,QImage::Format_ARGB32_Premultiplied);
+
+    QPainter painter(&img);
+    painter.fillRect(0,0,img.width(), img.height(), Qt::black);
     for (int z = 0; z < 3; z++)
     {
         for (int y = 0; y < height; y++)
@@ -120,18 +144,45 @@ void ImportDialog::display_map()
             for (int x = 0; x < width; x++)
             {
                 int pos = x + y * width + height*width * z;
-                int id = map_data.value("values").toArray().at(pos).toInt() - 0x0180;
-                painter_orig.drawImage(32*x,32*y,mc.get_tile_from_id(map_data.value("values").toArray().at(pos).toInt()));
-                if (id > 0)
-                    painter_new.drawImage(32*x,32*y,tileset_img.copy(32*(id % 8), 32*(id / 8), 32, 32));
+                int id = map_data.value("values").toArray().at(pos).toInt();
+                if (id < 0x180 && id >= 48)
+                {
+                    //autotiles
+                    painter.drawImage(32*x,32*y,autotiles_img.copy(32*(id % 8), 32*(id / 8), 32, 32));
+                }
+                else if (id >= 0x180)
+                {
+                    id -= 0x180;
+                    painter.drawImage(32*x,32*y,tileset_img.copy(32*(id % 8), 32*(id / 8), 32, 32));
+                }
             }
         }
     }
-    painter_orig.end();
-    painter_new.end();
+    painter.end();
+    target->setPixmap(QPixmap::fromImage(img));
+    qDebug() << "end: " << "draw_map_to_label";
+}
 
-    this->ui->label_before->setPixmap(QPixmap::fromImage(img_orig));
-    this->ui->label_after->setPixmap(QPixmap::fromImage(img_new));
+QImage ImportDialog::get_autotiles_image(RPGDB *currentdb, QJsonObject tileset)
+{
+    qDebug() << "begin:" << "get_autotile_image";
+    QImage result(8*32,6*32*8, QImage::Format_ARGB32_Premultiplied);
+
+    for (int y = 0; y < result.height(); y++)
+        for (int x = 0; x < result.width(); x++)
+            result.setPixelColor(x,y,QColor(0,0,0,0));
+
+    QPainter painter(&result);
+
+    QJsonArray autotile_names = tileset.value("@autotile_names").toArray();
+
+    for (int i = 0; i < 7; i++)
+    {
+        painter.drawImage(0,6*32*(i+1),Autotileset(FileOpener(currentdb->autotiles_dir, autotile_names.at(i).toString()).get_image()).get_full_tileset());
+    }
+    painter.end();
+    qDebug() << "end:" << "get_autotile_image";
+    return result;
 }
 
 void ImportDialog::on_button_browse_clicked()
@@ -139,6 +190,8 @@ void ImportDialog::on_button_browse_clicked()
     QString name = QFileDialog::getOpenFileName(this, "Choose Project", QDir::homePath(), "RPG Maker Project Files (*.rxproj);;Data Files(*.rxdata)");
     if (name == "")
         return;
+
+    this->ui->line_location->setText(name);
 
     QFileInfo fi(name);
 
@@ -155,6 +208,61 @@ void ImportDialog::on_treeWidget_currentItemChanged(QTreeWidgetItem *current, QT
 {
     Q_UNUSED(previous);
     this->id = current->text(2).toInt();
-    this->display_map();
+    this->adjusted = false;
+    this->display_maps();
+}
+
+
+void ImportDialog::on_button_import_clicked()
+{
+    adjusted_map.insert("@tileset_id", this->ui->combo_tileset->currentData().toInt());
+    RPGMapInfoController mic(db);
+    int id = mic.get_lowest_available_id();
+    mic.create_map_from_object(id, adjusted_map);
+    mic.set_name(id, this->ui->treeWidget->currentItem()->text(0));
+    emit finished();
+}
+
+
+void ImportDialog::on_button_adjust_clicked()
+{
+    qDebug() << "begin:" << "button_adjust";
+
+    QJsonObject map = secondary_db->get_mapfile_by_id(id)->object();
+    if (map.value("RXClass").toString() != "RPG::Map")
+        return;
+
+    QJsonObject tileset_orig = secondary_db->get_tileset_by_id(map.value("@tileset_id").toInt());
+    QJsonObject tileset_new = db->get_tileset_by_id(this->ui->combo_tileset->currentData().toInt());
+
+    if (tileset_orig.value("RXClass").toString() != "RPG::Tileset" && tileset_new.value("RXClass").toString() != "RPG::Tileset")
+        return;
+
+    QImage tileset_img_orig = FileOpener(secondary_db->tileset_dir,tileset_orig.value("@tileset_name").toString()).get_image();
+    QImage tileset_img_new = FileOpener(db->tileset_dir,tileset_new.value("@tileset_name").toString()).get_image();
+
+    QImage autotiles_new = this->get_autotiles_image(db,tileset_new);
+    QImage autotiles_orig = this->get_autotiles_image(secondary_db,tileset_orig);
+
+
+    TilesetCompare *compare = new TilesetCompare(tileset_img_new, tileset_img_orig, autotiles_new, autotiles_orig, map);
+    connect(compare, &TilesetCompare::progress, [=](int a, int b)
+    {
+        this->ui->progressBar->setMaximum(b);
+        this->ui->progressBar->setValue(a);
+    });
+    connect(compare, &TilesetCompare::finished, [=](QJsonObject map)
+    {
+        qDebug() << "begin:" << "signal finished";
+        this->adjusted_map = map;
+        this->adjusted = true;
+        this->ui->progressBar->setMaximum(100);
+        this->ui->progressBar->setValue(100);
+        this->display_maps();
+        qDebug() << "end:" << "signal finished";
+    });
+    connect(compare, SIGNAL(finished(QJsonObject)), compare, SLOT(deleteLater()));
+    compare->start();
+    qDebug() << "end:" << "button_adjust";
 }
 

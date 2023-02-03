@@ -33,6 +33,7 @@ public:
     RPGDB *get_db() {return this->db; }
 
     bool create_map(int id);
+    bool create_map_from_object(int id, QJsonObject map);
 
 
 signals:

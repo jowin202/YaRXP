@@ -122,3 +122,17 @@ bool RPGMapInfoController::create_map(int id)
 
     return true;
 }
+
+bool RPGMapInfoController::create_map_from_object(int id, QJsonObject map)
+{
+    QJsonObject mapinfo = Factory().create_map_info(false, "", 999, 0,0,0);
+
+    if (this->db->create_mapfile_from_object_with_id(id, map) == 0)
+        return false; // if failed no mapinfo entry
+
+    QJsonObject dict = db->get_mapinfos()->object();
+    dict.insert(QString::number(id), mapinfo);
+    db->get_mapinfos()->setObject(dict);
+
+    return true;
+}
