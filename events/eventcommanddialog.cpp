@@ -60,14 +60,48 @@ EventCommandDialog::EventCommandDialog(QListWidget *list, RPGDB *db, RPGMapContr
     if (current < 0)
         current = list->count()-1;
 
-    this->current = current;
+    //if one before is code 0
+    if (current > 0 && dynamic_cast<EventListItem*>(list->item(current-1)) != nullptr
+            && ((EventListItem*)list->item(current-1))->get_obj().value("@code").toInt() == 0)
+        current--;
 
-    if (dynamic_cast<EventListItem*>(list->item(current)) != nullptr)
+    //when code is 402 and before is 102 //show choices
+    if (current > 0 && dynamic_cast<EventListItem*>(list->item(current-1)) != nullptr
+            && ((EventListItem*)list->item(current-1))->get_obj().value("@code").toInt() == 102
+            && dynamic_cast<EventListItem*>(list->item(current)) != nullptr
+            && ((EventListItem*)list->item(current))->get_obj().value("@code").toInt() == 402)
     {
-        this->indent = ((EventListItem*)list->item(current))->get_obj().value("@indent").toInt();
-
-        //TODO
+        current++;
     }
+    //when code is 301 and before is 601 //show choices
+    if (current > 0 && dynamic_cast<EventListItem*>(list->item(current-1)) != nullptr
+            && ((EventListItem*)list->item(current-1))->get_obj().value("@code").toInt() == 301
+            && dynamic_cast<EventListItem*>(list->item(current)) != nullptr
+            && ((EventListItem*)list->item(current))->get_obj().value("@code").toInt() == 601)
+    {
+        current++;
+    }
+
+
+    //when code is a multi-liner, then wait until end
+    while (dynamic_cast<EventListItem*>(list->item(current)) != nullptr)
+    {
+        int code = ((EventListItem*)list->item(current))->get_obj().value("@code").toInt();
+
+        if (code == 401)
+            current++;
+        else if (code == 408)
+            current++;
+        else if (code == 509)
+            current++;
+        else if (code == 605)
+            current++;
+        else if (code == 655)
+            current++;
+        else break;
+    }
+    this->current = current;
+    this->indent = ((EventListItem*)list->item(current))->get_obj().value("@indent").toInt();
 
 }
 
