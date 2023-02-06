@@ -106,20 +106,9 @@ void ImportDialog::display_maps()
                             secondary_db->get_tileset_by_id(map.value("@tileset_id").toInt()),
                             secondary_db->get_mapfile_by_id(id)->object());
 
-    if (adjusted)
-    {
-        this->draw_map_to_label(db,this->ui->label_after,
-                                db->get_tileset_by_id(this->ui->combo_tileset->currentData().toInt()),
-                                adjusted_map);
-
-    }
-    else
-    {
-        this->draw_map_to_label(db,this->ui->label_after,
-                                db->get_tileset_by_id(this->ui->combo_tileset->currentData().toInt()),
-                                secondary_db->get_mapfile_by_id(id)->object());
-    }
-
+    this->draw_map_to_label(db,this->ui->label_after,
+                            db->get_tileset_by_id(this->ui->combo_tileset->currentData().toInt()),
+                            adjusted_map);
 }
 
 void ImportDialog::draw_map_to_label(RPGDB *currentdb, QLabel *target, QJsonObject tileset, QJsonObject map)
@@ -204,7 +193,7 @@ void ImportDialog::on_treeWidget_currentItemChanged(QTreeWidgetItem *current, QT
 {
     Q_UNUSED(previous);
     this->id = current->text(2).toInt();
-    this->adjusted = false;
+    this->adjusted_map = secondary_db->get_mapfile_by_id(id)->object();
     this->display_maps();
 }
 
@@ -245,7 +234,6 @@ void ImportDialog::on_button_adjust_clicked()
     connect(compare, &TilesetCompare::has_result, [=](QJsonObject map)
     {
         this->adjusted_map = map;
-        this->adjusted = true;
         this->display_maps();
     });
     connect(compare, SIGNAL(finished()), compare, SLOT(deleteLater()));

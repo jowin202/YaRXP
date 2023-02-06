@@ -43,7 +43,6 @@ private:
     RPGDB *db;
     RPGDB *secondary_db = 0;
 
-    bool adjusted = false;
     QJsonObject adjusted_map;
 
     int id;

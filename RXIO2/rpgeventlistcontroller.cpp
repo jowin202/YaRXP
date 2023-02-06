@@ -35,13 +35,42 @@ RPGEventListController::RPGEventListController(RPGMapController *mc, QListWidget
         if (row >= 0 && dynamic_cast<EventListItem*>(listwidget->item(row)) != nullptr)
         {
             int code = dynamic_cast<EventListItem*>(listwidget->item(row))->get_obj().value("@code").toInt();
-            if (code == 0 || code == 509) return; //cant delete this
+            if (code == 0 || code == 402 || code == 403 || code == 411 || code == 412 || code == 413
+                    || code == 509 || code == 601 || code == 602 || code == 603) return; //cant delete this
 
-            if (code == 101 || code == 108 || code == 209 || code == 355)
+            //multiline codes with indent lines between
+            //show choices, conditional branch, loop
+            //battle processing (301) could be a one-liner. check if next code is 601
+            if (code == 102 || code == 111 || code == 112 ||
+                    (code == 301 && dynamic_cast<EventListItem*>(listwidget->item(row+1)) != nullptr
+                     && dynamic_cast<EventListItem*>(listwidget->item(row+1))->get_obj().value("@code").toInt() == 601))
+            {
+                int last_code = 0;
+                if (code == 102) last_code = 404; //choices
+                else if (code == 111) last_code = 412; //conditional branch
+                else if (code == 112) last_code = 413; //loop
+                else if (code == 301) last_code = 604; //battle processing
+
+                int depth = 0;
+                delete listwidget->takeItem(row); //remove first
+                while (dynamic_cast<EventListItem*>(listwidget->item(row)) != nullptr &&
+                       (depth > 0 || dynamic_cast<EventListItem*>(listwidget->item(row))->get_obj().value("@code").toInt() != last_code))
+                {
+                    if ( dynamic_cast<EventListItem*>(listwidget->item(row))->get_obj().value("@code").toInt() == code)
+                        depth++;
+                    else if (depth > 0 && dynamic_cast<EventListItem*>(listwidget->item(row))->get_obj().value("@code").toInt() == last_code)
+                        depth--;
+
+                    delete listwidget->takeItem(row);
+                }
+                delete listwidget->takeItem(row); //remove last
+            }
+            //multiline commands
+            else if (code == 101 || code == 108 || code == 209 || code == 355 || code == 302)
             {
                 delete listwidget->takeItem(row);
                 while (dynamic_cast<EventListItem*>(listwidget->item(row)) != nullptr &&
-                       dynamic_cast<EventListItem*>(listwidget->item(row))->get_obj().value("@code").toInt() == code+300)
+                       dynamic_cast<EventListItem*>(listwidget->item(row))->get_obj().value("@code").toInt() == (code==302 ? 605 : code+300))
                     delete listwidget->takeItem(row);
 
             }
