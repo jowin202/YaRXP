@@ -47,8 +47,7 @@ void EditTroops::setEC(RPGEditorController *ec)
 
 void EditTroops::on_button_arrange_clicked()
 {
-    //this->ui->label_troop_pic->arrange();
-    //TODO Do it here
+    this->ui->label_troop_pic->arrange();
     this->ui->label_troop_pic->redraw();
 }
 

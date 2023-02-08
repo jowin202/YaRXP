@@ -10,7 +10,7 @@
 #include <QAction>
 
 #include <QJsonArray>
-
+#include <QCryptographicHash>
 
 
 class RPGEditorController;
@@ -38,12 +38,14 @@ public slots:
     void toggle_halfway();
     void toggle_immortal();
 
+    void arrange();
+
 private:
     bool left_clicked = false;
     RPGEditorController *ec;
 
     QJsonArray members;
-    QRect bounding_rects[8];
+    QRectF bounding_rects[8];
 
     int marked_member = -1;
     QPoint rel_pos;

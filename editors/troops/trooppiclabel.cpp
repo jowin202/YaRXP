@@ -42,7 +42,7 @@ void TroopPicLabel::mousePressEvent(QMouseEvent *ev)
         {
             this->marked_member = i;
             clicked_at_object = true;
-            this->rel_pos = ev->pos() - (this->bounding_rects[i].topLeft() + QPoint(this->bounding_rects[i].width()/2, this->bounding_rects[i].height()));
+            this->rel_pos = ev->pos() - (QPoint(this->bounding_rects[i].topLeft().x(),this->bounding_rects[i].topLeft().y()) + QPoint(this->bounding_rects[i].width()/2, this->bounding_rects[i].height()));
             break;
         }
     }
@@ -77,39 +77,6 @@ void TroopPicLabel::mouseMoveEvent(QMouseEvent *ev)
     }
 }
 
-
-/*
-void TroopPicLabel::arrange()
-{
-    int n = this->members.count();
-    int cnt = 0;
-
-    for (RPGTroopMember *member : this->members)
-    {
-        if (n == 1)
-            member->x = 320;
-        else if (n == 2)
-            member->x = 266 + (cnt++) * 92;
-        else if (n == 3)
-            member->x = 176 + (cnt++) * 120;
-        else if (n == 4)
-            member->x = 104 + (cnt++) * 144;
-        else if (n == 5)
-            member->x = 33 + (cnt++) * 55;
-        else if (n == 6)
-            member->x = 33 + (cnt++) * 55;
-        else if (n == 7)
-            member->x = 33 + (cnt++) * 55;
-        else if (n == 8)
-            member->x = 33 + (cnt++) * 55;
-
-        member->y = 304;
-    }
-
-    this->redraw();
-}
-*/
-
 void TroopPicLabel::remove_current()
 {
     if (marked_member >= 0 && marked_member < this->members.count())
@@ -127,7 +94,6 @@ void TroopPicLabel::remove_current()
 void TroopPicLabel::redraw()
 {
     members = ec->obj_get_jsonvalue(RPGDB::TROOPS, "@members").toArray();
-
     QString battleback_name = ec->obj_get_jsonvalue(RPGDB::SYSTEM, "@battleback_name").toString();
     QImage battleback = FileOpener(ec->get_db()->battleback_dir,battleback_name).get_image();
 
@@ -141,6 +107,11 @@ void TroopPicLabel::redraw()
     painter.fillRect(0,0,img.width(),img.height(), Qt::black);
     if (!battleback.isNull())
         painter.drawImage(QRect(0,0,battleback.width(),battleback.height()), battleback);
+
+
+    //set all bounding rects to zero should be empty
+    for (int i = 0; i < 8; i++)
+        this->bounding_rects[i].setRect(0,0,0,0);
 
     for (int i = 0; i < this->members.count(); i++)
     {
@@ -173,9 +144,9 @@ void TroopPicLabel::redraw()
         }
 
         painter.drawImage(x/2-battler.width()/2,y/2 - battler.height(), battler);
-        this->bounding_rects[i].setRect(x/2-battler.width()/2, y/2 - battler.height(),battler.width(), battler.height());
+        this->bounding_rects[i].setRect(x/2.0-battler.width()/2.0, y/2.0 - battler.height(),battler.width(), battler.height());
 
-        if (this->marked_member == i)
+        if (this->marked_member == i)// || true) //TODO: delete
         {
             painter.setOpacity(1);
             QPen pen = painter.pen();
@@ -184,13 +155,9 @@ void TroopPicLabel::redraw()
             painter.setPen(pen);
         }
     }
-    //other bounding rects should be empty
-    for (int i = this->members.count(); i < 8; i++)
-        this->bounding_rects[i].setRect(0,0,0,0);
-
 
     painter.end();
-
+    //this->arrange(); //TODO: delete
     this->setPixmap(QPixmap::fromImage(img));
 }
 
@@ -229,5 +196,69 @@ void TroopPicLabel::toggle_immortal()
 
     ec->obj_set_jsonvalue(RPGDB::TROOPS, "@members", this->members);
     this->redraw();
+}
+
+void TroopPicLabel::arrange()
+{
+    QJsonArray members = this->ec->obj_get_jsonvalue(RPGDB::TROOPS, "@members").toArray();
+    QCryptographicHash hash1(QCryptographicHash::Sha3_256);
+    QCryptographicHash hash2(QCryptographicHash::Sha3_256);
+    hash1.addData(QJsonDocument(members).toJson(QJsonDocument::Compact));
+
+    int sum = 0;
+    int member_count = members.count();
+    QList<int> members_x;
+    for (int i = 0; i < members.count(); i++)
+    {
+        members_x.append(members.at(i).toObject().value("@x").toInt());
+        sum += bounding_rects[i].width();
+    }
+
+
+    if (member_count == 0)
+        return;
+    else if (member_count == 1)
+    {
+        QJsonObject member = members.at(0).toObject();
+        member.insert("@x", 320);
+        member.insert("@y", 304);
+        members.removeAt(0);
+        members.insert(0,member);
+    }
+    else
+    {
+        qDebug() << members;
+        //qDebug() << members_x;
+        qDebug() << bounding_rects[0].width() << bounding_rects[1].width() << bounding_rects[2].width() << bounding_rects[3].width();
+
+        qreal spacing = 16;
+        qreal border_space = (640-2*sum - 16*(member_count-1))/2.0;
+        if (border_space < 8)
+        {
+            border_space = 8;
+            spacing = (640-2*sum-8-6)/(member_count-1);
+        }
+        qreal x = border_space + bounding_rects[0].width();
+
+        qDebug() << "border_space: " << border_space << member_count;
+        qDebug() << "orig:" << spacing << "calc: " << members_x[1]-members_x[0] - bounding_rects[1].width() - bounding_rects[0].width();
+        QJsonObject member;
+        for (int i = 0; i < member_count; i++)
+        {
+            if (i>0)
+                x += bounding_rects[i-1].width() + bounding_rects[i].width() + spacing;
+            member = members.at(i).toObject();
+            member.insert("@x", x);
+            member.insert("@y", 304);
+            members.removeAt(i);
+            members.insert(i,member);
+        }
+    }
+
+    this->ec->obj_set_jsonvalue(RPGDB::TROOPS, "@members", members);
+
+    hash2.addData(QJsonDocument(members).toJson(QJsonDocument::Compact));
+    qDebug() << (hash1.result() == hash2.result()) << hash1.result().toHex() << hash2.result().toHex();
+
 }
 
