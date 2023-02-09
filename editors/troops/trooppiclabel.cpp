@@ -146,7 +146,7 @@ void TroopPicLabel::redraw()
         painter.drawImage(x/2-battler.width()/2,y/2 - battler.height(), battler);
         this->bounding_rects[i].setRect(x/2.0-battler.width()/2.0, y/2.0 - battler.height(),battler.width(), battler.height());
 
-        if (this->marked_member == i || true) //TODO: delete
+        if (this->marked_member == i)// || true) //TODO: delete
         {
             painter.setOpacity(1);
             QPen pen = painter.pen();
@@ -157,7 +157,7 @@ void TroopPicLabel::redraw()
     }
 
     painter.end();
-    this->arrange(); //TODO: delete
+    //this->arrange(); //TODO: delete
     this->setPixmap(QPixmap::fromImage(img));
 }
 
