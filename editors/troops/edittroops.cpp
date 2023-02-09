@@ -72,6 +72,7 @@ void EditTroops::on_button_add_clicked()
     QJsonArray members = ec->obj_get_jsonvalue(RPGDB::TROOPS, "@members").toArray();
     members.append(Factory().create_troop_member(enemy_id, false, false, 320, 304));
     this->ec->obj_set_jsonvalue(RPGDB::TROOPS, "@members", members);
+    this->ui->label_troop_pic->redraw(); //do redraw twice because bounding rectangles are defined new
     this->on_button_arrange_clicked(); //redraw should be done there
     this->ui->button_add->setEnabled(members.count() < 8);
 }

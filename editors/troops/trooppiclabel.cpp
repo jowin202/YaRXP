@@ -228,20 +228,21 @@ void TroopPicLabel::arrange()
     else
     {
         //qDebug() << members;
-        qDebug() << members_x;
-        qDebug() << bounding_rects[0].width() << bounding_rects[1].width() << bounding_rects[2].width() << bounding_rects[3].width();
+        //qDebug() << members_x;
+        //qDebug() << bounding_rects[0].width() << bounding_rects[1].width() << bounding_rects[2].width() << bounding_rects[3].width() << bounding_rects[4].width() << bounding_rects[5].width() << bounding_rects[6].width() << bounding_rects[7].width();
 
         qreal spacing = 16;
         qreal border_space = (640-2*sum - 16*(member_count-1))/2.0;
         if (border_space < 8)
         {
             border_space = 8;
-            spacing = (640-2*sum-8-6)/(member_count-1);
+            spacing = (640-2*sum-8-8.0)/(member_count-1);
         }
         qreal x = border_space + qMax(8.0,bounding_rects[0].width());
 
         //qDebug() << "border_space: " << border_space << member_count;
-        //qDebug() << "orig:" << spacing << "calc: " << members_x[1]-members_x[0] - bounding_rects[1].width() - bounding_rects[0].width();
+        //qDebug() << "sum: " << sum << "orig:" << spacing << "calc: " << members_x[1]-members_x[0] - bounding_rects[1].width() - bounding_rects[0].width();
+        spacing = qCeil(spacing);
         QJsonObject member;
         for (int i = 0; i < member_count; i++)
         {
@@ -257,8 +258,8 @@ void TroopPicLabel::arrange()
 
     this->ec->obj_set_jsonvalue(RPGDB::TROOPS, "@members", members);
 
-    hash2.addData(QJsonDocument(members).toJson(QJsonDocument::Compact));
-    qDebug() << (hash1.result() == hash2.result()) << hash1.result().toHex() << hash2.result().toHex();
+    //hash2.addData(QJsonDocument(members).toJson(QJsonDocument::Compact));
+    //qDebug() << (hash1.result() == hash2.result()) << hash1.result().toHex() << hash2.result().toHex();
 
 }
 
