@@ -146,7 +146,7 @@ void TroopPicLabel::redraw()
         painter.drawImage(x/2-battler.width()/2,y/2 - battler.height(), battler);
         this->bounding_rects[i].setRect(x/2.0-battler.width()/2.0, y/2.0 - battler.height(),battler.width(), battler.height());
 
-        if (this->marked_member == i)// || true) //TODO: delete
+        if (this->marked_member == i || true) //TODO: delete
         {
             painter.setOpacity(1);
             QPen pen = painter.pen();
@@ -157,7 +157,7 @@ void TroopPicLabel::redraw()
     }
 
     painter.end();
-    //this->arrange(); //TODO: delete
+    this->arrange(); //TODO: delete
     this->setPixmap(QPixmap::fromImage(img));
 }
 
@@ -211,7 +211,7 @@ void TroopPicLabel::arrange()
     for (int i = 0; i < members.count(); i++)
     {
         members_x.append(members.at(i).toObject().value("@x").toInt());
-        sum += bounding_rects[i].width();
+        sum += qMax(8.0,bounding_rects[i].width());
     }
 
 
@@ -227,8 +227,8 @@ void TroopPicLabel::arrange()
     }
     else
     {
-        qDebug() << members;
-        //qDebug() << members_x;
+        //qDebug() << members;
+        qDebug() << members_x;
         qDebug() << bounding_rects[0].width() << bounding_rects[1].width() << bounding_rects[2].width() << bounding_rects[3].width();
 
         qreal spacing = 16;
@@ -238,15 +238,15 @@ void TroopPicLabel::arrange()
             border_space = 8;
             spacing = (640-2*sum-8-6)/(member_count-1);
         }
-        qreal x = border_space + bounding_rects[0].width();
+        qreal x = border_space + qMax(8.0,bounding_rects[0].width());
 
-        qDebug() << "border_space: " << border_space << member_count;
-        qDebug() << "orig:" << spacing << "calc: " << members_x[1]-members_x[0] - bounding_rects[1].width() - bounding_rects[0].width();
+        //qDebug() << "border_space: " << border_space << member_count;
+        //qDebug() << "orig:" << spacing << "calc: " << members_x[1]-members_x[0] - bounding_rects[1].width() - bounding_rects[0].width();
         QJsonObject member;
         for (int i = 0; i < member_count; i++)
         {
             if (i>0)
-                x += bounding_rects[i-1].width() + bounding_rects[i].width() + spacing;
+                x += qMax(8.0,bounding_rects[i-1].width()) + qMax(8.0,bounding_rects[i].width()) + spacing;
             member = members.at(i).toObject();
             member.insert("@x", x);
             member.insert("@y", 304);
