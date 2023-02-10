@@ -187,6 +187,16 @@ QJsonObject RPGEditorController::get_object_by_id(int obj_type, int id)
     return files[obj_type]->array().at(id).toObject();
 }
 
+void RPGEditorController::set_object_by_id(int obj_type, int id, QJsonObject obj)
+{
+    if (files[obj_type]->array().count() <= id) return;
+
+    QJsonArray array = files[obj_type]->array();
+    array.removeAt(id);
+    array.insert(id,obj);
+    files[obj_type]->setArray(array);
+}
+
 int RPGEditorController::count_objects(int obj_type)
 {
 

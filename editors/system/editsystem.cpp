@@ -298,7 +298,7 @@ void EditSystem::on_element_list_itemDoubleClicked(QListWidgetItem *item)
     Q_UNUSED(item);
     bool ok;
     QJsonArray element_list = this->ec->obj_get_jsonvalue(RPGDB::SYSTEM, "@elements").toArray();
-    QString element_name = QInputDialog::getText(this, "Element Name", "New Element Name:", QLineEdit::Normal, element_list.at(this->ui->element_list->currentRow()+1).toString(), &ok);
+    QString element_name = QInputDialog::getText(this, "Element Name", "Element Name:", QLineEdit::Normal, element_list.at(this->ui->element_list->currentRow()+1).toString(), &ok);
     if (ok)
     {
         element_list.removeAt(this->ui->element_list->currentRow()+1);

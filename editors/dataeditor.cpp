@@ -89,6 +89,285 @@ void DataEditor::setDB(RPGDB *db)
 
     this->ui->system_widget->setEC(ec);
 
+
+
+    //ACTORS: CTRL+C  -- CTRL+V
+    action_actors_copy.setShortcut(QKeySequence(tr("Ctrl+C")));
+    action_actors_copy.setShortcutContext(Qt::WidgetShortcut);
+    connect(&action_actors_copy, &QAction::triggered, [=](){
+        QSettings settings;
+        settings.setValue("copied_actor", QJsonDocument(ec->get_object_by_id(RPGDB::ACTORS,this->ui->actor_list->currentRow()+1)).toJson(QJsonDocument::Compact));
+    });
+    this->ui->actor_list->addAction(&action_actors_copy);
+
+    action_actors_paste.setShortcut(QKeySequence(tr("Ctrl+V")));
+    action_actors_paste.setShortcutContext(Qt::WidgetShortcut);
+    connect(&action_actors_paste, &QAction::triggered, [=](){
+        QSettings settings;
+        QJsonParseError error;
+        QJsonDocument doc = QJsonDocument::fromJson(settings.value("copied_actor").toByteArray(), &error);
+        if (error.error != QJsonParseError::NoError)
+            return;
+        ec->set_object_by_id(RPGDB::ACTORS, this->ui->actor_list->currentRow()+1, doc.object());
+        this->ec->fill_list(this->ui->actor_list, RPGDB::ACTORS, true, 3, false);
+    });
+    this->ui->actor_list->addAction(&action_actors_paste);
+
+
+    //CLASSES: CTRL+C  -- CTRL+V
+    action_classes_copy.setShortcut(QKeySequence(tr("Ctrl+C")));
+    action_classes_copy.setShortcutContext(Qt::WidgetShortcut);
+    connect(&action_classes_copy, &QAction::triggered, [=](){
+        QSettings settings;
+        settings.setValue("copied_class", QJsonDocument(ec->get_object_by_id(RPGDB::CLASSES,this->ui->classes_list->currentRow()+1)).toJson(QJsonDocument::Compact));
+    });
+    this->ui->classes_list->addAction(&action_classes_copy);
+
+    action_classes_paste.setShortcut(QKeySequence(tr("Ctrl+V")));
+    action_classes_paste.setShortcutContext(Qt::WidgetShortcut);
+    connect(&action_classes_paste, &QAction::triggered, [=](){
+        QSettings settings;
+        QJsonParseError error;
+        QJsonDocument doc = QJsonDocument::fromJson(settings.value("copied_class").toByteArray(), &error);
+        if (error.error != QJsonParseError::NoError)
+            return;
+        ec->set_object_by_id(RPGDB::CLASSES, this->ui->classes_list->currentRow()+1, doc.object());
+        this->ec->fill_list(this->ui->classes_list, RPGDB::CLASSES, true, 3, false);
+    });
+    this->ui->classes_list->addAction(&action_classes_paste);
+
+
+
+    //SKILLS: CTRL+C  -- CTRL+V
+    action_skills_copy.setShortcut(QKeySequence(tr("Ctrl+C")));
+    action_skills_copy.setShortcutContext(Qt::WidgetShortcut);
+    connect(&action_skills_copy, &QAction::triggered, [=](){
+        QSettings settings;
+        settings.setValue("copied_skill", QJsonDocument(ec->get_object_by_id(RPGDB::SKILLS,this->ui->skills_list->currentRow()+1)).toJson(QJsonDocument::Compact));
+    });
+    this->ui->skills_list->addAction(&action_skills_copy);
+
+    action_skills_paste.setShortcut(QKeySequence(tr("Ctrl+V")));
+    action_skills_paste.setShortcutContext(Qt::WidgetShortcut);
+    connect(&action_skills_paste, &QAction::triggered, [=](){
+        QSettings settings;
+        QJsonParseError error;
+        QJsonDocument doc = QJsonDocument::fromJson(settings.value("copied_skill").toByteArray(), &error);
+        if (error.error != QJsonParseError::NoError)
+            return;
+        ec->set_object_by_id(RPGDB::SKILLS, this->ui->skills_list->currentRow()+1, doc.object());
+        this->ec->fill_list(this->ui->skills_list, RPGDB::SKILLS, true, 3, false);
+    });
+    this->ui->skills_list->addAction(&action_skills_paste);
+
+
+    //ITEMS: CTRL+C  -- CTRL+V
+    action_items_copy.setShortcut(QKeySequence(tr("Ctrl+C")));
+    action_items_copy.setShortcutContext(Qt::WidgetShortcut);
+    connect(&action_items_copy, &QAction::triggered, [=](){
+        QSettings settings;
+        settings.setValue("copied_item", QJsonDocument(ec->get_object_by_id(RPGDB::ITEMS,this->ui->items_list->currentRow()+1)).toJson(QJsonDocument::Compact));
+    });
+    this->ui->items_list->addAction(&action_items_copy);
+
+    action_items_paste.setShortcut(QKeySequence(tr("Ctrl+V")));
+    action_items_paste.setShortcutContext(Qt::WidgetShortcut);
+    connect(&action_items_paste, &QAction::triggered, [=](){
+        QSettings settings;
+        QJsonParseError error;
+        QJsonDocument doc = QJsonDocument::fromJson(settings.value("copied_item").toByteArray(), &error);
+        if (error.error != QJsonParseError::NoError)
+            return;
+        ec->set_object_by_id(RPGDB::ITEMS, this->ui->items_list->currentRow()+1, doc.object());
+        this->ec->fill_list(this->ui->items_list, RPGDB::ITEMS, true, 3, false);
+    });
+    this->ui->items_list->addAction(&action_items_paste);
+
+
+    //WEAPONS: CTRL+C  -- CTRL+V
+    action_weapons_copy.setShortcut(QKeySequence(tr("Ctrl+C")));
+    action_weapons_copy.setShortcutContext(Qt::WidgetShortcut);
+    connect(&action_weapons_copy, &QAction::triggered, [=](){
+        QSettings settings;
+        settings.setValue("copied_weapon", QJsonDocument(ec->get_object_by_id(RPGDB::WEAPONS,this->ui->weapons_list->currentRow()+1)).toJson(QJsonDocument::Compact));
+    });
+    this->ui->weapons_list->addAction(&action_weapons_copy);
+
+    action_weapons_paste.setShortcut(QKeySequence(tr("Ctrl+V")));
+    action_weapons_paste.setShortcutContext(Qt::WidgetShortcut);
+    connect(&action_weapons_paste, &QAction::triggered, [=](){
+        QSettings settings;
+        QJsonParseError error;
+        QJsonDocument doc = QJsonDocument::fromJson(settings.value("copied_weapon").toByteArray(), &error);
+        if (error.error != QJsonParseError::NoError)
+            return;
+        ec->set_object_by_id(RPGDB::WEAPONS, this->ui->weapons_list->currentRow()+1, doc.object());
+        this->ec->fill_list(this->ui->weapons_list, RPGDB::WEAPONS, true, 3, false);
+    });
+    this->ui->weapons_list->addAction(&action_weapons_paste);
+
+
+    //ARMOR: CTRL+C  -- CTRL+V
+    action_armors_copy.setShortcut(QKeySequence(tr("Ctrl+C")));
+    action_armors_copy.setShortcutContext(Qt::WidgetShortcut);
+    connect(&action_armors_copy, &QAction::triggered, [=](){
+        QSettings settings;
+        settings.setValue("copied_armor", QJsonDocument(ec->get_object_by_id(RPGDB::ARMORS,this->ui->armors_list->currentRow()+1)).toJson(QJsonDocument::Compact));
+    });
+    this->ui->armors_list->addAction(&action_armors_copy);
+
+    action_armors_paste.setShortcut(QKeySequence(tr("Ctrl+V")));
+    action_armors_paste.setShortcutContext(Qt::WidgetShortcut);
+    connect(&action_armors_paste, &QAction::triggered, [=](){
+        QSettings settings;
+        QJsonParseError error;
+        QJsonDocument doc = QJsonDocument::fromJson(settings.value("copied_armor").toByteArray(), &error);
+        if (error.error != QJsonParseError::NoError)
+            return;
+        ec->set_object_by_id(RPGDB::ARMORS, this->ui->armors_list->currentRow()+1, doc.object());
+        this->ec->fill_list(this->ui->armors_list, RPGDB::ARMORS, true, 3, false);
+    });
+    this->ui->armors_list->addAction(&action_armors_paste);
+
+
+    //ENEMIES: CTRL+C  -- CTRL+V
+    action_enemies_copy.setShortcut(QKeySequence(tr("Ctrl+C")));
+    action_enemies_copy.setShortcutContext(Qt::WidgetShortcut);
+    connect(&action_enemies_copy, &QAction::triggered, [=](){
+        QSettings settings;
+        settings.setValue("copied_enemy", QJsonDocument(ec->get_object_by_id(RPGDB::ENEMIES,this->ui->enemies_list->currentRow()+1)).toJson(QJsonDocument::Compact));
+    });
+    this->ui->enemies_list->addAction(&action_enemies_copy);
+
+    action_enemies_paste.setShortcut(QKeySequence(tr("Ctrl+V")));
+    action_enemies_paste.setShortcutContext(Qt::WidgetShortcut);
+    connect(&action_enemies_paste, &QAction::triggered, [=](){
+        QSettings settings;
+        QJsonParseError error;
+        QJsonDocument doc = QJsonDocument::fromJson(settings.value("copied_enemy").toByteArray(), &error);
+        if (error.error != QJsonParseError::NoError)
+            return;
+        ec->set_object_by_id(RPGDB::ENEMIES, this->ui->enemies_list->currentRow()+1, doc.object());
+        this->ec->fill_list(this->ui->enemies_list, RPGDB::ENEMIES, true, 3, false);
+    });
+    this->ui->enemies_list->addAction(&action_enemies_paste);
+
+    //TROOPS: CTRL+C  -- CTRL+V
+    action_troops_copy.setShortcut(QKeySequence(tr("Ctrl+C")));
+    action_troops_copy.setShortcutContext(Qt::WidgetShortcut);
+    connect(&action_troops_copy, &QAction::triggered, [=](){
+        QSettings settings;
+        settings.setValue("copied_troop", QJsonDocument(ec->get_object_by_id(RPGDB::TROOPS,this->ui->troops_list->currentRow()+1)).toJson(QJsonDocument::Compact));
+    });
+    this->ui->troops_list->addAction(&action_troops_copy);
+
+    action_troops_paste.setShortcut(QKeySequence(tr("Ctrl+V")));
+    action_troops_paste.setShortcutContext(Qt::WidgetShortcut);
+    connect(&action_troops_paste, &QAction::triggered, [=](){
+        QSettings settings;
+        QJsonParseError error;
+        QJsonDocument doc = QJsonDocument::fromJson(settings.value("copied_troop").toByteArray(), &error);
+        if (error.error != QJsonParseError::NoError)
+            return;
+        ec->set_object_by_id(RPGDB::TROOPS, this->ui->troops_list->currentRow()+1, doc.object());
+        this->ec->fill_list(this->ui->troops_list, RPGDB::TROOPS, true, 3, false);
+    });
+    this->ui->troops_list->addAction(&action_troops_paste);
+
+
+
+
+    //STATES: CTRL+C  -- CTRL+V
+    action_states_copy.setShortcut(QKeySequence(tr("Ctrl+C")));
+    action_states_copy.setShortcutContext(Qt::WidgetShortcut);
+    connect(&action_states_copy, &QAction::triggered, [=](){
+        QSettings settings;
+        settings.setValue("copied_state", QJsonDocument(ec->get_object_by_id(RPGDB::STATES,this->ui->states_list->currentRow()+1)).toJson(QJsonDocument::Compact));
+    });
+    this->ui->states_list->addAction(&action_states_copy);
+
+    action_states_paste.setShortcut(QKeySequence(tr("Ctrl+V")));
+    action_states_paste.setShortcutContext(Qt::WidgetShortcut);
+    connect(&action_states_paste, &QAction::triggered, [=](){
+        QSettings settings;
+        QJsonParseError error;
+        QJsonDocument doc = QJsonDocument::fromJson(settings.value("copied_state").toByteArray(), &error);
+        if (error.error != QJsonParseError::NoError)
+            return;
+        ec->set_object_by_id(RPGDB::STATES, this->ui->states_list->currentRow()+1, doc.object());
+        this->ec->fill_list(this->ui->states_list, RPGDB::STATES, true, 3, false);
+    });
+    this->ui->states_list->addAction(&action_states_paste);
+
+
+    //ANIMATIONS: CTRL+C  -- CTRL+V
+    action_animations_copy.setShortcut(QKeySequence(tr("Ctrl+C")));
+    action_animations_copy.setShortcutContext(Qt::WidgetShortcut);
+    connect(&action_animations_copy, &QAction::triggered, [=](){
+        QSettings settings;
+        settings.setValue("copied_animation", QJsonDocument(ec->get_object_by_id(RPGDB::ANIMATIONS,this->ui->animations_list->currentRow()+1)).toJson(QJsonDocument::Compact));
+    });
+    this->ui->animations_list->addAction(&action_animations_copy);
+
+    action_animations_paste.setShortcut(QKeySequence(tr("Ctrl+V")));
+    action_animations_paste.setShortcutContext(Qt::WidgetShortcut);
+    connect(&action_animations_paste, &QAction::triggered, [=](){
+        QSettings settings;
+        QJsonParseError error;
+        QJsonDocument doc = QJsonDocument::fromJson(settings.value("copied_animation").toByteArray(), &error);
+        if (error.error != QJsonParseError::NoError)
+            return;
+        ec->set_object_by_id(RPGDB::ANIMATIONS, this->ui->animations_list->currentRow()+1, doc.object());
+        this->ec->fill_list(this->ui->animations_list, RPGDB::ANIMATIONS, true, 3, false);
+    });
+    this->ui->animations_list->addAction(&action_animations_paste);
+
+
+    //TILESETS: CTRL+C  -- CTRL+V
+    action_tilesets_copy.setShortcut(QKeySequence(tr("Ctrl+C")));
+    action_tilesets_copy.setShortcutContext(Qt::WidgetShortcut);
+    connect(&action_tilesets_copy, &QAction::triggered, [=](){
+        QSettings settings;
+        settings.setValue("copied_tilesets", QJsonDocument(ec->get_object_by_id(RPGDB::TILESETS,this->ui->tilesets_list->currentRow()+1)).toJson(QJsonDocument::Compact));
+    });
+    this->ui->tilesets_list->addAction(&action_tilesets_copy);
+
+    action_tilesets_paste.setShortcut(QKeySequence(tr("Ctrl+V")));
+    action_tilesets_paste.setShortcutContext(Qt::WidgetShortcut);
+    connect(&action_tilesets_paste, &QAction::triggered, [=](){
+        QSettings settings;
+        QJsonParseError error;
+        QJsonDocument doc = QJsonDocument::fromJson(settings.value("copied_tilesets").toByteArray(), &error);
+        if (error.error != QJsonParseError::NoError)
+            return;
+        ec->set_object_by_id(RPGDB::TILESETS, this->ui->tilesets_list->currentRow()+1, doc.object());
+        this->ec->fill_list(this->ui->tilesets_list, RPGDB::TILESETS, true, 3, false);
+    });
+    this->ui->tilesets_list->addAction(&action_tilesets_paste);
+
+
+
+    //COMMONEVENTS: CTRL+C  -- CTRL+V
+    action_common_events_copy.setShortcut(QKeySequence(tr("Ctrl+C")));
+    action_common_events_copy.setShortcutContext(Qt::WidgetShortcut);
+    connect(&action_common_events_copy, &QAction::triggered, [=](){
+        QSettings settings;
+        settings.setValue("copied_common_event", QJsonDocument(ec->get_object_by_id(RPGDB::COMMONEVENTS,this->ui->common_events_list->currentRow()+1)).toJson(QJsonDocument::Compact));
+    });
+    this->ui->common_events_list->addAction(&action_common_events_copy);
+
+    action_common_events_paste.setShortcut(QKeySequence(tr("Ctrl+V")));
+    action_common_events_paste.setShortcutContext(Qt::WidgetShortcut);
+    connect(&action_common_events_paste, &QAction::triggered, [=](){
+        QSettings settings;
+        QJsonParseError error;
+        QJsonDocument doc = QJsonDocument::fromJson(settings.value("copied_common_event").toByteArray(), &error);
+        if (error.error != QJsonParseError::NoError)
+            return;
+        ec->set_object_by_id(RPGDB::COMMONEVENTS, this->ui->common_events_list->currentRow()+1, doc.object());
+        this->ec->fill_list(this->ui->common_events_list, RPGDB::COMMONEVENTS, true, 3, false);
+    });
+    this->ui->common_events_list->addAction(&action_common_events_paste);
 }
 
 

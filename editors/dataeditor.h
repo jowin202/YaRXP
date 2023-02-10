@@ -5,6 +5,9 @@
 #include <QDebug>
 #include <QInputDialog>
 
+#include <QAction>
+#include <QSettings>
+
 class RPGDB;
 class RPGEditorController;
 
@@ -55,6 +58,42 @@ private:
     RPGDB *db;
     RPGEditorController *ec;
 
+
+    QAction action_actors_copy;
+    QAction action_actors_paste;
+
+    QAction action_classes_copy;
+    QAction action_classes_paste;
+
+    QAction action_skills_copy;
+    QAction action_skills_paste;
+
+    QAction action_items_copy;
+    QAction action_items_paste;
+
+    QAction action_weapons_copy;
+    QAction action_weapons_paste;
+
+    QAction action_armors_copy;
+    QAction action_armors_paste;
+
+    QAction action_enemies_copy;
+    QAction action_enemies_paste;
+
+    QAction action_troops_copy;
+    QAction action_troops_paste;
+
+    QAction action_states_copy;
+    QAction action_states_paste;
+
+    QAction action_animations_copy;
+    QAction action_animations_paste;
+
+    QAction action_tilesets_copy;
+    QAction action_tilesets_paste;
+
+    QAction action_common_events_copy;
+    QAction action_common_events_paste;
 };
 
 #endif // DATAEDITOR_H

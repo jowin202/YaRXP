@@ -52,6 +52,7 @@ public:
     QJsonValue obj_get_jsonvalue(int obj_type, QString key);
     QStringList obj_get_name_list(int obj_type);
     QJsonObject get_object_by_id(int obj_type, int id);
+    void set_object_by_id(int obj_type, int id, QJsonObject obj);
 
 
 
