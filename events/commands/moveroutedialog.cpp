@@ -53,6 +53,20 @@ MoveRouteDialog::MoveRouteDialog(RPGDB *db, RPGMapController *mc, QJsonArray par
     this->ui->listWidget->addAction(&this->action_delete);
     connect(&this->action_delete, SIGNAL(triggered()), this, SLOT(do_delete()));
 
+    this->action_copy.setShortcut(QKeySequence(tr("Ctrl+C")));
+    this->action_copy.setShortcutContext(Qt::WidgetShortcut);
+    this->ui->listWidget->addAction(&this->action_copy);
+    connect(&this->action_copy, SIGNAL(triggered()), this, SLOT(do_copy()));
+
+    this->action_paste.setShortcut(QKeySequence(tr("Ctrl+V")));
+    this->action_paste.setShortcutContext(Qt::WidgetShortcut);
+    this->ui->listWidget->addAction(&this->action_paste);
+    connect(&this->action_paste, SIGNAL(triggered()), this, SLOT(do_paste()));
+
+    this->action_cut.setShortcut(QKeySequence(tr("Ctrl+X")));
+    this->action_cut.setShortcutContext(Qt::WidgetShortcut);
+    this->ui->listWidget->addAction(&this->action_cut);
+    connect(&this->action_cut, SIGNAL(triggered()), this, SLOT(do_cut()));
 
 
 
@@ -741,6 +755,38 @@ void MoveRouteDialog::do_delete()
         this->fill_list();
         this->ui->listWidget->setCurrentRow(row);
     }
+}
+
+void MoveRouteDialog::do_copy()
+{
+    QSettings settings;
+
+    int row = this->ui->listWidget->currentRow();
+    if (row != this->ui->listWidget->count()-1) //cant copy the last one
+    {
+        settings.setValue("copied_move_command", QJsonDocument(this->list.at(row).toObject()).toJson(QJsonDocument::Compact));
+    }
+}
+
+void MoveRouteDialog::do_paste()
+{
+    QSettings settings;
+    QJsonParseError error;
+
+    int row = this->ui->listWidget->currentRow();
+    this->list.insert(row,QJsonDocument::fromJson(settings.value("copied_move_command").toString().toUtf8(), &error).object());
+
+    if (error.error != QJsonParseError::NoError)
+        return;
+
+    this->fill_list();
+    this->ui->listWidget->setCurrentRow(row);
+}
+
+void MoveRouteDialog::do_cut()
+{
+    this->do_copy();
+    this->do_delete();
 }
 
 

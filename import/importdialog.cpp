@@ -49,6 +49,8 @@ void ImportDialog::list_maps()
         columns << QString::number(toplevel_maps.at(i).toObject().value("@order").toInt()).rightJustified(3,'0');
         columns << QString::number(toplevel_maps.at(i).toObject().value("id").toInt());
         QTreeWidgetItem *item = new QTreeWidgetItem(columns);
+        item->setFlags(item->flags() | Qt::ItemIsUserCheckable);
+        item->setCheckState(0, Qt::Unchecked);
         this->ui->treeWidget->addTopLevelItem(item);
         this->id_map.insert(toplevel_maps.at(i).toObject().value("id").toInt(), item);
         this->ui->treeWidget->expandItem(item);
@@ -73,6 +75,8 @@ void ImportDialog::list_maps()
                 columns << QString::number(non_toplevel_maps.at(i).toObject().value("@order").toInt()).rightJustified(3,'0');
                 columns << QString::number(non_toplevel_maps.at(i).toObject().value("id").toInt());
                 QTreeWidgetItem *item = new QTreeWidgetItem(columns);
+                item->setFlags(item->flags() | Qt::ItemIsUserCheckable);
+                item->setCheckState(0, Qt::Unchecked);
                 this->id_map.value(non_toplevel_maps.at(i).toObject().value("@parent_id").toInt())->addChild(item);
                 this->id_map.insert(non_toplevel_maps.at(i).toObject().value("id").toInt(), item);
                 this->ui->treeWidget->expandItem(item);
@@ -91,6 +95,7 @@ void ImportDialog::list_maps()
             break; //break here if parent_id loop
     }
     this->ui->treeWidget->sortItems(1,Qt::SortOrder::AscendingOrder);
+    this->ui->treeWidget->resizeColumnToContents(0);
 }
 
 void ImportDialog::display_maps()
@@ -172,9 +177,12 @@ QImage ImportDialog::get_autotiles_image(RPGDB *currentdb, QJsonObject tileset)
 
 void ImportDialog::on_button_browse_clicked()
 {
-    QString name = QFileDialog::getOpenFileName(this, "Choose Project", QDir::homePath(), "RPG Maker Project Files (*.rxproj);;Data Files(*.rxdata)");
+    QSettings settings;
+
+    QString name = QFileDialog::getOpenFileName(this, "Choose Project", settings.value("import_path").toString(), "RPG Maker Project Files (*.rxproj);;Data Files(*.rxdata)");
     if (name == "")
         return;
+    settings.setValue("import_path", name);
 
     this->ui->line_location->setText(name);
 

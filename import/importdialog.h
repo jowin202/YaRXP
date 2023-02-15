@@ -7,6 +7,7 @@
 #include <QFileDialog>
 #include <QScrollBar>
 #include <QLabel>
+#include <QSettings>
 
 #include <QJsonObject>
 

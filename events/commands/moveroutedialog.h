@@ -3,8 +3,10 @@
 
 #include <QWidget>
 #include <QJsonArray>
+#include <QJsonParseError>
 #include <QKeyEvent>
 #include <QInputDialog>
+#include <QSettings>
 
 #include <QAction>
 #include <QListWidget>
@@ -92,6 +94,9 @@ private slots:
     void on_button_ok_clicked();
 
     void do_delete();
+    void do_copy();
+    void do_paste();
+    void do_cut();
 
     void on_listWidget_itemDoubleClicked(QListWidgetItem *item);
 
@@ -101,6 +106,9 @@ private:
     QJsonArray list;
 
     QAction action_delete;
+    QAction action_copy;
+    QAction action_paste;
+    QAction action_cut;
 
     QStringList text_blend { "Normal", "Add", "Sub" };
     QStringList text_move_routes = { "", "Move Down", "Move Left", "Move Right", "Move Up",
