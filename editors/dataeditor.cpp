@@ -375,6 +375,31 @@ void DataEditor::setDB(RPGDB *db)
         this->ec->fill_list(this->ui->common_events_list, RPGDB::COMMONEVENTS, true, 3, false);
     });
     this->ui->common_events_list->addAction(&action_common_events_paste);
+
+
+
+    //SCRIPTS: CTRL+C  -- CTRL+V
+    action_scripts_copy.setShortcut(QKeySequence(tr("Ctrl+C")));
+    action_scripts_copy.setShortcutContext(Qt::WidgetShortcut);
+    connect(&action_scripts_copy, &QAction::triggered, [=](){
+        QSettings settings;
+        settings.setValue("copied_script", QJsonDocument(ec->get_script_by_id(this->ui->scripts_list->currentRow())).toJson(QJsonDocument::Compact));
+    });
+    this->ui->scripts_list->addAction(&action_scripts_copy);
+
+    action_scripts_paste.setShortcut(QKeySequence(tr("Ctrl+V")));
+    action_scripts_paste.setShortcutContext(Qt::WidgetShortcut);
+    connect(&action_scripts_paste, &QAction::triggered, [=](){
+        QSettings settings;
+        QJsonParseError error;
+        QJsonDocument doc = QJsonDocument::fromJson(settings.value("copied_script").toByteArray(), &error);
+        if (error.error != QJsonParseError::NoError)
+            return;
+        ec->add_new_script_at_id(this->ui->scripts_list->currentRow());
+        ec->set_object_by_id(RPGDB::SCRIPTS, this->ui->scripts_list->currentRow(), doc.array());
+        this->ec->fill_list(this->ui->scripts_list, RPGDB::SCRIPTS, true, 3, false);
+    });
+    this->ui->scripts_list->addAction(&action_scripts_paste);
 }
 
 

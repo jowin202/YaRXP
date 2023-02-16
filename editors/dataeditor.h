@@ -100,6 +100,9 @@ private:
 
     QAction action_common_events_copy;
     QAction action_common_events_paste;
+
+    QAction action_scripts_copy;
+    QAction action_scripts_paste;
 };
 
 #endif // DATAEDITOR_H
