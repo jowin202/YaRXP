@@ -171,6 +171,17 @@ QStringList RPGEditorController::obj_get_name_list(int obj_type)
         }
         return list;
     }
+    else if (obj_type == RPGDB::SCRIPTS)
+    {
+        QJsonArray arr = script_file.array();
+
+        QStringList list;
+        for (int i = 0; i < arr.count(); i++)
+        {
+            list << QByteArray::fromBase64(arr.at(i).toArray().at(1).toString().toUtf8());
+        }
+        return list;
+    }
 
     QStringList list;
     for (int i = 1; i < files[obj_type]->array().count(); i++)
@@ -187,7 +198,7 @@ QJsonObject RPGEditorController::get_object_by_id(int obj_type, int id)
     return files[obj_type]->array().at(id).toObject();
 }
 
-void RPGEditorController::set_object_by_id(int obj_type, int id, QJsonObject obj)
+void RPGEditorController::set_object_by_id(int obj_type, int id, QJsonValue obj)
 {
     if (files[obj_type]->array().count() <= id) return;
 
@@ -195,6 +206,31 @@ void RPGEditorController::set_object_by_id(int obj_type, int id, QJsonObject obj
     array.removeAt(id);
     array.insert(id,obj);
     files[obj_type]->setArray(array);
+}
+
+QJsonArray RPGEditorController::get_script_by_id(int id)
+{
+    if (files[RPGDB::SCRIPTS]->array().count() <= id) return QJsonArray();
+    return files[RPGDB::SCRIPTS]->array().at(id).toArray();
+}
+
+void RPGEditorController::remove_script_by_id(int id)
+{
+    if (files[RPGDB::SCRIPTS]->array().count() <= id) return;
+    QJsonArray array = files[RPGDB::SCRIPTS]->array();
+    array.removeAt(id);
+    files[RPGDB::SCRIPTS]->setArray(array);
+}
+
+void RPGEditorController::add_new_script_at_id(int id)
+{
+    QJsonArray script;
+    script.append(0);
+    script.append("");
+    script.append("");
+    QJsonArray array = files[RPGDB::SCRIPTS]->array();
+    array.insert(id,script);
+    files[RPGDB::SCRIPTS]->setArray(array);
 }
 
 int RPGEditorController::count_objects(int obj_type)
@@ -299,7 +335,7 @@ void RPGEditorController::fill_list(QListWidget *list, int type, bool shownum, i
     list->setCurrentRow(current_val);
 }
 
-void RPGEditorController::set_files(QJsonDocument actor_file, QJsonDocument animation_file, QJsonDocument armor_file, QJsonDocument class_file, QJsonDocument common_event_file, QJsonDocument enemy_file, QJsonDocument item_file, QJsonDocument skill_file, QJsonDocument state_file, QJsonDocument system_file, QJsonDocument tileset_file, QJsonDocument troop_file, QJsonDocument weapon_file)
+void RPGEditorController::set_files(QJsonDocument actor_file, QJsonDocument animation_file, QJsonDocument armor_file, QJsonDocument class_file, QJsonDocument common_event_file, QJsonDocument enemy_file, QJsonDocument item_file, QJsonDocument skill_file, QJsonDocument state_file, QJsonDocument system_file, QJsonDocument tileset_file, QJsonDocument troop_file, QJsonDocument weapon_file, QJsonDocument script_file)
 {
     this->actor_file = actor_file;
     this->animation_file = animation_file;
@@ -314,6 +350,7 @@ void RPGEditorController::set_files(QJsonDocument actor_file, QJsonDocument anim
     this->tileset_file = tileset_file;
     this->troop_file = troop_file;
     this->weapon_file = weapon_file;
+    this->script_file = script_file;
 }
 
 void RPGEditorController::obj_set_jsonvalue(int obj_type, QString key, QJsonValue value)
@@ -502,10 +539,16 @@ void RPGEditorController::refresh(int object_type)
         emit current_weapon_changed();
         this->block_writing = false;
     }
+    else if (object_type == RPGDB::SCRIPTS)
+    {
+        this->block_writing = true;
+        emit current_script_changed();
+        this->block_writing = false;
+    }
 }
 
 void RPGEditorController::save_edited_data()
 {
-    this->db->set_files(actor_file,animation_file,armor_file,class_file,common_event_file,enemy_file,item_file,skill_file,state_file,system_file,tileset_file,troop_file,weapon_file);
+    this->db->set_files(actor_file,animation_file,armor_file,class_file,common_event_file,enemy_file,item_file,skill_file,state_file,system_file,tileset_file,troop_file,weapon_file,script_file);
 }
 

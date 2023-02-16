@@ -66,6 +66,8 @@ SOURCES += \
     editors/items/edititems.cpp \
     editors/plusminusbox.cpp \
     editors/plusminuslist.cpp \
+    editors/scripts/editscripts.cpp \
+    editors/scripts/highlighter.cpp \
     editors/skills/editskills.cpp \
     editors/states/editstates.cpp \
     editors/system/editsystem.cpp \
@@ -180,6 +182,8 @@ HEADERS += \
     editors/items/edititems.h \
     editors/plusminusbox.h \
     editors/plusminuslist.h \
+    editors/scripts/editscripts.h \
+    editors/scripts/highlighter.h \
     editors/skills/editskills.h \
     editors/states/editstates.h \
     editors/system/editsystem.h \
@@ -273,6 +277,7 @@ FORMS += \
     editors/items/edititems.ui \
     editors/plusminusbox.ui \
     editors/plusminuslist.ui \
+    editors/scripts/editscripts.ui \
     editors/skills/editskills.ui \
     editors/states/editstates.ui \
     editors/system/editsystem.ui \

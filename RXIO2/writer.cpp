@@ -1,9 +1,10 @@
 #include "writer.h"
 #include "rxexception.h"
 
-Writer::Writer(QJsonDocument *doc, QMap<QString, QStringList> *param_oders, QString file_location)
+Writer::Writer(QJsonDocument *doc, QMap<QString, QStringList> *param_oders, QString file_location, bool strings_from_base_64)
     : QObject()
 {
+    this->strings_from_base_64 = strings_from_base_64;
     this->f.setFileName(file_location);
     f.open(QIODevice::WriteOnly);
 
@@ -250,6 +251,15 @@ void Writer::write_integer(int n)
 void Writer::write_string(QString str)
 {
     write_one_byte((int)'"');
-    write_fixnum(str.toUtf8().length());
-    f.write(str.toUtf8());
+    if (strings_from_base_64)
+    {
+        QByteArray output = QByteArray::fromBase64(str.toUtf8());
+        write_fixnum(output.length());
+        f.write(output);
+    }
+    else
+    {
+        write_fixnum(str.toUtf8().length());
+        f.write(str.toUtf8());
+    }
 }

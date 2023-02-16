@@ -90,6 +90,13 @@ void DataEditor::setDB(RPGDB *db)
     this->ui->system_widget->setEC(ec);
 
 
+    this->ec->fill_list(this->ui->scripts_list, RPGDB::SCRIPTS, true, 3, false);
+    this->ui->script_widget->setEC(ec);
+    connect(this->ui->scripts_list, &QListWidget::currentRowChanged, ec, [=](int v){ ec->set_current_object(RPGDB::SCRIPTS, v); });
+    this->ui->scripts_list->setCurrentRow(0);
+
+
+
 
     //ACTORS: CTRL+C  -- CTRL+V
     action_actors_copy.setShortcut(QKeySequence(tr("Ctrl+C")));
@@ -476,5 +483,33 @@ void DataEditor::set_maximum(int obj_type)
         this->ec->set_max(obj_type, max);
         this->ec->refresh(obj_type);
     }
+}
+
+void DataEditor::on_scripts_list_doubleClicked(const QModelIndex &index)
+{
+    QJsonArray array = ec->get_script_by_id(index.row());
+    bool ok = false;
+    QString name = QInputDialog::getText(this, "Change Script Name", "Script Name:", QLineEdit::Normal, QString(QByteArray::fromBase64(array.at(1).toString().toUtf8())), &ok);
+    if (ok)
+    {
+        array.removeAt(1);
+        array.insert(1, QString(name.toUtf8().toBase64()));
+        ec->set_object_by_id(RPGDB::SCRIPTS,index.row(),array);
+        this->ec->fill_list(this->ui->scripts_list, RPGDB::SCRIPTS, true, 3, false);
+    }
+}
+
+
+void DataEditor::on_button_remove_script_clicked()
+{
+    ec->remove_script_by_id(ec->current_script);
+    this->ec->fill_list(this->ui->scripts_list, RPGDB::SCRIPTS, true, 3, false);
+}
+
+
+void DataEditor::on_buttton_add_script_clicked()
+{
+    ec->add_new_script_at_id(ec->current_script);
+    this->ec->fill_list(this->ui->scripts_list, RPGDB::SCRIPTS, true, 3, false);
 }
 

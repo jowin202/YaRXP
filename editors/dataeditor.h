@@ -4,7 +4,7 @@
 #include <QWidget>
 #include <QDebug>
 #include <QInputDialog>
-
+#include <QListWidgetItem>
 #include <QAction>
 #include <QSettings>
 
@@ -52,6 +52,12 @@ private slots:
 
 
     void set_maximum(int obj_type);
+
+    void on_scripts_list_doubleClicked(const QModelIndex &index);
+
+    void on_button_remove_script_clicked();
+
+    void on_buttton_add_script_clicked();
 
 private:
     Ui::DataEditor *ui;

@@ -1,9 +1,10 @@
 #include "parser.h"
 #include "rxexception.h"
 
-Parser::Parser(QJsonDocument *doc, QMap<QString, QStringList> *param_oders, QString file_location)
+Parser::Parser(QJsonDocument *doc, QMap<QString, QStringList> *param_oders, QString file_location, bool strings_to_base_64)
     : QObject()
 {
+    this->strings_to_base_64 = strings_to_base_64;
     this->f.setFileName(file_location);
     f.open(QIODevice::ReadOnly);
 
@@ -84,17 +85,20 @@ QJsonValue Parser::parse_token()
     else if (byte == 0x22) //" string
     {
         int len = this->read_fixnum();
-        QJsonValue str(QString(this->f.read(len)));
+        QByteArray content = this->f.read(len);
+
+        QString str;
+        if (strings_to_base_64)
+            str = QString(content.toBase64());
+        else
+            str = QString(content);
+
         this->reference_table.insert(++object_count, str);
         return str;
     }
     else if (byte == 0x49) //I" string coded differently
     {
-        this->read_one_byte(); //skip " character
-        int len = this->read_fixnum();
-        QJsonValue str(QString(this->f.read(len)));
-        this->reference_table.insert(++object_count, str);
-
+        QString str = this->parse_token().toString();
         int params = this->read_fixnum(); //should be always 1
         for (int i = 0; i < params; i++)
         {

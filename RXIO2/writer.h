@@ -15,7 +15,7 @@ class Writer : public QObject
 {
     Q_OBJECT
 public:
-    explicit Writer(QJsonDocument *doc, QMap<QString, QStringList> *param_oders, QString file_location);
+    explicit Writer(QJsonDocument *doc, QMap<QString, QStringList> *param_oders, QString file_location, bool strings_from_base_64 = false);
 
 
     void write_token(QJsonValue token);
@@ -43,6 +43,8 @@ private:
     QMap<int,QJsonValue> reference_table;
     int object_count = -1;
 
+
+    bool strings_from_base_64 = false;
 };
 
 #endif // WRITER_H

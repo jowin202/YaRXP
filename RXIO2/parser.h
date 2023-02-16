@@ -15,7 +15,7 @@ class Parser : public QObject
 {
     Q_OBJECT
 public:
-    explicit Parser(QJsonDocument *doc, QMap<QString, QStringList> *param_oders, QString file_location);
+    explicit Parser(QJsonDocument *doc, QMap<QString, QStringList> *param_oders, QString file_location, bool strings_to_base_64 = false);
 
     QJsonValue parse_token();
 
@@ -38,6 +38,8 @@ private:
 
     QMap<int,QJsonValue> reference_table;
     int object_count = -1;
+
+    bool strings_to_base_64 = false;
 };
 
 #endif // PARSER_H

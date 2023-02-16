@@ -30,7 +30,7 @@ public:
     void save_project();
     void close_project();
 
-    enum {ACTORS, CLASSES, SKILLS, ITEMS, WEAPONS, ARMORS, ENEMIES, TROOPS, STATES, ANIMATIONS, TILESETS, COMMONEVENTS, SYSTEM};
+    enum {ACTORS, CLASSES, SKILLS, ITEMS, WEAPONS, ARMORS, ENEMIES, TROOPS, STATES, ANIMATIONS, TILESETS, COMMONEVENTS, SYSTEM, SCRIPTS};
 
     enum {CLASSES_WEAPONS = 1024, CLASSES_SHIELD, CLASSES_HELMET, CLASSES_BODY, CLASSES_ACCESSORY, ELEMENTS };
 
@@ -122,7 +122,8 @@ public:
             QJsonDocument system_file,
             QJsonDocument tileset_file,
             QJsonDocument troop_file,
-            QJsonDocument weapon_file);
+            QJsonDocument weapon_file,
+            QJsonDocument script_file);
 
 
     void fill_list(QListWidget *list, int type, bool shownum, int chars);
@@ -144,7 +145,8 @@ private:
     QJsonDocument tileset_file;
     QJsonDocument troop_file;
     QJsonDocument weapon_file;
-    QJsonDocument *files[13] = {&actor_file, &class_file, &skill_file, &item_file, &weapon_file, &armor_file, &enemy_file, &troop_file, &state_file, &animation_file, &tileset_file, &common_event_file, &system_file };
+    QJsonDocument script_file;
+    QJsonDocument *files[14] = {&actor_file, &class_file, &skill_file, &item_file, &weapon_file, &armor_file, &enemy_file, &troop_file, &state_file, &animation_file, &tileset_file, &common_event_file, &system_file, &script_file };
 
     QJsonDocument mapinfo_file;
     QMap<int,QJsonDocument*> map_files;

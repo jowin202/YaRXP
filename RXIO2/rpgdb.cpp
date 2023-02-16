@@ -46,6 +46,8 @@ void RPGDB::load_project(QString dir)
     Parser tileset_parser(&tileset_file, &param_oders,           FileOpener(this->data_dir,"Tilesets.rxdata").get_existing_file());
     Parser troop_parser(&troop_file, &param_oders,               FileOpener(this->data_dir,"Troops.rxdata").get_existing_file());
     Parser weapon_parser(&weapon_file, &param_oders,             FileOpener(this->data_dir,"Weapons.rxdata").get_existing_file());
+    Parser script_parser(&script_file, &param_oders,             FileOpener(this->data_dir,"Scripts.rxdata").get_existing_file(), true); //base64
+
 
     Parser mapinfo_parser(&mapinfo_file, &param_oders,           FileOpener(this->data_dir,"MapInfos.rxdata").get_existing_file());
 
@@ -96,6 +98,7 @@ void RPGDB::save_project()
     Writer tileset_writer(&tileset_file, &param_oders,           FileOpener(this->data_dir, "Tilesets.rxdata").get_existing_file());
     Writer troop_writer(&troop_file, &param_oders,               FileOpener(this->data_dir, "Troops.rxdata").get_existing_file());
     Writer weapon_writer(&weapon_file, &param_oders,             FileOpener(this->data_dir, "Weapons.rxdata").get_existing_file());
+    Writer script_writer(&script_file, &param_oders,             FileOpener(this->data_dir, "Scripts.rxdata").get_existing_file(), true); //base64
 
     Writer mapinfo_writer(&mapinfo_file, &param_oders,           FileOpener(this->data_dir, "MapInfos.rxdata").get_existing_file());
 
@@ -122,7 +125,7 @@ RPGEditorController* RPGDB::prepare_data_editor()
 {
     RPGEditorController* ec = new RPGEditorController(this);
     ec->set_files(this->actor_file, this->animation_file, this->armor_file, this->class_file, this->common_event_file,
-                        this->enemy_file, this->item_file, this->skill_file, this->state_file, this->system_file, this->tileset_file, this->troop_file, this->weapon_file);
+                        this->enemy_file, this->item_file, this->skill_file, this->state_file, this->system_file, this->tileset_file, this->troop_file, this->weapon_file, this->script_file);
 
     return ec;
 }
@@ -222,7 +225,7 @@ QJsonArray RPGDB::get_equipment_vars(int actor_id)
     return result;
 }
 
-void RPGDB::set_files(QJsonDocument actor_file, QJsonDocument animation_file, QJsonDocument armor_file, QJsonDocument class_file, QJsonDocument common_event_file, QJsonDocument enemy_file, QJsonDocument item_file, QJsonDocument skill_file, QJsonDocument state_file, QJsonDocument system_file, QJsonDocument tileset_file, QJsonDocument troop_file, QJsonDocument weapon_file)
+void RPGDB::set_files(QJsonDocument actor_file, QJsonDocument animation_file, QJsonDocument armor_file, QJsonDocument class_file, QJsonDocument common_event_file, QJsonDocument enemy_file, QJsonDocument item_file, QJsonDocument skill_file, QJsonDocument state_file, QJsonDocument system_file, QJsonDocument tileset_file, QJsonDocument troop_file, QJsonDocument weapon_file, QJsonDocument script_file)
 {
     this->actor_file = actor_file;
     this->animation_file = animation_file;
@@ -237,6 +240,7 @@ void RPGDB::set_files(QJsonDocument actor_file, QJsonDocument animation_file, QJ
     this->tileset_file = tileset_file;
     this->troop_file = troop_file;
     this->weapon_file = weapon_file;
+    this->script_file = script_file;
 }
 
 void RPGDB::fill_list(QListWidget *list, int type, bool shownum, int chars)

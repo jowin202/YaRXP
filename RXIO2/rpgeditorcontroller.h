@@ -52,19 +52,19 @@ public:
     QJsonValue obj_get_jsonvalue(int obj_type, QString key);
     QStringList obj_get_name_list(int obj_type);
     QJsonObject get_object_by_id(int obj_type, int id);
-    void set_object_by_id(int obj_type, int id, QJsonObject obj);
+    void set_object_by_id(int obj_type, int id, QJsonValue obj);
 
 
-
+    //scripts
+    QJsonArray get_script_by_id(int id);
+    void remove_script_by_id(int id);
+    void add_new_script_at_id(int id);
 
     //max object and count
     int count_objects(int obj_type);
     void set_max(int obj_type, int count);
 
-
-
-    void set_files(
-            QJsonDocument actor_file,
+    void set_files(QJsonDocument actor_file,
             QJsonDocument animation_file,
             QJsonDocument armor_file,
             QJsonDocument class_file,
@@ -76,7 +76,7 @@ public:
             QJsonDocument system_file,
             QJsonDocument tileset_file,
             QJsonDocument troop_file,
-            QJsonDocument weapon_file);
+            QJsonDocument weapon_file, QJsonDocument script_file);
 
 
     int current_actor = -1;
@@ -92,6 +92,7 @@ public:
     int current_tileset = -1;
     int current_troop = -1;
     int current_weapon = -1;
+    int current_script = -1;
 
     bool block_writing = true;
     bool block_changing_objects = false;
@@ -121,9 +122,7 @@ signals:
     void current_tileset_changed();
     void current_troop_changed();
     void current_weapon_changed();
-
-
-
+    void current_script_changed();
 
 private:
     RPGDB *db;
@@ -141,12 +140,13 @@ private:
     QJsonDocument tileset_file;
     QJsonDocument troop_file;
     QJsonDocument weapon_file;
+    QJsonDocument script_file;
 
     QMap<int,QMetaMethod> object_changed_signals;
 
     //same order as the enum in RPGDB!!!
-    //enum {ACTORS, CLASSES, SKILLS, ITEMS, WEAPONS, ARMORS, ENEMIES, TROOPS, STATES, ANIMATIONS, TILESETS, COMMONEVENTS, SYSTEM};
-    void (RPGEditorController::* obj_changed_signals[13])() = {
+    //enum {ACTORS, CLASSES, SKILLS, ITEMS, WEAPONS, ARMORS, ENEMIES, TROOPS, STATES, ANIMATIONS, TILESETS, COMMONEVENTS, SYSTEM, SCRIPTS};
+    void (RPGEditorController::* obj_changed_signals[14])() = {
             &RPGEditorController::current_actor_changed,
             &RPGEditorController::current_class_changed,
             &RPGEditorController::current_skill_changed,
@@ -160,10 +160,12 @@ private:
             &RPGEditorController::current_tileset_changed,
             &RPGEditorController::current_common_event_changed,
             &RPGEditorController::current_system_changed,
+            &RPGEditorController::current_script_changed,
                                                                };
 
-    int *current_instance_variables[12] = { &current_actor, &current_class, &current_skill, &current_item, &current_weapon, &current_armor, &current_enemy, &current_troop, &current_state, &current_animation, &current_tileset, &current_common_event};
-    QJsonDocument *files[13] = {&actor_file, &class_file, &skill_file, &item_file, &weapon_file, &armor_file, &enemy_file, &troop_file, &state_file, &animation_file, &tileset_file, &common_event_file, &system_file };
+    //0 for system
+    int *current_instance_variables[14] = { &current_actor, &current_class, &current_skill, &current_item, &current_weapon, &current_armor, &current_enemy, &current_troop, &current_state, &current_animation, &current_tileset, &current_common_event, 0, &current_script};
+    QJsonDocument *files[14] = {&actor_file, &class_file, &skill_file, &item_file, &weapon_file, &armor_file, &enemy_file, &troop_file, &state_file, &animation_file, &tileset_file, &common_event_file, &system_file, &script_file };
 
 };
 
