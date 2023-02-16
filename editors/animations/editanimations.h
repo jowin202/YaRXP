@@ -35,14 +35,14 @@ private slots:
     void update_frame_list();
 
     void on_table_timings_itemDoubleClicked(QTableWidgetItem *item);
-
     void on_frame_list_currentRowChanged(int currentRow);
-
     void on_button_edit_battler_clicked();
-
     void on_button_paste_last_clicked();
-
-    void on_button_clear_frame_clicked();
+    void on_button_copy_clicked();
+    void on_button_clear_frames_clicked();
+    void on_button_tweening_clicked();
+    void on_button_cell_batch_clicked();
+    void on_button_entire_slide_clicked();
 
 private:
     Ui::EditAnimations *ui;

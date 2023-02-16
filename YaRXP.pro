@@ -48,8 +48,11 @@ SOURCES += \
     editors/actors/generatecurvedialog.cpp \
     editors/animations/animationgraphicpreview.cpp \
     editors/animations/animationlabel.cpp \
+    editors/animations/cellbatchdialog.cpp \
     editors/animations/cellpropertiesdialog.cpp \
+    editors/animations/copyframesdialog.cpp \
     editors/animations/editanimations.cpp \
+    editors/animations/entireslidedialog.cpp \
     editors/animations/flashsedialog.cpp \
     editors/animations/timingtable.cpp \
     editors/animations/tweeningdialog.cpp \
@@ -164,8 +167,11 @@ HEADERS += \
     editors/actors/generatecurvedialog.h \
     editors/animations/animationgraphicpreview.h \
     editors/animations/animationlabel.h \
+    editors/animations/cellbatchdialog.h \
     editors/animations/cellpropertiesdialog.h \
+    editors/animations/copyframesdialog.h \
     editors/animations/editanimations.h \
+    editors/animations/entireslidedialog.h \
     editors/animations/flashsedialog.h \
     editors/animations/timingtable.h \
     editors/animations/tweeningdialog.h \
@@ -262,8 +268,11 @@ FORMS += \
     editors/actors/editoractorparameterpage.ui \
     editors/actors/editoractorparameters.ui \
     editors/actors/generatecurvedialog.ui \
+    editors/animations/cellbatchdialog.ui \
     editors/animations/cellpropertiesdialog.ui \
+    editors/animations/copyframesdialog.ui \
     editors/animations/editanimations.ui \
+    editors/animations/entireslidedialog.ui \
     editors/animations/flashsedialog.ui \
     editors/animations/tweeningdialog.ui \
     editors/armors/editarmors.ui \

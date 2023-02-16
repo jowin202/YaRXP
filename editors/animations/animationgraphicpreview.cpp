@@ -73,6 +73,7 @@ void AnimationGraphicPreview::update()
 
     painter.end();
     this->setPixmap(QPixmap::fromImage(bg));
+    emit max_pattern(num_images);
 }
 
 void AnimationGraphicPreview::mousePressEvent(QMouseEvent *e)

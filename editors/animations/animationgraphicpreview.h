@@ -25,6 +25,7 @@ public:
 
 signals:
     void cell_chosen(int);
+    void max_pattern(int);
 
 private:
     RPGDB *db = 0;

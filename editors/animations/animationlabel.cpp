@@ -301,7 +301,7 @@ void AnimationLabel::mouseDoubleClickEvent(QMouseEvent *e)
             this->current_rectangle = i.key();
             int max_cell = ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray().at(current_frame).toObject().value("@cell_max").toInt();
             QJsonArray cell_values = ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray().at(current_frame).toObject().value("@cell_data").toObject().value("values").toArray();
-            CellPropertiesDialog *dialog = new CellPropertiesDialog(cell_values, this->current_rectangle, max_cell);
+            CellPropertiesDialog *dialog = new CellPropertiesDialog(cell_values, this->current_rectangle, max_cell, max_pattern);
             dialog->show();
             connect(dialog, &CellPropertiesDialog::ok_clicked, [=](QJsonArray cell_values)
             {

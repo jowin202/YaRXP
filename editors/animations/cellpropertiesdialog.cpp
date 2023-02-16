@@ -1,7 +1,7 @@
 #include "cellpropertiesdialog.h"
 #include "ui_cellpropertiesdialog.h"
 
-CellPropertiesDialog::CellPropertiesDialog(QJsonArray values, int number, int max, QWidget *parent) :
+CellPropertiesDialog::CellPropertiesDialog(QJsonArray values, int number, int max, int max_pattern, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::CellPropertiesDialog)
 {
@@ -18,6 +18,8 @@ CellPropertiesDialog::CellPropertiesDialog(QJsonArray values, int number, int ma
     this->values = values;
     this->number = number;
     this->max = max;
+
+    this->ui->spin_pattern->setMaximum(max_pattern);
 }
 
 CellPropertiesDialog::~CellPropertiesDialog()

@@ -26,6 +26,9 @@ public:
 
     void mouseDoubleClickEvent(QMouseEvent *e);
 
+
+    void set_max_pattern(int m) {this->max_pattern = m;}
+
 public slots:
     void set_pattern(int p) { this->pattern = p;}
 
@@ -45,6 +48,8 @@ private:
     int y=0;
 
     int pattern = 0;
+
+    int max_pattern;
 
 };
 

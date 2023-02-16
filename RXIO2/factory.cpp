@@ -155,6 +155,24 @@ QJsonObject Factory::create_animation_timing(int frame, QJsonObject audiofile, i
     return obj;
 }
 
+QJsonObject Factory::create_animation_frame()
+{
+    QJsonObject obj;
+
+    QJsonObject cell_data;
+    cell_data.insert("RXClass", "Table");
+    cell_data.insert("shitty_num", 2);
+    cell_data.insert("values", QJsonArray());
+    cell_data.insert("x", 0);
+    cell_data.insert("y", 8);
+    cell_data.insert("z", 1);
+    obj.insert("@cell_data", cell_data);
+    obj.insert("@cell_max", 0);
+
+    obj.insert("RXClass", "RPG::Animation::Frame");
+    return obj;
+}
+
 
 QJsonObject Factory::create_new_actor(int id)
 {

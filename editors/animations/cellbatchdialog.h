@@ -1,20 +1,20 @@
-#ifndef TWEENINGDIALOG_H
-#define TWEENINGDIALOG_H
+#ifndef CELLBATCHDIALOG_H
+#define CELLBATCHDIALOG_H
 
 #include <QWidget>
 #include <QKeyEvent>
 
 namespace Ui {
-class TweeningDialog;
+class CellBatchDialog;
 }
 
-class TweeningDialog : public QWidget
+class CellBatchDialog : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit TweeningDialog(int max_frames, QWidget *parent = nullptr);
-    ~TweeningDialog();
+    explicit CellBatchDialog(int max_frames, QWidget *parent = nullptr);
+    ~CellBatchDialog();
     void keyPressEvent(QKeyEvent *e) {
         if(e->key() == Qt::Key_Escape)
             this->on_button_cancel_clicked();
@@ -28,7 +28,7 @@ private slots:
     void on_button_cancel_clicked();
 
 private:
-    Ui::TweeningDialog *ui;
+    Ui::CellBatchDialog *ui;
 };
 
-#endif // TWEENINGDIALOG_H
+#endif // CELLBATCHDIALOG_H

@@ -1,20 +1,20 @@
-#ifndef TWEENINGDIALOG_H
-#define TWEENINGDIALOG_H
+#ifndef ENTIRESLIDEDIALOG_H
+#define ENTIRESLIDEDIALOG_H
 
 #include <QWidget>
 #include <QKeyEvent>
 
 namespace Ui {
-class TweeningDialog;
+class EntireSlideDialog;
 }
 
-class TweeningDialog : public QWidget
+class EntireSlideDialog : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit TweeningDialog(int max_frames, QWidget *parent = nullptr);
-    ~TweeningDialog();
+    explicit EntireSlideDialog(int max_frames, QWidget *parent = nullptr);
+    ~EntireSlideDialog();
     void keyPressEvent(QKeyEvent *e) {
         if(e->key() == Qt::Key_Escape)
             this->on_button_cancel_clicked();
@@ -28,7 +28,7 @@ private slots:
     void on_button_cancel_clicked();
 
 private:
-    Ui::TweeningDialog *ui;
+    Ui::EntireSlideDialog *ui;
 };
 
-#endif // TWEENINGDIALOG_H
+#endif // ENTIRESLIDEDIALOG_H

@@ -2,6 +2,10 @@
 #include "ui_editanimations.h"
 
 #include "flashsedialog.h"
+#include "copyframesdialog.h"
+#include "tweeningdialog.h"
+#include "cellbatchdialog.h"
+#include "entireslidedialog.h"
 
 #include "dialogs/imagedialog.h"
 #include "RXIO2/rpgdb.h"
@@ -12,6 +16,8 @@ EditAnimations::EditAnimations(QWidget *parent) :
     ui(new Ui::EditAnimations)
 {
     ui->setupUi(this);
+
+    connect(this->ui->graphic_preview_label, &AnimationGraphicPreview::max_pattern, [=](int m) { this->ui->animation_label->set_max_pattern(m); });
 }
 
 EditAnimations::~EditAnimations()
@@ -64,11 +70,23 @@ void EditAnimations::on_button_animation_clicked()
 void EditAnimations::on_button_set_frames_clicked()
 {
     bool ok;
-    int frames = QInputDialog::getInt(this, "Frame Count", "Set Frame Count:", this->ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray().count(), 1, 200, 1, &ok);
+    int frames_count = QInputDialog::getInt(this, "Frame Count", "Set Frame Count:", this->ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray().count(), 1, 200, 1, &ok);
     if (ok)
     {
-        this->ec->obj_set_jsonvalue(RPGDB::ANIMATIONS, "@frame_max", frames);
-        //TODO: insert frames
+        this->ec->obj_set_jsonvalue(RPGDB::ANIMATIONS, "@frame_max", frames_count);
+        QJsonArray frames = ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray();
+
+        while (frames.count() > frames_count)
+        {
+            frames.removeLast();
+        }
+        while (frames.count() < frames_count)
+        {
+            frames.append(Factory().create_animation_frame());
+        }
+
+
+        ec->obj_set_jsonvalue(RPGDB::ANIMATIONS, "@frames", frames);
         this->ec->refresh(RPGDB::ANIMATIONS); //update view
     }
 }
@@ -130,18 +148,73 @@ void EditAnimations::on_button_paste_last_clicked()
 }
 
 
-void EditAnimations::on_button_clear_frame_clicked()
-{
-    //TODO
-    /*
-    int current_frame = this->ui->frame_list->currentRow();
-    if (current_frame < 0) return; //
 
-    QJsonArray frames = this->ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray();
-    frames.removeAt(current_frame);
-    frames.insert(current_frame, frames.at(current_frame-1));
-    this->ec->obj_set_jsonvalue(RPGDB::ANIMATIONS, "@frames", frames);
-    this->ui->animation_label->update(current_frame);
-    */
+void EditAnimations::on_button_copy_clicked()
+{
+    CopyFramesDialog *dialog = new CopyFramesDialog(this->ui->frame_list->count(),true);
+    dialog->show();
+    connect(dialog, &CopyFramesDialog::ok_clicked, [=](int from, int to, int dest){
+        int min_frame = qMin(from,to);
+        int max_frame = qMax(from, to);
+        int delta = dest-from;
+
+        QJsonArray frames = this->ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray();
+        for (int i = min_frame; i <= max_frame && (i+delta) >= 1 && (i+delta) <= frames.count(); i++)
+        {
+            QJsonObject from_frame = frames.at(i-1).toObject(); //starts counting at 1
+            frames.removeAt(i-1+delta);
+            frames.insert(i-1+delta,from_frame);
+        }
+        this->ec->obj_set_jsonvalue(RPGDB::ANIMATIONS, "@frames", frames);
+        this->ui->animation_label->update(this->ui->frame_list->currentRow());
+    });
+}
+
+
+void EditAnimations::on_button_clear_frames_clicked()
+{
+    CopyFramesDialog *dialog = new CopyFramesDialog(this->ui->frame_list->count(),false);
+    dialog->show();
+    connect(dialog, &CopyFramesDialog::ok_clicked, [=](int from, int to, int dest){
+        Q_UNUSED(dest);
+        int min_frame = qMin(from,to);
+        int max_frame = qMax(from, to);
+
+        QJsonArray frames = this->ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray();
+        for (int i = min_frame; i <= max_frame; i++)
+        {
+            QJsonObject frame = frames.at(i-1).toObject(); //starts counting at 1
+            QJsonObject cell_data = frame.value("@cell_data").toObject();
+            cell_data.insert("values", QJsonArray());
+            cell_data.insert("x", 0);
+            frame.insert("@cell_data", cell_data);
+            frame.insert("@cell_max", 0);
+            frames.removeAt(i-1);
+            frames.insert(i-1,frame);
+        }
+        this->ec->obj_set_jsonvalue(RPGDB::ANIMATIONS, "@frames", frames);
+        this->ui->animation_label->update(this->ui->frame_list->currentRow());
+    });
+}
+
+
+void EditAnimations::on_button_tweening_clicked()
+{
+    TweeningDialog *dialog = new TweeningDialog(this->ui->frame_list->count());
+    dialog->show();
+}
+
+
+void EditAnimations::on_button_cell_batch_clicked()
+{
+    CellBatchDialog *dialog = new CellBatchDialog(this->ui->frame_list->count());
+    dialog->show();
+}
+
+
+void EditAnimations::on_button_entire_slide_clicked()
+{
+    EntireSlideDialog *dialog = new EntireSlideDialog(this->ui->frame_list->count());
+    dialog->show();
 }
 

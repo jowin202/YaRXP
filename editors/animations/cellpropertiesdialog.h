@@ -14,7 +14,7 @@ class CellPropertiesDialog : public QWidget
     Q_OBJECT
 
 public:
-    explicit CellPropertiesDialog(QJsonArray values, int number, int max, QWidget *parent = nullptr);
+    explicit CellPropertiesDialog(QJsonArray values, int number, int max, int max_pattern, QWidget *parent = nullptr);
     ~CellPropertiesDialog();
     void keyPressEvent(QKeyEvent *e) {
         if(e->key() == Qt::Key_Escape)
