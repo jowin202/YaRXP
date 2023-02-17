@@ -430,76 +430,88 @@ void DataEditor::on_tabWidget_currentChanged(int index)
 
 void DataEditor::on_button_actor_max_clicked()
 {
-    this->set_maximum(RPGDB::ACTORS);
+    if (this->set_maximum(RPGDB::ACTORS))
+        this->ec->fill_list(this->ui->actor_list, RPGDB::ACTORS, true, 3, false);
 }
 
 
 void DataEditor::on_button_classes_max_clicked()
 {
-    this->set_maximum(RPGDB::CLASSES);
+    if (this->set_maximum(RPGDB::CLASSES))
+        this->ec->fill_list(this->ui->classes_list, RPGDB::CLASSES, true, 3, false);
 }
 
 
 void DataEditor::on_button_skills_max_clicked()
 {
-    this->set_maximum(RPGDB::SKILLS);
+    if (this->set_maximum(RPGDB::SKILLS))
+        this->ec->fill_list(this->ui->skills_list, RPGDB::SKILLS, true, 3, false);
 }
 
 
 void DataEditor::on_button_items_max_clicked()
 {
-    this->set_maximum(RPGDB::ITEMS);
+    if (this->set_maximum(RPGDB::ITEMS))
+        this->ec->fill_list(this->ui->items_list, RPGDB::ITEMS, true, 3, false);
 }
 
 
 void DataEditor::on_button_weapons_max_clicked()
 {
-    this->set_maximum(RPGDB::WEAPONS);
+    if (this->set_maximum(RPGDB::WEAPONS))
+        this->ec->fill_list(this->ui->weapons_list, RPGDB::WEAPONS, true, 3, false);
 }
 
 
 void DataEditor::on_button_armors_max_clicked()
 {
-    this->set_maximum(RPGDB::ARMORS);
+    if (this->set_maximum(RPGDB::ARMORS))
+        this->ec->fill_list(this->ui->armors_list, RPGDB::ARMORS, true, 3, false);
 }
 
 
 void DataEditor::on_button_enemies_max_clicked()
 {
-    this->set_maximum(RPGDB::ENEMIES);
+    if (this->set_maximum(RPGDB::ENEMIES))
+        this->ec->fill_list(this->ui->enemies_list, RPGDB::ENEMIES, true, 3, false);
 }
 
 
 void DataEditor::on_button_troops_max_clicked()
 {
-    this->set_maximum(RPGDB::TROOPS);
+    if (this->set_maximum(RPGDB::TROOPS))
+        this->ec->fill_list(this->ui->troops_list, RPGDB::TROOPS, true, 3, false);
 }
 
 
 void DataEditor::on_button_states_max_clicked()
 {
     this->set_maximum(RPGDB::STATES);
+    this->ec->fill_list(this->ui->states_list, RPGDB::STATES, true, 3, false);
 }
 
 
 void DataEditor::on_button_animations_max_clicked()
 {
-    this->set_maximum(RPGDB::ANIMATIONS);
+    if (this->set_maximum(RPGDB::ANIMATIONS))
+        this->ec->fill_list(this->ui->animations_list, RPGDB::ANIMATIONS, true, 3, false);
 }
 
 
 void DataEditor::on_button_tilesets_max_clicked()
 {
-    this->set_maximum(RPGDB::TILESETS);
+    if (this->set_maximum(RPGDB::TILESETS))
+        this->ec->fill_list(this->ui->tilesets_list, RPGDB::TILESETS, true, 3, false);
 }
 
 
 void DataEditor::on_button_common_events_max_clicked()
 {
-    this->set_maximum(RPGDB::COMMONEVENTS);
+    if (this->set_maximum(RPGDB::COMMONEVENTS))
+        this->ec->fill_list(this->ui->common_events_list, RPGDB::COMMONEVENTS, true, 3, false);
 }
 
-void DataEditor::set_maximum(int obj_type)
+bool DataEditor::set_maximum(int obj_type)
 {
     bool ok = false;
     int max = QInputDialog::getInt(this, "Select Maximum", "Set Maximum",this->ec->count_objects(obj_type), 0, 999,1, &ok);
@@ -507,7 +519,9 @@ void DataEditor::set_maximum(int obj_type)
     {
         this->ec->set_max(obj_type, max);
         this->ec->refresh(obj_type);
+        return true;
     }
+    return false;
 }
 
 void DataEditor::on_scripts_list_doubleClicked(const QModelIndex &index)

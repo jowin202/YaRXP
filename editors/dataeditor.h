@@ -51,7 +51,7 @@ private slots:
     void on_button_common_events_max_clicked();
 
 
-    void set_maximum(int obj_type);
+    bool set_maximum(int obj_type);
 
     void on_scripts_list_doubleClicked(const QModelIndex &index);
 
