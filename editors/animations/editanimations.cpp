@@ -284,5 +284,41 @@ void EditAnimations::on_button_entire_slide_clicked()
 {
     EntireSlideDialog *dialog = new EntireSlideDialog(this->ui->frame_list->count());
     dialog->show();
+    connect(dialog, &EntireSlideDialog::ok_clicked, [=](int from_frame, int to_frame,
+                                                        int x, int y){
+        int min_frame = qMin(from_frame,to_frame);
+        int max_frame = qMax(from_frame, to_frame);
+
+        QJsonArray frames = this->ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray();
+        for (int i = min_frame; i <= max_frame && i <= frames.count(); i++)
+        {
+            QJsonObject current_frame = frames.at(i-1).toObject(); //starts counting at 1
+            QJsonObject current_cell_data = current_frame.value("@cell_data").toObject();
+            QJsonArray current_cell_data_values = current_cell_data.value("values").toArray();
+            int current_frame_cell_max = current_frame.value("@cell_max").toInt();
+
+            for (int j = 0; j < current_frame_cell_max; j++)
+            {
+                if (x != 0)
+                {
+                    int tmp = current_cell_data_values.at(1*current_frame_cell_max+j).toInt();
+                    current_cell_data_values.removeAt(1*current_frame_cell_max+j);
+                    current_cell_data_values.insert(1*current_frame_cell_max+j,tmp+x);
+                }
+                if (y != 0)
+                {
+                    int tmp = current_cell_data_values.at(2*current_frame_cell_max+j).toInt();
+                    current_cell_data_values.removeAt(2*current_frame_cell_max+j);
+                    current_cell_data_values.insert(2*current_frame_cell_max+j,tmp+y);
+                }
+            }
+            current_cell_data.insert("values", current_cell_data_values);
+            current_frame.insert("@cell_data", current_cell_data);
+            frames.removeAt(i-1);
+            frames.insert(i-1,current_frame);
+        }
+        this->ec->obj_set_jsonvalue(RPGDB::ANIMATIONS, "@frames", frames);
+        this->ui->animation_label->update(this->ui->frame_list->currentRow());
+    });
 }
 
