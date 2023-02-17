@@ -22,6 +22,9 @@ public:
             this->on_button_ok_clicked();
     }
 
+signals:
+    void ok_clicked(int,int,int,int, bool, bool, bool);
+
 private slots:
     void on_button_ok_clicked();
 

@@ -99,7 +99,7 @@ void AnimationLabel::update(int frame)
 
                 if (angle != 0)
                 {
-                    qreal scale = (qCos(qAbs(angle)/180.0 * 3.1415926)+qSin(qAbs(angle)/180.0 * 3.1415926));
+                    qreal scale = qAbs(qCos(angle/180.0 * 3.1415926))+qAbs(qSin(angle/180.0 * 3.1415926));
                     size = qRound(size*scale);
                 }
 
@@ -136,7 +136,7 @@ void AnimationLabel::update(int frame)
 
                     if (angle != 0)
                     {
-                        qreal scale = (qCos(qAbs(angle)/180.0 * 3.1415926)+qSin(qAbs(angle)/180.0 * 3.1415926));
+                        qreal scale = qAbs(qCos(angle/180.0 * 3.1415926))+qAbs(qSin(angle/180.0 * 3.1415926));
                         size = qRound(size*scale);
                         QTransform tr;
                         tr.scale(scale,scale);

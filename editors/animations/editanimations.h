@@ -27,6 +27,13 @@ public:
 
     void set_animation(int n);
 
+    int custom_round(qreal n)
+    {
+        if (n < 0)
+            return qCeil(n);
+        else return qFloor(n);
+    }
+
 
 
 private slots:

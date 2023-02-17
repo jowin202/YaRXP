@@ -18,7 +18,10 @@ TweeningDialog::~TweeningDialog()
 
 void TweeningDialog::on_button_ok_clicked()
 {
-
+    this->close();
+    emit ok_clicked(this->ui->spin_frames_from->value(),this->ui->spin_frames_to->value(),
+                    this->ui->spin_cells_from->value(),this->ui->spin_cells_to->value(),
+                    this->ui->check_pattern->isChecked(), this->ui->check_position->isChecked(), this->ui->check_opacity->isChecked());
 }
 
 

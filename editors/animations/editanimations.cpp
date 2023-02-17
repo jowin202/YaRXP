@@ -202,6 +202,99 @@ void EditAnimations::on_button_tweening_clicked()
 {
     TweeningDialog *dialog = new TweeningDialog(this->ui->frame_list->count());
     dialog->show();
+    connect(dialog, &TweeningDialog::ok_clicked, [=](int from_frame, int to_frame, int from_cell, int to_cell,
+                                                      bool pattern, bool position, bool opacity){
+        int min_frame = qMin(from_frame,to_frame);
+        int max_frame = qMax(from_frame, to_frame);
+        int min_cell = qMin(from_cell,to_cell);
+        int max_cell = qMax(from_cell, to_cell);
+        int delta = max_frame - min_frame;
+        if (delta == 0) return;
+
+        QJsonArray frames = this->ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray();
+        QJsonArray first_frame_cell_values = frames.at(min_frame-1).toObject().value("@cell_data").toObject().value("values").toArray();
+        QJsonArray last_frame_cell_values = frames.at(max_frame-1).toObject().value("@cell_data").toObject().value("values").toArray();
+        int first_frame_cell_max = frames.at(min_frame-1).toObject().value("@cell_max").toInt();
+        int last_frame_cell_max = frames.at(max_frame-1).toObject().value("@cell_max").toInt();
+
+        int cnt = 0;
+        for (int i = min_frame+1; i < max_frame && i < frames.count(); i++) //dont change first and last
+        {
+            cnt++;
+            QJsonObject current_frame = frames.at(i-1).toObject(); //starts counting at 1
+            QJsonObject current_cell_data = current_frame.value("@cell_data").toObject();
+            QJsonArray current_cell_data_values = current_cell_data.value("values").toArray();
+            int current_frame_cell_max = current_frame.value("@cell_max").toInt();
+
+            for (int j = min_cell-1; j < max_cell && j < current_frame_cell_max; j++) //counting at 0, but in dialog counting at 1
+            {
+                if (position) //position, zoom, angle
+                {
+                    int x = first_frame_cell_values.at(1*first_frame_cell_max+j).toInt();
+                    int y = first_frame_cell_values.at(2*last_frame_cell_max+j).toInt();
+                    int zoom = first_frame_cell_values.at(3*last_frame_cell_max+j).toInt();
+                    int angle = first_frame_cell_values.at(4*last_frame_cell_max+j).toInt();
+                    qreal delta_x = (last_frame_cell_values.at(1*last_frame_cell_max+j).toInt() - first_frame_cell_values.at(1*first_frame_cell_max+j).toInt())/(1.0*delta);
+                    qreal delta_y = (last_frame_cell_values.at(2*last_frame_cell_max+j).toInt() - first_frame_cell_values.at(2*first_frame_cell_max+j).toInt())/(1.0*delta);
+                    qreal delta_zoom = (last_frame_cell_values.at(3*last_frame_cell_max+j).toInt() - first_frame_cell_values.at(3*first_frame_cell_max+j).toInt())/(1.0*delta);
+                    qreal delta_angle = (last_frame_cell_values.at(4*last_frame_cell_max+j).toInt() - first_frame_cell_values.at(4*first_frame_cell_max+j).toInt())/(1.0*delta);
+                    current_cell_data_values.removeAt(1*current_frame_cell_max+j);
+                    current_cell_data_values.insert(1*current_frame_cell_max+j,custom_round(x+cnt*delta_x));
+                    current_cell_data_values.removeAt(2*current_frame_cell_max+j);
+                    current_cell_data_values.insert(2*current_frame_cell_max+j,custom_round(y+cnt*delta_y));
+                    current_cell_data_values.removeAt(3*current_frame_cell_max+j);
+                    current_cell_data_values.insert(3*current_frame_cell_max+j,custom_round(zoom+cnt*delta_zoom));
+                    current_cell_data_values.removeAt(4*current_frame_cell_max+j);
+                    current_cell_data_values.insert(4*current_frame_cell_max+j,custom_round(angle+cnt*delta_angle));
+                    //qDebug() << i << custom_round(x+cnt*delta_x) << custom_round(y+cnt*delta_y) << custom_round(zoom+cnt*delta_zoom);
+                }
+                if (pattern)
+                {
+                    int pattern = first_frame_cell_values.at(0*first_frame_cell_max+j).toInt();
+                    qreal delta_pattern = (last_frame_cell_values.at(0*last_frame_cell_max+j).toInt() - first_frame_cell_values.at(0*first_frame_cell_max+j).toInt())/(1.0*delta);
+
+                    current_cell_data_values.removeAt(0*current_frame_cell_max+j);
+                    current_cell_data_values.insert(0*current_frame_cell_max+j,custom_round(pattern+cnt*delta_pattern));
+                }
+                if (opacity) //opacity, blending
+                {
+                    int opacity = first_frame_cell_values.at(6*first_frame_cell_max+j).toInt();
+                    int blending = first_frame_cell_values.at(7*first_frame_cell_max+j).toInt();
+                    qreal delta_opacity = (last_frame_cell_values.at(6*last_frame_cell_max+j).toInt() - first_frame_cell_values.at(6*first_frame_cell_max+j).toInt())/(1.0*delta);
+                    qreal delta_blending = (last_frame_cell_values.at(7*last_frame_cell_max+j).toInt() - first_frame_cell_values.at(7*first_frame_cell_max+j).toInt())/(1.0*delta);
+
+                    current_cell_data_values.removeAt(6*current_frame_cell_max+j);
+                    current_cell_data_values.insert(6*current_frame_cell_max+j,custom_round(opacity+cnt*delta_opacity));
+                    current_cell_data_values.removeAt(7*current_frame_cell_max+j);
+                    current_cell_data_values.insert(7*current_frame_cell_max+j,custom_round(blending+cnt*delta_blending));
+                }
+
+                /*
+                if (pattern >=0)
+                {
+                    current_cell_data_values.removeAt(0*current_frame_cell_max+j);
+                    current_cell_data_values.insert(0*current_frame_cell_max+j,pattern-1); //start counting at 1 (wtf)
+                }
+                if (flip >=0)
+                {
+                    current_cell_data_values.removeAt(5*current_frame_cell_max+j);
+                    current_cell_data_values.insert(5*current_frame_cell_max+j,flip);
+                }
+                if (blending >=0)
+                {
+                    current_cell_data_values.removeAt(7*current_frame_cell_max+j);
+                    current_cell_data_values.insert(7*current_frame_cell_max+j,blending);
+                }
+                */
+            }
+            current_cell_data.insert("values", current_cell_data_values);
+            current_frame.insert("@cell_data", current_cell_data);
+            frames.removeAt(i-1);
+            frames.insert(i-1,current_frame);
+        }
+        this->ec->obj_set_jsonvalue(RPGDB::ANIMATIONS, "@frames", frames);
+        this->ui->animation_label->update(this->ui->frame_list->currentRow());
+    });
 }
 
 
