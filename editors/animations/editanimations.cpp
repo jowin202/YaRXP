@@ -217,6 +217,8 @@ void EditAnimations::on_button_tweening_clicked()
         int first_frame_cell_max = frames.at(min_frame-1).toObject().value("@cell_max").toInt();
         int last_frame_cell_max = frames.at(max_frame-1).toObject().value("@cell_max").toInt();
 
+        max_cell = qMin(max_cell, first_frame_cell_max); // only do cells which are in the first frame
+
         int cnt = 0;
         for (int i = min_frame+1; i < max_frame && i < frames.count(); i++) //dont change first and last
         {
@@ -226,7 +228,24 @@ void EditAnimations::on_button_tweening_clicked()
             QJsonArray current_cell_data_values = current_cell_data.value("values").toArray();
             int current_frame_cell_max = current_frame.value("@cell_max").toInt();
 
-            for (int j = min_cell-1; j < max_cell && j < current_frame_cell_max; j++) //counting at 0, but in dialog counting at 1
+            while (current_frame_cell_max < max_cell)
+            {
+                current_cell_data_values.insert(8*current_frame_cell_max, 1);   //blending
+                current_cell_data_values.insert(7*current_frame_cell_max, 255);   //opacity
+                current_cell_data_values.insert(6*current_frame_cell_max, 0);   //flip
+                current_cell_data_values.insert(5*current_frame_cell_max, 0);   //angle
+                current_cell_data_values.insert(4*current_frame_cell_max, 100); //zoom
+                current_cell_data_values.insert(3*current_frame_cell_max,0);
+                current_cell_data_values.insert(2*current_frame_cell_max,0);
+                current_cell_data_values.insert(1*current_frame_cell_max,1);
+
+                //increase cell_max
+                current_frame.insert("@cell_max", current_frame_cell_max+1);
+                current_cell_data.insert("x", current_frame_cell_max+1);
+                current_frame_cell_max = current_frame.value("@cell_max").toInt();
+            }
+
+            for (int j = min_cell-1; j < max_cell; j++) //counting at 0, but in dialog counting at 1
             {
                 if (position) //position, zoom, angle
                 {
@@ -268,24 +287,6 @@ void EditAnimations::on_button_tweening_clicked()
                     current_cell_data_values.removeAt(7*current_frame_cell_max+j);
                     current_cell_data_values.insert(7*current_frame_cell_max+j,custom_round(blending+cnt*delta_blending));
                 }
-
-                /*
-                if (pattern >=0)
-                {
-                    current_cell_data_values.removeAt(0*current_frame_cell_max+j);
-                    current_cell_data_values.insert(0*current_frame_cell_max+j,pattern-1); //start counting at 1 (wtf)
-                }
-                if (flip >=0)
-                {
-                    current_cell_data_values.removeAt(5*current_frame_cell_max+j);
-                    current_cell_data_values.insert(5*current_frame_cell_max+j,flip);
-                }
-                if (blending >=0)
-                {
-                    current_cell_data_values.removeAt(7*current_frame_cell_max+j);
-                    current_cell_data_values.insert(7*current_frame_cell_max+j,blending);
-                }
-                */
             }
             current_cell_data.insert("values", current_cell_data_values);
             current_frame.insert("@cell_data", current_cell_data);

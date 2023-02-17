@@ -226,7 +226,7 @@ void AnimationLabel::mousePressEvent(QMouseEvent *e)
     int max_cell = ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray().at(current_frame).toObject().value("@cell_max").toInt();
 
     QJsonArray cell_values = ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray().at(current_frame).toObject().value("@cell_data").toObject().value("values").toArray();
-    cell_values.insert(8*max_cell, 0);   //blending
+    cell_values.insert(8*max_cell, 1);   //blending
     cell_values.insert(7*max_cell, 255);   //opacity
     cell_values.insert(6*max_cell, 0);   //flip
     cell_values.insert(5*max_cell, 0);   //angle
@@ -237,6 +237,7 @@ void AnimationLabel::mousePressEvent(QMouseEvent *e)
 
     QJsonObject cell_data = ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray().at(current_frame).toObject().value("@cell_data").toObject();
     cell_data.insert("values", cell_values);
+    cell_data.insert("x", max_cell+1); //update cell dimensions, otherwise parser would not parse the full table
 
     QJsonObject thisframe = ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray().at(current_frame).toObject();
     thisframe.insert("@cell_data", cell_data);
