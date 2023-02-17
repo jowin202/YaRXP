@@ -22,6 +22,7 @@ CopyFramesDialog::CopyFramesDialog(int max_frames, bool true_for_copy_false_for_
     connect(this->ui->spin_dest, SIGNAL(valueChanged(int)), this,  SLOT(update()));
     connect(this->ui->spin_from, SIGNAL(valueChanged(int)), this,  SLOT(update()));
     connect(this->ui->spin_to, SIGNAL(valueChanged(int)), this,  SLOT(update()));
+    this->update();
 }
 
 CopyFramesDialog::~CopyFramesDialog()

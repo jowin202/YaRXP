@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>309</width>
-    <height>306</height>
+    <width>337</width>
+    <height>314</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -21,6 +21,9 @@
     <layout class="QGridLayout" name="gridLayout">
      <item row="1" column="0">
       <widget class="QSpinBox" name="spin_pattern">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="minimum">
         <number>1</number>
        </property>
@@ -29,29 +32,11 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="3">
-      <widget class="QLabel" name="label_8">
-       <property name="text">
-        <string>Blending:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="label_9">
-       <property name="text">
-        <string>Angle:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="2">
-      <widget class="QLabel" name="label_3">
-       <property name="text">
-        <string>Y:</string>
-       </property>
-      </widget>
-     </item>
      <item row="3" column="0">
       <widget class="QSpinBox" name="spin_angle">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="minimum">
         <number>0</number>
        </property>
@@ -65,6 +50,9 @@
      </item>
      <item row="3" column="3">
       <widget class="QComboBox" name="combo_blending">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <item>
         <property name="text">
          <string>Normal</string>
@@ -82,15 +70,11 @@
        </item>
       </widget>
      </item>
-     <item row="2" column="1">
-      <widget class="QLabel" name="label_7">
-       <property name="text">
-        <string>Flip:</string>
-       </property>
-      </widget>
-     </item>
      <item row="1" column="1">
       <widget class="QSpinBox" name="spin_x">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="minimum">
         <number>-320</number>
        </property>
@@ -99,29 +83,11 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="1">
-      <widget class="QLabel" name="label_4">
-       <property name="text">
-        <string>X:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="0">
-      <widget class="QLabel" name="label_5">
-       <property name="text">
-        <string>Pattern:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="2">
-      <widget class="QLabel" name="label_10">
-       <property name="text">
-        <string>Opacity:</string>
-       </property>
-      </widget>
-     </item>
      <item row="1" column="2">
       <widget class="QSpinBox" name="spin_y">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="minimum">
         <number>-160</number>
        </property>
@@ -130,15 +96,11 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="3">
-      <widget class="QLabel" name="label_6">
-       <property name="text">
-        <string>Zoom:</string>
-       </property>
-      </widget>
-     </item>
      <item row="3" column="1">
       <widget class="QComboBox" name="combo_flip">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <item>
         <property name="text">
          <string>No</string>
@@ -153,21 +115,89 @@
      </item>
      <item row="1" column="3">
       <widget class="QSpinBox" name="spin_zoom">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="minimum">
         <number>20</number>
        </property>
        <property name="maximum">
         <number>800</number>
        </property>
+       <property name="value">
+        <number>100</number>
+       </property>
       </widget>
      </item>
      <item row="3" column="2">
       <widget class="QSpinBox" name="spin_opacity">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="minimum">
         <number>0</number>
        </property>
        <property name="maximum">
         <number>255</number>
+       </property>
+       <property name="value">
+        <number>255</number>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QCheckBox" name="check_pattern">
+       <property name="text">
+        <string>Pattern:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QCheckBox" name="check_x">
+       <property name="text">
+        <string>X:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="2">
+      <widget class="QCheckBox" name="check_y">
+       <property name="text">
+        <string>Y:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="3">
+      <widget class="QCheckBox" name="check_zoom">
+       <property name="text">
+        <string>Zoom:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QCheckBox" name="check_angle">
+       <property name="text">
+        <string>Angle:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QCheckBox" name="check_flip">
+       <property name="text">
+        <string>Flip:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="2">
+      <widget class="QCheckBox" name="check_opacity">
+       <property name="text">
+        <string>Opacity:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="3">
+      <widget class="QCheckBox" name="check_blending">
+       <property name="text">
+        <string>Blending:</string>
        </property>
       </widget>
      </item>
@@ -227,6 +257,9 @@
        <property name="maximum">
         <number>16</number>
        </property>
+       <property name="value">
+        <number>16</number>
+       </property>
       </widget>
      </item>
     </layout>
@@ -282,17 +315,154 @@
   <tabstop>spin_frames_to</tabstop>
   <tabstop>spin_cells_from</tabstop>
   <tabstop>spin_cells_to</tabstop>
+  <tabstop>check_pattern</tabstop>
   <tabstop>spin_pattern</tabstop>
+  <tabstop>check_x</tabstop>
   <tabstop>spin_x</tabstop>
+  <tabstop>check_y</tabstop>
   <tabstop>spin_y</tabstop>
+  <tabstop>check_zoom</tabstop>
   <tabstop>spin_zoom</tabstop>
+  <tabstop>check_angle</tabstop>
   <tabstop>spin_angle</tabstop>
+  <tabstop>check_flip</tabstop>
   <tabstop>combo_flip</tabstop>
+  <tabstop>check_opacity</tabstop>
   <tabstop>spin_opacity</tabstop>
+  <tabstop>check_blending</tabstop>
   <tabstop>combo_blending</tabstop>
   <tabstop>button_ok</tabstop>
   <tabstop>button_cancel</tabstop>
  </tabstops>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>check_pattern</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>spin_pattern</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>46</x>
+     <y>148</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>44</x>
+     <y>173</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>check_x</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>spin_x</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>119</x>
+     <y>142</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>123</x>
+     <y>172</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>check_y</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>spin_y</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>209</x>
+     <y>142</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>209</x>
+     <y>175</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>check_zoom</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>spin_zoom</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>282</x>
+     <y>150</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>282</x>
+     <y>177</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>check_angle</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>spin_angle</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>67</x>
+     <y>217</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>71</x>
+     <y>247</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>check_flip</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>combo_flip</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>97</x>
+     <y>205</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>99</x>
+     <y>239</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>check_opacity</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>spin_opacity</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>182</x>
+     <y>210</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>185</x>
+     <y>235</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>check_blending</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>combo_blending</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>264</x>
+     <y>210</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>267</x>
+     <y>234</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

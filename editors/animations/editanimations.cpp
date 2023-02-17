@@ -209,6 +209,74 @@ void EditAnimations::on_button_cell_batch_clicked()
 {
     CellBatchDialog *dialog = new CellBatchDialog(this->ui->frame_list->count());
     dialog->show();
+    connect(dialog, &CellBatchDialog::ok_clicked, [=](int from_frame, int to_frame, int from_cell, int to_cell,
+                                                      int pattern, int x, int y, int zoom,
+                                                      int angle, int flip, int opacity, int blending){
+        int min_frame = qMin(from_frame,to_frame);
+        int max_frame = qMax(from_frame, to_frame);
+        int min_cell = qMin(from_cell,to_cell);
+        int max_cell = qMax(from_cell, to_cell);
+
+
+        QJsonArray frames = this->ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray();
+        for (int i = min_frame; i <= max_frame && i <= frames.count(); i++)
+        {
+            QJsonObject current_frame = frames.at(i-1).toObject(); //starts counting at 1
+            QJsonObject current_cell_data = current_frame.value("@cell_data").toObject();
+            QJsonArray current_cell_data_values = current_cell_data.value("values").toArray();
+            int current_frame_cell_max = current_frame.value("@cell_max").toInt();
+
+            for (int j = min_cell-1; j < max_cell && j < current_frame_cell_max; j++) //counting at 0, but in dialog counting at 1
+            {
+                if (pattern >=0)
+                {
+                    current_cell_data_values.removeAt(0*current_frame_cell_max+j);
+                    current_cell_data_values.insert(0*current_frame_cell_max+j,pattern-1); //start counting at 1 (wtf)
+                }
+                if (x >=0)
+                {
+                    current_cell_data_values.removeAt(1*current_frame_cell_max+j);
+                    current_cell_data_values.insert(1*current_frame_cell_max+j,x);
+                }
+                if (y >=0)
+                {
+                    current_cell_data_values.removeAt(2*current_frame_cell_max+j);
+                    current_cell_data_values.insert(2*current_frame_cell_max+j,y);
+                }
+                if (zoom >=0)
+                {
+                    current_cell_data_values.removeAt(3*current_frame_cell_max+j);
+                    current_cell_data_values.insert(3*current_frame_cell_max+j,zoom);
+                }
+                if (angle >=0)
+                {
+                    current_cell_data_values.removeAt(4*current_frame_cell_max+j);
+                    current_cell_data_values.insert(4*current_frame_cell_max+j,angle);
+                }
+                if (flip >=0)
+                {
+                    current_cell_data_values.removeAt(5*current_frame_cell_max+j);
+                    current_cell_data_values.insert(5*current_frame_cell_max+j,flip);
+                }
+                if (opacity >=0)
+                {
+                    current_cell_data_values.removeAt(6*current_frame_cell_max+j);
+                    current_cell_data_values.insert(6*current_frame_cell_max+j,opacity);
+                }
+                if (blending >=0)
+                {
+                    current_cell_data_values.removeAt(7*current_frame_cell_max+j);
+                    current_cell_data_values.insert(7*current_frame_cell_max+j,blending);
+                }
+            }
+            current_cell_data.insert("values", current_cell_data_values);
+            current_frame.insert("@cell_data", current_cell_data);
+            frames.removeAt(i-1);
+            frames.insert(i-1,current_frame);
+        }
+        this->ec->obj_set_jsonvalue(RPGDB::ANIMATIONS, "@frames", frames);
+        this->ui->animation_label->update(this->ui->frame_list->currentRow());
+    });
 }
 
 
