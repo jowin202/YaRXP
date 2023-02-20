@@ -208,6 +208,23 @@ QJsonValue Parser::parse_token()
             throw RXException("Undefined Reference: " + QString::number(ref) + " " + QString::number(reference_table.size()) + " " + QString::number(f.pos(),16));
         }
     }
+    else if (byte == 0x6c) // 'l' for BigInt
+    {
+        //experimental, because scripts size can exceed integer length (TODO)
+        bool is_plus = (this->read_one_byte() == '+' ? true: false); //else minus
+        int size = 2*(this->read_fixnum());
+        qint64 result = 0;
+        for (int i = 0; i < size; i++)
+        {
+            result <<= 8;
+            result |= this->read_one_byte();
+        }
+        if (!is_plus)
+            return -result;
+        return result;
+    }
+    else
+        throw RXException("Undefined Command: " + QString::number(f.pos(),16));
 
 
 
