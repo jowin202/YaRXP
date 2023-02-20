@@ -115,15 +115,18 @@ void MainWindow::on_actionOpen_triggered()
     if (dir.isEmpty())
         dir = QDir::homePath();
 
-    QString name = QFileDialog::getOpenFileName(this, "Choose Project", dir, "RPG Maker Project Files (*.rxproj *.rgssad);;Data Files(*.rxdata)");
-    if (name != "")
-        settings.setValue("lastopened", name);
+    QString name = QFileDialog::getOpenFileName(this, "Choose Project", dir, "RPG Maker Project Files (*.rxproj *.rgssad *.rxdata);;");
 
 
+    QFileInfo fi(name);
+    QString export_dir = fi.dir().absolutePath() + QDir::separator();
+
+    if (export_dir != "")
+        settings.setValue("lastopened", export_dir);
+
+    if (export_dir != "")
     if (name.toLower().endsWith("rgssad"))
     {
-        QFileInfo fi(name);
-        QString export_dir = fi.dir().absolutePath() + QDir::separator();
         if (!QFile(export_dir + "Game.rxproj").exists())
             IORGSSAD rgssad_file(name,export_dir);
     }
