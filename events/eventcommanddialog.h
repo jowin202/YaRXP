@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QListWidget>
+#include <QKeyEvent>
 
 class RPGDB;
 class RPGMapController;
@@ -19,6 +20,10 @@ class EventCommandDialog : public QWidget
 public:
     explicit EventCommandDialog(QListWidget *list, RPGDB *db, RPGMapController *mc, int current, QWidget *parent = nullptr);
     ~EventCommandDialog();
+    void keyPressEvent(QKeyEvent *e) {
+        if(e->key() == Qt::Key_Escape)
+            this->close();
+    }
 
 private slots:
     void on_button_show_text_clicked();

@@ -17,6 +17,51 @@ RPGEventListController::RPGEventListController(RPGMapController *mc, QListWidget
     QFont font("Monospace");
     font.setStyleHint(QFont::TypeWriter);
     listwidget->setFont(font);
+    listwidget->setSelectionMode(QListWidget::ContiguousSelection);
+
+    connect(listwidget, &QListWidget::itemSelectionChanged, [=](){
+        int min = listwidget->count();
+        int max = 0;
+        for (int i = 0; i < listwidget->selectedItems().count(); i++)
+        {
+            max = qMax(max,listwidget->row(listwidget->selectedItems().at(i)));
+            min = qMin(min,listwidget->row(listwidget->selectedItems().at(i)));
+        }
+
+    /*
+        if (min != max)
+        {
+            const QSignalBlocker blocker(listwidget);
+            EventListItem *first = dynamic_cast<EventListItem*>(listwidget->item(min));
+            EventListItem *last = dynamic_cast<EventListItem*>(listwidget->item(max));
+            if (first == nullptr || last == nullptr) return; // avoid null pointer
+            int code_first = first->get_obj().value("@code").toInt();
+            int code_last = last->get_obj().value("@code").toInt();
+
+            int multiline_codes[] = { 401, 408, 509, 605, 655 };
+
+            for (int c = 0; c < 5; c++)
+            {
+                if (code_first == multiline_codes[c])
+                {
+                    int i = min;
+                    do
+                    {
+                        listwidget->item(i)->setSelected(false);
+                    } while(i >= 0 && ((EventListItem*)listwidget->item(i--))->get_obj().value("@code").toInt() == multiline_codes[c]);
+                }
+                if (code_last == multiline_codes[c])
+                {
+                    int i = max;
+                    do
+                    {
+                        listwidget->item(i)->setSelected(false);
+                    } while(++i < listwidget->count() && ((EventListItem*)listwidget->item(i))->get_obj().value("@code").toInt() == multiline_codes[c]);
+                }
+            }
+        }
+        */
+    });
 
     //listwidget->setDragDropMode(QAbstractItemView::InternalMove);
 
@@ -72,10 +117,54 @@ RPGEventListController::RPGEventListController(RPGMapController *mc, QListWidget
                 while (dynamic_cast<EventListItem*>(listwidget->item(row)) != nullptr &&
                        dynamic_cast<EventListItem*>(listwidget->item(row))->get_obj().value("@code").toInt() == (code==302 ? 605 : code+300))
                     delete listwidget->takeItem(row);
-
             }
             else //delete the rest
                 delete listwidget->takeItem(row);
+        }
+    });
+
+
+
+    this->action_copy.setShortcut(QKeySequence(tr("Ctrl+C")));
+    this->action_copy.setShortcutContext(Qt::WidgetShortcut);
+    listwidget->addAction(&this->action_copy);
+    connect(&this->action_copy, &QAction::triggered, [=]()
+    {
+        int min = listwidget->count();
+        int max = 0;
+        for (int i = 0; i < listwidget->selectedItems().count(); i++)
+        {
+            max = qMax(max,listwidget->row(listwidget->selectedItems().at(i)));
+            min = qMin(min,listwidget->row(listwidget->selectedItems().at(i)));
+        }
+        QJsonArray copied_event_commands;
+        for (int i = min; i <= max; i++)
+        {
+            EventListItem *current = dynamic_cast<EventListItem*>(listwidget->item(i));
+            if (current == nullptr) continue; // avoid null pointer
+            copied_event_commands.append(current->get_obj());
+        }
+        QSettings settings;
+        settings.setValue("copied_event_commands", QJsonDocument(copied_event_commands).toJson(QJsonDocument::Compact));
+    });
+
+
+
+    this->action_paste.setShortcut(QKeySequence(tr("Ctrl+V")));
+    this->action_paste.setShortcutContext(Qt::WidgetShortcut);
+    listwidget->addAction(&this->action_paste);
+    connect(&this->action_paste, &QAction::triggered, [=]()
+    {
+        QSettings settings;
+        QJsonParseError err;
+        QJsonDocument doc = QJsonDocument::fromJson(settings.value("copied_event_commands").toByteArray(), &err);
+        if (err.error != QJsonParseError::NoError)
+            return;
+
+        QJsonArray list = doc.array();
+        for (int i = 0; i < list.count(); i++)
+        {
+            listwidget->insertItem(listwidget->currentRow(),new EventListItem(listwidget,this->mc,this->mic,list.at(i).toObject()));
         }
     });
 }

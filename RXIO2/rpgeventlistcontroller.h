@@ -4,6 +4,8 @@
 #include <QObject>
 #include <QAction>
 #include <QListWidget>
+#include <QSettings>
+#include <QJsonParseError>
 
 class RPGDB;
 class RPGMapController;
@@ -32,6 +34,8 @@ private:
     QListWidget *listwidget;
 
     QAction action_delete;
+    QAction action_copy;
+    QAction action_paste;
 
 signals:
 
