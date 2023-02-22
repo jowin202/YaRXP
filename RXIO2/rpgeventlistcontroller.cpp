@@ -63,8 +63,6 @@ RPGEventListController::RPGEventListController(RPGMapController *mc, QListWidget
         */
     });
 
-    //listwidget->setDragDropMode(QAbstractItemView::InternalMove);
-
     connect(listwidget, &QListWidget::itemDoubleClicked, this, [=](QListWidgetItem *item) {
         if (dynamic_cast<EventListItem*>(item) != nullptr)
             ((EventListItem*)item)->edit_cell();
@@ -142,6 +140,8 @@ RPGEventListController::RPGEventListController(RPGMapController *mc, QListWidget
         {
             EventListItem *current = dynamic_cast<EventListItem*>(listwidget->item(i));
             if (current == nullptr) continue; // avoid null pointer
+            if (i == max && max == this->listwidget->count()-1) continue; //cant copy laste zero code
+
             copied_event_commands.append(current->get_obj());
         }
         QSettings settings;

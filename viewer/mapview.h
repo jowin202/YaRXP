@@ -238,7 +238,8 @@ private:
     {
         this->is_moving = false;
         this->scene()->removeItem(this->select_rectangle);
-        this->select_rectangle->update();
+        this->scene()->update(this->select_rectangle->pos().x()-32,this->select_rectangle->pos().y()-32,32*this->select_rectangle->size().width()+64,32*this->select_rectangle->size().height()+64);
+        //this->select_rectangle->update();
         delete this->select_rectangle;
         this->select_rectangle = 0;
     }
