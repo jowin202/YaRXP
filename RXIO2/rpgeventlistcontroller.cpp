@@ -272,10 +272,21 @@ RPGEventListController::RPGEventListController(RPGMapController *mc, QListWidget
         if (err.error != QJsonParseError::NoError)
             return;
 
+
+        int indent = 0;
+        if (dynamic_cast<EventListItem*>(listwidget->currentItem()) != nullptr)
+            indent = dynamic_cast<EventListItem*>(listwidget->currentItem())->get_obj().value("@indent").toInt();
+
+        int stdindent = 0;
         QJsonArray list = doc.array();
+        if (list.count() > 0)
+            stdindent = list.first().toObject().value("@indent").toInt();
+
         for (int i = 0; i < list.count(); i++)
         {
-            listwidget->insertItem(listwidget->currentRow(),new EventListItem(listwidget,this->mc,this->mic,list.at(i).toObject()));
+            QJsonObject obj = list.at(i).toObject();
+            obj.insert("@indent", indent - stdindent + obj.value("@indent").toInt());
+            listwidget->insertItem(listwidget->currentRow(),new EventListItem(listwidget,this->mc,this->mic,obj));
         }
     });
 }
