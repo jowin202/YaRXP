@@ -37,6 +37,9 @@ private:
     QAction action_copy;
     QAction action_paste;
 
+    int old_min = -1;
+    int old_max = -1;
+
 signals:
 
 

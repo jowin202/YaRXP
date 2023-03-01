@@ -54,6 +54,8 @@ EventListItem::EventListItem(QListWidget *parent, RPGMapController *mc, RPGMapIn
     this->mic = mic;
     this->parent = parent;
 
+    //if (obj.value("@code").toInt() > 400) this->setFlags(this->flags() & (~Qt::ItemIsSelectable));
+
     this->update_text();
 }
 

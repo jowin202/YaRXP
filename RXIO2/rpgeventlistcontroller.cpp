@@ -28,39 +28,150 @@ RPGEventListController::RPGEventListController(RPGMapController *mc, QListWidget
             min = qMin(min,listwidget->row(listwidget->selectedItems().at(i)));
         }
 
-    /*
-        if (min != max)
+        if (this->old_max >= 0 && max > old_max && old_min == min)
         {
+            //selection down extend
             const QSignalBlocker blocker(listwidget);
-            EventListItem *first = dynamic_cast<EventListItem*>(listwidget->item(min));
-            EventListItem *last = dynamic_cast<EventListItem*>(listwidget->item(max));
-            if (first == nullptr || last == nullptr) return; // avoid null pointer
-            int code_first = first->get_obj().value("@code").toInt();
-            int code_last = last->get_obj().value("@code").toInt();
 
-            int multiline_codes[] = { 401, 408, 509, 605, 655 };
-
-            for (int c = 0; c < 5; c++)
+            int depth_choices = 0;
+            int depth_branch = 0;
+            int depth_loop = 0;
+            int depth_battle = 0;
+            for (int i = old_max; i <= max; i++)
             {
-                if (code_first == multiline_codes[c])
-                {
-                    int i = min;
-                    do
-                    {
-                        listwidget->item(i)->setSelected(false);
-                    } while(i >= 0 && ((EventListItem*)listwidget->item(i--))->get_obj().value("@code").toInt() == multiline_codes[c]);
+                EventListItem *current = dynamic_cast<EventListItem*>(listwidget->item(i));
+                if (current == nullptr) continue; // avoid null pointer
+                int code = current->get_obj().value("@code").toInt();
+                if (code == 102)
+                    depth_choices++;
+                if (code == 404)
+                    depth_choices--;
+                if (code == 111)
+                    depth_branch++;
+                if (code == 412)
+                    depth_branch--;
+                if (code == 112)
+                    depth_loop++;
+                if (code == 413)
+                    depth_loop--;
+                if (code == 301)
+                { //can be a one liner
+                    EventListItem *next = dynamic_cast<EventListItem*>(listwidget->item(i+1));
+                    if (next != nullptr && next->get_obj().value("@code").toInt() == 601)
+                        depth_battle++;
                 }
-                if (code_last == multiline_codes[c])
-                {
-                    int i = max;
-                    do
-                    {
-                        listwidget->item(i)->setSelected(false);
-                    } while(++i < listwidget->count() && ((EventListItem*)listwidget->item(i))->get_obj().value("@code").toInt() == multiline_codes[c]);
+                if (code == 604)
+                    depth_battle--;
+            }
+
+            while ((depth_choices > 0 || depth_branch > 0 || depth_loop > 0 || depth_battle > 0) && max < listwidget->count()-1 )
+            {
+                max++;
+                listwidget->item(max)->setSelected(true);
+                listwidget->setCurrentRow(max);
+                EventListItem *current = dynamic_cast<EventListItem*>(listwidget->item(max));
+                if (current == nullptr) continue; // avoid null pointer
+                int code = current->get_obj().value("@code").toInt();
+                if (code == 102)
+                    depth_choices++;
+                if (code == 404)
+                    depth_choices--;
+                if (code == 111)
+                    depth_branch++;
+                if (code == 412)
+                    depth_branch--;
+                if (code == 112)
+                    depth_loop++;
+                if (code == 413)
+                    depth_loop--;
+                if (code == 301)
+                { //can be a one liner
+                    EventListItem *next = dynamic_cast<EventListItem*>(listwidget->item(max+1));
+                    if (next != nullptr && next->get_obj().value("@code").toInt() == 601)
+                        depth_battle++;
                 }
+                if (code == 604)
+                    depth_battle--;
             }
         }
-        */
+        if (this->old_max > 0 && max < old_max && old_min == min)
+        {
+            //selection down reduce
+            const QSignalBlocker blocker(listwidget);
+
+            int depth_choices = 0;
+            int depth_branch = 0;
+            int depth_loop = 0;
+            int depth_battle = 0;
+            for (int i = old_max; i > max; i--)
+            {
+                EventListItem *current = dynamic_cast<EventListItem*>(listwidget->item(i));
+                if (current == nullptr) continue; // avoid null pointer
+                int code = current->get_obj().value("@code").toInt();
+                if (code == 404)
+                    depth_choices++;
+                if (code == 102)
+                    depth_choices--;
+                if (code == 412)
+                    depth_branch++;
+                if (code == 111)
+                    depth_branch--;
+                if (code == 413)
+                    depth_loop++;
+                if (code == 112)
+                    depth_loop--;
+                if (code == 604)
+                    depth_battle++;
+                if (code == 301)
+                { //can be a one liner
+                    EventListItem *next = dynamic_cast<EventListItem*>(listwidget->item(i+1));
+                    if (next != nullptr && next->get_obj().value("@code").toInt() == 601)
+                        depth_battle--;
+                }
+            }
+
+            bool while_entered = false;
+            while ((depth_choices > 0 || depth_branch > 0 || depth_loop > 0 || depth_battle > 0))// && max >= min )
+            {
+                while_entered = true;
+                listwidget->item(max)->setSelected(false);
+                qDebug() << "unselect" << max;
+                EventListItem *current = dynamic_cast<EventListItem*>(listwidget->item(max));
+                if (current == nullptr) continue; // avoid null pointer
+                int code = current->get_obj().value("@code").toInt();
+                if (code == 404)
+                    depth_choices++;
+                if (code == 102)
+                    depth_choices--;
+                if (code == 412)
+                    depth_branch++;
+                if (code == 111)
+                    depth_branch--;
+                if (code == 413)
+                    depth_loop++;
+                if (code == 112)
+                    depth_loop--;
+                if (code == 604)
+                    depth_battle++;
+                if (code == 301)
+                { //can be a one liner
+                    EventListItem *next = dynamic_cast<EventListItem*>(listwidget->item(max+1));
+                    if (next != nullptr && next->get_obj().value("@code").toInt() == 601)
+                        depth_battle--;
+                }
+                max--;
+            }
+            if (while_entered)
+            {
+                listwidget->item(max+1)->setSelected(false);
+                qDebug() << "unselect" << max+1;
+                listwidget->setCurrentRow(max);
+            }
+
+        }
+
+        this->old_min = min;
+        this->old_max = max;
     });
 
     connect(listwidget, &QListWidget::itemDoubleClicked, this, [=](QListWidgetItem *item) {

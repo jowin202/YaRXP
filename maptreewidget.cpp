@@ -245,13 +245,38 @@ void MapTreeWidget::delete_map()
     int id = this->currentItem()->text(2).toInt();
     QString name = mic->get_name(id);
 
-    int res = QMessageBox::question(this, "Deleting Map", QString("Do you really want to delete %1?").arg(name));
+    QJsonObject mapinfos = this->db->get_mapinfos()->object();
+
+    QList<int> ids_to_delete;
+    ids_to_delete.append(id);
+
+    int num_before = 0;
+    do
+    {
+        num_before = ids_to_delete.count();
+        foreach(const QString& key, mapinfos.keys()) {
+            if (key == "RXClass") continue;
+            QJsonObject value = mapinfos.value(key).toObject();
+            if (ids_to_delete.contains(value.value("@parent_id").toInt()) && !ids_to_delete.contains(key.toInt()))
+                ids_to_delete.append(key.toInt());
+        }
+    } while(num_before < ids_to_delete.count());
+
+    //delete child nodes in tree
+    int res;
+    if (num_before == 1)
+        res = QMessageBox::question(this, "Deleting Map", QString("Do you really want to delete %1?").arg(name));
+    else
+        res = QMessageBox::question(this, "Deleting Map", QString("Do you really want to delete %1 and %2 child maps?").arg(name).arg(num_before-1));
     if (res == QMessageBox::Button::Yes)
     {
-        QJsonObject mapinfos = this->db->get_mapinfos()->object();
-        mapinfos.remove(QString::number(id));
+        foreach (int id_for_delete, ids_to_delete)
+        {
+            mapinfos.remove(QString::number(id_for_delete));
+            this->db->remove_map_file_by_id(id_for_delete);
+        }
+
         this->db->get_mapinfos()->setObject(mapinfos);
-        this->db->remove_map_file_by_id(id);
         this->list_maps();
     }
 }
