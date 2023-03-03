@@ -35,6 +35,20 @@ QImage FileOpener::get_image()
     return QImage(fullpath);
 }
 
+QString FileOpener::get_image_path()
+{
+    QDir dir(path);
+    QStringList filters = { name, name + ".jpg", name + ".png" };
+    QFileInfoList files = dir.entryInfoList(filters, QDir::NoDotAndDotDot | QDir::Files);
+
+
+    if (files.length() == 0) return "";
+
+    QString fullpath = files.at(0).absoluteFilePath();
+
+    return fullpath;
+}
+
 QString FileOpener::get_audio()
 {
     QDir dir(path);

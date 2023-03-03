@@ -2,6 +2,7 @@
 #include "ui_dataeditor.h"
 
 #include "RXIO2/rpgdb.h"
+#include "RXIO2/fileopener.h"
 #include "RXIO2/rpgeditorcontroller.h"
 
 DataEditor::DataEditor(QWidget *parent) :
@@ -336,6 +337,8 @@ void DataEditor::setDB(RPGDB *db)
     connect(&action_tilesets_copy, &QAction::triggered, [=](){
         QSettings settings;
         settings.setValue("copied_tilesets", QJsonDocument(ec->get_object_by_id(RPGDB::TILESETS,this->ui->tilesets_list->currentRow()+1)).toJson(QJsonDocument::Compact));
+        settings.setValue("copied_tilesets_path", db->tileset_dir);
+        settings.setValue("copied_autotiles_path", db->autotiles_dir);
     });
     this->ui->tilesets_list->addAction(&action_tilesets_copy);
 
@@ -347,6 +350,22 @@ void DataEditor::setDB(RPGDB *db)
         QJsonDocument doc = QJsonDocument::fromJson(settings.value("copied_tilesets").toByteArray(), &error);
         if (error.error != QJsonParseError::NoError)
             return;
+
+        if (settings.value("copied_tilesets_path").toString() != db->tileset_dir)
+        {
+            int res = QMessageBox::question(this, "Import Tileset Graphic Files", "Do you want to import the graphic files of the other project?");
+            if (res == QMessageBox::Yes)
+            {
+                QFile file(FileOpener(settings.value("copied_tilesets_path").toString(), doc.object().value("@tileset_name").toString()).get_image_path());
+                file.copy(db->tileset_dir + QFileInfo(file.fileName()).fileName());
+
+                for (int i = 0; i < 7; i++)
+                {
+                    QFile file(FileOpener(settings.value("copied_autotiles_path").toString(), doc.object().value("@autotile_names").toArray().at(i).toString()).get_image_path());
+                    file.copy(db->autotiles_dir + QFileInfo(file.fileName()).fileName());
+                }
+            }
+        }
         ec->set_object_by_id(RPGDB::TILESETS, this->ui->tilesets_list->currentRow()+1, doc.object());
         this->ec->fill_list(this->ui->tilesets_list, RPGDB::TILESETS, true, 3, false);
     });

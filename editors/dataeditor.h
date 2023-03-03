@@ -7,6 +7,7 @@
 #include <QListWidgetItem>
 #include <QAction>
 #include <QSettings>
+#include <QMessageBox>
 
 class RPGDB;
 class RPGEditorController;

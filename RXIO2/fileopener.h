@@ -13,9 +13,9 @@ public:
 
     QString get_existing_directory();
     QImage get_image();
+    QString get_image_path();
     QString get_audio();
     QString get_existing_file();
-
 private:
     QString path;
     QString name;
