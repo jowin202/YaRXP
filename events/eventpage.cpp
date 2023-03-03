@@ -100,6 +100,23 @@ EventPage::EventPage(RPGMapController *mc, QWidget *parent):
     this->ui->widget_switch1->setSwitchWidget(db);
     this->ui->widget_switch2->setSwitchWidget(db);
     this->ui->widget_variable->setVariableWidget(db);
+
+    this->evc = new RPGEventListController(this->mc, this->ui->eventList);
+    QJsonArray empty_list;
+    empty_list.append(Factory().create_empty_event_command());
+    this->evc->fill_list(empty_list);
+
+    this->move_route = Factory().create_move_route(false, false);
+
+    this->ui->label_graphic->set_data_from_page(this->db,
+                                                "", //empty character name
+                                                0, //hue
+                                                0, //pattern
+                                                2, //direction
+                                                255, //opacity
+                                                0, //blend type
+                                                0, //tile_id
+                                                mc->current_map()->object().value("@tileset_id").toInt());
 }
 
 EventPage::~EventPage()
