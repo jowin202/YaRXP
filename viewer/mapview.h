@@ -16,6 +16,7 @@
 #include <QMenu>
 
 #include "mapselectrectangle.h"
+#include "maptile.h"
 
 #include "RXIO2/rpgmapcontroller.h"
 
@@ -132,6 +133,10 @@ public slots:
             QJsonObject ev = this->mc.event_on_pos(opt.marked_tile);
             if (ev.contains("RXClass"))
                 mc.remove_event_by_id(ev.value("@id").toInt());
+
+            MapTile *tile;
+            if ( (tile = ((MapTile*)this->scene()->itemAt(32*opt.marked_tile,QTransform()))) != 0)
+                tile->update();
         }
         else if (opt.mode == SELECT && this->select_rectangle != 0)
         {
@@ -177,6 +182,9 @@ public slots:
                 ev.insert("@y", opt.marked_tile.y());
                 ev.insert("@id", id);
                 mc.set_event_by_id(id, ev);
+                MapTile *tile;
+                if ( (tile = ((MapTile*)this->scene()->itemAt(32*opt.marked_tile,QTransform()))) != 0)
+                    tile->update();
             }
         }
     }

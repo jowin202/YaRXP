@@ -120,6 +120,12 @@ void MapView::edit_event_on_pos(QPoint pos)
         QJsonObject event_to_create = Factory().create_event(mc.get_next_event_id(),pos.x(),pos.y());
         EventDialog *dialog = new EventDialog(&this->mc, event_to_create); //create event
         dialog->show();
+
+        connect(dialog, &EventDialog::ok_clicked, [=](){ //show created event
+            MapTile *tile;
+            if ( (tile = ((MapTile*)this->scene()->itemAt(32*opt.marked_tile,QTransform()))) != 0)
+                tile->update();
+        });
     }
 }
 

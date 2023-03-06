@@ -33,6 +33,9 @@ public:
             this->on_button_cancel_clicked();
     }
 
+signals:
+    void ok_clicked();
+
 public slots:
     void do_numbers_of_tabs_right();
 

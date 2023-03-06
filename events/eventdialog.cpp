@@ -96,6 +96,7 @@ void EventDialog::on_button_apply_clicked()
     int id = this->event.value("@id").toInt();
     mc->set_event_by_id(id, this->event);
     this->do_numbers_of_tabs_right();
+    emit ok_clicked();
 }
 
 void EventDialog::on_button_copy_clicked()
