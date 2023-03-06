@@ -17,6 +17,7 @@
 
 #include "mapselectrectangle.h"
 #include "maptile.h"
+#include "undodb.h"
 
 #include "RXIO2/rpgmapcontroller.h"
 
@@ -130,6 +131,7 @@ public slots:
     {
         if (opt.mode == EVENT)
         {
+            this->undo.push(mc.get_current_map_id(),mc.current_map()->object());
             QJsonObject ev = this->mc.event_on_pos(opt.marked_tile);
             if (ev.contains("RXClass"))
                 mc.remove_event_by_id(ev.value("@id").toInt());
@@ -181,12 +183,20 @@ public slots:
                 ev.insert("@x", opt.marked_tile.x());
                 ev.insert("@y", opt.marked_tile.y());
                 ev.insert("@id", id);
+                this->undo.push(mc.get_current_map_id(),mc.current_map()->object());
                 mc.set_event_by_id(id, ev);
                 MapTile *tile;
                 if ( (tile = ((MapTile*)this->scene()->itemAt(32*opt.marked_tile,QTransform()))) != 0)
                     tile->update();
             }
         }
+    }
+    void do_undo()
+    {
+        QJsonObject obj = undo.pop(mc.get_current_map_id());
+        if (obj != QJsonObject())
+            mc.current_map()->setObject(obj);
+        this->scene()->update();
     }
     void prepare_context_menu(QPoint pos)
     {
@@ -208,9 +218,10 @@ public slots:
             menu.exec(this->mapToGlobal(pos));
         }
     }
-
-
     void edit_event_on_pos(QPoint pos);
+
+
+
 private:
     bool changes_made = false;
     RPGDB *db;
@@ -262,6 +273,7 @@ private:
     QAction action_follow_teleport;
 
 
+    UndoDB undo;
 };
 
 #endif // MAPVIEW_H

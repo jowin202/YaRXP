@@ -156,17 +156,18 @@ int RPGMapController::get_next_event_id()
     return -1;
 }
 
-void RPGMapController::move_event(QPoint from, QPoint to)
+bool RPGMapController::move_event(QPoint from, QPoint to)
 {
     QJsonObject event_on_from_pos = this->event_on_pos(from);
     QJsonObject event_on_to_pos = this->event_on_pos(to);
     if (!event_on_from_pos.contains("RXClass") || event_on_to_pos.contains("RXClass")) //from pos should contain event, to pos should not
-        return;
+        return false;
 
     int id = event_on_from_pos.value("@id").toInt();
     event_on_from_pos.insert("@x", to.x());
     event_on_from_pos.insert("@y", to.y());
     this->set_event_by_id(id, event_on_from_pos);
+    return true;
 }
 
 QList<int> RPGMapController::get_elements_in_rectangle(QRect rect, int fromlayer, int tolayer)

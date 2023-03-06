@@ -132,7 +132,8 @@ SOURCES += \
     maptreewidget.cpp \
     viewer/mapview.cpp \
     viewer/tilesetrectangle.cpp \
-    viewer/tilesetview.cpp
+    viewer/tilesetview.cpp \
+    viewer/undodb.cpp
 
 HEADERS += \
     RXIO2/autotileset.h \
@@ -250,7 +251,8 @@ HEADERS += \
     maptreewidget.h \
     viewer/mapview.h \
     viewer/tilesetrectangle.h \
-    viewer/tilesetview.h
+    viewer/tilesetview.h \
+    viewer/undodb.h
 
 FORMS += \
     dialogs/audiodialog.ui \

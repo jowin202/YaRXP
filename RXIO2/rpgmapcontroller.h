@@ -48,7 +48,7 @@ public:
     void remove_event_by_id(int id);
     int get_next_event_id();
 
-    void move_event(QPoint from, QPoint to);
+    bool move_event(QPoint from, QPoint to);
 
     QList<int> get_elements_in_rectangle(QRect rect, int fromlayer, int tolayer);
     void delete_elements_in_rectangle(QRect rect, int fromlayer, int tolayer);

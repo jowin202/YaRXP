@@ -92,6 +92,8 @@ private slots:
     void zoom_out();
 
 
+    void on_actionUndo_triggered();
+
 private:
     Ui::MainWindow *ui;
     QActionGroup *layergroup;

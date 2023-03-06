@@ -264,7 +264,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset>
+    <iconset resource="icons.qrc">
      <normaloff>:/icons/icons/bx-layer1.svg</normaloff>:/icons/icons/bx-layer1.svg</iconset>
    </property>
    <property name="text">
@@ -282,7 +282,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset>
+    <iconset resource="icons.qrc">
      <normaloff>:/icons/icons/bx-layer2.svg</normaloff>:/icons/icons/bx-layer2.svg</iconset>
    </property>
    <property name="text">
@@ -394,6 +394,9 @@
    </property>
    <property name="text">
     <string>Undo</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Z</string>
    </property>
   </action>
   <action name="actionCut">
@@ -695,6 +698,8 @@
    <header>viewer/tilesetview.h</header>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="icons.qrc"/>
+ </resources>
  <connections/>
 </ui>

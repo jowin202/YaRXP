@@ -442,3 +442,9 @@ void MainWindow::zoom_out()
 {
     this->ui->slider_scale->setValue(this->ui->slider_scale->value()-10);
 }
+
+void MainWindow::on_actionUndo_triggered()
+{
+    this->ui->mapView->do_undo();
+}
+

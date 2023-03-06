@@ -122,6 +122,7 @@ void MapView::edit_event_on_pos(QPoint pos)
         dialog->show();
 
         connect(dialog, &EventDialog::ok_clicked, [=](){ //show created event
+            this->undo.push(mc.get_current_map_id(),mc.current_map()->object());
             MapTile *tile;
             if ( (tile = ((MapTile*)this->scene()->itemAt(32*opt.marked_tile,QTransform()))) != 0)
                 tile->update();
@@ -197,6 +198,7 @@ void MapView::mousePressEvent(QMouseEvent *event)
         {
             this->left_button_clicked = true;
             this->draw_from_pos = pos;
+            this->undo.push(mc.get_current_map_id(),mc.current_map()->object());
             this->mc.put_elements_from_list(pos+rectangle_offset, QPoint(0,0), this->brush, this->opt.layer, this->opt.layer);
             this->rectangle->update();
         }
@@ -223,6 +225,7 @@ void MapView::mousePressEvent(QMouseEvent *event)
         else if (this->select_rectangle != 0)
         {
             //kill rectangle
+            this->undo.push(mc.get_current_map_id(),mc.current_map()->object());
             this->select_rectangle->save_to_map();
             this->kill_select_rectangle();
         }
@@ -296,7 +299,9 @@ void MapView::mouseReleaseEvent(QMouseEvent *event)
     {
         if (event->button() == Qt::LeftButton && event_left_button_for_moving && this->event_moving_from_pos != pos)
         {
-            this->mc.move_event(this->event_moving_from_pos, pos);
+            QJsonObject obj = mc.current_map()->object(); //copy object before move
+            if (this->mc.move_event(this->event_moving_from_pos, pos))
+                this->undo.push(mc.get_current_map_id(), obj); //backup old obj
             MapTile *tile;
             if ( (tile = ((MapTile*)this->scene()->itemAt(32*event_moving_from_pos,QTransform()))) != 0)
                 tile->update();
