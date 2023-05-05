@@ -6,6 +6,9 @@
 #include "RXIO2/iorgssad.h"
 
 
+#include "PBS/mapconnectiondialog.h"
+
+
 #include <QDebug>
 #include <QToolButton>
 #include <QActionGroup>
@@ -446,5 +449,12 @@ void MainWindow::zoom_out()
 void MainWindow::on_actionUndo_triggered()
 {
     this->ui->mapView->do_undo();
+}
+
+
+void MainWindow::on_actionPBS_Editor_triggered()
+{
+    MapConnectionDialog *d = new MapConnectionDialog(&this->db);
+    d->show();
 }
 

@@ -169,6 +169,8 @@
     <addaction name="actionCommon_Scripts"/>
     <addaction name="actionSystem"/>
     <addaction name="actionScripting_Editor"/>
+    <addaction name="separator"/>
+    <addaction name="actionPBS_Editor"/>
    </widget>
    <widget class="QMenu" name="menuMap">
     <property name="title">
@@ -678,6 +680,11 @@
   <action name="actionExport_Map_Images">
    <property name="text">
     <string>Export Map Images</string>
+   </property>
+  </action>
+  <action name="actionPBS_Editor">
+   <property name="text">
+    <string>PBS Editor</string>
    </property>
   </action>
  </widget>

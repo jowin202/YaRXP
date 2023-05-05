@@ -94,6 +94,8 @@ private slots:
 
     void on_actionUndo_triggered();
 
+    void on_actionPBS_Editor_triggered();
+
 private:
     Ui::MainWindow *ui;
     QActionGroup *layergroup;
