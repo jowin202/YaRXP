@@ -1,7 +1,7 @@
 #include "writer.h"
 #include "rxexception.h"
 
-Writer::Writer(QJsonDocument *doc, QMap<QString, QStringList> *param_oders, QString file_location, bool strings_from_base_64)
+Writer::Writer(QJsonDocument *doc, QString file_location, bool strings_from_base_64)
     : QObject()
 {
     this->strings_from_base_64 = strings_from_base_64;
@@ -12,7 +12,6 @@ Writer::Writer(QJsonDocument *doc, QMap<QString, QStringList> *param_oders, QStr
     this->write_one_byte(0x08);
 
 
-    this->param_orders = param_oders;
     this->doc = doc;
 
 
@@ -53,8 +52,6 @@ void Writer::write_token(QJsonValue token)
                 this->write_integer(key.toInt()); //keys are always integer, needed for MapInfos
                 this->write_token(obj.value(key));
             }
-
-
         }
         else if (obj.value("RXClass") == "Table")
         {
@@ -78,7 +75,6 @@ void Writer::write_token(QJsonValue token)
                 this->write_one_byte(values.at(i).toInt() & 0xFF);
                 this->write_one_byte((values.at(i).toInt()>>8) & 0xFF);
             }
-
         }
         else if (obj.value("RXClass") == "Color" || obj.value("RXClass") == "Tone")
         {
@@ -105,19 +101,11 @@ void Writer::write_token(QJsonValue token)
             this->write_symbol_or_link(obj_type);
             this->write_fixnum(size);
 
-            if (!param_orders->contains(obj_type) || param_orders->value(obj_type).length() != size)
-            {
-                qDebug() << obj_type << size;
-                throw RXException("object attribute size failed");
-            }
-            QStringList params = param_orders->value(obj_type);
 
-            for (int i = 0; i < size; i++)
-            {
-                this->write_symbol_or_link(params.at(i));
-                if (!obj.contains(params.at(i)))
-                    throw RXException("Object of Class " + obj_type + " does not contain attribute " + params.at(i));
-                this->write_token(obj.value(params.at(i)));
+            foreach(const QString& key, obj.keys()) {
+                if (key == "RXClass") continue;
+                this->write_symbol_or_link(key);
+                this->write_token(obj.value(key));
             }
         }
     }

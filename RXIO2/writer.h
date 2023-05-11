@@ -15,7 +15,7 @@ class Writer : public QObject
 {
     Q_OBJECT
 public:
-    explicit Writer(QJsonDocument *doc, QMap<QString, QStringList> *param_oders, QString file_location, bool strings_from_base_64 = false);
+    explicit Writer(QJsonDocument *doc, QString file_location, bool strings_from_base_64 = false);
 
 
     void write_token(QJsonValue token);
@@ -37,7 +37,6 @@ signals:
 private:
     QFile f;
     QStringList symbol_cache;
-    QMap<QString, QStringList> *param_orders;
     QJsonDocument *doc;
 
     QMap<int,QJsonValue> reference_table;

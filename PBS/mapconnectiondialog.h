@@ -53,7 +53,6 @@ private:
     QJsonDocument connection_file;
     RPGDB *db;
     QHash<int,QTreeWidgetItem*> id_map;
-    QMap<QString, QStringList> param_oders;
 };
 
 #endif // MAPCONNECTIONDIALOG_H

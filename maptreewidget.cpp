@@ -40,6 +40,23 @@ MapTreeWidget::MapTreeWidget(QWidget *parent) : QTreeWidget(parent)
         connect(dialog, SIGNAL(finished()), this, SLOT(list_maps()));
         dialog->show();
     });
+    action7.setText("&Jump to Map");
+    action7.setShortcut(QKeySequence(tr("Ctrl+J")));
+    action7.setShortcutContext(Qt::ApplicationShortcut);
+    this->addAction(&action7);
+    connect(&action7, &QAction::triggered, [=](){
+        bool ok;
+        int current = (this->currentItem()==0 ? 1 : this->currentItem()->text(2).toInt());
+        int val = QInputDialog::getInt(this, "Jump to Map", "Enter Map ID:", current, 0, 9999,1,&ok);
+        if (ok)
+        {
+            QList<QTreeWidgetItem*> items = this->findItems(QString::number(val),Qt::MatchExactly|Qt::MatchRecursive,2);
+            if (items.length() > 0)
+            {
+                this->setCurrentItem(items.at(0));
+            }
+        }
+    });
 
 
 
@@ -53,6 +70,8 @@ MapTreeWidget::MapTreeWidget(QWidget *parent) : QTreeWidget(parent)
     menu.addAction(&action5);
     menu.addSeparator();
     menu.addAction(&action6);
+    menu.addSeparator();
+    menu.addAction(&action7);
 
 
     connect(this, SIGNAL(itemExpanded(QTreeWidgetItem*)), this, SLOT(itemExpanded(QTreeWidgetItem*)));

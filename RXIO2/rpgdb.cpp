@@ -33,23 +33,23 @@ void RPGDB::load_project(QString dir)
     this->battleback_dir = FileOpener(this->graphics_dir, "battlebacks").get_existing_directory();
     this->animations_dir = FileOpener(this->graphics_dir, "animations").get_existing_directory();
 
-    Parser actor_parser(&actor_file, &param_oders,               FileOpener(this->data_dir,"Actors.rxdata").get_existing_file());
-    Parser animation_parser(&animation_file, &param_oders,       FileOpener(this->data_dir,"Animations.rxdata").get_existing_file());
-    Parser armor_parser(&armor_file, &param_oders,               FileOpener(this->data_dir,"Armors.rxdata").get_existing_file());
-    Parser class_parser(&class_file, &param_oders,               FileOpener(this->data_dir,"Classes.rxdata").get_existing_file());
-    Parser common_event_parser(&common_event_file, &param_oders, FileOpener(this->data_dir,"CommonEvents.rxdata").get_existing_file());
-    Parser enemy_parser(&enemy_file, &param_oders,               FileOpener(this->data_dir,"Enemies.rxdata").get_existing_file());
-    Parser item_parser(&item_file, &param_oders,                 FileOpener(this->data_dir,"Items.rxdata").get_existing_file());
-    Parser skill_parser(&skill_file, &param_oders,               FileOpener(this->data_dir,"Skills.rxdata").get_existing_file());
-    Parser state_parser(&state_file, &param_oders,               FileOpener(this->data_dir,"States.rxdata").get_existing_file());
-    Parser system_parser(&system_file, &param_oders,             FileOpener(this->data_dir,"System.rxdata").get_existing_file());
-    Parser tileset_parser(&tileset_file, &param_oders,           FileOpener(this->data_dir,"Tilesets.rxdata").get_existing_file());
-    Parser troop_parser(&troop_file, &param_oders,               FileOpener(this->data_dir,"Troops.rxdata").get_existing_file());
-    Parser weapon_parser(&weapon_file, &param_oders,             FileOpener(this->data_dir,"Weapons.rxdata").get_existing_file());
-    Parser script_parser(&script_file, &param_oders,             FileOpener(this->data_dir,"Scripts.rxdata").get_existing_file(), true); //base64
+    Parser actor_parser(&actor_file,                FileOpener(this->data_dir,"Actors.rxdata").get_existing_file());
+    Parser animation_parser(&animation_file,        FileOpener(this->data_dir,"Animations.rxdata").get_existing_file());
+    Parser armor_parser(&armor_file,                FileOpener(this->data_dir,"Armors.rxdata").get_existing_file());
+    Parser class_parser(&class_file,                FileOpener(this->data_dir,"Classes.rxdata").get_existing_file());
+    Parser common_event_parser(&common_event_file,  FileOpener(this->data_dir,"CommonEvents.rxdata").get_existing_file());
+    Parser enemy_parser(&enemy_file,                FileOpener(this->data_dir,"Enemies.rxdata").get_existing_file());
+    Parser item_parser(&item_file,                  FileOpener(this->data_dir,"Items.rxdata").get_existing_file());
+    Parser skill_parser(&skill_file,                FileOpener(this->data_dir,"Skills.rxdata").get_existing_file());
+    Parser state_parser(&state_file,                FileOpener(this->data_dir,"States.rxdata").get_existing_file());
+    Parser system_parser(&system_file,              FileOpener(this->data_dir,"System.rxdata").get_existing_file());
+    Parser tileset_parser(&tileset_file,            FileOpener(this->data_dir,"Tilesets.rxdata").get_existing_file());
+    Parser troop_parser(&troop_file,                FileOpener(this->data_dir,"Troops.rxdata").get_existing_file());
+    Parser weapon_parser(&weapon_file,              FileOpener(this->data_dir,"Weapons.rxdata").get_existing_file());
+    Parser script_parser(&script_file,              FileOpener(this->data_dir,"Scripts.rxdata").get_existing_file(), true); //base64
 
 
-    Parser mapinfo_parser(&mapinfo_file, &param_oders,           FileOpener(this->data_dir,"MapInfos.rxdata").get_existing_file());
+    Parser mapinfo_parser(&mapinfo_file,            FileOpener(this->data_dir,"MapInfos.rxdata").get_existing_file());
 
     foreach (const QString& key, mapinfo_file.object().keys())
     {
@@ -58,7 +58,7 @@ void RPGDB::load_project(QString dir)
         if (QFile(QString(this->data_dir + "Map%1.rxdata").arg(i,3,10,QChar('0'))).exists())
         {
             QJsonDocument *doc = new QJsonDocument;
-            Parser map_parser(doc, &param_oders, QString(this->data_dir + "Map%1.rxdata").arg(i,3,10,QChar('0')));
+            Parser map_parser(doc,  QString(this->data_dir + "Map%1.rxdata").arg(i,3,10,QChar('0')));
             map_files.insert(i,doc);
         }
         else
@@ -85,22 +85,22 @@ void RPGDB::load_project(QString dir)
 
 void RPGDB::save_project()
 {
-    Writer actor_writer(&actor_file, &param_oders,               FileOpener(this->data_dir, "Actors.rxdata").get_existing_file());
-    Writer animation_writer(&animation_file, &param_oders,       FileOpener(this->data_dir, "Animations.rxdata").get_existing_file());
-    Writer armor_writer(&armor_file, &param_oders,               FileOpener(this->data_dir, "Armors.rxdata").get_existing_file());
-    Writer class_writer(&class_file, &param_oders,               FileOpener(this->data_dir, "Classes.rxdata").get_existing_file());
-    Writer common_event_writer(&common_event_file, &param_oders, FileOpener(this->data_dir, "CommonEvents.rxdata").get_existing_file());
-    Writer enemy_writer(&enemy_file, &param_oders,               FileOpener(this->data_dir, "Enemies.rxdata").get_existing_file());
-    Writer item_writer(&item_file, &param_oders,                 FileOpener(this->data_dir, "Items.rxdata").get_existing_file());
-    Writer skill_writer(&skill_file, &param_oders,               FileOpener(this->data_dir, "Skills.rxdata").get_existing_file());
-    Writer state_writer(&state_file, &param_oders,               FileOpener(this->data_dir, "States.rxdata").get_existing_file());
-    Writer system_writer(&system_file, &param_oders,             FileOpener(this->data_dir, "System.rxdata").get_existing_file());
-    Writer tileset_writer(&tileset_file, &param_oders,           FileOpener(this->data_dir, "Tilesets.rxdata").get_existing_file());
-    Writer troop_writer(&troop_file, &param_oders,               FileOpener(this->data_dir, "Troops.rxdata").get_existing_file());
-    Writer weapon_writer(&weapon_file, &param_oders,             FileOpener(this->data_dir, "Weapons.rxdata").get_existing_file());
-    Writer script_writer(&script_file, &param_oders,             FileOpener(this->data_dir, "Scripts.rxdata").get_existing_file(), true); //base64
+    Writer actor_writer(&actor_file,                FileOpener(this->data_dir, "Actors.rxdata").get_existing_file());
+    Writer animation_writer(&animation_file,        FileOpener(this->data_dir, "Animations.rxdata").get_existing_file());
+    Writer armor_writer(&armor_file,                FileOpener(this->data_dir, "Armors.rxdata").get_existing_file());
+    Writer class_writer(&class_file,                FileOpener(this->data_dir, "Classes.rxdata").get_existing_file());
+    Writer common_event_writer(&common_event_file,  FileOpener(this->data_dir, "CommonEvents.rxdata").get_existing_file());
+    Writer enemy_writer(&enemy_file,                FileOpener(this->data_dir, "Enemies.rxdata").get_existing_file());
+    Writer item_writer(&item_file,                  FileOpener(this->data_dir, "Items.rxdata").get_existing_file());
+    Writer skill_writer(&skill_file,                FileOpener(this->data_dir, "Skills.rxdata").get_existing_file());
+    Writer state_writer(&state_file,                FileOpener(this->data_dir, "States.rxdata").get_existing_file());
+    Writer system_writer(&system_file,              FileOpener(this->data_dir, "System.rxdata").get_existing_file());
+    Writer tileset_writer(&tileset_file,            FileOpener(this->data_dir, "Tilesets.rxdata").get_existing_file());
+    Writer troop_writer(&troop_file,                FileOpener(this->data_dir, "Troops.rxdata").get_existing_file());
+    Writer weapon_writer(&weapon_file,              FileOpener(this->data_dir, "Weapons.rxdata").get_existing_file());
+    Writer script_writer(&script_file,              FileOpener(this->data_dir, "Scripts.rxdata").get_existing_file(), true); //base64
 
-    Writer mapinfo_writer(&mapinfo_file, &param_oders,           FileOpener(this->data_dir, "MapInfos.rxdata").get_existing_file());
+    Writer mapinfo_writer(&mapinfo_file,            FileOpener(this->data_dir, "MapInfos.rxdata").get_existing_file());
 
 
     for (int i = 0; i < 999; i++)
@@ -108,7 +108,7 @@ void RPGDB::save_project()
         if (map_files.contains(i))
         {
             QJsonDocument *doc = map_files.value(i);
-            Writer map_writer(doc, &param_oders, QString(this->data_dir + "Map%1.rxdata").arg(i,3,10,QChar('0')));
+            Writer map_writer(doc, QString(this->data_dir + "Map%1.rxdata").arg(i,3,10,QChar('0')));
         }
     }
 

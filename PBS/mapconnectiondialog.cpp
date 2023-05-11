@@ -21,7 +21,7 @@ MapConnectionDialog::MapConnectionDialog(RPGDB *db, QWidget *parent) :
         this->close();
         return;
     }
-    Parser parser(&connection_file, &param_oders,filepath);
+    Parser parser(&connection_file, filepath);
 
     //qDebug() << connection_file.array();
     this->ui->graphicsView->setScene(new QGraphicsScene);

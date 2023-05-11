@@ -1,7 +1,7 @@
 #include "parser.h"
 #include "rxexception.h"
 
-Parser::Parser(QJsonDocument *doc, QMap<QString, QStringList> *param_oders, QString file_location, bool strings_to_base_64)
+Parser::Parser(QJsonDocument *doc, QString file_location, bool strings_to_base_64)
     : QObject()
 {
     this->strings_to_base_64 = strings_to_base_64;
@@ -19,7 +19,6 @@ Parser::Parser(QJsonDocument *doc, QMap<QString, QStringList> *param_oders, QStr
 
 
 
-    this->param_oders = param_oders;
     this->doc = doc;
 
 
@@ -192,8 +191,6 @@ QJsonValue Parser::parse_token()
 
             obj.insert(attribute_symbol, attribute_value);
         }
-        if (!param_oders->contains(symbol))
-            param_oders->insert(symbol, param_oder);
 
         this->reference_table.insert(curr_obj_count, obj);
         return QJsonValue(obj);

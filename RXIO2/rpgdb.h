@@ -152,9 +152,6 @@ private:
     QMap<int,QJsonDocument*> map_files;
 
 
-    QMap<QString, QStringList> param_oders;
-
-
 
 
 
