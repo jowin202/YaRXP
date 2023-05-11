@@ -9,6 +9,7 @@
 #include <QKeyEvent>
 
 #include <QJsonDocument>
+#include <QMessageBox>
 
 class RPGDB;
 

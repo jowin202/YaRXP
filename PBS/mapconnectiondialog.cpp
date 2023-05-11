@@ -14,7 +14,14 @@ MapConnectionDialog::MapConnectionDialog(RPGDB *db, QWidget *parent) :
 {
     ui->setupUi(this);
     this->db = db;
-    Parser parser(&connection_file, &param_oders,       FileOpener(db->data_dir,"map_connections.dat").get_existing_file());
+    QString filepath = FileOpener(db->data_dir,"map_connections.dat").get_existing_file();
+    if (filepath.isEmpty())
+    {
+        QMessageBox::critical(this, "Not supported", "This feature is not supported in your project");
+        this->close();
+        return;
+    }
+    Parser parser(&connection_file, &param_oders,filepath);
 
     //qDebug() << connection_file.array();
     this->ui->graphicsView->setScene(new QGraphicsScene);
@@ -24,6 +31,7 @@ MapConnectionDialog::MapConnectionDialog(RPGDB *db, QWidget *parent) :
     this->list_maps();
     this->ui->treeWidget->hideColumn(1);
     this->ui->treeWidget->hideColumn(2);
+
 
 }
 
@@ -83,6 +91,7 @@ void MapConnectionDialog::display_maps(int id)
     this->ui->graphicsView->update();
 
     QImage map = this->render_map(id);
+    QImage new_map;
     QGraphicsPixmapItem *selected_map = new QGraphicsPixmapItem(QPixmap::fromImage(map));
     selected_map->setPos(0,0);
     this->ui->graphicsView->scene()->addItem(selected_map);
@@ -123,7 +132,7 @@ void MapConnectionDialog::display_maps(int id)
 
             //qDebug() << conn << new_map_id << neightbour;
 
-            QImage new_map = this->render_map(new_map_id);
+            new_map = this->render_map(new_map_id);
             QGraphicsPixmapItem *new_map_item = new QGraphicsPixmapItem(QPixmap::fromImage(new_map));
 
             QPoint pos;
@@ -162,6 +171,8 @@ void MapConnectionDialog::display_maps(int id)
     }
     this->ui->graphicsView->scene()->setSceneRect(scene_rect);
     //qDebug() << scene_rect;
+
+    this->ui->graphicsView->centerOn(new_map.width()/2, new_map.height()/2);
 }
 
 QImage MapConnectionDialog::render_map(int id)
