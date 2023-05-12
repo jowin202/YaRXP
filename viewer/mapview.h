@@ -94,8 +94,8 @@ signals:
     void zoom_in();
     void zoom_out();
     void one_tile_selected(int);
-    //void hover_coordinates(int,int);
     void mouse_over_coordinates(int,int);
+    void jump_to_map(int);
 
 public slots:
     void redraw();

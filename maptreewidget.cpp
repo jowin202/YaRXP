@@ -50,11 +50,7 @@ MapTreeWidget::MapTreeWidget(QWidget *parent) : QTreeWidget(parent)
         int val = QInputDialog::getInt(this, "Jump to Map", "Enter Map ID:", current, 0, 9999,1,&ok);
         if (ok)
         {
-            QList<QTreeWidgetItem*> items = this->findItems(QString::number(val),Qt::MatchExactly|Qt::MatchRecursive,2);
-            if (items.length() > 0)
-            {
-                this->setCurrentItem(items.at(0));
-            }
+            this->jump_to_item(val);
         }
     });
 

@@ -53,6 +53,15 @@ public slots:
 
     void dropEvent(QDropEvent *event);
 
+    void jump_to_item(int val)
+    {
+        QList<QTreeWidgetItem*> items = this->findItems(QString::number(val),Qt::MatchExactly|Qt::MatchRecursive,2);
+        if (items.length() > 0)
+        {
+            this->setCurrentItem(items.at(0));
+        }
+    }
+
 signals:
     void on_map_selected(int);
 

@@ -28,6 +28,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(this->ui->mapView, SIGNAL(zoom_out()), this, SLOT(zoom_out()));
     connect(this->ui->mapView, SIGNAL(one_tile_selected(int)), this->ui->tilesetView, SLOT(select_tile(int)));
     connect(this->ui->mapView, SIGNAL(mouse_over_coordinates(int,int)), this, SLOT(show_current_coordinates(int,int)));
+    connect(this->ui->mapView, SIGNAL(jump_to_map(int)), this->ui->map_tree_widget, SLOT(jump_to_item(int)));
 
     this->ui->tilesetView->setDB(&this->db);
     connect(this->ui->tilesetView, SIGNAL(selection_changed(QList<int>)), this->ui->mapView, SLOT(set_brush(QList<int>)));
