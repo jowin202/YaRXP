@@ -1,10 +1,11 @@
 #include "parser.h"
 #include "rxexception.h"
 
-Parser::Parser(QJsonDocument *doc, QString file_location, bool strings_to_base_64)
+Parser::Parser(QJsonDocument *doc, QString file_location, bool strings_to_base_64, bool extended_dictionary)
     : QObject()
 {
     this->strings_to_base_64 = strings_to_base_64;
+    this->extended_dictionary = extended_dictionary;
     this->f.setFileName(file_location);
     f.open(QIODevice::ReadOnly);
 
@@ -29,7 +30,7 @@ Parser::Parser(QJsonDocument *doc, QString file_location, bool strings_to_base_6
         doc->setArray(val.toArray());
     else
     {
-        qDebug() << "TODO";
+        qDebug() << "TODO" << val << val.type();
     }
 
     f.close();
@@ -59,13 +60,28 @@ QJsonValue Parser::parse_token()
         int len = this->read_fixnum();
         obj.insert("RXClass", "dictionary");
 
-        for (int i = 0; i < len; i++)
+        if (extended_dictionary)
         {
-            int key = this->parse_token().toInt(-1); //should be integer
-            QJsonValue val = this->parse_token(); // object
-
-            obj.insert(QString::number(key), val);
+            QJsonArray dict_list;
+            for (int i = 0; i < len; i++)
+            {
+                QJsonArray key_value_pair;
+                key_value_pair.append(this->parse_token()); //key -- any type
+                key_value_pair.append(this->parse_token()); //value -- any type
+                dict_list.append(key_value_pair);
+            }
+            obj.insert("dict_list", dict_list);
         }
+        else
+        {
+            for (int i = 0; i < len; i++)
+            {
+                int key = this->parse_token().toInt(-1); //should be integer
+                QJsonValue val = this->parse_token(); // object
+                obj.insert(QString::number(key), val);
+            }
+        }
+
         this->reference_table.insert(curr_obj_count, obj);
         return QJsonValue(obj);
     }
@@ -180,13 +196,11 @@ QJsonValue Parser::parse_token()
         int attribute_count = this->read_fixnum();
 
 
-        QStringList param_oder;
 
         obj.insert("RXClass", symbol);
         for (int i = 0; i < attribute_count; i++)
         {
             QString attribute_symbol = this->read_symbol_or_link();
-            param_oder << attribute_symbol;
             QJsonValue attribute_value = this->parse_token();
 
             obj.insert(attribute_symbol, attribute_value);
@@ -219,6 +233,17 @@ QJsonValue Parser::parse_token()
         if (!is_plus)
             return -result;
         return result;
+    }
+    else if (byte == 0x3A || byte == 0x3B) // ':' or ';' symbol
+    {
+        Q_ASSERT(this->extended_dictionary);
+        //This should only happen when extended_dictionary is true
+        //only for PBS
+        f.seek(f.pos()-1); //read ':;' again
+        QJsonObject symbol;
+        symbol.insert("RXClass", "symbol");
+        symbol.insert("symbol_value", this->read_symbol_or_link());
+        return symbol;
     }
     else
         throw RXException("Undefined Command: " + QString::number(f.pos(),16));

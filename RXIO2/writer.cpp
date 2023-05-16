@@ -1,10 +1,11 @@
 #include "writer.h"
 #include "rxexception.h"
 
-Writer::Writer(QJsonDocument *doc, QString file_location, bool strings_from_base_64)
+Writer::Writer(QJsonDocument *doc, QString file_location, bool strings_from_base_64, bool extended_dictionary)
     : QObject()
 {
     this->strings_from_base_64 = strings_from_base_64;
+    this->extended_dictionary = extended_dictionary;
     this->f.setFileName(file_location);
     f.open(QIODevice::WriteOnly);
 
@@ -43,15 +44,36 @@ void Writer::write_token(QJsonValue token)
 
         if (obj.value("RXClass") == "dictionary")
         {
-            //do dictionary stuff
-            this->write_one_byte(0x7B);
-            this->write_fixnum(obj.size()-1); //excluding rxclass
 
-            foreach(const QString& key, obj.keys()) {
-                if (key == "RXClass") continue;
-                this->write_integer(key.toInt()); //keys are always integer, needed for MapInfos
-                this->write_token(obj.value(key));
+            if (extended_dictionary)
+            {
+                QJsonArray dict_list = obj.value("dict_list").toArray();
+
+                //do extended dictionary stuff
+                this->write_one_byte(0x7B);
+                this->write_fixnum(dict_list.count());
+
+                for (int i = 0; i < dict_list.count(); i++)
+                {
+                    if (dict_list.at(i).toArray().count() != 2) continue;
+                    this->write_token(dict_list.at(i).toArray().at(0));
+                    this->write_token(dict_list.at(i).toArray().at(1));
+                }
             }
+            else
+            {
+                //do dictionary stuff
+                this->write_one_byte(0x7B);
+                this->write_fixnum(obj.size()-1); //excluding rxclass
+
+                foreach(const QString& key, obj.keys()) {
+                    if (key == "RXClass") continue;
+                    this->write_integer(key.toInt()); //keys are always integer, needed for MapInfos
+                    this->write_token(obj.value(key));
+                }
+            }
+
+
         }
         else if (obj.value("RXClass") == "Table")
         {
@@ -92,6 +114,13 @@ void Writer::write_token(QJsonValue token)
             this->f.write((char*)&g, 8);
             this->f.write((char*)&b, 8);
             this->f.write((char*)&alpha, 8);
+        }
+        else if (obj.value("RXClass") == "symbol")
+        {
+            Q_ASSERT(this->extended_dictionary);
+            //This should only happen when extended_dictionary is true
+            //Only for PBS
+            this->write_symbol_or_link(obj.value("symbol_value").toString());
         }
         else //normal object
         {

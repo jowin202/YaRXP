@@ -15,7 +15,7 @@ class Writer : public QObject
 {
     Q_OBJECT
 public:
-    explicit Writer(QJsonDocument *doc, QString file_location, bool strings_from_base_64 = false);
+    explicit Writer(QJsonDocument *doc, QString file_location, bool strings_from_base_64 = false, bool extended_dictionary = false);
 
 
     void write_token(QJsonValue token);
@@ -44,6 +44,7 @@ private:
 
 
     bool strings_from_base_64 = false;
+    bool extended_dictionary = false;
 };
 
 #endif // WRITER_H
