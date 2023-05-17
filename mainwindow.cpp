@@ -6,7 +6,7 @@
 #include "RXIO2/iorgssad.h"
 
 
-#include "PBS/mapconnectiondialog.h"
+#include "PBS/mapconnection/mapconnectiondialog.h"
 
 
 #include <QDebug>

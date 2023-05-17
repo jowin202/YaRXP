@@ -16,7 +16,9 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    PBS/mapconnectiondialog.cpp \
+    PBS/mapconnection/mapconnectiondialog.cpp \
+    PBS/mapconnection/mapgraphicsitem.cpp \
+    PBS/pbseditor.cpp \
     RXIO2/autotileset.cpp \
     RXIO2/factory.cpp \
     RXIO2/fileopener.cpp \
@@ -137,7 +139,9 @@ SOURCES += \
     viewer/undodb.cpp
 
 HEADERS += \
-    PBS/mapconnectiondialog.h \
+    PBS/mapconnection/mapconnectiondialog.h \
+    PBS/mapconnection/mapgraphicsitem.h \
+    PBS/pbseditor.h \
     RXIO2/autotileset.h \
     RXIO2/factory.h \
     RXIO2/fileopener.h \
@@ -257,7 +261,8 @@ HEADERS += \
     viewer/undodb.h
 
 FORMS += \
-    PBS/mapconnectiondialog.ui \
+    PBS/mapconnection/mapconnectiondialog.ui \
+    PBS/pbseditor.ui \
     dialogs/audiodialog.ui \
     dialogs/combodialog.ui \
     dialogs/imagechooserdialog.ui \
