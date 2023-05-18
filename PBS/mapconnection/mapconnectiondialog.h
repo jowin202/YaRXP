@@ -12,6 +12,7 @@
 #include <QMessageBox>
 
 class RPGDB;
+class MapGraphicsItem;
 
 namespace Ui {
 class MapConnectionDialog;
@@ -35,10 +36,11 @@ public:
     void list_maps();
     void display_maps(int id);
 
-    QImage render_map(int id);
-
-
+    MapGraphicsItem *render_map(int id);
 signals:
+
+public slots:
+    void jump_to_item(int val);
 
 private slots:
     void on_treeWidget_currentItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *previous);

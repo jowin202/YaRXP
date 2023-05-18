@@ -8,6 +8,8 @@
 #include "RXIO2/parser.h"
 #include "RXIO2/fileopener.h"
 
+#include "mapgraphicsitem.h"
+
 MapConnectionDialog::MapConnectionDialog(RPGDB *db, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::MapConnectionDialog)
@@ -88,17 +90,16 @@ void MapConnectionDialog::list_maps()
 void MapConnectionDialog::display_maps(int id)
 {
     this->ui->graphicsView->scene()->clear();
-    this->ui->graphicsView->update();
+    //this->ui->graphicsView->update();
 
-    QImage map = this->render_map(id);
-    QImage new_map;
-    QGraphicsPixmapItem *selected_map = new QGraphicsPixmapItem(QPixmap::fromImage(map));
+    MapGraphicsItem *new_map = 0;
+    MapGraphicsItem *selected_map = this->render_map(id);
+    if (selected_map == 0) return;
     selected_map->setPos(0,0);
     this->ui->graphicsView->scene()->addItem(selected_map);
 
-
     QMap<int,QRect> processed_maps;
-    processed_maps.insert(id, QRect(0,0,map.width(),map.height()));
+    processed_maps.insert(id, QRect(0,0,selected_map->width(),selected_map->height()));
 
     bool changed = false;
     do
@@ -108,7 +109,6 @@ void MapConnectionDialog::display_maps(int id)
         {
             QJsonArray conn = connection_file.array().at(i).toArray();
             //TODO conn should have enough entries
-
             int new_map_id;
             int delta;
             QRect neightbour;
@@ -133,22 +133,21 @@ void MapConnectionDialog::display_maps(int id)
             //qDebug() << conn << new_map_id << neightbour;
 
             new_map = this->render_map(new_map_id);
-            QGraphicsPixmapItem *new_map_item = new QGraphicsPixmapItem(QPixmap::fromImage(new_map));
 
             QPoint pos;
             if (direction == "N")
-                pos = QPoint(neightbour.left()+delta,neightbour.y()-new_map.height());
+                pos = QPoint(neightbour.left()+delta,neightbour.y()-new_map->height());
             else if (direction == "W")
-                pos = QPoint(neightbour.x()-new_map.width(), neightbour.top()+delta);
+                pos = QPoint(neightbour.x()-new_map->width(), neightbour.top()+delta);
             else if (direction == "E")
                 pos = QPoint(neightbour.right(), neightbour.top()+delta);
             else if (direction == "S")
                 pos = QPoint(neightbour.left()+delta,neightbour.bottom());
 
-            new_map_item->setPos(pos);
-            processed_maps.insert(new_map_id, QRect(pos,QSize(new_map.width(),new_map.height())));
+            new_map->setPos(pos);
+            processed_maps.insert(new_map_id, QRect(pos,QSize(new_map->width(),new_map->height())));
 
-            this->ui->graphicsView->scene()->addItem(new_map_item);
+            this->ui->graphicsView->scene()->addItem(new_map);
         }
     }
     while (changed);
@@ -170,25 +169,27 @@ void MapConnectionDialog::display_maps(int id)
             scene_rect.setBottom(i.value().bottom());
     }
     this->ui->graphicsView->scene()->setSceneRect(scene_rect);
-    //qDebug() << scene_rect;
-
-    this->ui->graphicsView->centerOn(new_map.width()/2, new_map.height()/2);
+    this->ui->graphicsView->scene()->update();
+    this->ui->graphicsView->centerOn(selected_map->width()/2, selected_map->height()/2);
 }
 
-QImage MapConnectionDialog::render_map(int id)
+MapGraphicsItem *MapConnectionDialog::render_map(int id)
 {
     QJsonObject map = db->get_mapfile_by_id(id)->object();
     if (map.value("RXClass").toString() != "RPG::Map")
-        return QImage();
+        return 0;
 
     QJsonObject tileset = db->get_tileset_by_id(map.value("@tileset_id").toInt());
     if (tileset.value("RXClass").toString() != "RPG::Tileset")
-        return QImage();
+        return 0;
+
+    MapGraphicsItem *result = new MapGraphicsItem();
 
     RPGMapController mc;
     mc.setDB(db);
     mc.setMap(id);
 
+    QJsonObject map_events = map.value("@events").toObject();
     QJsonObject map_data = map.value("@data").toObject();
     int width = map_data.value("x").toInt();
     int height = map_data.value("y").toInt();
@@ -208,16 +209,53 @@ QImage MapConnectionDialog::render_map(int id)
             }
         }
     }
-    painter.end();
 
-    return img;
+    //clickable links
+    painter.setOpacity(0.5);
+    foreach (const QString &key, map_events.keys()) {
+        if (key == "RXClass") continue;
+        QJsonObject event = map_events.value(key).toObject();
+        QJsonArray pages = event.value("@pages").toArray();
+        bool has_teleport = false;
+        for (int p = 0; p < pages.count(); p++)
+        {
+            QJsonArray event_list = pages.at(p).toObject().value("@list").toArray();
+            for (int e = 0; e < event_list.count(); e++)
+            {
+                if (event_list.at(e).toObject().value("@code").toInt() == 201)
+                {
+                    has_teleport = true;
+                    result->addLink(QRect(32*event.value("@x").toInt(),32*event.value("@y").toInt(), 32,32),
+                                    event_list.at(e).toObject().value("@parameters").toArray().at(1).toInt());
+                }
+            }
+        }
+        if (has_teleport)
+        {
+            painter.fillRect(32*event.value("@x").toInt(),32*event.value("@y").toInt(), 32,32, Qt::blue);
+        }
+    }
+
+    painter.end();
+    result->setImage(img);
+
+    connect(result, SIGNAL(mouse_clicked(int)), this, SLOT(jump_to_item(int)));
+    return result;
+}
+
+void MapConnectionDialog::jump_to_item(int val)
+{
+    QList<QTreeWidgetItem*> items = this->ui->treeWidget->findItems(QString::number(val),Qt::MatchExactly|Qt::MatchRecursive,2);
+    if (items.length() > 0)
+    {
+        this->ui->treeWidget->setCurrentItem(items.at(0));
+    }
 }
 
 void MapConnectionDialog::on_treeWidget_currentItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *previous)
 {
     Q_UNUSED(previous);
     int id = current->text(2).toInt();
-
     this->display_maps(id);
 }
 
