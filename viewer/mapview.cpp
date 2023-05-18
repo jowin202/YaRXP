@@ -76,8 +76,13 @@ void MapView::set_mode(int mode)
 
 void MapView::set_map(int id)
 {
+    //do not delete selection when changing map
+    if (this->opt.mode == SELECT && this->select_rectangle != 0)
+    {
+        //restore select rectangle to map
+        this->select_rectangle->save_to_map();
+    }
     this->mc.setMap(id);
-
     this->changes_made = false;
     this->redraw();
 }
