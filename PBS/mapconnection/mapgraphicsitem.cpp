@@ -28,11 +28,12 @@ int MapGraphicsItem::height()
     return this->h;
 }
 
-void MapGraphicsItem::setImage(QImage img)
+void MapGraphicsItem::setImage(QImage img, int self_id)
 {
     this->w = img.width();
     this->h = img.height();
     this->img = img;
+    this->self_id = self_id;
 }
 
 void MapGraphicsItem::addLink(QRect link_area, int dest)
@@ -54,4 +55,5 @@ void MapGraphicsItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
             return;
         }
     }
+    emit mouse_clicked(self_id);
 }

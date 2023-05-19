@@ -16,6 +16,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    PBS/mapconnection/connectedmapview.cpp \
     PBS/mapconnection/mapconnectiondialog.cpp \
     PBS/mapconnection/mapgraphicsitem.cpp \
     PBS/pbseditor.cpp \
@@ -139,6 +140,8 @@ SOURCES += \
     viewer/undodb.cpp
 
 HEADERS += \
+    PBS/mapconnection/connectedmapview.h \
+    PBS/mapconnection/link.h \
     PBS/mapconnection/mapconnectiondialog.h \
     PBS/mapconnection/mapgraphicsitem.h \
     PBS/pbseditor.h \

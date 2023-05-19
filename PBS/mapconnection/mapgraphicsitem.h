@@ -9,18 +9,8 @@
 #include <QMultiMap>
 #include <QRect>
 
-/*
-inline uint qHash(const QRect & r)
-{
-    return qHash(qHash(r.left()) + qHash(r.top()) + qHash(r.width()) + qHash(r.bottom()));
-}
-*/
+#include "link.h"
 
-struct link
-{
-    QRect rect;
-    int dest;
-};
 
 class MapGraphicsItem : public QGraphicsObject
 {
@@ -34,7 +24,7 @@ public:
     int width();
     int height();
 
-    void setImage(QImage img);
+    void setImage(QImage img, int self_id);
     void addLink(QRect link_area, int dest);
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
 
@@ -47,6 +37,7 @@ private:
     int w;
     QImage img;
     QList<link> link_list;
+    int self_id;
 };
 
 #endif // MAPGRAPHICSITEM_H

@@ -8,11 +8,21 @@
 #include <QPainter>
 #include <QKeyEvent>
 
+#include <QTimer>
 #include <QJsonDocument>
 #include <QMessageBox>
 
+#include "link.h"
+
 class RPGDB;
 class MapGraphicsItem;
+
+
+struct cached_map{
+    QImage img;
+    QList<link> links;
+};
+
 
 namespace Ui {
 class MapConnectionDialog;
@@ -34,9 +44,11 @@ public:
     }
 
     void list_maps();
-    void display_maps(int id);
+    void display_maps(int id, bool center = true);
 
     MapGraphicsItem *render_map(int id);
+
+
 signals:
 
 public slots:
@@ -49,12 +61,18 @@ private slots:
 
     void on_horizontalSlider_valueChanged(int value);
 
+    void on_button_refresh_clicked();
+
 private:
     Ui::MapConnectionDialog *ui;
 
+    QMap<int,cached_map> cached_maps;
+
     QJsonDocument connection_file;
+    QJsonDocument encounters_file;
     RPGDB *db;
     QHash<int,QTreeWidgetItem*> id_map;
+    int current_id = -1;
 };
 
 #endif // MAPCONNECTIONDIALOG_H

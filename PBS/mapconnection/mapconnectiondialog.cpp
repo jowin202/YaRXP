@@ -16,19 +16,32 @@ MapConnectionDialog::MapConnectionDialog(RPGDB *db, QWidget *parent) :
 {
     ui->setupUi(this);
     this->db = db;
-    QString filepath = FileOpener(db->data_dir,"map_connections.dat").get_existing_file();
-    if (filepath.isEmpty())
+    QString filepath_connections = FileOpener(db->data_dir,"map_connections.dat").get_existing_file();
+    if (filepath_connections.isEmpty())
     {
         QMessageBox::critical(this, "Not supported", "This feature is not supported in your project");
         this->close();
         return;
     }
-    Parser parser(&connection_file, filepath);
+    Parser parser(&connection_file, filepath_connections, false, true);
 
-    //qDebug() << connection_file.array();
+
+    QString filepath_encounters = FileOpener(db->data_dir,"encounters.dat").get_existing_file();
+    if (!filepath_encounters.isEmpty())
+    {
+        Parser parser(&encounters_file, filepath_encounters, false, true);
+        QFile f("/tmp/test.json");
+        f.open(QIODevice::WriteOnly);
+        f.write(encounters_file.toJson());
+        f.close();
+    }
+
+
     this->ui->graphicsView->setScene(new QGraphicsScene);
     this->ui->graphicsView->setAlignment(Qt::AlignLeft | Qt::AlignTop);
     this->ui->graphicsView->setResizeAnchor(QGraphicsView::AnchorUnderMouse);
+    connect(this->ui->graphicsView, &ConnectedMapView::zoom_in, [=](){ this->ui->horizontalSlider->setValue(this->ui->horizontalSlider->value()+10);});
+    connect(this->ui->graphicsView, &ConnectedMapView::zoom_out, [=](){ this->ui->horizontalSlider->setValue(this->ui->horizontalSlider->value()-10);});
 
     this->list_maps();
     this->ui->treeWidget->hideColumn(1);
@@ -87,7 +100,7 @@ void MapConnectionDialog::list_maps()
     this->ui->treeWidget->sortItems(1,Qt::SortOrder::AscendingOrder);
 }
 
-void MapConnectionDialog::display_maps(int id)
+void MapConnectionDialog::display_maps(int id, bool center)
 {
     this->ui->graphicsView->scene()->clear();
     //this->ui->graphicsView->update();
@@ -170,7 +183,13 @@ void MapConnectionDialog::display_maps(int id)
     }
     this->ui->graphicsView->scene()->setSceneRect(scene_rect);
     this->ui->graphicsView->scene()->update();
-    this->ui->graphicsView->centerOn(selected_map->width()/2, selected_map->height()/2);
+    //shitty workaround to center everything
+    if (center)
+    {
+        QTimer::singleShot(1, [=](){
+            this->ui->graphicsView->centerOn(selected_map->width()/2, selected_map->height()/2);
+        });
+    }
 }
 
 MapGraphicsItem *MapConnectionDialog::render_map(int id)
@@ -184,64 +203,83 @@ MapGraphicsItem *MapConnectionDialog::render_map(int id)
         return 0;
 
     MapGraphicsItem *result = new MapGraphicsItem();
+    QImage img;
 
-    RPGMapController mc;
-    mc.setDB(db);
-    mc.setMap(id);
-
-    QJsonObject map_events = map.value("@events").toObject();
-    QJsonObject map_data = map.value("@data").toObject();
-    int width = map_data.value("x").toInt();
-    int height = map_data.value("y").toInt();
-
-    QImage img(width*32,height*32,QImage::Format_ARGB32_Premultiplied);
-    QPainter painter;
-    painter.begin(&img);
-    painter.fillRect(0,0,img.width(), img.height(), Qt::black);
-    for (int z = 0; z < 3; z++)
+    if (cached_maps.contains(id))
     {
-        for (int y = 0; y < height; y++)
-        {
-            for (int x = 0; x < width; x++)
-            {
-                int pos = x + y * width + height*width * z;
-                painter.drawImage(32*x,32*y,mc.get_tile_from_id(map_data.value("values").toArray().at(pos).toInt()));
-            }
-        }
+        img = cached_maps.value(id).img;
+        for (int i = 0; i < cached_maps.value(id).links.count(); i++)
+            result->addLink(cached_maps.value(id).links.at(i).rect,cached_maps.value(id).links.at(i).dest);
     }
+    else
+    {
+        cached_map current_map;
+        RPGMapController mc;
+        mc.setDB(db);
+        mc.setMap(id);
 
-    //clickable links
-    painter.setOpacity(0.5);
-    foreach (const QString &key, map_events.keys()) {
-        if (key == "RXClass") continue;
-        QJsonObject event = map_events.value(key).toObject();
-        QJsonArray pages = event.value("@pages").toArray();
-        bool has_teleport = false;
-        for (int p = 0; p < pages.count(); p++)
+        QJsonObject map_events = map.value("@events").toObject();
+        QJsonObject map_data = map.value("@data").toObject();
+        int width = map_data.value("x").toInt();
+        int height = map_data.value("y").toInt();
+
+        img = QImage(width*32,height*32,QImage::Format_ARGB32_Premultiplied);
+        QPainter painter;
+        painter.begin(&img);
+        painter.fillRect(0,0,img.width(), img.height(), Qt::black);
+        for (int z = 0; z < 3; z++)
         {
-            QJsonArray event_list = pages.at(p).toObject().value("@list").toArray();
-            for (int e = 0; e < event_list.count(); e++)
+            for (int y = 0; y < height; y++)
             {
-                if (event_list.at(e).toObject().value("@code").toInt() == 201)
+                for (int x = 0; x < width; x++)
                 {
-                    has_teleport = true;
-                    result->addLink(QRect(32*event.value("@x").toInt(),32*event.value("@y").toInt(), 32,32),
-                                    event_list.at(e).toObject().value("@parameters").toArray().at(1).toInt());
+                    int pos = x + y * width + height*width * z;
+                    painter.drawImage(32*x,32*y,mc.get_tile_from_id(map_data.value("values").toArray().at(pos).toInt()));
                 }
             }
         }
-        if (has_teleport)
-        {
-            painter.fillRect(32*event.value("@x").toInt(),32*event.value("@y").toInt(), 32,32, Qt::blue);
+
+        //clickable links
+        painter.setOpacity(0.5);
+        foreach (const QString &key, map_events.keys()) {
+            if (key == "RXClass") continue;
+            QJsonObject event = map_events.value(key).toObject();
+            QJsonArray pages = event.value("@pages").toArray();
+            bool has_teleport = false;
+            for (int p = 0; p < pages.count(); p++)
+            {
+                QJsonArray event_list = pages.at(p).toObject().value("@list").toArray();
+                for (int e = 0; e < event_list.count(); e++)
+                {
+                    if (event_list.at(e).toObject().value("@code").toInt() == 201)
+                    {
+                        has_teleport = true;
+                        result->addLink(QRect(32*event.value("@x").toInt(),32*event.value("@y").toInt(), 32,32),
+                                        event_list.at(e).toObject().value("@parameters").toArray().at(1).toInt());
+                        link l;
+                        l.dest = event_list.at(e).toObject().value("@parameters").toArray().at(1).toInt();
+                        l.rect = QRect(32*event.value("@x").toInt(),32*event.value("@y").toInt(), 32,32);
+                        current_map.links.append(l);
+                    }
+                }
+            }
+            if (has_teleport)
+            {
+                painter.fillRect(32*event.value("@x").toInt(),32*event.value("@y").toInt(), 32,32, Qt::blue);
+            }
         }
+        painter.end();
+        current_map.img = img;
+        cached_maps.insert(id, current_map);
     }
 
-    painter.end();
-    result->setImage(img);
+
+    result->setImage(img, id);
 
     connect(result, SIGNAL(mouse_clicked(int)), this, SLOT(jump_to_item(int)));
     return result;
 }
+
 
 void MapConnectionDialog::jump_to_item(int val)
 {
@@ -255,8 +293,8 @@ void MapConnectionDialog::jump_to_item(int val)
 void MapConnectionDialog::on_treeWidget_currentItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *previous)
 {
     Q_UNUSED(previous);
-    int id = current->text(2).toInt();
-    this->display_maps(id);
+    this->current_id = current->text(2).toInt();
+    this->display_maps(this->current_id);
 }
 
 void MapConnectionDialog::on_button_ok_clicked()
@@ -278,5 +316,13 @@ void MapConnectionDialog::on_horizontalSlider_valueChanged(int value)
     QTransform matrix;
     matrix.scale(scale,scale);
     this->ui->graphicsView->setTransform(matrix);
+}
+
+
+void MapConnectionDialog::on_button_refresh_clicked()
+{
+    this->cached_maps.clear();
+    if (this->current_id > 0)
+        this->display_maps(this->current_id, false); //dont center view
 }
 
