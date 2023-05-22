@@ -19,7 +19,11 @@ SOURCES += \
     PBS/mapconnection/connectedmapview.cpp \
     PBS/mapconnection/mapconnectiondialog.cpp \
     PBS/mapconnection/mapgraphicsitem.cpp \
+    PBS/mapencounter/encounterslot.cpp \
+    PBS/mapencounter/encounterwidget.cpp \
+    PBS/mapencounter/mapencounterdialog.cpp \
     PBS/pbseditor.cpp \
+    PBS/pbsfactory.cpp \
     RXIO2/autotileset.cpp \
     RXIO2/factory.cpp \
     RXIO2/fileopener.cpp \
@@ -144,7 +148,11 @@ HEADERS += \
     PBS/mapconnection/link.h \
     PBS/mapconnection/mapconnectiondialog.h \
     PBS/mapconnection/mapgraphicsitem.h \
+    PBS/mapencounter/encounterslot.h \
+    PBS/mapencounter/encounterwidget.h \
+    PBS/mapencounter/mapencounterdialog.h \
     PBS/pbseditor.h \
+    PBS/pbsfactory.h \
     RXIO2/autotileset.h \
     RXIO2/factory.h \
     RXIO2/fileopener.h \
@@ -265,6 +273,9 @@ HEADERS += \
 
 FORMS += \
     PBS/mapconnection/mapconnectiondialog.ui \
+    PBS/mapencounter/encounterslot.ui \
+    PBS/mapencounter/encounterwidget.ui \
+    PBS/mapencounter/mapencounterdialog.ui \
     PBS/pbseditor.ui \
     dialogs/audiodialog.ui \
     dialogs/combodialog.ui \

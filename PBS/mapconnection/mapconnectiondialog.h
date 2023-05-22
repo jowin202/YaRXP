@@ -63,13 +63,18 @@ private slots:
 
     void on_button_refresh_clicked();
 
+
+    void on_button_up_clicked();
+    void on_button_down_clicked();
+    void on_button_left_clicked();
+    void on_button_right_clicked();
+
 private:
     Ui::MapConnectionDialog *ui;
 
     QMap<int,cached_map> cached_maps;
 
     QJsonDocument connection_file;
-    QJsonDocument encounters_file;
     RPGDB *db;
     QHash<int,QTreeWidgetItem*> id_map;
     int current_id = -1;

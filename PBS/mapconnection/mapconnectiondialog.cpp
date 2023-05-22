@@ -8,6 +8,7 @@
 #include "RXIO2/parser.h"
 #include "RXIO2/fileopener.h"
 
+#include "../pbsfactory.h"
 #include "mapgraphicsitem.h"
 
 MapConnectionDialog::MapConnectionDialog(RPGDB *db, QWidget *parent) :
@@ -26,17 +27,6 @@ MapConnectionDialog::MapConnectionDialog(RPGDB *db, QWidget *parent) :
     Parser parser(&connection_file, filepath_connections, false, true);
 
 
-    QString filepath_encounters = FileOpener(db->data_dir,"encounters.dat").get_existing_file();
-    if (!filepath_encounters.isEmpty())
-    {
-        Parser parser(&encounters_file, filepath_encounters, false, true);
-        QFile f("/tmp/test.json");
-        f.open(QIODevice::WriteOnly);
-        f.write(encounters_file.toJson());
-        f.close();
-    }
-
-
     this->ui->graphicsView->setScene(new QGraphicsScene);
     this->ui->graphicsView->setAlignment(Qt::AlignLeft | Qt::AlignTop);
     this->ui->graphicsView->setResizeAnchor(QGraphicsView::AnchorUnderMouse);
@@ -46,8 +36,6 @@ MapConnectionDialog::MapConnectionDialog(RPGDB *db, QWidget *parent) :
     this->list_maps();
     this->ui->treeWidget->hideColumn(1);
     this->ui->treeWidget->hideColumn(2);
-
-
 }
 
 MapConnectionDialog::~MapConnectionDialog()
@@ -164,8 +152,6 @@ void MapConnectionDialog::display_maps(int id, bool center)
         }
     }
     while (changed);
-
-
 
     QRect scene_rect(0,0,0,0);
     QMap<int, QRect>::iterator i;
@@ -324,5 +310,75 @@ void MapConnectionDialog::on_button_refresh_clicked()
     this->cached_maps.clear();
     if (this->current_id > 0)
         this->display_maps(this->current_id, false); //dont center view
+}
+
+
+
+
+void MapConnectionDialog::on_button_up_clicked()
+{
+
+}
+
+
+void MapConnectionDialog::on_button_down_clicked()
+{
+
+}
+
+
+void MapConnectionDialog::on_button_left_clicked()
+{
+    for (int i = 0; i < connection_file.array().count(); i++)
+    {
+        QJsonArray conn = connection_file.array().at(i).toArray();
+        if (conn.at(0).toInt() == this->current_id && (conn.at(1).toString() == "N" || conn.at(1).toString() == "S"))
+        {
+            int v = conn.at(2).toInt();
+            conn.removeAt(2);
+            conn.insert(2,v-1);
+        }
+        else if (conn.at(3).toInt() == this->current_id && (conn.at(4).toString() == "N" || conn.at(4).toString() == "S"))
+        {
+            int v = conn.at(5).toInt();
+            conn.removeAt(5);
+            conn.insert(5,v-1);
+        }
+        else continue;
+
+        QJsonArray array = connection_file.array();
+        array.removeAt(i);
+        array.insert(i,conn);
+        connection_file.setArray(array);
+    }
+    this->display_maps(this->current_id,false);
+}
+
+
+void MapConnectionDialog::on_button_right_clicked()
+{
+    for (int i = 0; i < connection_file.array().count(); i++)
+    {
+        QJsonArray conn = connection_file.array().at(i).toArray();
+        if (conn.at(0).toInt() == this->current_id && (conn.at(1).toString() == "N" || conn.at(1).toString() == "S"))
+        {
+            int v = conn.at(2).toInt();
+            conn.removeAt(2);
+            conn.insert(2,v+1);
+        }
+        else if (conn.at(3).toInt() == this->current_id && (conn.at(4).toString() == "N" || conn.at(4).toString() == "S"))
+        {
+            int v = conn.at(5).toInt();
+            conn.removeAt(5);
+            conn.insert(5,v+1);
+        }
+        else continue;
+
+        QJsonArray array = connection_file.array();
+        array.removeAt(i);
+        array.insert(i,conn);
+        connection_file.setArray(array);
+    }
+    this->display_maps(this->current_id,false);
 }
 

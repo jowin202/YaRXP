@@ -2,6 +2,9 @@
 <ui version="4.0">
  <class>PBSEditor</class>
  <widget class="QWidget" name="PBSEditor">
+  <property name="windowModality">
+   <enum>Qt::ApplicationModal</enum>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -13,7 +16,7 @@
   <property name="windowTitle">
    <string>PBS Editor</string>
   </property>
-  <widget class="QPushButton" name="pushButton">
+  <widget class="QPushButton" name="button_mapConnection">
    <property name="geometry">
     <rect>
      <x>50</x>
@@ -30,7 +33,7 @@
    <property name="geometry">
     <rect>
      <x>50</x>
-     <y>100</y>
+     <y>150</y>
      <width>171</width>
      <height>34</height>
     </rect>
@@ -43,13 +46,26 @@
    <property name="geometry">
     <rect>
      <x>50</x>
-     <y>150</y>
+     <y>200</y>
      <width>171</width>
      <height>34</height>
     </rect>
    </property>
    <property name="text">
     <string>Item Editor</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="button_mapencounter">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>100</y>
+     <width>171</width>
+     <height>34</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Map Encounter Editor</string>
    </property>
   </widget>
  </widget>

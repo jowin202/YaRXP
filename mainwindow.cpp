@@ -6,7 +6,7 @@
 #include "RXIO2/iorgssad.h"
 
 
-#include "PBS/mapconnection/mapconnectiondialog.h"
+#include "PBS/pbseditor.h"
 
 
 #include <QDebug>
@@ -455,7 +455,7 @@ void MainWindow::on_actionUndo_triggered()
 
 void MainWindow::on_actionPBS_Editor_triggered()
 {
-    MapConnectionDialog *d = new MapConnectionDialog(&this->db);
+    PBSEditor *d = new PBSEditor(&this->db);
     d->show();
 }
 
