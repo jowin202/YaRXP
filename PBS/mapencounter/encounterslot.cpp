@@ -14,16 +14,16 @@ EncounterSlot::EncounterSlot(QJsonArray data, QWidget *parent) :
     this->ui->spin_lv_to->setValue(data.at(3).toInt());
 
     connect(this->ui->spin_prob, &QSpinBox::valueChanged, [=](){
-        emit content_changed(this->get_data());
+        emit content_changed();
     });
     connect(this->ui->spin_lv_from, &QSpinBox::valueChanged, [=](){
-        emit content_changed(this->get_data());
+        emit content_changed();
     });
     connect(this->ui->spin_lv_to, &QSpinBox::valueChanged, [=](){
-        emit content_changed(this->get_data());
+        emit content_changed();
     });
     connect(this->ui->line_name, &QLineEdit::textChanged, [=](){
-        emit content_changed(this->get_data());
+        emit content_changed();
     });
 }
 
@@ -32,14 +32,24 @@ EncounterSlot::~EncounterSlot()
     delete ui;
 }
 
-QJsonArray EncounterSlot::get_data()
+QString EncounterSlot::get_name()
 {
-    QJsonArray array;
-    array.append(this->ui->spin_prob->value());
-    array.append(PBSFactory().create_symbol(this->ui->line_name->text()));
-    array.append(this->ui->spin_lv_from->value());
-    array.append(this->ui->spin_lv_to->value());
-    return array;
+    return this->ui->line_name->text();
+}
+
+int EncounterSlot::get_prob()
+{
+    return this->ui->spin_prob->value();
+}
+
+int EncounterSlot::get_lv_from()
+{
+    return this->ui->spin_lv_from->value();
+}
+
+int EncounterSlot::get_lv_to()
+{
+    return this->ui->spin_lv_to->value();
 }
 
 void EncounterSlot::on_button_delete_clicked()

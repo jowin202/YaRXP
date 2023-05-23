@@ -8,6 +8,7 @@
 #include "RXIO2/parser.h"
 #include "RXIO2/fileopener.h"
 
+#include "../pbsfactory.h"
 #include "encounterwidget.h"
 
 MapEncounterDialog::MapEncounterDialog(RPGDB *db, QWidget *parent) :
@@ -84,6 +85,29 @@ void MapEncounterDialog::list_maps()
     this->ui->treeWidget->sortItems(1,Qt::SortOrder::AscendingOrder);
 }
 
+void MapEncounterDialog::change_current(int version_index, int map, int version)
+{
+    QJsonObject file_obj = encounters_file.object();
+    QJsonArray dict_list = file_obj.value("dict_list").toArray();
+
+    PBSFactory factory;
+    EncounterWidget *w;
+    QJsonArray new_encounter = factory.create_encounter(map, version);
+    for (int i = 0; i < this->ui->encounter_layout->count(); i++)
+    {
+        if (this->ui->encounter_layout->itemAt(i) == 0) continue;
+        if ((w=dynamic_cast<EncounterWidget*>(this->ui->encounter_layout->itemAt(i)->widget())) != nullptr)
+        {
+            new_encounter = factory.encounter_add_type(new_encounter, w->type(), w->step_chance());
+            new_encounter = w->add_slot_data(new_encounter);
+        }
+    }
+    dict_list.removeAt(version_index);
+    dict_list.insert(version_index, new_encounter);
+    file_obj.insert("dict_list", dict_list);
+    encounters_file.setObject(file_obj);
+}
+
 void MapEncounterDialog::on_treeWidget_currentItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *previous)
 {
     Q_UNUSED(previous);
@@ -113,27 +137,22 @@ void MapEncounterDialog::combo_version_changed()
     int version_index = this->ui->combo_version->currentData().toInt(&ok);
     if (!ok) return;
 
-
     QLayoutItem *item;
      while ( (item = this->ui->encounter_layout->takeAt(0)) != 0)
          delete item->widget();
 
     QJsonArray encounters_data = encounters_file.object().value("dict_list").toArray().at(version_index).toArray();
     int encounter_types = encounters_data.at(1).toObject().value("@types").toObject().value("dict_list").toArray().count();
-    //qDebug() << this->current_id << version;
     for (int i = 0; i < encounter_types; i++)
     {
         EncounterWidget *w = new EncounterWidget(encounters_data, i);
         this->ui->encounter_layout->addWidget(w);
-
-        connect(w, &EncounterWidget::data_changed, [=](QJsonArray encounters_data){
-            QJsonObject file_obj = encounters_file.object();
-            QJsonArray dict_list = file_obj.value("dict_list").toArray();
-            dict_list.removeAt(version_index);
-            dict_list.insert(version_index, encounters_data);
-            file_obj.insert("dict_list", dict_list);
-            encounters_file.setObject(file_obj);
+        connect(w, &EncounterWidget::data_changed, [=]() {
+            this->change_current(version_index,
+                                 encounters_data.at(1).toObject().value("@map").toInt(),
+                                 encounters_data.at(1).toObject().value("@version").toInt());
         });
+
     }
 }
 

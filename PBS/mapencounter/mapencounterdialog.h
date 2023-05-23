@@ -22,6 +22,7 @@ public:
     ~MapEncounterDialog();
 
     void list_maps();
+    void change_current(int version_index, int map, int version);
 
 
 private slots:

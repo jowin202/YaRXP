@@ -21,11 +21,18 @@ public:
     explicit EncounterWidget(QJsonArray encounters_data, int index, QWidget *parent = nullptr);
     ~EncounterWidget();
 
+    QString type();
+    int step_chance();
+    QJsonArray add_slot_data(QJsonArray encounter);
+
 private slots:
     void update_slots();
 
+
+    void on_button_add_slot_clicked();
+
 signals:
-    void data_changed(QJsonArray data);
+    void data_changed();
 
 private:
     Ui::EncounterWidget *ui;

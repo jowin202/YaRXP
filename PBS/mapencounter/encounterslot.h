@@ -19,11 +19,13 @@ public:
     explicit EncounterSlot(QJsonArray data, QWidget *parent = nullptr);
     ~EncounterSlot();
 
-    QJsonArray get_data();
-
+    QString get_name();
+    int get_prob();
+    int get_lv_from();
+    int get_lv_to();
 
 signals:
-    void content_changed(QJsonArray data);
+    void content_changed();
     void slot_deleted();
 
 private slots:
