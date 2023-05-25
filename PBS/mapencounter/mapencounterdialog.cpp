@@ -5,6 +5,7 @@
 #include "RXIO2/rpgmapinfocontroller.h"
 #include "RXIO2/rpgmapcontroller.h"
 
+#include "RXIO2/writer.h"
 #include "RXIO2/parser.h"
 #include "RXIO2/fileopener.h"
 
@@ -141,7 +142,17 @@ void MapEncounterDialog::combo_version_changed()
      while ( (item = this->ui->encounter_layout->takeAt(0)) != 0)
          delete item->widget();
 
-    QJsonArray encounters_data = encounters_file.object().value("dict_list").toArray().at(version_index).toArray();
+    QJsonArray encounters_data;
+    if (version_index >= 0)
+        encounters_data = encounters_file.object().value("dict_list").toArray().at(version_index).toArray();
+    else
+    {
+        PBSFactory factory;
+        encounters_data = factory.create_encounter(this->current_id,-version_index-1);
+        encounters_data = factory.encounter_add_type(encounters_data, "Land", 21);
+        version_index = encounters_file.object().value("dict_list").toArray().count(); //index is at the end of the file
+    }
+
     int encounter_types = encounters_data.at(1).toObject().value("@types").toObject().value("dict_list").toArray().count();
     for (int i = 0; i < encounter_types; i++)
     {
@@ -154,5 +165,28 @@ void MapEncounterDialog::combo_version_changed()
         });
 
     }
+}
+
+
+void MapEncounterDialog::on_button_cancel_clicked()
+{
+    this->close();
+}
+
+
+void MapEncounterDialog::on_button_ok_clicked()
+{
+    Writer writer(&encounters_file, db->data_dir + "encounters.dat", false, true);
+}
+
+
+void MapEncounterDialog::on_button_add_version_clicked()
+{
+    bool ok;
+    int version = QInputDialog::getInt(this, "Version: ", "Version: ", 0, 0, 100,1, &ok);
+    if (!ok)
+        return;
+    this->ui->combo_version->addItem(QString("Version %1").arg(version), -version-1); //due to 0
+    this->ui->combo_version->setCurrentIndex(this->ui->combo_version->count()-1);
 }
 

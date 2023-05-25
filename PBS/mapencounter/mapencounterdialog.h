@@ -6,6 +6,8 @@
 #include <QTreeWidgetItem>
 #include <QMessageBox>
 #include <QJsonDocument>
+#include <QKeyEvent>
+#include <QInputDialog>
 
 class RPGDB;
 
@@ -21,6 +23,13 @@ public:
     explicit MapEncounterDialog(RPGDB *db, QWidget *parent = nullptr);
     ~MapEncounterDialog();
 
+    void keyPressEvent(QKeyEvent *e) {
+        if(e->key() == Qt::Key_Escape)
+            this->on_button_cancel_clicked();
+    }
+
+
+
     void list_maps();
     void change_current(int version_index, int map, int version);
 
@@ -28,6 +37,12 @@ public:
 private slots:
     void on_treeWidget_currentItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *previous);
     void combo_version_changed();
+
+    void on_button_cancel_clicked();
+
+    void on_button_ok_clicked();
+
+    void on_button_add_version_clicked();
 
 private:
     Ui::MapEncounterDialog *ui;

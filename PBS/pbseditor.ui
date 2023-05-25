@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>300</height>
+    <height>366</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -66,6 +66,19 @@
    </property>
    <property name="text">
     <string>Map Encounter Editor</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_4">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>250</y>
+     <width>171</width>
+     <height>34</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Trainer Editor</string>
    </property>
   </widget>
  </widget>
