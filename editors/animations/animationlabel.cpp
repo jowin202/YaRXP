@@ -7,6 +7,39 @@
 AnimationLabel::AnimationLabel(QWidget *parent) : QLabel(parent)
 {
     this->update(0);
+
+    this->action_new.setText("New");
+    connect(&this->action_new, SIGNAL(triggered()), this, SLOT(create_new_cell()));
+    this->action_properties.setText("Properties");
+    connect(&this->action_properties, SIGNAL(triggered()), this, SLOT(open_cell_properties_dialog()));
+
+
+    this->action_copy.setText("Copy");
+    this->action_copy.setShortcut(QKeySequence(tr("Ctrl+C")));
+    this->action_copy.setShortcutContext(Qt::WindowShortcut);
+    this->addAction(&this->action_copy);
+    connect(&this->action_copy, SIGNAL(triggered()), this, SLOT(do_copy()));
+    this->action_cut.setText("Cut");
+    this->action_cut.setShortcut(QKeySequence(tr("Ctrl+X")));
+    this->action_cut.setShortcutContext(Qt::WindowShortcut);
+    this->addAction(&this->action_cut);
+    connect(&this->action_cut, SIGNAL(triggered()), this, SLOT(do_cut()));
+
+    this->action_paste_menu.setText("Paste");
+    this->action_paste_menu.setShortcut(QKeySequence(tr("Ctrl+V"))); //not added to the widget. shortcut only visible in menu
+    connect(&this->action_paste_menu, SIGNAL(triggered()), this, SLOT(do_paste_from_menu()));
+
+    this->action_paste.setShortcut(QKeySequence(tr("Ctrl+V")));
+    this->action_paste.setShortcutContext(Qt::WindowShortcut);
+    this->addAction(&this->action_paste);
+    connect(&this->action_paste, SIGNAL(triggered()), this, SLOT(do_paste()));
+
+    this->action_delete.setText("Delete");
+    this->action_delete.setShortcut(Qt::Key_Delete);
+    this->action_delete.setShortcutContext(Qt::WindowShortcut);
+    this->addAction(&this->action_delete);
+    connect(&this->action_delete, SIGNAL(triggered()), this, SLOT(do_delete()));
+    connect(this, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(prepare_context_menu(QPoint)));
 }
 
 void AnimationLabel::update(int frame)
@@ -201,6 +234,7 @@ void AnimationLabel::mousePressEvent(QMouseEvent *e)
     if (this->current_frame == -1)
         return;
 
+    this->current_rectangle = -1;
     QMapIterator<int, QRect> i(this->current_red_rectangles);
     while (i.hasNext()) {
         i.next();
@@ -208,47 +242,29 @@ void AnimationLabel::mousePressEvent(QMouseEvent *e)
         {
             this->current_rectangle = i.key();
             this->update(this->current_frame);
-            this->is_moving = true;
-            return;
+            if (e->button() == Qt::LeftButton)
+                this->is_moving = true; //Move only with left button
         }
     }
+    this->update(this->current_frame);
+
+    //this creates new cell by left click (if empty place)
+    //removed as this is annoying
+    /*
+    if (this->current_rectangle >= 0) return; //start moving and not creating a new cell
+
+    //Right click should open context menu, not creating a new cell
+    if (e->button() == Qt::RightButton) return;
+
 
     //if reached here, insert pattern
     if (this->current_animation_graphic == "") return; //but only if pattern available
-    if (qAbs((e->pos().x()-4)/4 * 8 - 320) > 320)
-        return;
-    if (qAbs((e->pos().y()-36)/4 * 8 - 160) > 160)
-        return;
 
     x = (e->pos().x()-4)/4 * 8 - 320;
     y = (e->pos().y()-36)/4 * 8 - 160;
 
-    int max_cell = ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray().at(current_frame).toObject().value("@cell_max").toInt();
-
-    QJsonArray cell_values = ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray().at(current_frame).toObject().value("@cell_data").toObject().value("values").toArray();
-    cell_values.insert(8*max_cell, 1);   //blending
-    cell_values.insert(7*max_cell, 255);   //opacity
-    cell_values.insert(6*max_cell, 0);   //flip
-    cell_values.insert(5*max_cell, 0);   //angle
-    cell_values.insert(4*max_cell, 100); //zoom
-    cell_values.insert(3*max_cell,y);
-    cell_values.insert(2*max_cell,x);
-    cell_values.insert(1*max_cell,pattern);
-
-    QJsonObject cell_data = ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray().at(current_frame).toObject().value("@cell_data").toObject();
-    cell_data.insert("values", cell_values);
-    cell_data.insert("x", max_cell+1); //update cell dimensions, otherwise parser would not parse the full table
-
-    QJsonObject thisframe = ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray().at(current_frame).toObject();
-    thisframe.insert("@cell_data", cell_data);
-    thisframe.insert("@cell_max", max_cell+1);
-
-    QJsonArray frame_array = ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray();
-    frame_array.removeAt(current_frame);
-    frame_array.insert(current_frame, thisframe);
-
-    ec->obj_set_jsonvalue(RPGDB::ANIMATIONS, "@frames", frame_array);
-    this->update(current_frame);
+    this->paste_cell(pattern,x,y,100,0,0,255,1);
+    */
 }
 
 void AnimationLabel::mouseMoveEvent(QMouseEvent *e)
@@ -300,26 +316,149 @@ void AnimationLabel::mouseDoubleClickEvent(QMouseEvent *e)
         if (i.value().contains(e->pos()))
         {
             this->current_rectangle = i.key();
-            int max_cell = ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray().at(current_frame).toObject().value("@cell_max").toInt();
-            QJsonArray cell_values = ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray().at(current_frame).toObject().value("@cell_data").toObject().value("values").toArray();
-            CellPropertiesDialog *dialog = new CellPropertiesDialog(cell_values, this->current_rectangle, max_cell, max_pattern);
-            dialog->show();
-            connect(dialog, &CellPropertiesDialog::ok_clicked, [=](QJsonArray cell_values)
-            {
-                QJsonObject cell_data = ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray().at(current_frame).toObject().value("@cell_data").toObject();
-                cell_data.insert("values", cell_values);
-
-                QJsonObject thisframe = ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray().at(current_frame).toObject();
-                thisframe.insert("@cell_data", cell_data);
-
-                QJsonArray frame_array = ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray();
-                frame_array.removeAt(current_frame);
-                frame_array.insert(current_frame, thisframe);
-
-                ec->obj_set_jsonvalue(RPGDB::ANIMATIONS, "@frames", frame_array);
-                this->update(current_frame);
-            });
+            this->open_cell_properties_dialog();
             return;
         }
     }
+}
+
+void AnimationLabel::open_cell_properties_dialog()
+{
+    int max_cell = ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray().at(current_frame).toObject().value("@cell_max").toInt();
+    QJsonArray cell_values = ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray().at(current_frame).toObject().value("@cell_data").toObject().value("values").toArray();
+    CellPropertiesDialog *dialog = new CellPropertiesDialog(cell_values, this->current_rectangle, max_cell, max_pattern);
+    dialog->show();
+    connect(dialog, &CellPropertiesDialog::ok_clicked, [=](QJsonArray cell_values)
+    {
+        QJsonObject cell_data = ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray().at(current_frame).toObject().value("@cell_data").toObject();
+        cell_data.insert("values", cell_values);
+
+        QJsonObject thisframe = ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray().at(current_frame).toObject();
+        thisframe.insert("@cell_data", cell_data);
+
+        QJsonArray frame_array = ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray();
+        frame_array.removeAt(current_frame);
+        frame_array.insert(current_frame, thisframe);
+
+        ec->obj_set_jsonvalue(RPGDB::ANIMATIONS, "@frames", frame_array);
+        this->update(current_frame);
+    });
+}
+
+void AnimationLabel::paste_cell(int pattern, int x, int y, int zoom, int angle, int flip, int opacity, int blending)
+{
+    x = qMin(qMax(-320,x),320); //create it in range
+    y = qMin(qMax(-160,y),160);
+
+    int max_cell = ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray().at(current_frame).toObject().value("@cell_max").toInt();
+    QJsonArray cell_values = ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray().at(current_frame).toObject().value("@cell_data").toObject().value("values").toArray();
+    cell_values.insert(8*max_cell, blending);   //blending
+    cell_values.insert(7*max_cell, opacity);   //opacity
+    cell_values.insert(6*max_cell, flip);   //flip
+    cell_values.insert(5*max_cell, angle);   //angle
+    cell_values.insert(4*max_cell, zoom); //zoom
+    cell_values.insert(3*max_cell,y);
+    cell_values.insert(2*max_cell,x);
+    cell_values.insert(1*max_cell,pattern);
+
+    QJsonObject cell_data = ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray().at(current_frame).toObject().value("@cell_data").toObject();
+    cell_data.insert("values", cell_values);
+    cell_data.insert("x", max_cell+1); //update cell dimensions, otherwise parser would not parse the full table
+
+    QJsonObject thisframe = ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray().at(current_frame).toObject();
+    thisframe.insert("@cell_data", cell_data);
+    thisframe.insert("@cell_max", max_cell+1);
+
+    QJsonArray frame_array = ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray();
+    frame_array.removeAt(current_frame);
+    frame_array.insert(current_frame, thisframe);
+
+    this->current_rectangle = max_cell; //highlight pasted rectangle
+    ec->obj_set_jsonvalue(RPGDB::ANIMATIONS, "@frames", frame_array);
+    this->update(current_frame);
+}
+
+void AnimationLabel::do_copy()
+{
+    QJsonArray array;
+
+    int max_cell = ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray().at(current_frame).toObject().value("@cell_max").toInt();
+    QJsonArray cell_values = ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray().at(current_frame).toObject().value("@cell_data").toObject().value("values").toArray();
+    array.append(cell_values.at(0*max_cell+this->current_rectangle));
+    array.append(cell_values.at(1*max_cell+this->current_rectangle));
+    array.append(cell_values.at(2*max_cell+this->current_rectangle));
+    array.append(cell_values.at(3*max_cell+this->current_rectangle));
+    array.append(cell_values.at(4*max_cell+this->current_rectangle));
+    array.append(cell_values.at(5*max_cell+this->current_rectangle));
+    array.append(cell_values.at(6*max_cell+this->current_rectangle));
+    array.append(cell_values.at(7*max_cell+this->current_rectangle));
+
+    QJsonDocument doc(array);
+    QSettings settings;
+    settings.setValue("copied_animation_cell", doc.toJson(QJsonDocument::Compact));
+}
+
+void AnimationLabel::do_paste()
+{
+    QSettings settings;
+    QJsonParseError err;
+    QByteArray json = settings.value("copied_animation_cell").toByteArray();
+    QJsonDocument doc = QJsonDocument::fromJson(json, &err);
+    if (err.error != QJsonParseError::NoError) return;
+
+    QJsonArray array = doc.array();
+    this->paste_cell(array.at(0).toInt(),array.at(1).toInt(),array.at(2).toInt(),array.at(3).toInt(),array.at(4).toInt(),array.at(5).toInt(),array.at(6).toInt(),array.at(7).toInt());
+}
+
+void AnimationLabel::do_paste_from_menu()
+{
+    QSettings settings;
+    QJsonParseError err;
+    QByteArray json = settings.value("copied_animation_cell").toByteArray();
+    QJsonDocument doc = QJsonDocument::fromJson(json, &err);
+    if (err.error != QJsonParseError::NoError) return;
+
+    QJsonArray array = doc.array();
+    this->paste_cell(array.at(0).toInt(),context_menu_pos.x(), context_menu_pos.y(),array.at(3).toInt(),array.at(4).toInt(),array.at(5).toInt(),array.at(6).toInt(),array.at(7).toInt());
+}
+
+void AnimationLabel::do_cut()
+{
+    this->do_copy();
+    this->do_delete();
+}
+
+void AnimationLabel::do_delete()
+{
+    int max_cell = ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray().at(current_frame).toObject().value("@cell_max").toInt();
+    QJsonArray cell_values = ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray().at(current_frame).toObject().value("@cell_data").toObject().value("values").toArray();
+    cell_values.removeAt(7*max_cell+this->current_rectangle);   //blending
+    cell_values.removeAt(6*max_cell+this->current_rectangle);   //opacity
+    cell_values.removeAt(5*max_cell+this->current_rectangle);   //flip
+    cell_values.removeAt(4*max_cell+this->current_rectangle);   //angle
+    cell_values.removeAt(3*max_cell+this->current_rectangle); //zoom
+    cell_values.removeAt(2*max_cell+this->current_rectangle);
+    cell_values.removeAt(1*max_cell+this->current_rectangle);
+    cell_values.removeAt(0*max_cell+this->current_rectangle);
+
+    QJsonObject cell_data = ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray().at(current_frame).toObject().value("@cell_data").toObject();
+    cell_data.insert("values", cell_values);
+    cell_data.insert("x", max_cell-1); //update cell dimensions
+
+    QJsonObject thisframe = ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray().at(current_frame).toObject();
+    thisframe.insert("@cell_data", cell_data);
+    thisframe.insert("@cell_max", max_cell-1);
+
+    QJsonArray frame_array = ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray();
+    frame_array.removeAt(current_frame);
+    frame_array.insert(current_frame, thisframe);
+
+    ec->obj_set_jsonvalue(RPGDB::ANIMATIONS, "@frames", frame_array);
+    this->current_rectangle = -1;
+    this->update(current_frame);
+}
+
+void AnimationLabel::create_new_cell()
+{
+    this->paste_cell(pattern,context_menu_pos.x(), context_menu_pos.y(),100,0,0,255,1);
 }

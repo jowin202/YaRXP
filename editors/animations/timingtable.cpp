@@ -9,6 +9,8 @@
 
 TimingTable::TimingTable(QWidget *parent) : QTableWidget(parent)
 {
+    this->setFocusPolicy(Qt::ClickFocus);
+
     action_add = new QAction("Add");
     action_add->setShortcut(Qt::Key_Return);
     action_add->setShortcutContext(Qt::WidgetShortcut);
@@ -25,20 +27,20 @@ TimingTable::TimingTable(QWidget *parent) : QTableWidget(parent)
     action_delete->setShortcut(Qt::Key_Delete);
     action_delete->setShortcutContext(Qt::WidgetShortcut);
     connect(action_delete, SIGNAL(triggered()), this, SLOT(delete_timing()));
-    this->addAction(action_delete);
+    //this->addAction(action_delete);
 
     action_copy = new QAction("Copy");
     action_copy->setShortcut(QKeySequence(tr("Ctrl+C")));
     action_copy->setShortcutContext(Qt::WidgetShortcut);
     connect(action_copy, SIGNAL(triggered()), this, SLOT(copy_timing()));
-    this->addAction(action_copy);
+    //this->addAction(action_copy);
 
 
     action_paste = new QAction("Paste");
     action_paste->setShortcut(QKeySequence(tr("Ctrl+V")));
     action_paste->setShortcutContext(Qt::WidgetShortcut);
     connect(action_paste, SIGNAL(triggered()), this, SLOT(paste_timing()));
-    this->addAction(action_paste);
+    //this->addAction(action_paste);
 
     connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(on_customContextMenuRequested(const QPoint&)));
 }
