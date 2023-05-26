@@ -16,12 +16,12 @@ AnimationLabel::AnimationLabel(QWidget *parent) : QLabel(parent)
 
     this->action_copy.setText("Copy");
     this->action_copy.setShortcut(QKeySequence(tr("Ctrl+C")));
-    this->action_copy.setShortcutContext(Qt::WindowShortcut);
+    this->action_copy.setShortcutContext(Qt::WidgetShortcut);
     this->addAction(&this->action_copy);
     connect(&this->action_copy, SIGNAL(triggered()), this, SLOT(do_copy()));
     this->action_cut.setText("Cut");
     this->action_cut.setShortcut(QKeySequence(tr("Ctrl+X")));
-    this->action_cut.setShortcutContext(Qt::WindowShortcut);
+    this->action_cut.setShortcutContext(Qt::WidgetShortcut);
     this->addAction(&this->action_cut);
     connect(&this->action_cut, SIGNAL(triggered()), this, SLOT(do_cut()));
 
@@ -30,13 +30,13 @@ AnimationLabel::AnimationLabel(QWidget *parent) : QLabel(parent)
     connect(&this->action_paste_menu, SIGNAL(triggered()), this, SLOT(do_paste_from_menu()));
 
     this->action_paste.setShortcut(QKeySequence(tr("Ctrl+V")));
-    this->action_paste.setShortcutContext(Qt::WindowShortcut);
+    this->action_paste.setShortcutContext(Qt::WidgetShortcut);
     this->addAction(&this->action_paste);
     connect(&this->action_paste, SIGNAL(triggered()), this, SLOT(do_paste()));
 
     this->action_delete.setText("Delete");
     this->action_delete.setShortcut(Qt::Key_Delete);
-    this->action_delete.setShortcutContext(Qt::WindowShortcut);
+    this->action_delete.setShortcutContext(Qt::WidgetShortcut);
     this->addAction(&this->action_delete);
     connect(&this->action_delete, SIGNAL(triggered()), this, SLOT(do_delete()));
     connect(this, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(prepare_context_menu(QPoint)));
@@ -430,6 +430,8 @@ void AnimationLabel::do_cut()
 
 void AnimationLabel::do_delete()
 {
+    if (this->current_rectangle < 0) return; //undefined behaviour
+
     int max_cell = ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray().at(current_frame).toObject().value("@cell_max").toInt();
     QJsonArray cell_values = ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray().at(current_frame).toObject().value("@cell_data").toObject().value("values").toArray();
     cell_values.removeAt(7*max_cell+this->current_rectangle);   //blending

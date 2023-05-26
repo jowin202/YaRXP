@@ -113,10 +113,11 @@ void EditAnimations::on_table_timings_itemDoubleClicked(QTableWidgetItem *item)
 void EditAnimations::on_frame_list_currentRowChanged(int currentRow)
 {
     QJsonArray frames = this->ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray();
-    QJsonObject frame = frames.at(currentRow).toObject();
+    //QJsonObject frame = frames.at(currentRow).toObject();
+    //qDebug() << frame;
 
     this->ui->animation_label->update(currentRow);
-    //qDebug() << frame;
+    this->ui->animation_label->setFocus(); //shotcut
 }
 
 
