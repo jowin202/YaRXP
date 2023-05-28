@@ -84,3 +84,11 @@ void EncounterWidget::on_button_add_slot_clicked()
     emit data_changed();
 }
 
+
+void EncounterWidget::on_button_remove_encounter_clicked()
+{
+    int answer = QMessageBox::question(this, "Delete encounter widget", "Do you really want to delete this encounter widget?");
+    if (answer == QMessageBox::Yes)
+        emit encounter_widget_deleted();
+}
+

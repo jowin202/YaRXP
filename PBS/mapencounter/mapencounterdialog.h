@@ -44,6 +44,10 @@ private slots:
 
     void on_button_add_version_clicked();
 
+    void on_button_remove_version_clicked();
+
+    void on_button_add_encounter_clicked();
+
 private:
     Ui::MapEncounterDialog *ui;
     RPGDB *db;

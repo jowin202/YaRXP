@@ -6,6 +6,7 @@
 #include <QJsonDocument>
 #include <QJsonValue>
 #include <QJsonObject>
+#include <QMessageBox>
 
 #include <QCryptographicHash>
 
@@ -31,8 +32,11 @@ private slots:
 
     void on_button_add_slot_clicked();
 
+    void on_button_remove_encounter_clicked();
+
 signals:
     void data_changed();
+    void encounter_widget_deleted();
 
 private:
     Ui::EncounterWidget *ui;

@@ -111,7 +111,7 @@ void MapEncounterDialog::change_current(int version_index, int map, int version)
 
 void MapEncounterDialog::on_treeWidget_currentItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *previous)
 {
-    Q_UNUSED(previous);
+    Q_UNUSED(previous); //don't use this
     this->current_id = current->text(2).toInt();
 
     this->ui->combo_version->clear();
@@ -130,6 +130,7 @@ void MapEncounterDialog::on_treeWidget_currentItemChanged(QTreeWidgetItem *curre
         }
     }
     this->ui->combo_version->setEnabled(this->ui->combo_version->count() > 0);
+    this->ui->button_remove_version->setEnabled(this->ui->combo_version->count() > 0);
 }
 
 void MapEncounterDialog::combo_version_changed()
@@ -138,17 +139,25 @@ void MapEncounterDialog::combo_version_changed()
     int version_index = this->ui->combo_version->currentData().toInt(&ok);
     if (!ok) return;
 
+    //delete current
     QLayoutItem *item;
      while ( (item = this->ui->encounter_layout->takeAt(0)) != 0)
          delete item->widget();
 
+     //flags for new created
+     bool create_new = false;
+     int version;
+
     QJsonArray encounters_data;
-    if (version_index >= 0)
+    if (version_index >= 0) //version already exists
         encounters_data = encounters_file.object().value("dict_list").toArray().at(version_index).toArray();
     else
     {
+        //create this new
+        create_new = true;
         PBSFactory factory;
-        encounters_data = factory.create_encounter(this->current_id,-version_index-1);
+        version = -version_index-1; //use this again for saving to file
+        encounters_data = factory.create_encounter(this->current_id,version);
         encounters_data = factory.encounter_add_type(encounters_data, "Land", 21);
         version_index = encounters_file.object().value("dict_list").toArray().count(); //index is at the end of the file
     }
@@ -163,8 +172,16 @@ void MapEncounterDialog::combo_version_changed()
                                  encounters_data.at(1).toObject().value("@map").toInt(),
                                  encounters_data.at(1).toObject().value("@version").toInt());
         });
+        connect(w, &EncounterWidget::encounter_widget_deleted, [=]() {
+            delete w;
+            this->change_current(version_index,
+                                 encounters_data.at(1).toObject().value("@map").toInt(),
+                                 encounters_data.at(1).toObject().value("@version").toInt());
+        });
 
     }
+    if (create_new)
+        this->change_current(version_index,this->current_id,version);
 }
 
 
@@ -188,5 +205,45 @@ void MapEncounterDialog::on_button_add_version_clicked()
         return;
     this->ui->combo_version->addItem(QString("Version %1").arg(version), -version-1); //due to 0
     this->ui->combo_version->setCurrentIndex(this->ui->combo_version->count()-1);
+
+}
+
+
+void MapEncounterDialog::on_button_remove_version_clicked()
+{
+    if (QMessageBox::question(this, "Delete Encounter version", "Do you really want to delete the current version?") != QMessageBox::Yes)
+        return;
+    bool ok;
+    int version_index = this->ui->combo_version->currentData().toInt(&ok);
+    if (!ok) return;
+
+    QJsonObject obj = encounters_file.object();
+    QJsonArray dict_list = obj.value("dict_list").toArray();
+    dict_list.removeAt(version_index);
+    obj.insert("dict_list", dict_list);
+    encounters_file.setObject(obj);
+
+    //trigger event manually to reload combo
+    this->on_treeWidget_currentItemChanged(this->ui->treeWidget->currentItem(), 0);
+}
+
+
+void MapEncounterDialog::on_button_add_encounter_clicked()
+{
+    bool ok;
+    int version_index = this->ui->combo_version->currentData().toInt(&ok);
+    if (!ok) return;
+
+    QJsonObject obj = encounters_file.object();
+    QJsonArray dict_list = obj.value("dict_list").toArray();
+    QJsonArray encounters_data = dict_list.at(version_index).toArray();
+    encounters_data = PBSFactory().encounter_add_type(encounters_data, "Land", 21);
+    dict_list.removeAt(version_index);
+    dict_list.insert(version_index,encounters_data);
+    obj.insert("dict_list", dict_list);
+    encounters_file.setObject(obj);
+
+    //trigger reload
+    this->combo_version_changed();
 }
 
