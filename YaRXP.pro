@@ -131,6 +131,8 @@ SOURCES += \
     events/eventpage.cpp \
     events/commands/moveroutedialog.cpp \
     import/importdialog.cpp \
+    import/importscreenshotdialog.cpp \
+    import/screenshotanalysisthread.cpp \
     import/tilesetcompare.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -260,6 +262,8 @@ HEADERS += \
     events/eventpage.h \
     events/commands/moveroutedialog.h \
     import/importdialog.h \
+    import/importscreenshotdialog.h \
+    import/screenshotanalysisthread.h \
     import/tilesetcompare.h \
     mainwindow.h \
     viewer/maprectangle.h \
@@ -359,6 +363,7 @@ FORMS += \
     events/eventpage.ui \
     events/commands/moveroutedialog.ui \
     import/importdialog.ui \
+    import/importscreenshotdialog.ui \
     mainwindow.ui
 
 # Default rules for deployment.

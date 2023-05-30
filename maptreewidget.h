@@ -76,6 +76,7 @@ private:
     QAction action5;
     QAction action6;
     QAction action7;
+    QAction action8;
 
     RPGDB *db;
     RPGMapInfoController *mic;

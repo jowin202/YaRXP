@@ -300,6 +300,7 @@ void RPGMapController::shift_map(int xtiles, int ytiles)
     QJsonObject events = this->get_jsonvalue("@events").toObject();
     foreach (const QString &key, events.keys())
     {
+        if (key == "RXClass") continue;
         QJsonObject event = events.value(key).toObject();
         if (xtiles != 0)
         {

@@ -459,3 +459,17 @@ void MainWindow::on_actionPBS_Editor_triggered()
     d->show();
 }
 
+
+void MainWindow::on_actionSave_Map_Pic_triggered()
+{
+    QString path = QFileDialog::getSaveFileName(this, "Save Image to", QDir::homePath(), "PNG-Image (*.png);;");
+    if (path == "") return;
+    QImage img(this->ui->mapView->scene()->sceneRect().width(),this->ui->mapView->scene()->sceneRect().height(), QImage::Format_ARGB32_Premultiplied);
+    img.fill(Qt::transparent);
+    QPainter painter;
+    painter.begin(&img);
+    this->ui->mapView->scene()->render(&painter);
+    painter.end();
+    img.save(path);
+}
+

@@ -111,6 +111,8 @@
     <addaction name="separator"/>
     <addaction name="actionChange_Title"/>
     <addaction name="actionOpen_Project_Folder"/>
+    <addaction name="separator"/>
+    <addaction name="actionSave_Map_Pic"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
@@ -685,6 +687,11 @@
   <action name="actionPBS_Editor">
    <property name="text">
     <string>PBS Editor</string>
+   </property>
+  </action>
+  <action name="actionSave_Map_Pic">
+   <property name="text">
+    <string>Save Map Pic</string>
    </property>
   </action>
  </widget>

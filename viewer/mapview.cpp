@@ -195,6 +195,9 @@ void MapView::mousePressEvent(QMouseEvent *event)
     QPointF posf = mapToScene(event->pos());
     QPoint pos = QPoint((int)posf.x()/32, (int)posf.y()/32);
 
+    if (mapToScene(event->pos()).x() <= 0 || mapToScene(event->pos()).x() >= 32*mc.get_width()) return;
+    if (mapToScene(event->pos()).y() <= 0 || mapToScene(event->pos()).y() >= 32*mc.get_height()) return;
+
     if (opt.mode == PEN)
     {
         if (this->rectangle == 0)
@@ -272,12 +275,20 @@ void MapView::mouseReleaseEvent(QMouseEvent *event)
     QPointF posf = mapToScene(event->pos());
     QPoint pos = QPoint((int)posf.x()/32, (int)posf.y()/32);
 
+    //always do this
     if (event->button() == Qt::LeftButton)
         this->left_button_clicked = false;
+    if (event->button() == Qt::RightButton)
+        this->right_button_clicked = false;
+    if (opt.mode == SELECT)
+        this->select_mouse_button_pressed = false;
+
+    //then check if pos is valid
+    if (mapToScene(event->pos()).x() <= 0 || mapToScene(event->pos()).x() >= 32*mc.get_width()) return;
+    if (mapToScene(event->pos()).y() <= 0 || mapToScene(event->pos()).y() >= 32*mc.get_height()) return;
 
     if (opt.mode == PEN && event->button() == Qt::RightButton)
     {
-        this->right_button_clicked = false;
         if (this->rectangle != 0)
             this->rectangle_offset = QPoint(this->rectangle->pos().x()/32,this->rectangle->pos().y()/32)-last_valid_pos_in_draw_rectangle;
 
@@ -286,8 +297,6 @@ void MapView::mouseReleaseEvent(QMouseEvent *event)
     }
     else if (opt.mode == SELECT)
     {
-        this->select_mouse_button_pressed = false;
-
         if (!is_moving)
         {
             //selection rectangle

@@ -96,6 +96,8 @@ private slots:
 
     void on_actionPBS_Editor_triggered();
 
+    void on_actionSave_Map_Pic_triggered();
+
 private:
     Ui::MainWindow *ui;
     QActionGroup *layergroup;

@@ -4,6 +4,7 @@
 #include "RXIO2/rpgmapinfocontroller.h"
 
 #include "import/importdialog.h"
+#include "import/importscreenshotdialog.h"
 
 MapTreeWidget::MapTreeWidget(QWidget *parent) : QTreeWidget(parent)
 {
@@ -40,11 +41,18 @@ MapTreeWidget::MapTreeWidget(QWidget *parent) : QTreeWidget(parent)
         connect(dialog, SIGNAL(finished()), this, SLOT(list_maps()));
         dialog->show();
     });
-    action7.setText("&Jump to Map");
-    action7.setShortcut(QKeySequence(tr("Ctrl+J")));
-    action7.setShortcutContext(Qt::ApplicationShortcut);
-    this->addAction(&action7);
+    action7.setText("&Import Screenshot");
+    action7.setShortcutContext(Qt::WidgetShortcut);
     connect(&action7, &QAction::triggered, [=](){
+        ImportScreenshotDialog *dialog = new ImportScreenshotDialog(db);
+        connect(dialog, SIGNAL(finished()), this, SLOT(list_maps()));
+        dialog->show();
+    });
+    action8.setText("&Jump to Map");
+    action8.setShortcut(QKeySequence(tr("Ctrl+J")));
+    action8.setShortcutContext(Qt::ApplicationShortcut);
+    this->addAction(&action8);
+    connect(&action8, &QAction::triggered, [=](){
         bool ok;
         int current = (this->currentItem()==0 ? 1 : this->currentItem()->text(2).toInt());
         int val = QInputDialog::getInt(this, "Jump to Map", "Enter Map ID:", current, 0, 9999,1,&ok);
@@ -66,8 +74,9 @@ MapTreeWidget::MapTreeWidget(QWidget *parent) : QTreeWidget(parent)
     menu.addAction(&action5);
     menu.addSeparator();
     menu.addAction(&action6);
-    menu.addSeparator();
     menu.addAction(&action7);
+    menu.addSeparator();
+    menu.addAction(&action8);
 
 
     connect(this, SIGNAL(itemExpanded(QTreeWidgetItem*)), this, SLOT(itemExpanded(QTreeWidgetItem*)));
