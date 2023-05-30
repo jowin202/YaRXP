@@ -200,6 +200,8 @@ public slots:
     }
     void prepare_context_menu(QPoint pos)
     {
+        if (mapToScene(pos).x() <= 0 || mapToScene(pos).x() >= 32*mc.get_width()) return;
+        if (mapToScene(pos).y() <= 0 || mapToScene(pos).y() >= 32*mc.get_height()) return;
         if (opt.mode == EVENT)
         {
             QMenu menu;

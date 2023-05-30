@@ -195,11 +195,15 @@ void MapView::mousePressEvent(QMouseEvent *event)
     QPointF posf = mapToScene(event->pos());
     QPoint pos = QPoint((int)posf.x()/32, (int)posf.y()/32);
 
-    if (mapToScene(event->pos()).x() <= 0 || mapToScene(event->pos()).x() >= 32*mc.get_width()) return;
-    if (mapToScene(event->pos()).y() <= 0 || mapToScene(event->pos()).y() >= 32*mc.get_height()) return;
+
+    if (opt.mode == SELECT && event->button() == Qt::RightButton)
+        this->set_mode(PEN); //jump to pen if right click
 
     if (opt.mode == PEN)
     {
+        if (mapToScene(event->pos()).x() <= 0 || mapToScene(event->pos()).x() >= 32*mc.get_width()) return;
+        if (mapToScene(event->pos()).y() <= 0 || mapToScene(event->pos()).y() >= 32*mc.get_height()) return;
+
         if (this->rectangle == 0)
             return;
         if (event->button() == Qt::LeftButton)
@@ -247,7 +251,10 @@ void MapView::mousePressEvent(QMouseEvent *event)
         }
     }
     else if (opt.mode == EVENT)
-    {
+    { 
+        if (mapToScene(event->pos()).x() <= 0 || mapToScene(event->pos()).x() >= 32*mc.get_width()) return;
+        if (mapToScene(event->pos()).y() <= 0 || mapToScene(event->pos()).y() >= 32*mc.get_height()) return;
+
         //marked tile
         MapTile *tile;
         QPoint prev_marked_tile = opt.marked_tile;
@@ -280,15 +287,14 @@ void MapView::mouseReleaseEvent(QMouseEvent *event)
         this->left_button_clicked = false;
     if (event->button() == Qt::RightButton)
         this->right_button_clicked = false;
-    if (opt.mode == SELECT)
-        this->select_mouse_button_pressed = false;
 
-    //then check if pos is valid
-    if (mapToScene(event->pos()).x() <= 0 || mapToScene(event->pos()).x() >= 32*mc.get_width()) return;
-    if (mapToScene(event->pos()).y() <= 0 || mapToScene(event->pos()).y() >= 32*mc.get_height()) return;
 
     if (opt.mode == PEN && event->button() == Qt::RightButton)
     {
+        //then check if pos is valid, not for selection
+        if (mapToScene(event->pos()).x() <= 0 || mapToScene(event->pos()).x() >= 32*mc.get_width()) return;
+        if (mapToScene(event->pos()).y() <= 0 || mapToScene(event->pos()).y() >= 32*mc.get_height()) return;
+
         if (this->rectangle != 0)
             this->rectangle_offset = QPoint(this->rectangle->pos().x()/32,this->rectangle->pos().y()/32)-last_valid_pos_in_draw_rectangle;
 
@@ -297,6 +303,7 @@ void MapView::mouseReleaseEvent(QMouseEvent *event)
     }
     else if (opt.mode == SELECT)
     {
+        this->select_mouse_button_pressed = false;
         if (!is_moving)
         {
             //selection rectangle
@@ -311,8 +318,14 @@ void MapView::mouseReleaseEvent(QMouseEvent *event)
 
     if (opt.mode == EVENT)
     {
+
         if (event->button() == Qt::LeftButton && event_left_button_for_moving && this->event_moving_from_pos != pos)
         {
+            this->event_left_button_for_moving = false; // do this before pos check
+            //then check if pos is valid, not for selection
+            if (mapToScene(event->pos()).x() <= 0 || mapToScene(event->pos()).x() >= 32*mc.get_width()) return;
+            if (mapToScene(event->pos()).y() <= 0 || mapToScene(event->pos()).y() >= 32*mc.get_height()) return;
+
             QJsonObject obj = mc.current_map()->object(); //copy object before move
             if (this->mc.move_event(this->event_moving_from_pos, pos))
                 this->undo.push(mc.get_current_map_id(), obj); //backup old obj
@@ -328,12 +341,14 @@ void MapView::mouseReleaseEvent(QMouseEvent *event)
             if ( (tile = ((MapTile*)this->scene()->itemAt(32*prev_marked_tile,QTransform()))) != 0)
                 tile->update();
         }
-        this->event_left_button_for_moving = false;
     }
 }
 
 void MapView::mouseDoubleClickEvent(QMouseEvent *event)
 {
+    if (mapToScene(event->pos()).x() <= 0 || mapToScene(event->pos()).x() >= 32*mc.get_width()) return;
+    if (mapToScene(event->pos()).y() <= 0 || mapToScene(event->pos()).y() >= 32*mc.get_height()) return;
+
     QPointF posf = mapToScene(event->pos());
     QPoint pos = QPoint((int)posf.x()/32, (int)posf.y()/32);
 
