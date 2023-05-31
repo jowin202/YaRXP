@@ -468,7 +468,10 @@ void MainWindow::on_actionSave_Map_Pic_triggered()
     img.fill(Qt::transparent);
     QPainter painter;
     painter.begin(&img);
+    int layer = this->ui->mapView->opt.layer;
+    this->ui->mapView->opt.layer = 2;
     this->ui->mapView->scene()->render(&painter);
+    this->ui->mapView->opt.layer = layer;
     painter.end();
     img.save(path);
 }

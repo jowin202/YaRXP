@@ -43,7 +43,7 @@ void ImportScreenshotDialog::on_button_import_clicked()
 
 void ImportScreenshotDialog::on_combo_tileset_currentIndexChanged(int index)
 {
-
+    Q_UNUSED(index);
 }
 
 
@@ -81,13 +81,11 @@ void ImportScreenshotDialog::load_screenshot()
     //if (this->ui->spin_scale->value() == 100)
     //    this->edited_img = QImage(cropped_image);
     //else
-    this->edited_img = QImage(cropped_image).scaled(cropped_image.width()*2.5, cropped_image.height()*2.5, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-    /*
     if (this->ui->radio_scale_width->isChecked())
-        this->edited_img = cropped_image.scaledToWidth(32*this->ui->spin_scale_x->value(), Qt::SmoothTransformation);
+        this->edited_img = cropped_image.scaledToWidth(this->ui->spin_scale_x->value(), Qt::SmoothTransformation);
     else
-        this->edited_img = cropped_image.scaledToHeight(32*this->ui->spin_scale_y->value(), Qt::SmoothTransformation);
-    */
+        this->edited_img = cropped_image.scaledToHeight(this->ui->spin_scale_y->value(), Qt::SmoothTransformation);
+
 
     QImage shown_image = QImage(edited_img); //do not draw gridlines in cached image
     if (this->ui->check_gridlines->isChecked())
