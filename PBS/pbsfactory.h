@@ -43,6 +43,9 @@ public:
 
 
 
+
+    QJsonArray create_trainer_type(QString id, QString real_name, int base_money, int skill_level, int gender, QString intro_bgm, QString battle_bgm, QString victory_bgm);
+
 };
 
 #endif // PBSFACTORY_H

@@ -20,8 +20,8 @@ public:
 
 private slots:
     void on_button_mapConnection_clicked();
-
     void on_button_mapencounter_clicked();
+    void on_button_trainer_editor_clicked();
 
 private:
     Ui::PBSEditor *ui;

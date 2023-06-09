@@ -24,6 +24,9 @@ SOURCES += \
     PBS/mapencounter/mapencounterdialog.cpp \
     PBS/pbseditor.cpp \
     PBS/pbsfactory.cpp \
+    PBS/trainers/trainereditor.cpp \
+    PBS/trainers/trainerpokemon.cpp \
+    PBS/trainers/trainertype.cpp \
     RXIO2/autotileset.cpp \
     RXIO2/factory.cpp \
     RXIO2/fileopener.cpp \
@@ -155,6 +158,9 @@ HEADERS += \
     PBS/mapencounter/mapencounterdialog.h \
     PBS/pbseditor.h \
     PBS/pbsfactory.h \
+    PBS/trainers/trainereditor.h \
+    PBS/trainers/trainerpokemon.h \
+    PBS/trainers/trainertype.h \
     RXIO2/autotileset.h \
     RXIO2/factory.h \
     RXIO2/fileopener.h \
@@ -281,6 +287,9 @@ FORMS += \
     PBS/mapencounter/encounterwidget.ui \
     PBS/mapencounter/mapencounterdialog.ui \
     PBS/pbseditor.ui \
+    PBS/trainers/trainereditor.ui \
+    PBS/trainers/trainerpokemon.ui \
+    PBS/trainers/trainertype.ui \
     dialogs/audiodialog.ui \
     dialogs/combodialog.ui \
     dialogs/imagechooserdialog.ui \

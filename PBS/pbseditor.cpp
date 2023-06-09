@@ -3,6 +3,7 @@
 
 #include "PBS/mapconnection/mapconnectiondialog.h"
 #include "PBS/mapencounter/mapencounterdialog.h"
+#include "PBS/trainers/trainereditor.h"
 
 PBSEditor::PBSEditor(RPGDB *db, QWidget *parent) :
     QWidget(parent),
@@ -28,6 +29,15 @@ void PBSEditor::on_button_mapConnection_clicked()
 void PBSEditor::on_button_mapencounter_clicked()
 {
     MapEncounterDialog *d = new MapEncounterDialog(db);
+    this->close();
+    d->show();
+}
+
+
+
+void PBSEditor::on_button_trainer_editor_clicked()
+{
+    TrainerEditor *d = new TrainerEditor(db);
     this->close();
     d->show();
 }

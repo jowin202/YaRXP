@@ -97,3 +97,25 @@ QJsonArray PBSFactory::encounter_add_mon(QJsonArray encounter, QString type, QSt
     }
     return encounter;
 }
+
+QJsonArray PBSFactory::create_trainer_type(QString id, QString real_name, int base_money, int skill_level, int gender, QString intro_bgm, QString battle_bgm, QString victory_bgm)
+{
+    QJsonObject id_obj = this->create_symbol(id);
+
+    QJsonObject basic_obj;
+    basic_obj.insert("@id", id_obj);
+    basic_obj.insert("@gender", gender);
+    basic_obj.insert("@base_money", base_money);
+    basic_obj.insert("@skill_level", skill_level);
+    basic_obj.insert("@flags", QJsonArray());
+    basic_obj.insert("@battle_BGM", (battle_bgm == "" ? QJsonValue::Null : QJsonValue(battle_bgm)));
+    basic_obj.insert("@intro_BGM", (intro_bgm == "" ? QJsonValue::Null : QJsonValue(intro_bgm)));
+    basic_obj.insert("@victory_BGM", (victory_bgm == "" ? QJsonValue::Null : QJsonValue(victory_bgm)));
+    basic_obj.insert("@real_name", real_name);
+    basic_obj.insert("RXClass", "GameData::TrainerType");
+
+    QJsonArray result;
+    result.append(id_obj);
+    result.append(basic_obj);
+    return result;
+}

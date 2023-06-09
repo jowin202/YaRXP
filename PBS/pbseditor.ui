@@ -68,7 +68,7 @@
     <string>Map Encounter Editor</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_4">
+  <widget class="QPushButton" name="button_trainer_editor">
    <property name="geometry">
     <rect>
      <x>50</x>
