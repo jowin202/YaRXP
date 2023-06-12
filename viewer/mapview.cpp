@@ -318,11 +318,9 @@ void MapView::mouseReleaseEvent(QMouseEvent *event)
 
     if (opt.mode == EVENT)
     {
-
         if (event->button() == Qt::LeftButton && event_left_button_for_moving && this->event_moving_from_pos != pos)
         {
-            this->event_left_button_for_moving = false; // do this before pos check
-            //then check if pos is valid, not for selection
+            //check if pos is valid, only when dropping
             if (mapToScene(event->pos()).x() <= 0 || mapToScene(event->pos()).x() >= 32*mc.get_width()) return;
             if (mapToScene(event->pos()).y() <= 0 || mapToScene(event->pos()).y() >= 32*mc.get_height()) return;
 
@@ -341,6 +339,7 @@ void MapView::mouseReleaseEvent(QMouseEvent *event)
             if ( (tile = ((MapTile*)this->scene()->itemAt(32*prev_marked_tile,QTransform()))) != 0)
                 tile->update();
         }
+        this->event_left_button_for_moving = false; //always do this
     }
 }
 
