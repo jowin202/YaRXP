@@ -52,6 +52,8 @@ MapView::MapView(QWidget *parent) : QGraphicsView(parent)
                         && event.value("@pages").toArray().at(p).toObject().value("@list").toArray().at(c).toObject().value("@parameters").toArray().at(0).toInt() == 0)
                 {
                     //qDebug() << "Page" << p+1 << "Line" << c << event.value("@pages").toArray().at(p).toObject().value("@list").toArray().at(c).toObject().value("@parameters").toArray();
+                    this->opt.marked_tile = QPoint(event.value("@pages").toArray().at(p).toObject().value("@list").toArray().at(c).toObject().value("@parameters").toArray().at(2).toInt(),
+                                                   event.value("@pages").toArray().at(p).toObject().value("@list").toArray().at(c).toObject().value("@parameters").toArray().at(3).toInt());
                     emit jump_to_map(event.value("@pages").toArray().at(p).toObject().value("@list").toArray().at(c).toObject().value("@parameters").toArray().at(1).toInt());
                     return;
                 }
