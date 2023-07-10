@@ -119,7 +119,7 @@ void MainWindow::on_actionOpen_triggered()
     if (dir.isEmpty())
         dir = QDir::homePath();
 
-    QString name = QFileDialog::getOpenFileName(this, "Choose Project", dir);//, "RPG Maker Project Files (*.rxproj *.rgssad *.rxdata);;");
+    QString name = QFileDialog::getOpenFileName(this, "Choose Project", dir, "RPG Maker Project Files (*.rxproj *.rgssad *.rxdata);;");
 
 
     QFileInfo fi(name);

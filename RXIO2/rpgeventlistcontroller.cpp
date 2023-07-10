@@ -19,6 +19,7 @@ RPGEventListController::RPGEventListController(RPGMapController *mc, QListWidget
     listwidget->setFont(font);
     listwidget->setSelectionMode(QListWidget::ContiguousSelection);
 
+    /*
     connect(listwidget, &QListWidget::itemSelectionChanged, [=](){
         int min = listwidget->count();
         int max = 0;
@@ -173,6 +174,7 @@ RPGEventListController::RPGEventListController(RPGMapController *mc, QListWidget
         this->old_min = min;
         this->old_max = max;
     });
+    */
 
     connect(listwidget, &QListWidget::itemDoubleClicked, this, [=](QListWidgetItem *item) {
         if (dynamic_cast<EventListItem*>(item) != nullptr)
