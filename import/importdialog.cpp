@@ -49,8 +49,8 @@ void ImportDialog::list_maps()
         columns << QString::number(toplevel_maps.at(i).toObject().value("@order").toInt()).rightJustified(3,'0');
         columns << QString::number(toplevel_maps.at(i).toObject().value("id").toInt());
         QTreeWidgetItem *item = new QTreeWidgetItem(columns);
-        item->setFlags(item->flags() | Qt::ItemIsUserCheckable);
-        item->setCheckState(0, Qt::Unchecked);
+        //item->setFlags(item->flags() | Qt::ItemIsUserCheckable);
+        //item->setCheckState(0, Qt::Unchecked);
         this->ui->treeWidget->addTopLevelItem(item);
         this->id_map.insert(toplevel_maps.at(i).toObject().value("id").toInt(), item);
         this->ui->treeWidget->expandItem(item);
@@ -75,8 +75,8 @@ void ImportDialog::list_maps()
                 columns << QString::number(non_toplevel_maps.at(i).toObject().value("@order").toInt()).rightJustified(3,'0');
                 columns << QString::number(non_toplevel_maps.at(i).toObject().value("id").toInt());
                 QTreeWidgetItem *item = new QTreeWidgetItem(columns);
-                item->setFlags(item->flags() | Qt::ItemIsUserCheckable);
-                item->setCheckState(0, Qt::Unchecked);
+                //item->setFlags(item->flags() | Qt::ItemIsUserCheckable);
+                //item->setCheckState(0, Qt::Unchecked);
                 this->id_map.value(non_toplevel_maps.at(i).toObject().value("@parent_id").toInt())->addChild(item);
                 this->id_map.insert(non_toplevel_maps.at(i).toObject().value("id").toInt(), item);
                 this->ui->treeWidget->expandItem(item);
@@ -102,7 +102,7 @@ void ImportDialog::display_maps()
 {
     if (secondary_db->get_mapfile_by_id(id) == 0)
         return;
-    QJsonObject map = secondary_db->get_mapfile_by_id(id)->object();
+    map = secondary_db->get_mapfile_by_id(id)->object();
     if (map.value("RXClass").toString() != "RPG::Map")
         return;
 
@@ -246,5 +246,37 @@ void ImportDialog::on_button_adjust_clicked()
     });
     connect(compare, SIGNAL(finished()), compare, SLOT(deleteLater()));
     compare->start();
+}
+
+
+void ImportDialog::on_button_import_w_tileset_clicked()
+{
+    int res = QMessageBox::question(this, "Import Tileset Graphic Files", "Do you want to import the graphic files of the other project?");
+    if (res == QMessageBox::Yes)
+    {
+
+        QJsonObject tileset = secondary_db->get_tileset_by_id(map.value("@tileset_id").toInt());
+        int new_tileset_id = db->add_tileset(tileset);
+
+        map.insert("@tileset_id", new_tileset_id);
+        RPGMapInfoController mic(db);
+        int id = mic.get_lowest_available_id();
+        mic.create_map_from_object(id, map);
+        mic.set_name(id, this->ui->treeWidget->currentItem()->text(0));
+
+
+        QFile file(FileOpener(secondary_db->tileset_dir, tileset.value("@tileset_name").toString()).get_image_path());
+        file.copy(db->tileset_dir + QFileInfo(file.fileName()).fileName());
+
+        for (int i = 0; i < 7; i++)
+        {
+            QFile file(FileOpener(secondary_db->autotiles_dir, tileset.value("@autotile_names").toArray().at(i).toString()).get_image_path());
+            file.copy(db->autotiles_dir + QFileInfo(file.fileName()).fileName());
+        }
+
+        emit finished();
+    }
+
+
 }
 

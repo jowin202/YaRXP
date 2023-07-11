@@ -135,6 +135,14 @@ QJsonObject RPGDB::get_tileset_by_id(int id)
     return this->tileset_file.array().at(id).toObject();
 }
 
+int RPGDB::add_tileset(QJsonObject tileset)
+{
+    QJsonArray array = this->tileset_file.array();
+    array.append(tileset);
+    this->tileset_file.setArray(array);
+    return array.count()-1; //returns new tileset id
+}
+
 QJsonArray RPGDB::get_switch_names()
 {
     return system_file.object().value("@switches").toArray();

@@ -9,6 +9,7 @@
 #include <QLabel>
 #include <QSettings>
 
+#include <QMessageBox>
 #include <QJsonObject>
 
 class RPGDB;
@@ -39,11 +40,14 @@ private slots:
     void on_treeWidget_currentItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *previous);
     void on_button_import_clicked();
     void on_button_adjust_clicked();
+    void on_button_import_w_tileset_clicked();
+
 private:
     Ui::ImportDialog *ui;
     RPGDB *db;
     RPGDB *secondary_db = 0;
 
+    QJsonObject map;
     QJsonObject adjusted_map;
 
     int id;
