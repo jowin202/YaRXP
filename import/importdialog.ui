@@ -74,7 +74,7 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>148</width>
+             <width>185</width>
              <height>570</height>
             </rect>
            </property>
@@ -98,7 +98,7 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>148</width>
+             <width>185</width>
              <height>570</height>
             </rect>
            </property>
@@ -120,7 +120,7 @@
          <item row="0" column="2">
           <widget class="QPushButton" name="button_import">
            <property name="text">
-            <string>Import</string>
+            <string>Import Right</string>
            </property>
           </widget>
          </item>
@@ -140,7 +140,7 @@
          <item row="0" column="1">
           <widget class="QPushButton" name="button_import_w_tileset">
            <property name="text">
-            <string>Import with Tileset</string>
+            <string>Import Left</string>
            </property>
           </widget>
          </item>

@@ -100,6 +100,9 @@ void ImportDialog::list_maps()
 
 void ImportDialog::display_maps()
 {
+    if (secondary_db == 0)
+        return;
+
     if (secondary_db->get_mapfile_by_id(id) == 0)
         return;
     map = secondary_db->get_mapfile_by_id(id)->object();
