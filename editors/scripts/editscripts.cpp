@@ -46,6 +46,45 @@ void EditScripts::setEC(RPGEditorController *ec)
     });
 }
 
+void EditScripts::export_all_scripts()
+{
+    QString dir = QFileDialog::getExistingDirectory(this, "Choose Script Export Location", ec->get_db()->project_dir);
+    if (dir.isEmpty())
+        return;
+
+    if (!dir.endsWith(QDir::separator()))
+        dir += QDir::separator();
+
+    int script_num = 0;
+    while (true)
+    {
+        QJsonArray array = ec->get_script_by_id(script_num);
+        if (array.count() < 3)
+            break; //probably not the best solution but it works
+
+
+        int uncompressed_size = array.at(0).toInt();
+
+        QByteArray buffer;
+        buffer = buffer.prepend(uncompressed_size&0xFF);
+        uncompressed_size >>= 8;
+        buffer = buffer.prepend(uncompressed_size&0xFF);
+        uncompressed_size >>= 8;
+        buffer = buffer.prepend(uncompressed_size&0xFF);
+        uncompressed_size >>= 8;
+        buffer = buffer.prepend(uncompressed_size&0xFF);
+
+        QString script_name = QString(QByteArray::fromBase64(array.at(1).toVariant().toByteArray()));
+        QString script_content = qUncompress(buffer + QByteArray::fromBase64(array.at(2).toVariant().toByteArray()));
+
+        QFile f(dir+QString("%1_%2.rb").arg(++script_num,3,10, QChar('0')).arg(script_name));
+        f.open(QIODevice::WriteOnly);
+
+        f.write(script_content.toUtf8());
+        f.close();
+    }
+}
+
 void EditScripts::save()
 {
     QJsonArray array = ec->get_script_by_id(ec->current_script);

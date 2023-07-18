@@ -2,6 +2,8 @@
 #define EDITSCRIPTS_H
 
 #include <QWidget>
+#include <QFileDialog>
+
 
 class Highlighter;
 class RPGEditorController;
@@ -19,6 +21,10 @@ public:
     ~EditScripts();
 
     void setEC(RPGEditorController *ec);
+
+
+public slots:
+    void export_all_scripts();
 
 private slots:
     void save();

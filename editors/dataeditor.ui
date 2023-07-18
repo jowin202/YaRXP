@@ -2007,20 +2007,6 @@
        <string>Scripts</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_16">
-       <item row="3" column="0">
-        <widget class="QPushButton" name="buttton_add_script">
-         <property name="text">
-          <string>Add</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="1">
-        <widget class="QPushButton" name="button_remove_script">
-         <property name="text">
-          <string>Remove</string>
-         </property>
-        </widget>
-       </item>
        <item row="1" column="0" colspan="2">
         <widget class="QListWidget" name="scripts_list">
          <property name="sizePolicy">
@@ -2146,9 +2132,6 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="2" rowspan="3">
-        <widget class="EditScripts" name="script_widget" native="true"/>
-       </item>
        <item row="3" column="2">
         <spacer name="horizontalSpacer_14">
          <property name="orientation">
@@ -2161,6 +2144,30 @@
           </size>
          </property>
         </spacer>
+       </item>
+       <item row="3" column="0">
+        <widget class="QPushButton" name="buttton_add_script">
+         <property name="text">
+          <string>Add</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QPushButton" name="button_remove_script">
+         <property name="text">
+          <string>Remove</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="3">
+        <widget class="QPushButton" name="scripts_export">
+         <property name="text">
+          <string>Export all Scripts</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="2" rowspan="3" colspan="2">
+        <widget class="EditScripts" name="script_widget" native="true"/>
        </item>
       </layout>
      </widget>
@@ -2252,8 +2259,28 @@
    <extends>QWidget</extends>
    <header>editors/scripts/editscripts.h</header>
    <container>1</container>
+   <slots>
+    <slot>export_all_scripts()</slot>
+   </slots>
   </customwidget>
  </customwidgets>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>scripts_export</sender>
+   <signal>clicked()</signal>
+   <receiver>script_widget</receiver>
+   <slot>export_all_scripts()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>979</x>
+     <y>478</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>824</x>
+     <y>221</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>
