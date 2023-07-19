@@ -17,21 +17,29 @@ void RPGDB::load_project(QString dir)
         dir += QDir::separator();
     }
     this->project_dir = dir;
-    this->data_dir = FileOpener(this->project_dir, "data").get_existing_directory();
-    this->audio_dir = FileOpener(this->project_dir, "audio").get_existing_directory();
+    this->data_dir = FileOpener(this->project_dir, "Data").get_existing_directory_or_create_it();
+    this->audio_dir = FileOpener(this->project_dir, "Audio").get_existing_directory_or_create_it();
 
-    this->audio_dir = FileOpener(this->project_dir, "audio").get_existing_directory();
-    this->bgm_dir = FileOpener(this->audio_dir, "bgm").get_existing_directory();
-    this->bgs_dir = FileOpener(this->audio_dir, "bgs").get_existing_directory();
-    this->me_dir = FileOpener(this->audio_dir, "me").get_existing_directory();
-    this->se_dir = FileOpener(this->audio_dir, "se").get_existing_directory();
-    this->graphics_dir = FileOpener(this->project_dir, "graphics").get_existing_directory();
-    this->tileset_dir = FileOpener(this->graphics_dir, "tilesets").get_existing_directory();
-    this->autotiles_dir = FileOpener(this->graphics_dir, "autotiles").get_existing_directory();
-    this->character_dir = FileOpener(this->graphics_dir, "characters").get_existing_directory();
-    this->battler_dir = FileOpener(this->graphics_dir, "battlers").get_existing_directory();
-    this->battleback_dir = FileOpener(this->graphics_dir, "battlebacks").get_existing_directory();
-    this->animations_dir = FileOpener(this->graphics_dir, "animations").get_existing_directory();
+    this->bgm_dir = FileOpener(this->audio_dir, "BGM").get_existing_directory_or_create_it();
+    this->bgs_dir = FileOpener(this->audio_dir, "BGS").get_existing_directory_or_create_it();
+    this->me_dir = FileOpener(this->audio_dir, "ME").get_existing_directory_or_create_it();
+    this->se_dir = FileOpener(this->audio_dir, "SE").get_existing_directory_or_create_it();
+    this->graphics_dir = FileOpener(this->project_dir, "Graphics").get_existing_directory_or_create_it();
+    this->tileset_dir = FileOpener(this->graphics_dir, "Tilesets").get_existing_directory_or_create_it();
+    this->autotiles_dir = FileOpener(this->graphics_dir, "Autotiles").get_existing_directory_or_create_it();
+    this->character_dir = FileOpener(this->graphics_dir, "Characters").get_existing_directory_or_create_it();
+    this->battler_dir = FileOpener(this->graphics_dir, "Battlers").get_existing_directory_or_create_it();
+    this->battleback_dir = FileOpener(this->graphics_dir, "Battlebacks").get_existing_directory_or_create_it();
+    this->animations_dir = FileOpener(this->graphics_dir, "Animations").get_existing_directory_or_create_it();
+    this->icons_dir = FileOpener(this->graphics_dir, "Icons").get_existing_directory_or_create_it();
+    this->pictures_dir = FileOpener(this->graphics_dir, "Pictures").get_existing_directory_or_create_it();
+    this->windowskins_dir = FileOpener(this->graphics_dir, "Windowskins").get_existing_directory_or_create_it();
+    this->transitions_dir = FileOpener(this->graphics_dir, "Transitions").get_existing_directory_or_create_it();
+    this->panoramas_dir = FileOpener(this->graphics_dir, "Panoramas").get_existing_directory_or_create_it();
+    this->fogs_dir = FileOpener(this->graphics_dir, "Fogs").get_existing_directory_or_create_it();
+    this->titles_dir = FileOpener(this->graphics_dir, "Titles").get_existing_directory_or_create_it();
+    this->gameovers_dir = FileOpener(this->graphics_dir, "Gameovers").get_existing_directory_or_create_it();
+
 
     Parser actor_parser(&actor_file,                FileOpener(this->data_dir,"Actors.rxdata").get_existing_file());
     Parser animation_parser(&animation_file,        FileOpener(this->data_dir,"Animations.rxdata").get_existing_file());
@@ -66,21 +74,6 @@ void RPGDB::load_project(QString dir)
             qDebug() << QString(this->data_dir + "Map%1.rxdata").arg(i,3,10,QChar('0')) << "does not exist";
         }
     }
-
-    /*
-    qDebug() << (actor_file.array().last().toObject() == Factory().create_new_actor(actor_file.array().last().toObject().value("@id").toInt()));
-    qDebug() << (class_file.array().last().toObject() == Factory().create_new_class(class_file.array().last().toObject().value("@id").toInt(), system_file.object().value("@elements").toArray().count(), state_file.array().count()) );
-    qDebug() << (skill_file.array().last().toObject() == Factory().create_new_skill(skill_file.array().last().toObject().value("@id").toInt()));
-    qDebug() << (item_file.array().last().toObject() == Factory().create_new_item(item_file.array().last().toObject().value("@id").toInt()));
-    qDebug() << (weapon_file.array().last().toObject() == Factory().create_new_weapon(weapon_file.array().last().toObject().value("@id").toInt()));
-    qDebug() << (armor_file.array().last().toObject() == Factory().create_new_armor(armor_file.array().last().toObject().value("@id").toInt()));
-    qDebug() << (enemy_file.array().last().toObject() == Factory().create_new_enemy(enemy_file.array().last().toObject().value("@id").toInt(), system_file.object().value("@elements").toArray().count(), state_file.array().count()) );
-    qDebug() << (troop_file.array().last().toObject() == Factory().create_new_troop(troop_file.array().last().toObject().value("@id").toInt()) );
-    qDebug() << (state_file.array().last().toObject() == Factory().create_new_state(state_file.array().last().toObject().value("@id").toInt()) );
-    qDebug() << (animation_file.array().last().toObject() == Factory().create_new_animation(animation_file.array().last().toObject().value("@id").toInt()) );
-    qDebug() << (tileset_file.array().last().toObject() == Factory().create_new_tileset(tileset_file.array().last().toObject().value("@id").toInt()) );
-    qDebug() << (common_event_file.array().last().toObject() == Factory().create_new_commonevent(common_event_file.array().last().toObject().value("@id").toInt()) );
-    */
 }
 
 void RPGDB::save_project()

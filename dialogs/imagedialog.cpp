@@ -23,72 +23,72 @@ ImageDialog::ImageDialog(RPGDB *db, int mode, QString current_image_file, QWidge
     switch (mode) {
     case EVENTPAGE:
         title = "Graphic";
-        folder_name = "Characters";
+        folder_name = db->character_dir;
         visible_hue = true;
         visible_options = true;
         break;
     case ANIMATIONS:
         title = "Animation Graphic";
-        folder_name = "Animations";
+        folder_name = db->animations_dir;
         visible_hue = true;
         break;
     case AUTOTILES:
         title = "Autotile Graphic";
-        folder_name = "Autotiles";
+        folder_name = db->autotiles_dir;
         break;
     case BATTLEBACKS:
         title = "Battleback Graphic";
-        folder_name = "Battlebacks";
+        folder_name = db->battleback_dir;
         break;
     case BATTLERS:
         title = "Battlers Graphic";
-        folder_name = "Battlers";
+        folder_name = db->battler_dir;
         visible_hue = true;
         break;
     case CHARACTERS:
         title = "Character Graphic";
-        folder_name = "Characters";
+        folder_name = db->character_dir;
         visible_hue = true;
         break;
     case FOGS:
         title = "Fog Graphic";
-        folder_name = "Fogs";
+        folder_name = db->fogs_dir;
         visible_hue = true;
         visible_fog_options = true;
         visible_options = true;
         break;
     case ICONS:
         title = "Icon Graphic";
-        folder_name = "Icons";
+        folder_name = db->icons_dir;
         break;
     case PANOMRAMAS:
         title = "Panorama Graphic";
-        folder_name = "Panoramas";
+        folder_name = db->panoramas_dir;
         visible_hue = true;
         break;
     case PICTURES:
         title = "Picture Graphic";
-        folder_name = "Pictures";
+        folder_name = db->pictures_dir;
         break;
     case TILESETS:
         title = "Tileset Graphic";
-        folder_name = "Tilesets";
+        folder_name = db->tileset_dir;
         break;
     case TITLES:
         title = "Title Graphic";
-        folder_name = "Titles";
+        folder_name = db->titles_dir;
         break;
     case TRANSITIONS:
         title = "Transition Graphic";
-        folder_name = "Transitions";
+        folder_name = db->transitions_dir;
         break;
     case WINDOWSKINS:
         title = "Windowskin Graphic";
-        folder_name = "Windowskins";
+        folder_name = db->windowskins_dir;
         break;
     case GAMEOVERS:
         title = "Gameover Graphic";
-        folder_name = "Gameovers";
+        folder_name = db->gameovers_dir;
         break;
     }
 
@@ -141,7 +141,7 @@ void ImageDialog::update_image_list()
     if (mode == EVENTPAGE)
         this->ui->list->addItem("(Tileset)");
 
-    QDir pics_dir(this->db->project_dir + "Graphics" + QDir::separator() + folder_name);
+    QDir pics_dir(folder_name);
 
     QStringList entries = pics_dir.entryList(QDir::Filter::NoFilter, QDir::SortFlag::Name);
     for (QString entry : entries)
@@ -204,7 +204,7 @@ void ImageDialog::on_button_cancel_clicked()
 
 void ImageDialog::on_list_currentRowChanged(int currentRow)
 {
-    this->current_img = QImage(db->project_dir + "Graphics" + QDir::separator() + this->folder_name + QDir::separator() + this->ui->list->item(currentRow)->text()).convertToFormat(QImage::Format_ARGB32);
+    this->current_img = QImage(this->folder_name + QDir::separator() + this->ui->list->item(currentRow)->text()).convertToFormat(QImage::Format_ARGB32);
     this->update_image();
 }
 

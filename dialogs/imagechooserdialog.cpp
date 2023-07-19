@@ -71,6 +71,9 @@ void ImageChooserDialog::update_image_list()
         this->ui->list->addItem("(Tileset)");
 
 
+    if (this->db->character_dir == "")
+        return; //no more entries if there is no character dir
+
     QDir pics_dir(this->db->character_dir);
 
     QStringList entries = pics_dir.entryList(QDir::Filter::Files | QDir::Filter::NoDotAndDotDot, QDir::SortFlag::Name);

@@ -10,13 +10,35 @@ QString FileOpener::get_existing_directory()
 {
     QDir dir(path);
     QFileInfoList files = dir.entryInfoList(QStringList(name), QDir::NoDotAndDotDot | QDir::Dirs);
-
-
     if (files.length() == 0) return QString();
 
     QString fullpath = files.at(0).absoluteFilePath();
     if (!fullpath.endsWith(QDir::separator()))
         fullpath += QDir::separator();
+
+    return fullpath;
+}
+
+QString FileOpener::get_existing_directory_or_create_it()
+{
+    QDir dir(path);
+    QFileInfoList files = dir.entryInfoList(QStringList(name), QDir::NoDotAndDotDot | QDir::Dirs);
+    QString fullpath;
+
+    if (files.length() == 0)
+    {
+        if (path.endsWith(QDir::separator()))
+            fullpath = path + name;
+        else
+            fullpath = path + QDir::separator() + name;
+        QDir().mkdir(fullpath);
+    }
+    else
+    {
+        fullpath = files.at(0).absoluteFilePath();
+        if (!fullpath.endsWith(QDir::separator()))
+            fullpath += QDir::separator();
+    }
 
     return fullpath;
 }

@@ -108,6 +108,14 @@ public:
     QString battler_dir;
     QString battleback_dir;
     QString animations_dir;
+    QString icons_dir;
+    QString pictures_dir;
+    QString windowskins_dir;
+    QString transitions_dir;
+    QString panoramas_dir;
+    QString fogs_dir;
+    QString titles_dir;
+    QString gameovers_dir;
 
 
     void set_files(
