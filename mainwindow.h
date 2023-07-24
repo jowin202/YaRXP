@@ -98,6 +98,8 @@ private slots:
 
     void on_actionSave_Map_Pic_triggered();
 
+    void on_actionExport_Maps_to_Godot_triggered();
+
 private:
     Ui::MainWindow *ui;
     QActionGroup *layergroup;

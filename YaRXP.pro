@@ -133,6 +133,7 @@ SOURCES += \
     events/eventlistitem.cpp \
     events/eventpage.cpp \
     events/commands/moveroutedialog.cpp \
+    export/godotexporter.cpp \
     import/importdialog.cpp \
     import/importscreenshotdialog.cpp \
     import/screenshotanalysisthread.cpp \
@@ -267,6 +268,7 @@ HEADERS += \
     events/eventlistitem.h \
     events/eventpage.h \
     events/commands/moveroutedialog.h \
+    export/godotexporter.h \
     import/importdialog.h \
     import/importscreenshotdialog.h \
     import/screenshotanalysisthread.h \

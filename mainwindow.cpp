@@ -5,6 +5,7 @@
 #include "RXIO2/rpgeditorcontroller.h"
 #include "RXIO2/iorgssad.h"
 
+#include"export/godotexporter.h"
 
 #include "PBS/pbseditor.h"
 
@@ -474,5 +475,13 @@ void MainWindow::on_actionSave_Map_Pic_triggered()
     this->ui->mapView->opt.layer = layer;
     painter.end();
     img.save(path);
+}
+
+
+void MainWindow::on_actionExport_Maps_to_Godot_triggered()
+{
+    QString path = QFileDialog::getExistingDirectory(this, "Export to Directory", QDir::homePath());
+    if (path != "")
+        GodotExporter(&this->db, path);
 }
 
