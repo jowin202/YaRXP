@@ -75,7 +75,7 @@ void GodotExporter::write_to_file(int id, QString name)
     QJsonObject map = db->get_mapfile_by_id(id)->object();
     QJsonObject tileset = db->get_tileset_by_id(map.value("@tileset_id").toInt());
 
-    int max_y = tileset.value("@passages").toObject().value("values").toArray().count()-384;
+    int max_y = (tileset.value("@passages").toObject().value("values").toArray().count()-384 -1)/8+1;
     int height = map.value("@height").toInt();
     int width = map.value("@width").toInt();
     QJsonArray tiles = map.value("@data").toObject().value("values").toArray();
@@ -121,6 +121,7 @@ void GodotExporter::write_to_file(int id, QString name)
 
 
     f.write(QString("[node name=\"" + name + "\" type=\"TileMap\"]\n").toUtf8());
+    f.write(QString("texture_filter = 5\n").toUtf8());
     f.write(QString("position = Vector2(0, 0)\n").toUtf8());
     f.write(QString("tile_set = SubResource(\"" + Tileset_id + "\")\n").toUtf8());
     f.write(QString("format = 2\n").toUtf8());
@@ -129,7 +130,7 @@ void GodotExporter::write_to_file(int id, QString name)
 
     QString tiledata;
 
-    tiledata = "layer_0/tile_data = PackedInt32Array(";
+    tiledata = "";
     for (int y = 0; y < height; y++)
     {
         for (int x = 0; x < width; x++)
@@ -143,6 +144,7 @@ void GodotExporter::write_to_file(int id, QString name)
         }
     }
     tiledata.chop(2);
+    tiledata = "layer_0/tile_data = PackedInt32Array(" + tiledata;
     tiledata += ")\n";
     f.write(tiledata.toUtf8());
 
@@ -153,7 +155,7 @@ void GodotExporter::write_to_file(int id, QString name)
     f.write(QString("layer_1/y_sort_origin = 0\n").toUtf8());
     f.write(QString("layer_1/z_index = 0\n").toUtf8());
 
-    tiledata = "layer_1/tile_data = PackedInt32Array(";
+    tiledata = "";
     for (int y = 0; y < height; y++)
     {
         for (int x = 0; x < width; x++)
@@ -167,6 +169,7 @@ void GodotExporter::write_to_file(int id, QString name)
         }
     }
     tiledata.chop(2);
+    tiledata = "layer_1/tile_data = PackedInt32Array(" + tiledata;
     tiledata += ")\n";
     f.write(tiledata.toUtf8());
 
@@ -177,7 +180,7 @@ void GodotExporter::write_to_file(int id, QString name)
     f.write(QString("layer_2/y_sort_origin = 0\n").toUtf8());
     f.write(QString("layer_2/z_index = 0\n").toUtf8());
 
-    tiledata = "layer_2/tile_data = PackedInt32Array(";
+    tiledata = "";
     for (int y = 0; y < height; y++)
     {
         for (int x = 0; x < width; x++)
@@ -191,6 +194,7 @@ void GodotExporter::write_to_file(int id, QString name)
         }
     }
     tiledata.chop(2);
+    tiledata = "layer_2/tile_data = PackedInt32Array(" + tiledata;
     tiledata += ")\n";
     f.write(tiledata.toUtf8());
 
@@ -202,5 +206,5 @@ QString GodotExporter::random_id()
 {
     QCryptographicHash hash(QCryptographicHash::Sha3_512);
     hash.addData(QString::number(QDateTime::currentMSecsSinceEpoch() + (counter++)).toUtf8());
-    return QString(hash.result().toBase64().replace("+","").replace("/", "").mid(0,16));
+    return QString(hash.result().toBase64().replace("+","").replace("/", "").mid(0,13));
 }
