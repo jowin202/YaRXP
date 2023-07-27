@@ -17,9 +17,11 @@ public:
     int array_position(int x, int y, int layer, int width, int height)
     {return x + y * width + height * width * layer;}
 
-    void create_dir_structure();
-    void write_to_file(int id, QString name);
+    QString create_tileset(QString name);
+    QString create_autotile(QString name);
 
+    void create_dir_structure();
+    void write_map_to_file(int id, QString name);
 
     QString random_id();
 
@@ -29,6 +31,8 @@ private:
     QString path;
     QMap <int,QString> map_id_to_dir;
 
+    QMap<QString,QString> imported_tilesets;
+    QMap<QString,QString> imported_autotiles;
 
     int counter = 0;
 
