@@ -38,14 +38,15 @@ QString GodotExporter::create_tileset(QString name)
     }
 }
 
-QString GodotExporter::create_autotile(QString name)
+QVariantList GodotExporter::create_autotile(QString name)
 {
     if (this->imported_autotiles.contains(name))
         return this->imported_autotiles.value(name);
     else
     {
+        QVariantList params;
+        params << this->random_id() << this->random_id() << this->random_id(); //3 IDs
 
-        QString id = this->random_id();
         QImage autotile_image = FileOpener(db->autotiles_dir, name).get_image();
 
         if (autotile_image.width() == 96 && autotile_image.height() == 128)
@@ -53,6 +54,7 @@ QString GodotExporter::create_autotile(QString name)
             //standard
             Autotileset autotileset(FileOpener(db->autotiles_dir, name).get_image());
             autotileset.get_full_tileset().save(path + "Graphics" + QDir::separator() + "Autotiles" + QDir::separator() + name + ".png");
+            params << 1; //standard autotile with no animation
         }
         else if (autotile_image.height() == 128 && autotile_image.width() >= 96)
         {
@@ -68,8 +70,8 @@ QString GodotExporter::create_autotile(QString name)
                 painter.drawImage(256*i, 0, autotileset.get_full_tileset());
             }
             painter.end();
-
             result.save(path + "Graphics" + QDir::separator() + "Autotiles" + QDir::separator() + name + ".png");
+            params << num; //num of animations
         }
         else if (autotile_image.height() == 32)
         {
@@ -91,6 +93,7 @@ QString GodotExporter::create_autotile(QString name)
             }
             painter.end();
             result.save(path + "Graphics" + QDir::separator() + "Autotiles" + QDir::separator() + name + ".png");
+            params << num; //num of animations
         }
         else
         {
@@ -98,11 +101,11 @@ QString GodotExporter::create_autotile(QString name)
             //just in case
             Autotileset autotileset(FileOpener(db->autotiles_dir, name).get_image());
             autotileset.get_full_tileset().save(path + "Graphics" + QDir::separator() + "Autotiles" + QDir::separator() + name + ".png");
+            params << 1; //num of animations
         }
 
-
-        this->imported_autotiles.insert(name, id);
-        return id;
+        this->imported_autotiles.insert(name, params);
+        return params;
     }
 }
 
@@ -182,25 +185,29 @@ void GodotExporter::write_map_to_file(int id, QString name)
     QString Texture2D_id = this->random_id();
     QString TileSetAtlasSource_id = this->random_id();
     QString Tileset_id = this->random_id();
-    QStringList autotile_ids;
 
     //AUTOTILES
+    int num_autotiles = 0;
+    QString autotiles_resources_import = "";
     QJsonArray autotile_names = tileset.value("@autotile_names").toArray();
     for (int i = 0; i < autotile_names.count(); i++)
     {
         if (autotile_names.at(i).toString() == "")
             continue;
 
-        QString id = this->create_autotile(autotile_names.at(i).toString());
-        if (!autotile_ids.contains(id))
-            autotile_ids.append(id);
+        num_autotiles++;
+        QVariantList ids = this->create_autotile(autotile_names.at(i).toString());
+        autotiles_resources_import += QString("[ext_resource type=\"Texture2D\" uid=\"uid://" + ids.at(0).toString() + "\" path=\"res://Graphics/Autotiles/" +
+                                              autotile_names.at(i).toString() +".png\" id=\"" + ids.at(1).toString() + "\"]\n");
+
     }
 
 
 
 
-    f.write(QString("[gd_scene load_steps=4 format=3 uid=\"uid://" + scene_uid + "\"]\n\n").toUtf8());
+    f.write(QString("[gd_scene load_steps=" + QString::number(4+num_autotiles*2) + " format=3 uid=\"uid://" + scene_uid + "\"]\n\n").toUtf8());
 
+    f.write(autotiles_resources_import.toUtf8());
     f.write(QString("[ext_resource type=\"Texture2D\" uid=\"uid://" + Texture2D_uid + "\" path=\"res://Graphics/Tilesets/" +
                     tileset.value("@tileset_name").toString() +".png\" id=\"" + Texture2D_id + "\"]\n\n").toUtf8());
 
@@ -224,11 +231,64 @@ void GodotExporter::write_map_to_file(int id, QString name)
         }
     }
 
+    for (int i = 0; i < autotile_names.count(); i++)
+    {
+        if (autotile_names.at(i).toString() == "")
+            continue;
+
+        QVariantList ids = this->imported_autotiles.value(autotile_names.at(i).toString());
+        if (ids.count() != 4)
+        {
+            qDebug() << "error";
+            exit(67); // should never happen
+        }
+
+
+        f.write(QString("\n\n[sub_resource type=\"TileSetAtlasSource\" id=\"" + ids.at(2).toString() +"\"]\n").toUtf8());
+        f.write(QString("texture = ExtResource(\"" + ids.at(1).toString() + "\")\n").toUtf8());
+        f.write(QString("texture_region_size = Vector2i(32, 32)\n").toUtf8());
+        f.write(QString("use_texture_padding = false\n").toUtf8());
+
+
+        for (int y = 0; y < 6; y++)
+        {
+            for (int x = 0; x < 8; x++)
+            {
+                int animation_frames = ids.at(3).toInt();
+                if (animation_frames > 1)
+                {
+                    f.write(QString("%1:%2/animation_columns = " + QString::number(animation_frames) + "\n").arg(x).arg(y).toUtf8());
+                    f.write(QString("%1:%2/animation_separation = Vector2i(7, 0)\n").arg(x).arg(y).toUtf8());
+                    for (int i = 0; i < animation_frames; i++)
+                        f.write(QString("%1:%2/animation_frame_" + QString::number(i) + "/duration = 1.0\n").arg(x).arg(y).toUtf8());
+                }
+                f.write(QString("%1:%2/0 = 0\n").arg(x).arg(y).toUtf8());
+                f.write(QString("%1:%2/0/physics_layer_0/linear_velocity = Vector2(0, 0)\n").arg(x).arg(y).toUtf8());
+                f.write(QString("%1:%2/0/physics_layer_0/angular_velocity = 0.0\n").arg(x).arg(y).toUtf8());
+                if ((passages.at(48*(i+1) + 8*y + x).toInt() & 0xF) > 0)
+                    f.write(QString("%1:%2/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)\n").arg(x).arg(y).toUtf8());
+                if (priorities.at(48*(i+1) + 8*y + x).toInt() > 0)
+                    f.write(QString("%1:%2/0/z_index = %3\n").arg(x).arg(y).arg(priorities.at(384 + 8*y + x).toInt()).toUtf8());
+            }
+        }
+    }
+
 
     f.write(QString("\n[sub_resource type=\"TileSet\" id=\"" + Tileset_id + "\"]\n").toUtf8());
     f.write(QString("tile_size = Vector2i(32, 32)\n").toUtf8());
     f.write(QString("physics_layer_0/collision_layer = 1\n").toUtf8());
-    f.write(QString("sources/0 = SubResource(\"" + TileSetAtlasSource_id + "\")\n\n").toUtf8());
+    f.write(QString("sources/0 = SubResource(\"" + TileSetAtlasSource_id + "\")\n\n").toUtf8()); //main tileset
+
+    for (int i = 0; i < autotile_names.count(); i++)
+    {
+        if (autotile_names.at(i).toString() == "")
+            continue;
+
+        QVariantList ids = imported_autotiles.value(autotile_names.at(i).toString());
+        if (ids.count() != 4) exit(678);
+        f.write(QString("sources/" + QString::number(i+1) + " = SubResource(\"" + ids.at(2).toString() + "\")\n\n").toUtf8()); //main tileset
+
+    }
 
 
     f.write(QString("[node name=\"" + name + "\" type=\"TileMap\"]\n").toUtf8());
@@ -247,11 +307,18 @@ void GodotExporter::write_map_to_file(int id, QString name)
         for (int x = 0; x < width; x++)
         {
             int tile_id = tiles.at(array_position(x,y,0,width,height)).toInt();
-            if (tile_id < 384) continue;
-
-            tile_id -= 384;
-
-            tiledata += QString("%1, %2, %3, ").arg(x+65536*y).arg(65536*(tile_id%8)).arg(tile_id/8);
+            if (tile_id < 48)
+                continue; //do nothing
+            else if (tile_id < 384) //autotile
+            {
+                int autotile_id = tile_id/48; //between 1 and 7
+                tiledata += QString("%1, %2, %3, ").arg(x+65536*y).arg(65536*(tile_id%8) + autotile_id).arg( (tile_id % 48)/8);
+            }
+            else
+            {
+                tile_id -= 384;
+                tiledata += QString("%1, %2, %3, ").arg(x+65536*y).arg(65536*(tile_id%8)).arg(tile_id/8);
+            }
         }
     }
     tiledata.chop(2);
@@ -272,11 +339,18 @@ void GodotExporter::write_map_to_file(int id, QString name)
         for (int x = 0; x < width; x++)
         {
             int tile_id = tiles.at(array_position(x,y,1,width,height)).toInt();
-            if (tile_id < 384) continue;
-
-            tile_id -= 384;
-
-            tiledata += QString("%1, %2, %3, ").arg(x+65536*y).arg(65536*(tile_id%8)).arg(tile_id/8);
+            if (tile_id < 48)
+                continue; //do nothing
+            else if (tile_id < 384) //autotile
+            {
+                int autotile_id = tile_id/48; //between 1 and 7
+                tiledata += QString("%1, %2, %3, ").arg(x+65536*y).arg(65536*(tile_id%8) + autotile_id).arg( (tile_id % 48)/8);
+            }
+            else
+            {
+                tile_id -= 384;
+                tiledata += QString("%1, %2, %3, ").arg(x+65536*y).arg(65536*(tile_id%8)).arg(tile_id/8);
+            }
         }
     }
     tiledata.chop(2);
@@ -297,11 +371,18 @@ void GodotExporter::write_map_to_file(int id, QString name)
         for (int x = 0; x < width; x++)
         {
             int tile_id = tiles.at(array_position(x,y,2,width,height)).toInt();
-            if (tile_id < 384) continue;
-
-            tile_id -= 384;
-
-            tiledata += QString("%1, %2, %3, ").arg(x+65536*y).arg(65536*(tile_id%8)).arg(tile_id/8);
+            if (tile_id < 48)
+                continue; //do nothing
+            else if (tile_id < 384) //autotile
+            {
+                int autotile_id = tile_id/48; //between 1 and 7
+                tiledata += QString("%1, %2, %3, ").arg(x+65536*y).arg(65536*(tile_id%8) + autotile_id).arg( (tile_id % 48)/8);
+            }
+            else
+            {
+                tile_id -= 384;
+                tiledata += QString("%1, %2, %3, ").arg(x+65536*y).arg(65536*(tile_id%8)).arg(tile_id/8);
+            }
         }
     }
     tiledata.chop(2);

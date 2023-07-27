@@ -18,7 +18,7 @@ public:
     {return x + y * width + height * width * layer;}
 
     QString create_tileset(QString name);
-    QString create_autotile(QString name);
+    QVariantList create_autotile(QString name);
 
     void create_dir_structure();
     void write_map_to_file(int id, QString name);
@@ -32,7 +32,7 @@ private:
     QMap <int,QString> map_id_to_dir;
 
     QMap<QString,QString> imported_tilesets;
-    QMap<QString,QString> imported_autotiles;
+    QMap<QString,QVariantList> imported_autotiles;
 
     int counter = 0;
 
