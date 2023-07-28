@@ -16,25 +16,142 @@ GodotExporter::GodotExporter(RPGDB *db, QString path)
     this->create_dir_structure();
 }
 
-QString GodotExporter::create_tileset(QString name)
+QString GodotExporter::create_tileset(int tileset_id, QJsonObject tileset)
 {
-    if (this->imported_tilesets.contains(name))
-        return this->imported_tilesets.value(name);
+    QString filename = tileset.value("@name").toString();
+    QString name = tileset.value("@tileset_name").toString();
+
+    QJsonArray passages = tileset.value("@passages").toObject().value("values").toArray();
+    QJsonArray priorities = tileset.value("@priorities").toObject().value("values").toArray();
+    int max_y = (passages.count()-384 -1)/8+1;
+    QString global_tileset_hash = (this->pseudorandom_id(QString::number(tileset_id,10) + filename));
+    QString tileset_path = path + "Graphics" + QDir::separator() + "Tilesets" + QDir::separator() + filename + ".tres";
+
+    QJsonArray autotile_names = tileset.value("@autotile_names").toArray();
+    int num_autotiles = 0;
+    for (int i = 0; i < autotile_names.count(); i++)
+    {
+        if (autotile_names.at(i).toString() != "")
+            num_autotiles++;
+    }
+
+
+
+    if (this->imported_tilesets.contains(filename))
+        return this->imported_tilesets.value(filename);
     else
     {
-        QString id = this->random_id();
+        //QString id = this->random_id();
         QFile f(FileOpener(db->tileset_dir, name).get_image_path());
         f.copy(path + "Graphics" + QDir::separator() + "Tilesets" + QDir::separator() + name + ".png");
 
-        /*
-        QFile f2(f.fileName() + ".import");
+        QFile f2(tileset_path);
         f2.open(QIODevice::WriteOnly);
-        f2.write(QString("[remap]\n\nimporter=\"texture\"\ntype=\"CompressedTexture2D\"uid=\"uid://" + id + "\"").toUtf8());
-        f2.close();
-        */
+        QTextStream tileset_file_input(&f2);
+        tileset_file_input << "[gd_resource type=\"TileSet\" load_steps=" << QString::number(1+2+2*num_autotiles) << " format=3 uid=\"uid://" << global_tileset_hash << "\"]\n\n";
+        tileset_file_input << "[ext_resource type=\"Texture2D\" path=\"res://Graphics/Tilesets/" << name << ".png\" id=\"" << this->pseudorandom_id(name) << "\"]\n";
 
-        this->imported_tilesets.insert(name, id);
-        return id;
+        for (int i = 0; i < autotile_names.count(); i++)
+        {
+            if (autotile_names.at(i).toString() == "") continue;
+            tileset_file_input << QString("[ext_resource type=\"Texture2D\" path=\"res://Graphics/Autotiles/" +
+                                                  autotile_names.at(i).toString() +".png\" id=\"" + this->pseudorandom_id(autotile_names.at(i).toString()) + "\"]\n");
+        }
+
+        tileset_file_input << "\n";
+
+
+        //Main Tileset
+        tileset_file_input << "[sub_resource type=\"TileSetAtlasSource\" id=\"" + this->pseudorandom_id(this->pseudorandom_id(name)) <<"\"]\n";
+        tileset_file_input << "texture = ExtResource(\"" << this->pseudorandom_id(name) << "\")\n";
+        tileset_file_input << "texture_region_size = Vector2i(32, 32)\n";
+        tileset_file_input << "use_texture_padding = false\n";
+
+        for (int y = 0; y < max_y; y++)
+        {
+            for (int x = 0; x < 8; x++)
+            {
+                tileset_file_input << QString("%1:%2/0 = 0\n").arg(x).arg(y);
+                tileset_file_input << QString("%1:%2/0/physics_layer_0/linear_velocity = Vector2(0, 0)\n").arg(x).arg(y);
+                tileset_file_input << QString("%1:%2/0/physics_layer_0/angular_velocity = 0.0\n").arg(x).arg(y);
+                if ((passages.at(384 + 8*y + x).toInt() & 0xF) > 0)
+                    tileset_file_input << QString("%1:%2/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)\n").arg(x).arg(y);
+                if (priorities.at(384 + 8*y + x).toInt() > 0)
+                    tileset_file_input << QString("%1:%2/0/z_index = %3\n").arg(x).arg(y).arg(priorities.at(384 + 8*y + x).toInt());
+            }
+        }
+
+        tileset_file_input << "\n";
+
+
+        //autotiles
+        for (int i = 0; i < autotile_names.count(); i++)
+        {
+            if (autotile_names.at(i).toString() == "") continue;
+
+            QVariantList ids = this->create_autotile(autotile_names.at(i).toString());
+
+            if (ids.count() != 4)
+            {
+                qDebug() << "error";
+                exit(67); // should never happen
+            }
+
+
+            tileset_file_input << "[sub_resource type=\"TileSetAtlasSource\" id=\"" << ids.at(2).toString() << "\"]\n";
+            tileset_file_input << "texture = ExtResource(\"" << this->pseudorandom_id(autotile_names.at(i).toString()) << "\")\n";
+            tileset_file_input << "texture_region_size = Vector2i(32, 32)\n";
+            tileset_file_input << "use_texture_padding = false\n";
+
+
+            for (int y = 0; y < 6; y++)
+            {
+                for (int x = 0; x < 8; x++)
+                {
+                    int animation_frames = ids.at(3).toInt();
+                    if (animation_frames > 1)
+                    {
+                        tileset_file_input << QString("%1:%2/animation_columns = " + QString::number(animation_frames) + "\n").arg(x).arg(y);
+                        tileset_file_input << QString("%1:%2/animation_separation = Vector2i(7, 0)\n").arg(x).arg(y);
+                        for (int i = 0; i < animation_frames; i++)
+                            tileset_file_input << QString("%1:%2/animation_frame_" + QString::number(i) + "/duration = 1.0\n").arg(x).arg(y);
+                    }
+                    tileset_file_input << QString("%1:%2/0 = 0\n").arg(x).arg(y);
+                    tileset_file_input << QString("%1:%2/0/physics_layer_0/linear_velocity = Vector2(0, 0)\n").arg(x).arg(y);
+                    tileset_file_input << QString("%1:%2/0/physics_layer_0/angular_velocity = 0.0\n").arg(x).arg(y);
+                    if ((passages.at(48*(i+1) + 8*y + x).toInt() & 0xF) > 0)
+                        tileset_file_input << QString("%1:%2/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)\n").arg(x).arg(y);
+                    if (priorities.at(48*(i+1) + 8*y + x).toInt() > 0)
+                        tileset_file_input << QString("%1:%2/0/z_index = %3\n").arg(x).arg(y).arg(priorities.at(384 + 8*y + x).toInt());
+                }
+            }
+            tileset_file_input << "\n";
+        }
+
+
+
+        tileset_file_input << "[resource]\n";
+        tileset_file_input << "tile_size = Vector2i(32, 32)\n";
+        tileset_file_input << "physics_layer_0/collision_layer = 1\n";
+        tileset_file_input << "sources/0 = SubResource(\"" << this->pseudorandom_id(this->pseudorandom_id(name)) << "\")\n";
+
+        for (int i = 0; i < autotile_names.count(); i++)
+        {
+            if (autotile_names.at(i).toString() == "")
+                continue;
+
+            QVariantList ids = imported_autotiles.value(autotile_names.at(i).toString());
+            if (ids.count() != 4) exit(678);
+            tileset_file_input <<  "sources/" << QString::number(i+1) << " = SubResource(\"" << ids.at(2).toString() << "\")\n";
+
+        }
+
+        f2.close();
+
+
+
+        this->imported_tilesets.insert(filename, global_tileset_hash);
+        return global_tileset_hash;
     }
 }
 
@@ -171,9 +288,10 @@ void GodotExporter::write_map_to_file(int id, QString name)
 
 
     QJsonObject map = db->get_mapfile_by_id(id)->object();
-    QJsonObject tileset = db->get_tileset_by_id(map.value("@tileset_id").toInt());
+    int tileset_id = map.value("@tileset_id").toInt();
+    QJsonObject tileset = db->get_tileset_by_id(tileset_id);
 
-    int max_y = (tileset.value("@passages").toObject().value("values").toArray().count()-384 -1)/8+1;
+    //int max_y = (tileset.value("@passages").toObject().value("values").toArray().count()-384 -1)/8+1;
     int height = map.value("@height").toInt();
     int width = map.value("@width").toInt();
     QJsonArray tiles = map.value("@data").toObject().value("values").toArray();
@@ -181,120 +299,21 @@ void GodotExporter::write_map_to_file(int id, QString name)
     QJsonArray priorities = tileset.value("@priorities").toObject().value("values").toArray();
 
     QString scene_uid = this->random_id();
-    QString Texture2D_uid = this->create_tileset(tileset.value("@tileset_name").toString()); //this->random_id();
+    QString tileset_uid = this->create_tileset(tileset_id, tileset);
+    QString tileset_filename = tileset.value("@name").toString();
     QString Texture2D_id = this->random_id();
     QString TileSetAtlasSource_id = this->random_id();
     QString Tileset_id = this->random_id();
 
-    //AUTOTILES
-    int num_autotiles = 0;
-    QString autotiles_resources_import = "";
-    QJsonArray autotile_names = tileset.value("@autotile_names").toArray();
-    for (int i = 0; i < autotile_names.count(); i++)
-    {
-        if (autotile_names.at(i).toString() == "")
-            continue;
 
-        num_autotiles++;
-        QVariantList ids = this->create_autotile(autotile_names.at(i).toString());
-        autotiles_resources_import += QString("[ext_resource type=\"Texture2D\" uid=\"uid://" + ids.at(0).toString() + "\" path=\"res://Graphics/Autotiles/" +
-                                              autotile_names.at(i).toString() +".png\" id=\"" + ids.at(1).toString() + "\"]\n");
+    f.write(QString("[gd_scene load_steps=2 format=3 uid=\"uid://" + scene_uid + "\"]\n\n").toUtf8());
 
-    }
-
-
-
-
-    f.write(QString("[gd_scene load_steps=" + QString::number(4+num_autotiles*2) + " format=3 uid=\"uid://" + scene_uid + "\"]\n\n").toUtf8());
-
-    f.write(autotiles_resources_import.toUtf8());
-    f.write(QString("[ext_resource type=\"Texture2D\" uid=\"uid://" + Texture2D_uid + "\" path=\"res://Graphics/Tilesets/" +
-                    tileset.value("@tileset_name").toString() +".png\" id=\"" + Texture2D_id + "\"]\n\n").toUtf8());
-
-    f.write(QString("[sub_resource type=\"TileSetAtlasSource\" id=\"" + TileSetAtlasSource_id +"\"]\n").toUtf8());
-    f.write(QString("texture = ExtResource(\"" + Texture2D_id + "\")\n").toUtf8());
-    f.write(QString("texture_region_size = Vector2i(32, 32)\n").toUtf8());
-    f.write(QString("use_texture_padding = false\n").toUtf8());
-
-
-    for (int y = 0; y < max_y; y++)
-    {
-        for (int x = 0; x < 8; x++)
-        {
-            f.write(QString("%1:%2/0 = 0\n").arg(x).arg(y).toUtf8());
-            f.write(QString("%1:%2/0/physics_layer_0/linear_velocity = Vector2(0, 0)\n").arg(x).arg(y).toUtf8());
-            f.write(QString("%1:%2/0/physics_layer_0/angular_velocity = 0.0\n").arg(x).arg(y).toUtf8());
-            if ((passages.at(384 + 8*y + x).toInt() & 0xF) > 0)
-                f.write(QString("%1:%2/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)\n").arg(x).arg(y).toUtf8());
-            if (priorities.at(384 + 8*y + x).toInt() > 0)
-                f.write(QString("%1:%2/0/z_index = %3\n").arg(x).arg(y).arg(priorities.at(384 + 8*y + x).toInt()).toUtf8());
-        }
-    }
-
-    for (int i = 0; i < autotile_names.count(); i++)
-    {
-        if (autotile_names.at(i).toString() == "")
-            continue;
-
-        QVariantList ids = this->imported_autotiles.value(autotile_names.at(i).toString());
-        if (ids.count() != 4)
-        {
-            qDebug() << "error";
-            exit(67); // should never happen
-        }
-
-
-        f.write(QString("\n\n[sub_resource type=\"TileSetAtlasSource\" id=\"" + ids.at(2).toString() +"\"]\n").toUtf8());
-        f.write(QString("texture = ExtResource(\"" + ids.at(1).toString() + "\")\n").toUtf8());
-        f.write(QString("texture_region_size = Vector2i(32, 32)\n").toUtf8());
-        f.write(QString("use_texture_padding = false\n").toUtf8());
-
-
-        for (int y = 0; y < 6; y++)
-        {
-            for (int x = 0; x < 8; x++)
-            {
-                int animation_frames = ids.at(3).toInt();
-                if (animation_frames > 1)
-                {
-                    f.write(QString("%1:%2/animation_columns = " + QString::number(animation_frames) + "\n").arg(x).arg(y).toUtf8());
-                    f.write(QString("%1:%2/animation_separation = Vector2i(7, 0)\n").arg(x).arg(y).toUtf8());
-                    for (int i = 0; i < animation_frames; i++)
-                        f.write(QString("%1:%2/animation_frame_" + QString::number(i) + "/duration = 1.0\n").arg(x).arg(y).toUtf8());
-                }
-                f.write(QString("%1:%2/0 = 0\n").arg(x).arg(y).toUtf8());
-                f.write(QString("%1:%2/0/physics_layer_0/linear_velocity = Vector2(0, 0)\n").arg(x).arg(y).toUtf8());
-                f.write(QString("%1:%2/0/physics_layer_0/angular_velocity = 0.0\n").arg(x).arg(y).toUtf8());
-                if ((passages.at(48*(i+1) + 8*y + x).toInt() & 0xF) > 0)
-                    f.write(QString("%1:%2/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)\n").arg(x).arg(y).toUtf8());
-                if (priorities.at(48*(i+1) + 8*y + x).toInt() > 0)
-                    f.write(QString("%1:%2/0/z_index = %3\n").arg(x).arg(y).arg(priorities.at(384 + 8*y + x).toInt()).toUtf8());
-            }
-        }
-    }
-
-
-    f.write(QString("\n[sub_resource type=\"TileSet\" id=\"" + Tileset_id + "\"]\n").toUtf8());
-    f.write(QString("tile_size = Vector2i(32, 32)\n").toUtf8());
-    f.write(QString("physics_layer_0/collision_layer = 1\n").toUtf8());
-    f.write(QString("sources/0 = SubResource(\"" + TileSetAtlasSource_id + "\")\n\n").toUtf8()); //main tileset
-
-    for (int i = 0; i < autotile_names.count(); i++)
-    {
-        if (autotile_names.at(i).toString() == "")
-            continue;
-
-        QVariantList ids = imported_autotiles.value(autotile_names.at(i).toString());
-        if (ids.count() != 4) exit(678);
-        f.write(QString("sources/" + QString::number(i+1) + " = SubResource(\"" + ids.at(2).toString() + "\")\n\n").toUtf8()); //main tileset
-
-    }
-
+    f.write(QString("[ext_resource type=\"TileSet\" path=\"res://Graphics/Tilesets/" + tileset_filename + ".tres\" id=\"" + this->pseudorandom_id(tileset_filename) + "\"]\n\n").toUtf8());
 
     f.write(QString("[node name=\"" + name + "\" type=\"TileMap\"]\n").toUtf8());
     f.write(QString("texture_filter = 5\n").toUtf8());
     f.write(QString("position = Vector2(0, 0)\n").toUtf8());
-    f.write(QString("tile_set = SubResource(\"" + Tileset_id + "\")\n").toUtf8());
+    f.write(QString("tile_set = ExtResource(\"" + this->pseudorandom_id(tileset_filename) + "\")\n").toUtf8());
     f.write(QString("format = 2\n").toUtf8());
     f.write(QString("layer_0/name = \"Ground\"\n").toUtf8());
 
@@ -398,5 +417,12 @@ QString GodotExporter::random_id()
 {
     QCryptographicHash hash(QCryptographicHash::Sha3_512);
     hash.addData(QString::number(QDateTime::currentMSecsSinceEpoch() + (counter++)).toUtf8());
+    return QString(hash.result().toBase64().replace("+","").replace("/", "").mid(0,13));
+}
+
+QString GodotExporter::pseudorandom_id(QString input)
+{
+    QCryptographicHash hash(QCryptographicHash::Sha3_512);
+    hash.addData(input.toUtf8());
     return QString(hash.result().toBase64().replace("+","").replace("/", "").mid(0,13));
 }

@@ -17,13 +17,14 @@ public:
     int array_position(int x, int y, int layer, int width, int height)
     {return x + y * width + height * width * layer;}
 
-    QString create_tileset(QString name);
+    QString create_tileset(int tileset_id, QJsonObject tileset);
     QVariantList create_autotile(QString name);
 
     void create_dir_structure();
     void write_map_to_file(int id, QString name);
 
     QString random_id();
+    QString pseudorandom_id(QString input);
 
 
 private:
