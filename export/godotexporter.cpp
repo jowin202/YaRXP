@@ -72,10 +72,16 @@ QString GodotExporter::create_tileset(int tileset_id, QJsonObject tileset)
             for (int x = 0; x < 8; x++)
             {
                 tileset_file_input << QString("%1:%2/0 = 0\n").arg(x).arg(y);
-                tileset_file_input << QString("%1:%2/0/physics_layer_0/linear_velocity = Vector2(0, 0)\n").arg(x).arg(y);
-                tileset_file_input << QString("%1:%2/0/physics_layer_0/angular_velocity = 0.0\n").arg(x).arg(y);
-                if ((passages.at(384 + 8*y + x).toInt() & 0xF) > 0)
+                //tileset_file_input << QString("%1:%2/0/physics_layer_0/linear_velocity = Vector2(0, 0)\n").arg(x).arg(y);
+                //tileset_file_input << QString("%1:%2/0/physics_layer_0/angular_velocity = 0.0\n").arg(x).arg(y);
+                if ((passages.at(384 + 8*y + x).toInt() & 0x1) > 0)
                     tileset_file_input << QString("%1:%2/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)\n").arg(x).arg(y);
+                if ((passages.at(384 + 8*y + x).toInt() & 0x2) > 0)
+                    tileset_file_input << QString("%1:%2/0/physics_layer_1/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)\n").arg(x).arg(y);
+                if ((passages.at(384 + 8*y + x).toInt() & 0x4) > 0)
+                    tileset_file_input << QString("%1:%2/0/physics_layer_2/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)\n").arg(x).arg(y);
+                if ((passages.at(384 + 8*y + x).toInt() & 0x8) > 0)
+                    tileset_file_input << QString("%1:%2/0/physics_layer_3/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)\n").arg(x).arg(y);
                 if (priorities.at(384 + 8*y + x).toInt() > 0)
                     tileset_file_input << QString("%1:%2/0/z_index = %3\n").arg(x).arg(y).arg(priorities.at(384 + 8*y + x).toInt());
             }
@@ -117,10 +123,16 @@ QString GodotExporter::create_tileset(int tileset_id, QJsonObject tileset)
                             tileset_file_input << QString("%1:%2/animation_frame_" + QString::number(i) + "/duration = 1.0\n").arg(x).arg(y);
                     }
                     tileset_file_input << QString("%1:%2/0 = 0\n").arg(x).arg(y);
-                    tileset_file_input << QString("%1:%2/0/physics_layer_0/linear_velocity = Vector2(0, 0)\n").arg(x).arg(y);
-                    tileset_file_input << QString("%1:%2/0/physics_layer_0/angular_velocity = 0.0\n").arg(x).arg(y);
-                    if ((passages.at(48*(i+1) + 8*y + x).toInt() & 0xF) > 0)
+                    //tileset_file_input << QString("%1:%2/0/physics_layer_0/linear_velocity = Vector2(0, 0)\n").arg(x).arg(y);
+                    //tileset_file_input << QString("%1:%2/0/physics_layer_0/angular_velocity = 0.0\n").arg(x).arg(y);
+                    if ((passages.at(48*(i+1) + 8*y + x).toInt() & 0x1) > 0)
                         tileset_file_input << QString("%1:%2/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)\n").arg(x).arg(y);
+                    if ((passages.at(48*(i+1) + 8*y + x).toInt() & 0x2) > 0)
+                        tileset_file_input << QString("%1:%2/0/physics_layer_1/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)\n").arg(x).arg(y);
+                    if ((passages.at(48*(i+1) + 8*y + x).toInt() & 0x4) > 0)
+                        tileset_file_input << QString("%1:%2/0/physics_layer_2/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)\n").arg(x).arg(y);
+                    if ((passages.at(48*(i+1) + 8*y + x).toInt() & 0x8) > 0)
+                        tileset_file_input << QString("%1:%2/0/physics_layer_3/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)\n").arg(x).arg(y);
                     if (priorities.at(48*(i+1) + 8*y + x).toInt() > 0)
                         tileset_file_input << QString("%1:%2/0/z_index = %3\n").arg(x).arg(y).arg(priorities.at(384 + 8*y + x).toInt());
                 }
@@ -133,6 +145,13 @@ QString GodotExporter::create_tileset(int tileset_id, QJsonObject tileset)
         tileset_file_input << "[resource]\n";
         tileset_file_input << "tile_size = Vector2i(32, 32)\n";
         tileset_file_input << "physics_layer_0/collision_layer = 1\n";
+        tileset_file_input << "physics_layer_1/collision_layer = 2\n";
+        tileset_file_input << "physics_layer_2/collision_layer = 4\n";
+        tileset_file_input << "physics_layer_3/collision_layer = 8\n";
+        tileset_file_input << "physics_layer_0/collision_mask = 1\n";
+        tileset_file_input << "physics_layer_1/collision_mask = 2\n";
+        tileset_file_input << "physics_layer_2/collision_mask = 4\n";
+        tileset_file_input << "physics_layer_3/collision_mask = 8\n";
         tileset_file_input << "sources/0 = SubResource(\"" << this->pseudorandom_id(this->pseudorandom_id(name)) << "\")\n";
 
         for (int i = 0; i < autotile_names.count(); i++)
