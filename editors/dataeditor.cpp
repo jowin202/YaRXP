@@ -421,6 +421,13 @@ void DataEditor::setDB(RPGDB *db)
     this->ui->scripts_list->addAction(&action_scripts_paste);
 }
 
+void DataEditor::set_tileset_and_tile(int tileset_id, int y_value)
+{
+    this->set_widget(DataEditor::TILESETS);
+    this->ui->tilesets_list->setCurrentRow(tileset_id-1);
+    this->ui->tilesets_widget->focus_on_tile(y_value);
+}
+
 
 
 void DataEditor::on_button_cancel_clicked()

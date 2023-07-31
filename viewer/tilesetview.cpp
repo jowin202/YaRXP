@@ -2,6 +2,7 @@
 
 #include <QScrollBar>
 
+#include "editors/dataeditor.h"
 #include "tilesetrectangle.h"
 #include "tilesetview.h"
 
@@ -20,6 +21,7 @@ TilesetView::TilesetView(QWidget *parent) : QGraphicsView(parent)
 
 void TilesetView::set_tileset(int id)
 {
+    this->current_id = id;
     QJsonObject current = db->get_tileset_by_id(id);
     QImage tileset_image = FileOpener(db->tileset_dir, current.value("@tileset_name").toString()).get_image();
     this->max_height = tileset_image.height()+32;
@@ -135,6 +137,27 @@ void TilesetView::mouseReleaseEvent(QMouseEvent *event)
     }
 
     emit selection_changed(data);
+}
+
+void TilesetView::mouseDoubleClickEvent(QMouseEvent *event)
+{
+    if (mapToScene(event->pos()).x() <= 0 || mapToScene(event->pos()).x() >= 256
+            || mapToScene(event->pos()).y() <= 0 || mapToScene(event->pos()).y() >= max_height) return;
+
+    if (this->current_id < 0) return; //dont do anything if no tileset is loaded
+
+    if (mapToScene(event->pos()).y() < 32)
+        return; //view autotiles
+
+    //QPointF posf = mapToScene(event->pos());
+    //QPoint pos = QPoint((int)posf.x()/32, (int)posf.y()/32);
+
+
+    DataEditor *da = new DataEditor;
+    da->setDB(this->db);
+    da->set_widget(DataEditor::TILESETS);
+    da->set_tileset_and_tile(current_id, mapToScene(event->pos()).y());
+    da->show();
 }
 
 void TilesetView::select_tile(int value)

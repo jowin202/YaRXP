@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QActionGroup>
+#include <QTimer>
 
 namespace Ui {
 class EditTilesets;
@@ -18,6 +19,7 @@ public:
     ~EditTilesets();
 
     void setEC(RPGEditorController *ec);
+    void focus_on_tile(int y_value);
 
 
 private slots:

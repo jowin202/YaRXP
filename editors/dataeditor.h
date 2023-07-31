@@ -29,6 +29,9 @@ public:
     void set_widget(int widget);
     void setDB(RPGDB *db);
 
+    //for scrolling to the correct tile when opening
+    void set_tileset_and_tile(int tileset_id, int y_value);
+
 
 private slots:
     void on_button_cancel_clicked();
@@ -53,11 +56,8 @@ private slots:
 
 
     bool set_maximum(int obj_type);
-
     void on_scripts_list_doubleClicked(const QModelIndex &index);
-
     void on_button_remove_script_clicked();
-
     void on_buttton_add_script_clicked();
 
 private:

@@ -27,8 +27,10 @@ public:
     void mouseMoveEvent(QMouseEvent *event) override;
     void mousePressEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
+    void mouseDoubleClickEvent(QMouseEvent *event) override;
 
 
+    int current_id = -1;
     bool clicked = false;
     TilesetRectangle *rectangle = 0;
     QPoint last_pos;

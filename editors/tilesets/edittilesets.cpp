@@ -42,6 +42,14 @@ void EditTilesets::setEC(RPGEditorController *ec)
     this->ec->connect_string_to_text_field(RPGDB::TILESETS, "@battleback_name", this->ui->line_battleback);
 }
 
+void EditTilesets::focus_on_tile(int y_value)
+{
+    //wait 100msec until window is defined (otherwise wrong position)
+    QTimer::singleShot(100, [=](){
+        this->ui->tileset_widget->centerOn(128, y_value);
+    });
+}
+
 
 void EditTilesets::on_button_choose_tileset_clicked()
 {
