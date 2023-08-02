@@ -330,6 +330,7 @@ void GodotExporter::write_map_to_file(int id, QString name)
     f.write(QString("[ext_resource type=\"TileSet\" path=\"res://Graphics/Tilesets/" + tileset_filename + ".tres\" id=\"" + this->pseudorandom_id(tileset_filename) + "\"]\n\n").toUtf8());
 
     f.write(QString("[node name=\"" + name + "\" type=\"TileMap\"]\n").toUtf8());
+    f.write(QString("y_sort_enabled = true\n").toUtf8());
     f.write(QString("texture_filter = 5\n").toUtf8());
     f.write(QString("position = Vector2(0, 0)\n").toUtf8());
     f.write(QString("tile_set = ExtResource(\"" + this->pseudorandom_id(tileset_filename) + "\")\n").toUtf8());
