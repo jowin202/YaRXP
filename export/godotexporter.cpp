@@ -83,7 +83,7 @@ QString GodotExporter::create_tileset(int tileset_id, QJsonObject tileset)
                 if ((passages.at(384 + 8*y + x).toInt() & 0x8) > 0)
                     tileset_file_input << QString("%1:%2/0/physics_layer_3/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)\n").arg(x).arg(y);
                 if (priorities.at(384 + 8*y + x).toInt() > 0)
-                    tileset_file_input << QString("%1:%2/0/z_index = %3\n").arg(x).arg(y).arg(priorities.at(384 + 8*y + x).toInt());
+                    tileset_file_input << QString("%1:%2/0/z_index = %3\n").arg(x).arg(y).arg(1+priorities.at(384 + 8*y + x).toInt()); //Player has prio 1 (for map transistion)
             }
         }
 
@@ -134,7 +134,7 @@ QString GodotExporter::create_tileset(int tileset_id, QJsonObject tileset)
                     if ((passages.at(48*(i+1) + 8*y + x).toInt() & 0x8) > 0)
                         tileset_file_input << QString("%1:%2/0/physics_layer_3/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)\n").arg(x).arg(y);
                     if (priorities.at(48*(i+1) + 8*y + x).toInt() > 0)
-                        tileset_file_input << QString("%1:%2/0/z_index = %3\n").arg(x).arg(y).arg(priorities.at(384 + 8*y + x).toInt());
+                        tileset_file_input << QString("%1:%2/0/z_index = %3\n").arg(x).arg(y).arg(1+priorities.at(384 + 8*y + x).toInt()); //Player has prio 1 (for map transistion)
                 }
             }
             tileset_file_input << "\n";
@@ -325,45 +325,82 @@ void GodotExporter::write_map_to_file(int id, QString name)
     QString Tileset_id = this->random_id();
 
 
-    f.write(QString("[gd_scene load_steps=2 format=3 uid=\"uid://" + scene_uid + "\"]\n\n").toUtf8());
+    //Tile Data
+    QString tiledata_layers[] = {QString(), QString(), QString() };
+    QString always_allowed_areas;
+    for (int y = 0; y < height; y++)
+    {
+        for (int x = 0; x < width; x++)
+        {
+            bool has_non_zero_tile[] = { false, false, false };
+            bool has_non_blocking_tile[] = { false, false, false };
+            bool has_high_priority[] = { false, false, false };
 
-    f.write(QString("[ext_resource type=\"TileSet\" path=\"res://Graphics/Tilesets/" + tileset_filename + ".tres\" id=\"" + this->pseudorandom_id(tileset_filename) + "\"]\n\n").toUtf8());
+            for (int z = 2; z >= 0; z--)
+            {
+                int tile_id = tiles.at(array_position(x,y,z,width,height)).toInt();
+
+                has_non_zero_tile[z] = (tile_id >= 48);
+                has_high_priority[z] = (priorities.at(tile_id).toInt() > 0);
+                has_non_blocking_tile[z] = (passages.at(tile_id).toInt() & 0xF) == 0;
+
+                if (tile_id < 48)
+                    continue; //do nothing
+                else if (tile_id < 384) //autotile
+                {
+                    int autotile_id = tile_id/48; //between 1 and 7
+                    tiledata_layers[z] += QString("%1, %2, %3, ").arg(x+65536*y).arg(65536*(tile_id%8) + autotile_id).arg( (tile_id % 48)/8);
+                }
+                else
+                {
+                    tile_id -= 384;
+                    tiledata_layers[z] += QString("%1, %2, %3, ").arg(x+65536*y).arg(65536*(tile_id%8)).arg(tile_id/8);
+                }
+            }
+            bool always_allowed = false;
+
+            if (has_non_zero_tile[2] && !has_high_priority[2] && has_non_blocking_tile[2])
+            {
+                if (has_non_zero_tile[1] && !has_non_blocking_tile[1])
+                    always_allowed = true;
+                if (has_non_zero_tile[0] && !has_non_blocking_tile[0])
+                    always_allowed = true;
+            }
+            if (has_non_zero_tile[1] && !has_high_priority[1] && has_non_blocking_tile[1])
+            {
+                if (has_non_zero_tile[0] && !has_non_blocking_tile[0])
+                    always_allowed = true;
+            }
+
+            if (always_allowed)
+                always_allowed_areas += QString("[node name=\"AlwaysPassableArea_%1_%2\" parent=\".\" instance=ExtResource(\"apa\")]\nposition = Vector2(%3, %4)\n\n").arg(x).arg(y).arg(32*x).arg(32*y);
+
+        }
+    }
+    tiledata_layers[0].chop(2);
+    tiledata_layers[1].chop(2);
+    tiledata_layers[2].chop(2);
+    tiledata_layers[0] = "layer_0/tile_data = PackedInt32Array(" + tiledata_layers[0] + ")\n";
+    tiledata_layers[1] = "layer_1/tile_data = PackedInt32Array(" + tiledata_layers[1] + ")\n";
+    tiledata_layers[2] = "layer_2/tile_data = PackedInt32Array(" + tiledata_layers[2] + ")\n";
+
+
+
+    f.write(QString("[gd_scene load_steps=3 format=3 uid=\"uid://" + scene_uid + "\"]\n\n").toUtf8());
+
+    f.write(QString("[ext_resource type=\"TileSet\" path=\"res://Graphics/Tilesets/" + tileset_filename + ".tres\" id=\"" + this->pseudorandom_id(tileset_filename) + "\"]\n").toUtf8());
+    f.write(QString("[ext_resource type=\"PackedScene\" path=\"res://World/always_passable_area.tscn\" id=\"apa\"]\n\n").toUtf8());
 
     f.write(QString("[node name=\"" + name + "\" type=\"TileMap\"]\n").toUtf8());
+
     f.write(QString("y_sort_enabled = true\n").toUtf8());
     f.write(QString("texture_filter = 5\n").toUtf8());
     f.write(QString("position = Vector2(0, 0)\n").toUtf8());
     f.write(QString("tile_set = ExtResource(\"" + this->pseudorandom_id(tileset_filename) + "\")\n").toUtf8());
     f.write(QString("format = 2\n").toUtf8());
     f.write(QString("layer_0/name = \"Ground\"\n").toUtf8());
+    f.write(tiledata_layers[0].toUtf8());
 
-
-    QString tiledata;
-
-    tiledata = "";
-    for (int y = 0; y < height; y++)
-    {
-        for (int x = 0; x < width; x++)
-        {
-            int tile_id = tiles.at(array_position(x,y,0,width,height)).toInt();
-            if (tile_id < 48)
-                continue; //do nothing
-            else if (tile_id < 384) //autotile
-            {
-                int autotile_id = tile_id/48; //between 1 and 7
-                tiledata += QString("%1, %2, %3, ").arg(x+65536*y).arg(65536*(tile_id%8) + autotile_id).arg( (tile_id % 48)/8);
-            }
-            else
-            {
-                tile_id -= 384;
-                tiledata += QString("%1, %2, %3, ").arg(x+65536*y).arg(65536*(tile_id%8)).arg(tile_id/8);
-            }
-        }
-    }
-    tiledata.chop(2);
-    tiledata = "layer_0/tile_data = PackedInt32Array(" + tiledata;
-    tiledata += ")\n";
-    f.write(tiledata.toUtf8());
 
     f.write(QString("layer_1/name = \"Middle\"\n").toUtf8());
     f.write(QString("layer_1/enabled = true\n").toUtf8());
@@ -371,31 +408,8 @@ void GodotExporter::write_map_to_file(int id, QString name)
     f.write(QString("layer_1/y_sort_enabled = false\n").toUtf8());
     f.write(QString("layer_1/y_sort_origin = 0\n").toUtf8());
     f.write(QString("layer_1/z_index = 0\n").toUtf8());
+    f.write(tiledata_layers[1].toUtf8());
 
-    tiledata = "";
-    for (int y = 0; y < height; y++)
-    {
-        for (int x = 0; x < width; x++)
-        {
-            int tile_id = tiles.at(array_position(x,y,1,width,height)).toInt();
-            if (tile_id < 48)
-                continue; //do nothing
-            else if (tile_id < 384) //autotile
-            {
-                int autotile_id = tile_id/48; //between 1 and 7
-                tiledata += QString("%1, %2, %3, ").arg(x+65536*y).arg(65536*(tile_id%8) + autotile_id).arg( (tile_id % 48)/8);
-            }
-            else
-            {
-                tile_id -= 384;
-                tiledata += QString("%1, %2, %3, ").arg(x+65536*y).arg(65536*(tile_id%8)).arg(tile_id/8);
-            }
-        }
-    }
-    tiledata.chop(2);
-    tiledata = "layer_1/tile_data = PackedInt32Array(" + tiledata;
-    tiledata += ")\n";
-    f.write(tiledata.toUtf8());
 
     f.write(QString("layer_2/name = \"Top\"\n").toUtf8());
     f.write(QString("layer_2/enabled = true\n").toUtf8());
@@ -403,32 +417,14 @@ void GodotExporter::write_map_to_file(int id, QString name)
     f.write(QString("layer_2/y_sort_enabled = false\n").toUtf8());
     f.write(QString("layer_2/y_sort_origin = 0\n").toUtf8());
     f.write(QString("layer_2/z_index = 0\n").toUtf8());
+    f.write(tiledata_layers[2].toUtf8());
 
-    tiledata = "";
-    for (int y = 0; y < height; y++)
+
+    if (always_allowed_areas != "")
     {
-        for (int x = 0; x < width; x++)
-        {
-            int tile_id = tiles.at(array_position(x,y,2,width,height)).toInt();
-            if (tile_id < 48)
-                continue; //do nothing
-            else if (tile_id < 384) //autotile
-            {
-                int autotile_id = tile_id/48; //between 1 and 7
-                tiledata += QString("%1, %2, %3, ").arg(x+65536*y).arg(65536*(tile_id%8) + autotile_id).arg( (tile_id % 48)/8);
-            }
-            else
-            {
-                tile_id -= 384;
-                tiledata += QString("%1, %2, %3, ").arg(x+65536*y).arg(65536*(tile_id%8)).arg(tile_id/8);
-            }
-        }
+        f.write("\n\n");
+        f.write(always_allowed_areas.toUtf8());
     }
-    tiledata.chop(2);
-    tiledata = "layer_2/tile_data = PackedInt32Array(" + tiledata;
-    tiledata += ")\n";
-    f.write(tiledata.toUtf8());
-
 
     f.close();
 }
