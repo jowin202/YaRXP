@@ -37,6 +37,7 @@ private:
 
     int counter = 0;
 
+    int direction_convert[4] = {3, 0, 1, 2 };
 };
 
 #endif // GODOTEXPORTER_H

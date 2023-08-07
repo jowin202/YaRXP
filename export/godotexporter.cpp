@@ -310,7 +310,6 @@ void GodotExporter::write_map_to_file(int id, QString name)
     int tileset_id = map.value("@tileset_id").toInt();
     QJsonObject tileset = db->get_tileset_by_id(tileset_id);
 
-    //int max_y = (tileset.value("@passages").toObject().value("values").toArray().count()-384 -1)/8+1;
     int height = map.value("@height").toInt();
     int width = map.value("@width").toInt();
     QJsonArray tiles = map.value("@data").toObject().value("values").toArray();
@@ -320,9 +319,9 @@ void GodotExporter::write_map_to_file(int id, QString name)
     QString scene_uid = this->random_id();
     QString tileset_uid = this->create_tileset(tileset_id, tileset);
     QString tileset_filename = tileset.value("@name").toString();
-    QString Texture2D_id = this->random_id();
-    QString TileSetAtlasSource_id = this->random_id();
-    QString Tileset_id = this->random_id();
+    //QString Texture2D_id = this->random_id();
+    //QString TileSetAtlasSource_id = this->random_id();
+    //QString Tileset_id = this->random_id();
 
 
     //Tile Data
@@ -386,8 +385,67 @@ void GodotExporter::write_map_to_file(int id, QString name)
 
 
 
-    f.write(QString("[gd_scene load_steps=3 format=3 uid=\"uid://" + scene_uid + "\"]\n\n").toUtf8());
 
+    //NPC Data
+    int npc_count = 0;
+    QString npc_data;
+    QString npc_data_includes;
+    QJsonObject events_object = map.value("@events").toObject();
+    foreach (const QString &key, events_object.keys())
+    {
+        if (key == "RXClass") continue;
+        bool ok;
+        key.toInt(&ok);
+        if (!ok) continue;
+        QJsonObject event = events_object.value(key).toObject();
+        QString event_name = event.value("@name").toString();
+        if (event_name == "")
+            event_name = QString("Event %1").arg(key);
+        int x = event.value("@x").toInt();
+        int y = event.value("@y").toInt();
+        QJsonObject first_page = event.value("@pages").toArray().first().toObject();
+        QJsonObject graphic_object = first_page.value("@graphic").toObject();
+        QString character_name = graphic_object.value("@character_name").toString();
+        if (character_name == "") continue;
+
+        int direction = graphic_object.value("@direction").toInt()/2-1;
+        Q_ASSERT(direction <= 3 && direction >= 0);
+        direction = direction_convert[direction];
+
+
+        /*
+        QJsonArray list = first_page.value("@list").toArray();
+        for (int i = 0; i < list.count(); i++)
+        {
+            //TODO
+            if (list.at(i).toObject().value("@code").toInt() == 209) //move route
+            {
+                continue; //assuming door;
+            }
+        }
+        */
+
+
+        QString id1 = this->random_id();
+        QString id2 = this->random_id();
+        npc_count++;
+        npc_data_includes += QString("[ext_resource type=\"PackedScene\" path=\"res://NPC/NPC.tscn\" id=\"%1\"]\n").arg(id1);
+        npc_data_includes += QString("[ext_resource type=\"Texture2D\" path=\"res://Graphics/Characters/%1.png\" id=\"%2\"]\n").arg(character_name).arg(id2);
+        npc_data += QString("[node name=\"%1_%3_%4\" parent=\".\" instance=ExtResource(\"%2\")]\n").arg(event_name).arg(id1).arg(x).arg(y);
+        npc_data += QString("position = Vector2(%1, %2)\n").arg(32*x).arg(32*y);
+        npc_data += QString("texture_image = ExtResource(\"%1\")\n").arg(id2);
+        npc_data += QString("init_direction = %1\n\n").arg(direction);
+    }
+
+
+
+
+
+
+    f.write(QString("[gd_scene load_steps=%1 format=3 uid=\"uid://" + scene_uid + "\"]\n\n").arg(3+npc_count*2).toUtf8());
+
+
+    f.write(npc_data_includes.toUtf8());
     f.write(QString("[ext_resource type=\"TileSet\" path=\"res://Graphics/Tilesets/" + tileset_filename + ".tres\" id=\"" + this->pseudorandom_id(tileset_filename) + "\"]\n").toUtf8());
     f.write(QString("[ext_resource type=\"PackedScene\" path=\"res://World/always_passable_area.tscn\" id=\"apa\"]\n\n").toUtf8());
 
@@ -425,6 +483,9 @@ void GodotExporter::write_map_to_file(int id, QString name)
         f.write("\n\n");
         f.write(always_allowed_areas.toUtf8());
     }
+
+
+    f.write(npc_data.toUtf8());
 
     f.close();
 }
