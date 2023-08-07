@@ -447,7 +447,7 @@ void GodotExporter::write_map_to_file(int id, QString name)
 
     f.write(npc_data_includes.toUtf8());
     f.write(QString("[ext_resource type=\"TileSet\" path=\"res://Graphics/Tilesets/" + tileset_filename + ".tres\" id=\"" + this->pseudorandom_id(tileset_filename) + "\"]\n").toUtf8());
-    f.write(QString("[ext_resource type=\"PackedScene\" path=\"res://World/always_passable_area.tscn\" id=\"apa\"]\n\n").toUtf8());
+    f.write(QString("[ext_resource type=\"PackedScene\" path=\"res://utils/always_passable_area.tscn\" id=\"apa\"]\n\n").toUtf8());
 
     f.write(QString("[node name=\"" + name + "\" type=\"TileMap\"]\n").toUtf8());
 
