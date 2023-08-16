@@ -432,7 +432,7 @@ void GodotExporter::write_map_to_file(int id, QString name)
 
 
     //NPC Data
-    int npc_count = 0;
+    int event_count = 0;
     QString npc_data;
     QString npc_data_includes;
     QJsonObject events_object = map.value("@events").toObject();
@@ -458,28 +458,42 @@ void GodotExporter::write_map_to_file(int id, QString name)
         direction = direction_convert[direction];
 
 
-        /*
+        bool is_door = false;
+
+        bool contains_move_route = false;
         QJsonArray list = first_page.value("@list").toArray();
         for (int i = 0; i < list.count(); i++)
         {
             //TODO
             if (list.at(i).toObject().value("@code").toInt() == 209) //move route
             {
-                continue; //assuming door;
+                contains_move_route = true;
             }
         }
-        */
+        is_door = (first_page.value("@trigger").toInt() == 1) && contains_move_route;
 
 
         QString id1 = this->random_id();
         QString id2 = this->random_id();
-        npc_count++;
-        npc_data_includes += QString("[ext_resource type=\"PackedScene\" path=\"res://NPC/NPC.tscn\" id=\"%1\"]\n").arg(id1);
-        npc_data_includes += QString("[ext_resource type=\"Texture2D\" path=\"res://Graphics/Characters/%1.png\" id=\"%2\"]\n").arg(character_name).arg(id2);
-        npc_data += QString("[node name=\"%1_%3_%4\" parent=\".\" instance=ExtResource(\"%2\")]\n").arg(event_name).arg(id1).arg(x).arg(y);
-        npc_data += QString("position = Vector2(%1, %2)\n").arg(32*x).arg(32*y);
-        npc_data += QString("texture_image = ExtResource(\"%1\")\n").arg(id2);
-        npc_data += QString("init_direction = %1\n\n").arg(direction);
+        event_count++;
+        if (is_door)
+        {
+            npc_data_includes += QString("[ext_resource type=\"PackedScene\" path=\"res://Door/door.tscn\" id=\"%1\"]\n").arg(id1);
+            npc_data_includes += QString("[ext_resource type=\"Texture2D\" path=\"res://Graphics/Characters/%1.png\" id=\"%2\"]\n").arg(character_name).arg(id2);
+            npc_data += QString("[node name=\"%1_%3_%4\" parent=\".\" instance=ExtResource(\"%2\")]\n").arg(event_name).arg(id1).arg(x).arg(y);
+            npc_data += QString("position = Vector2(%1, %2)\n").arg(32*x).arg(32*y);
+            npc_data += QString("texture_image = ExtResource(\"%1\")\n").arg(id2);
+            npc_data += QString("door_sprite_val = %1\n\n").arg(graphic_object.value("@pattern").toInt());
+        }
+        else //NPC
+        {
+            npc_data_includes += QString("[ext_resource type=\"PackedScene\" path=\"res://NPC/NPC.tscn\" id=\"%1\"]\n").arg(id1);
+            npc_data_includes += QString("[ext_resource type=\"Texture2D\" path=\"res://Graphics/Characters/%1.png\" id=\"%2\"]\n").arg(character_name).arg(id2);
+            npc_data += QString("[node name=\"%1_%3_%4\" parent=\".\" instance=ExtResource(\"%2\")]\n").arg(event_name).arg(id1).arg(x).arg(y);
+            npc_data += QString("position = Vector2(%1, %2)\n").arg(32*x).arg(32*y);
+            npc_data += QString("texture_image = ExtResource(\"%1\")\n").arg(id2);
+            npc_data += QString("init_direction = %1\n\n").arg(direction);
+        }
     }
 
 
@@ -487,7 +501,7 @@ void GodotExporter::write_map_to_file(int id, QString name)
 
 
 
-    f.write(QString("[gd_scene load_steps=%1 format=3 uid=\"uid://" + scene_uid + "\"]\n\n").arg(3+npc_count*2).toUtf8());
+    f.write(QString("[gd_scene load_steps=%1 format=3 uid=\"uid://" + scene_uid + "\"]\n\n").arg(3+event_count*2).toUtf8());
 
 
     f.write(npc_data_includes.toUtf8());
