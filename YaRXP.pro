@@ -38,6 +38,7 @@ SOURCES += \
     RXIO2/rpgmapcontroller.cpp \
     RXIO2/rpgmapinfocontroller.cpp \
     RXIO2/rxexception.cpp \
+    RXIO2/searchthread.cpp \
     RXIO2/writer.cpp \
     dialogs/audiodialog.cpp \
     dialogs/combodialog.cpp \
@@ -174,6 +175,7 @@ HEADERS += \
     RXIO2/rpgmapcontroller.h \
     RXIO2/rpgmapinfocontroller.h \
     RXIO2/rxexception.h \
+    RXIO2/searchthread.h \
     RXIO2/writer.h \
     dialogs/audiodialog.h \
     dialogs/combodialog.h \

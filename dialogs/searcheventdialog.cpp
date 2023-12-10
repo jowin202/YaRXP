@@ -1,7 +1,7 @@
 #include "searcheventdialog.h"
 #include "ui_searcheventdialog.h"
 #include "RXIO2/rpgdb.h"
-#include "RXIO2/rpgmapinfocontroller.h"
+#include "RXIO2/searchthread.h"
 
 SearchEventDialog::SearchEventDialog(RPGDB *db) :
     QWidget(),
@@ -10,7 +10,6 @@ SearchEventDialog::SearchEventDialog(RPGDB *db) :
     ui->setupUi(this);
 
     this->db = db;
-    this->mic = new RPGMapInfoController(db);
 
     this->ui->switch_widget->setSwitchWidget(db);
     this->ui->variable_widget->setVariableWidget(db);
@@ -25,11 +24,16 @@ SearchEventDialog::~SearchEventDialog()
 
 void SearchEventDialog::on_button_ok_clicked()
 {
-    QJsonArray toplevel_maps = this->mic->get_toplevel_maps();
-    QJsonArray non_toplevel_maps = this->mic->get_child_maps();
-    qDebug() << toplevel_maps;
+    int mode = -1;
+    if (this->ui->radio_text->isChecked()) mode = SearchThread::TEXT;
+
+    Qt::CaseSensitivity cs = Qt::CaseSensitive;
+    if (this->ui->check_ignore_case->isChecked())
+        cs = Qt::CaseInsensitive;
 
 
+    SearchThread *thread = new SearchThread(db,mode,this->ui->line_text->text(),0,cs); //TODO
+    thread->run();
 }
 
 

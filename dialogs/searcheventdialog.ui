@@ -118,7 +118,7 @@
         </widget>
        </item>
        <item row="0" column="0">
-        <widget class="QCheckBox" name="checkBox_3">
+        <widget class="QCheckBox" name="check_ignore_case">
          <property name="text">
           <string>Ignore Case</string>
          </property>
@@ -207,7 +207,7 @@
   <connection>
    <sender>radio_text</sender>
    <signal>toggled(bool)</signal>
-   <receiver>checkBox_3</receiver>
+   <receiver>check_ignore_case</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
