@@ -100,6 +100,8 @@ private slots:
 
     void on_actionExport_Maps_to_Godot_triggered();
 
+    void on_actionSearch_triggered();
+
 private:
     Ui::MainWindow *ui;
     QActionGroup *layergroup;

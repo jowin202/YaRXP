@@ -105,6 +105,7 @@
     <addaction name="actionNew"/>
     <addaction name="actionOpen"/>
     <addaction name="actionSave"/>
+    <addaction name="actionSearch"/>
     <addaction name="separator"/>
     <addaction name="actionImport_RGSSAD"/>
     <addaction name="actionExport_RGSSAD"/>
@@ -698,6 +699,18 @@
   <action name="actionExport_Maps_to_Godot">
    <property name="text">
     <string>Export Maps to Godot</string>
+   </property>
+  </action>
+  <action name="actionSearch">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/icons/bx-search.svg</normaloff>:/icons/icons/bx-search.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Search</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+F</string>
    </property>
   </action>
  </widget>

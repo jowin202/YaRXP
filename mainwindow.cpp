@@ -8,6 +8,7 @@
 #include"export/godotexporter.h"
 
 #include "PBS/pbseditor.h"
+#include "dialogs/searcheventdialog.h"
 
 
 #include <QDebug>
@@ -483,5 +484,12 @@ void MainWindow::on_actionExport_Maps_to_Godot_triggered()
     QString path = QFileDialog::getExistingDirectory(this, "Export to Directory", QDir::homePath());
     if (path != "")
         GodotExporter(&this->db, path);
+}
+
+
+void MainWindow::on_actionSearch_triggered()
+{
+    SearchEventDialog *dialog = new SearchEventDialog(&this->db);
+    dialog->show();
 }
 

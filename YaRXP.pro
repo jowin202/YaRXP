@@ -48,6 +48,7 @@ SOURCES += \
     dialogs/maplocationarea.cpp \
     dialogs/maplocationfinderdialog.cpp \
     dialogs/mappropertiesdialog.cpp \
+    dialogs/searcheventdialog.cpp \
     dialogs/switchvariablewidget.cpp \
     editors/abcbox.cpp \
     editors/abclist.cpp \
@@ -183,6 +184,7 @@ HEADERS += \
     dialogs/maplocationarea.h \
     dialogs/maplocationfinderdialog.h \
     dialogs/mappropertiesdialog.h \
+    dialogs/searcheventdialog.h \
     dialogs/switchvariablewidget.h \
     editors/abcbox.h \
     editors/abclist.h \
@@ -299,6 +301,7 @@ FORMS += \
     dialogs/listdialog.ui \
     dialogs/maplocationfinderdialog.ui \
     dialogs/mappropertiesdialog.ui \
+    dialogs/searcheventdialog.ui \
     dialogs/switchvariablewidget.ui \
     editors/abcbox.ui \
     editors/abclist.ui \
