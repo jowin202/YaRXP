@@ -10,7 +10,7 @@ class SearchThread : public QThread
 {
     Q_OBJECT
 public:
-    explicit SearchThread(RPGDB *db, int mode, QString text, int var_sw_cmd, Qt::CaseSensitivity cs);
+    explicit SearchThread(RPGDB *db, int mode, QString text, int sw_var, Qt::CaseSensitivity cs);
 
     enum SearchMode { TEXT, SWITCH, VARIABLE, COMMAND };
     void run();
@@ -20,7 +20,7 @@ public:
     RPGDB *db;
     int mode;
     QString text;
-    int var_sw_cmd;
+    int sw_var;
     Qt::CaseSensitivity case_sensitive_options;
 
     QList<int> result;

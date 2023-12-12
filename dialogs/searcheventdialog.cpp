@@ -31,14 +31,26 @@ SearchEventDialog::~SearchEventDialog()
 void SearchEventDialog::on_button_ok_clicked()
 {
     int mode = -1;
+    int sw_var = -1;
     if (this->ui->radio_text->isChecked()) mode = SearchThread::TEXT;
+    else if (this->ui->radio_switch->isChecked())
+    {
+        mode = SearchThread::SWITCH;
+        sw_var = this->ui->switch_widget->getValue();
+    }
+    else if (this->ui->radio_variable->isChecked())
+    {
+        mode = SearchThread::VARIABLE;
+        sw_var = this->ui->variable_widget->getValue();
+    }
+
 
     Qt::CaseSensitivity cs = Qt::CaseSensitive;
     if (this->ui->check_ignore_case->isChecked())
         cs = Qt::CaseInsensitive;
 
 
-    SearchThread *thread = new SearchThread(db,mode,this->ui->line_text->text(),0,cs); //TODO
+    SearchThread *thread = new SearchThread(db,mode,this->ui->line_text->text(),sw_var,cs);
 
     connect(thread, &SearchThread::finished, [=](){
         this->ui->table_result->clearContents();
