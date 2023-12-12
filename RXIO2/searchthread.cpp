@@ -28,41 +28,42 @@ void SearchThread::run()
     {
         if ((doc = db->get_mapfile_by_id(id)) != 0)
         {
-            if (mode == TEXT)
+            map = doc->object();
+            events = map.value("@events").toObject();
+
+            //iterate over map events
+            foreach (const QString& key, events.keys())
             {
-                map = doc->object();
-                events = map.value("@events").toObject();
-
-                //iterate over map events
-                foreach (const QString& key, events.keys())
+                if (key == "RXClass") continue; //find all events but skip text argument
+                key.toInt(&ok,10);
+                if (ok)
                 {
-                    if (key == "RXClass") continue; //find all events but skip text argument
-                    key.toInt(&ok,10);
-                    if (ok)
+                    event = events.value(key).toObject();
+                    pages = event.value("@pages").toArray();
+                    for (int i = 0; i < pages.count(); i++)
                     {
-                        event = events.value(key).toObject();
-                        pages = event.value("@pages").toArray();
-                        for (int i = 0; i < pages.count(); i++)
-                        {
-                            page = pages.at(i).toObject();
-                            list = page.value("@list").toArray();
+                        page = pages.at(i).toObject();
+                        list = page.value("@list").toArray();
 
-                            for (int j = 0; j < list.count(); j++)
+                        for (int j = 0; j < list.count(); j++)
+                        {
+                            cmd = list.at(j).toObject();
+                            param = cmd.value("@parameters").toArray();
+                            for (int k = 0; k < param.count(); k++)
                             {
-                                cmd = list.at(j).toObject();
-                                param = cmd.value("@parameters").toArray();
-                                for (int k = 0; k < param.count(); k++)
+                                if (mode == TEXT && param.at(k).isString() && param.at(k).toString().contains(text, case_sensitive_options))
                                 {
-                                    if (param.at(k).isString() && param.at(k).toString().contains(text, case_sensitive_options))
-                                    {
-                                        qDebug() << id << event.value("@id").toInt() << (i+1) << j;
-                                    }
+                                    //qDebug() << id << event.value("@id").toInt() << (i+1) << j;
+                                    result << id;
+                                    result << event.value("@id").toInt();
+                                    result << i;
+                                    result << j;
                                 }
                             }
-
                         }
 
                     }
+
                 }
             }
         }

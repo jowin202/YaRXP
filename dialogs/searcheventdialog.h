@@ -9,6 +9,7 @@ class SearchEventDialog;
 }
 
 class RPGDB;
+class RPGMapInfoController;
 
 class SearchEventDialog : public QWidget
 {
@@ -35,6 +36,7 @@ private slots:
 private:
     Ui::SearchEventDialog *ui;
     RPGDB *db;
+    RPGMapInfoController *mic;
 };
 
 #endif // SEARCHEVENTDIALOG_H

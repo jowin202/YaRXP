@@ -85,7 +85,43 @@
       </widget>
      </item>
      <item row="6" column="0" colspan="2">
-      <widget class="QTableWidget" name="tableWidget"/>
+      <widget class="QTableWidget" name="table_result">
+       <column>
+        <property name="text">
+         <string>map_id</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>event_id</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>page_id</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>cmd_num</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Map</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Event</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Content</string>
+        </property>
+       </column>
+      </widget>
      </item>
      <item row="3" column="1">
       <widget class="SwitchVariableWidget" name="variable_widget" native="true">

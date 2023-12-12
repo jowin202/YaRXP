@@ -22,6 +22,8 @@ public:
     QString text;
     int var_sw_cmd;
     Qt::CaseSensitivity case_sensitive_options;
+
+    QList<int> result;
 };
 
 #endif // SEARCHTHREAD_H
