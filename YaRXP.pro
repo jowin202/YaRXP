@@ -2,6 +2,12 @@ QT       += core gui multimedia
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
+CONFIG(debug, debug|release) {
+    DESTDIR = build/debug
+} else {
+    DESTDIR = build/release
+}
+
 CONFIG += c++11
 
 # The following define makes your compiler emit warnings if you use
