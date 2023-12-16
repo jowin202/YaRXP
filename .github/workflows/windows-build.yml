@@ -3,8 +3,7 @@ name: Windows Build
 on:
   push:
     branches:
-      - main
-      - cicd
+      - master
 
 env:
   QT_VERSION: 6.5.0
