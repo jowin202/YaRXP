@@ -490,6 +490,11 @@ void MainWindow::on_actionExport_Maps_to_Godot_triggered()
 void MainWindow::on_actionSearch_triggered()
 {
     SearchEventDialog *dialog = new SearchEventDialog(&this->db);
+    connect(dialog, &SearchEventDialog::select_event, [=](int map_id,int event_id,int page,int){
+        this->ui->map_tree_widget->jump_to_item(map_id);
+        this->on_actionEvents_triggered();
+        this->ui->mapView->goto_event(event_id,true,page);
+    });
     dialog->show();
 }
 

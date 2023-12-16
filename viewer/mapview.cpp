@@ -20,10 +20,10 @@ MapView::MapView(QWidget *parent) : QGraphicsView(parent)
 
     this->action_newevent.setText("New Event");
     this->action_newevent.setShortcut(Qt::Key_Enter);
-    connect(&this->action_newevent, &QAction::triggered, [=]{ if (opt.mode == EVENT) this->edit_event_on_pos(opt.marked_tile);});
+    connect(&this->action_newevent, &QAction::triggered, [=]{ if (opt.mode == EVENT) this->edit_event_on_pos(opt.marked_tile,0);});
     this->action_editevent.setText("Edit Event");
     this->action_editevent.setShortcut(Qt::Key_Return);
-    connect(&this->action_editevent, &QAction::triggered, [=]{ if (opt.mode == EVENT) this->edit_event_on_pos(opt.marked_tile);});
+    connect(&this->action_editevent, &QAction::triggered, [=]{ if (opt.mode == EVENT) this->edit_event_on_pos(opt.marked_tile,0);});
     this->addAction(&this->action_editevent); //return should work
     this->action_cut.setText("Cut");
     this->action_cut.setShortcut(QKeySequence(tr("Ctrl+X")));
@@ -58,6 +58,18 @@ MapView::MapView(QWidget *parent) : QGraphicsView(parent)
                     return;
                 }
             }
+        }
+    });
+    this->action_goto_event.setText("Jump to Event");
+    this->action_goto_event.setShortcut(QKeySequence(tr("Ctrl+E")));
+    this->addAction(&this->action_goto_event);
+    connect(&this->action_goto_event, &QAction::triggered, [=]()
+    {
+        bool ok;
+        int val = QInputDialog::getInt(this, "Jump to Event", "Enter Event ID:", 1, 1, 9999,1,&ok);
+        if (ok)
+        {
+            this->goto_event(val,false,0);
         }
     });
 
@@ -114,12 +126,13 @@ void MapView::set_brush(QList<int> data)
     this->rectangle->update();
 }
 
-void MapView::edit_event_on_pos(QPoint pos)
+void MapView::edit_event_on_pos(QPoint pos, int page)
 {
     QJsonObject event = this->mc.event_on_pos(pos);
     if (event.keys().count() > 1)
     {
         EventDialog *dialog = new EventDialog(&this->mc, event);
+        dialog->set_page(page);
         dialog->show();
     }
     else
@@ -355,7 +368,7 @@ void MapView::mouseDoubleClickEvent(QMouseEvent *event)
 
     if (opt.mode == EVENT)
     {
-        this->edit_event_on_pos(pos);
+        this->edit_event_on_pos(pos,0);
     }
 }
 
@@ -371,6 +384,27 @@ void MapView::wheelEvent(QWheelEvent *event)
     }
     event->accept();
     QGraphicsView::wheelEvent(event);
+}
+
+void MapView::goto_event(int id, bool open_dialog, int page)
+{
+    QJsonObject event = this->mc.event_by_id(id);
+    if (event.contains("@x") && event.contains("@y"))
+    {
+        QPoint newpos(event.value("@x").toInt(), event.value("@y").toInt());
+        MapTile *tile;
+        QPoint prev_marked_tile = opt.marked_tile;
+        this->opt.marked_tile = newpos;
+        if ( (tile = ((MapTile*)this->scene()->itemAt(32*newpos,QTransform()))) != 0)
+            tile->update();
+        if ( (tile = ((MapTile*)this->scene()->itemAt(32*prev_marked_tile,QTransform()))) != 0)
+            tile->update();
+
+        this->centerOn(32*newpos);
+        if (open_dialog)
+            this->edit_event_on_pos(newpos,page);
+
+    }
 }
 
 void MapView::redraw()

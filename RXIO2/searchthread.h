@@ -3,6 +3,8 @@
 
 #include <QThread>
 #include <QObject>
+#include <QList>
+#include <QCoreApplication>
 
 class RPGDB;
 
@@ -15,8 +17,6 @@ public:
     enum SearchMode { TEXT, SWITCH, VARIABLE, COMMAND };
     void run();
 
-
-
     RPGDB *db;
     int mode;
     QString text;
@@ -24,6 +24,10 @@ public:
     Qt::CaseSensitivity case_sensitive_options;
 
     QList<int> result;
+
+
+signals:
+    void finished(QList<int>);
 };
 
 #endif // SEARCHTHREAD_H

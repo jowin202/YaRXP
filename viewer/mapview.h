@@ -14,6 +14,7 @@
 
 #include <QAction>
 #include <QMenu>
+#include <QInputDialog>
 
 #include "mapselectrectangle.h"
 #include "maptile.h"
@@ -98,6 +99,7 @@ signals:
     void jump_to_map(int);
 
 public slots:
+    void goto_event(int id, bool open_dialog, int page);
     void redraw();
     void set_brush(QList<int> data);
     void do_copy()
@@ -217,10 +219,11 @@ public slots:
             menu.addSeparator();
             menu.addAction(&this->action_set_start);
             menu.addAction(&this->action_follow_teleport);
+            menu.addAction(&this->action_goto_event);
             menu.exec(this->mapToGlobal(pos));
         }
     }
-    void edit_event_on_pos(QPoint pos);
+    void edit_event_on_pos(QPoint pos, int page);
 
 
 
@@ -273,6 +276,7 @@ private:
     QAction action_delete;
     QAction action_set_start;
     QAction action_follow_teleport;
+    QAction action_goto_event;
 
 
     UndoDB undo;

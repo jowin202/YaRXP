@@ -30,13 +30,17 @@ public:
 
 private slots:
     void on_button_ok_clicked();
-
     void on_button_cancel_clicked();
+    void update_gui(QList<int> result);
+    void on_table_result_cellDoubleClicked(int row, int column);
 
 private:
     Ui::SearchEventDialog *ui;
     RPGDB *db;
     RPGMapInfoController *mic;
+
+signals:
+    void select_event(int,int,int,int);
 };
 
 #endif // SEARCHEVENTDIALOG_H

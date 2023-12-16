@@ -57,6 +57,12 @@ void EventDialog::do_numbers_of_tabs_right()
 
 }
 
+void EventDialog::set_page(int page)
+{
+    if (page < this->ui->tab_widget->count())
+        this->ui->tab_widget->setCurrentIndex(page);
+}
+
 void EventDialog::on_button_new_clicked()
 {
     int pos = this->ui->tab_widget->addTab(new EventPage(mc), QString()); //empty

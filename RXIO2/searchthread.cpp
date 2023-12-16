@@ -93,4 +93,5 @@ void SearchThread::run()
             }
         }
     }
+    emit finished(result);
 }

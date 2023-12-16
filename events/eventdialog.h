@@ -38,6 +38,7 @@ signals:
 
 public slots:
     void do_numbers_of_tabs_right();
+    void set_page(int page);
 
 private slots:
     void on_button_new_clicked();
