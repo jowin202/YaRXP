@@ -74,11 +74,9 @@ jobs:
         7z a -r "${Env:ARCHIVE_NAME}.zip" .\build\release\*
 
     - name: Publish release
-      uses: "marvinpinto/action-automatic-releases@latest"
+      uses: softprops/action-gh-release@v2
       with:
-        repo_token: "${{ secrets.GITHUB_TOKEN }}"
-        automatic_release_tag: "latest"
+        tag_name: latest-windows
         prerelease: true
-        title: "Automatic Build"
-        files: |
-          ${{ env.ARCHIVE_NAME }}.zip
+        name: "Automatic Windows Build"
+        files: ${{ env.ARCHIVE_NAME }}.zip
