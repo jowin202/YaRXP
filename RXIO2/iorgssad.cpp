@@ -17,7 +17,7 @@ IORGSSAD::IORGSSAD(QString path, QString output_dir)
 
     QByteArray header = file.read(8);
     if (header != QByteArray::fromHex("5247535341440001"))
-        throw new RXException("Invalid header");
+        throw RXException("Invalid header");
 
     while (true)
     {

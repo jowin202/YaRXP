@@ -221,14 +221,14 @@ QJsonValue Parser::parse_token()
     }
     else if (byte == 0x6c) // 'l' for BigInt
     {
-        //experimental, because scripts size can exceed integer length (TODO)
         bool is_plus = (this->read_one_byte() == '+' ? true: false); //else minus
         int size = 2*(this->read_fixnum());
         qint64 result = 0;
         for (int i = 0; i < size; i++)
         {
-            result <<= 8;
-            result |= this->read_one_byte();
+            int b = this->read_one_byte();
+            if (i < 8) // cap at 64 bits to avoid undefined behavior from over-shift
+                result |= ((qint64)b << (8 * i));
         }
         if (!is_plus)
             return -result;
@@ -265,7 +265,7 @@ int Parser::read_one_byte()
 
 int Parser::read_fixnum()
 {
-    int num = f.read(1).at(0);
+    int num = (signed char)f.read(1).at(0);
 
     if (num == 0)
         return num;

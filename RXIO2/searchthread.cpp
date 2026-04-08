@@ -66,7 +66,7 @@ void SearchThread::run()
                                 }
                             }
                             else if (mode == SWITCH &&
-                                     (code == 121 && param.at(0).toInt() <= sw_var && param.at(1).toInt() >= sw_var)
+                                     (code == 121 && param.count() >= 2 && param.at(0).toInt() <= sw_var && param.at(1).toInt() >= sw_var)
                                      )//TODO
                             {
                                 //qDebug() << "switch" << id << event.value("@id").toInt() << i << j << param;
@@ -76,7 +76,7 @@ void SearchThread::run()
                                 result << j;
                             }
                             else if (mode == VARIABLE &&
-                                     (code == 122 && param.at(0).toInt() <= sw_var && param.at(1).toInt() >= sw_var)
+                                     (code == 122 && param.count() >= 2 && param.at(0).toInt() <= sw_var && param.at(1).toInt() >= sw_var)
                                      )//TODO
                             {
                                 //qDebug() << "variable" << id << event.value("@id").toInt() << i << j << param;

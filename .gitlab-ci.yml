@@ -1,0 +1,151 @@
+stages:
+  - build
+  - release
+
+variables:
+  QT_VERSION: "6.5.0"
+  AQT_PLATFORM_WIN: "msvc2019_64"
+  AQT_PLATFORM_MAC: "clang_64"
+
+# ---------------------------------------------------------------------------
+# Windows Build
+# ---------------------------------------------------------------------------
+build-windows:
+  stage: build
+  tags:
+    - saas-windows-medium-amd64
+  variables:
+    ARCHIVE_NAME: "YaRXP-win-amd64-latest"
+  script:
+    # --- Set up MSVC environment variables -----------------------------------
+    - |
+      $vswhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
+      $vsPath  = & $vswhere -latest -products * `
+                   -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 `
+                   -property installationPath
+      if (-not $vsPath) { Write-Error "Visual Studio not found"; exit 1 }
+      $vcvars = "$vsPath\VC\Auxiliary\Build\vcvarsall.bat"
+      $envLines = cmd /C "`"$vcvars`" x64 && set"
+      foreach ($line in $envLines) {
+        if ($line -match "^([^=]+)=(.+)$") {
+          [System.Environment]::SetEnvironmentVariable($Matches[1], $Matches[2], "Process")
+        }
+      }
+
+    # --- Install Qt via aqtinstall -------------------------------------------
+    - |
+      $aqtUrl = "https://github.com/miurahr/aqtinstall/releases/download/v3.1.6/aqt_x64_signed.exe"
+      Invoke-WebRequest -Uri $aqtUrl -OutFile "$env:TEMP\aqt.exe"
+    - |
+      & "$env:TEMP\aqt.exe" install-qt windows desktop $env:QT_VERSION "win64_$env:AQT_PLATFORM_WIN" `
+          -m qtmultimedia -O C:\Qt
+
+    # --- qmake ---------------------------------------------------------------
+    - |
+      $env:PATH = "C:\Qt\$env:QT_VERSION\$env:AQT_PLATFORM_WIN\bin;$env:PATH"
+      qmake -Wall -tp vc YaRXP.pro
+
+    # --- Build ---------------------------------------------------------------
+    - msbuild YaRXP.vcxproj -property:Configuration=Release -maxCpuCount
+
+    # --- Deploy Qt runtime ---------------------------------------------------
+    - |
+      $windeployqt = "C:\Qt\$env:QT_VERSION\$env:AQT_PLATFORM_WIN\bin\windeployqt.exe"
+      & $windeployqt --release --no-translations "$pwd\build\release"
+
+    # --- Package -------------------------------------------------------------
+    - 7z a -r "$env:ARCHIVE_NAME.zip" .\build\release\*
+
+  artifacts:
+    name: "$ARCHIVE_NAME"
+    paths:
+      - build/release/
+      - "*.zip"
+    expire_in: 30 days
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+# ---------------------------------------------------------------------------
+# macOS Build (shared template)
+# ---------------------------------------------------------------------------
+.build-macos-base:
+  stage: build
+  variables:
+    QT_DIR: "$HOME/Qt"
+  script:
+    # --- Install Qt via aqtinstall -------------------------------------------
+    - pip3 install aqtinstall --quiet
+    - |
+      aqt install-qt mac desktop $QT_VERSION $AQT_PLATFORM_MAC \
+          -m qtmultimedia -O "$QT_DIR"
+
+    # --- qmake + make --------------------------------------------------------
+    - |
+      export PATH="$QT_DIR/$QT_VERSION/$AQT_PLATFORM_MAC/bin:$PATH"
+      qmake CONFIG+=release YaRXP.pro
+      make -j$(sysctl -n hw.ncpu)
+
+    # --- Deploy Qt runtime & create .dmg ------------------------------------
+    - |
+      export PATH="$QT_DIR/$QT_VERSION/$AQT_PLATFORM_MAC/bin:$PATH"
+      macdeployqt build/release/YaRXP.app -dmg
+      mv build/release/YaRXP.dmg "$ARCHIVE_NAME.dmg"
+
+  artifacts:
+    name: "$ARCHIVE_NAME"
+    paths:
+      - "*.dmg"
+    expire_in: 30 days
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+# --- Intel (x86_64) ---------------------------------------------------------
+build-macos-intel:
+  extends: .build-macos-base
+  tags:
+    - saas-macos-medium-amd64
+  variables:
+    ARCHIVE_NAME: "YaRXP-macos-intel-latest"
+
+# --- Apple Silicon (arm64) --------------------------------------------------
+build-macos-arm:
+  extends: .build-macos-base
+  tags:
+    - saas-macos-medium-m1
+  variables:
+    ARCHIVE_NAME: "YaRXP-macos-arm64-latest"
+
+# ---------------------------------------------------------------------------
+# GitLab Release  (runs on shared Linux runner, links all three artifacts)
+# ---------------------------------------------------------------------------
+release:
+  stage: release
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
+  needs:
+    - job: build-windows
+      artifacts: true
+    - job: build-macos-intel
+      artifacts: true
+    - job: build-macos-arm
+      artifacts: true
+  script:
+    - echo "Publishing release for commit $CI_COMMIT_SHORT_SHA"
+  release:
+    name: "Automatic Build"
+    tag_name: "latest"
+    description: |
+      Automated build from branch `$CI_COMMIT_BRANCH`.
+      Commit: $CI_COMMIT_SHORT_SHA — $CI_COMMIT_TITLE
+    assets:
+      links:
+        - name: "YaRXP-win-amd64-latest.zip"
+          url: "$CI_PROJECT_URL/-/jobs/artifacts/$CI_COMMIT_BRANCH/raw/YaRXP-win-amd64-latest.zip?job=build-windows"
+          link_type: package
+        - name: "YaRXP-macos-intel-latest.dmg"
+          url: "$CI_PROJECT_URL/-/jobs/artifacts/$CI_COMMIT_BRANCH/raw/YaRXP-macos-intel-latest.dmg?job=build-macos-intel"
+          link_type: package
+        - name: "YaRXP-macos-arm64-latest.dmg"
+          url: "$CI_PROJECT_URL/-/jobs/artifacts/$CI_COMMIT_BRANCH/raw/YaRXP-macos-arm64-latest.dmg?job=build-macos-arm"
+          link_type: package
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
