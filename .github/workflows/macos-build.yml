@@ -1,0 +1,72 @@
+name: macOS Build
+
+on:
+  workflow_dispatch:
+
+env:
+  QT_VERSION: 6.5.0
+
+jobs:
+
+  build:
+
+    permissions:
+      contents: write
+
+    strategy:
+      matrix:
+        include:
+          - arch: intel
+            runner: macos-13
+            qt_arch: clang_64
+            archive: YaRXP-macos-intel-latest
+          - arch: arm
+            runner: macos-latest
+            qt_arch: clang_arm64
+            archive: YaRXP-macos-arm-latest
+
+    runs-on: ${{ matrix.runner }}
+
+    steps:
+
+    - uses: actions/checkout@v3
+
+    - name: Install aqtinstall
+      run: pip3 install aqtinstall
+
+    - name: Install Qt
+      run: |
+        aqt install-qt mac desktop $QT_VERSION ${{ matrix.qt_arch }} -m qtmultimedia -O $HOME/Qt
+
+    - name: Run qmake
+      run: |
+        export PATH="$HOME/Qt/$QT_VERSION/${{ matrix.qt_arch }}/bin:$PATH"
+        qmake CONFIG+=release YaRXP.pro
+
+    - name: Build
+      run: make -j$(sysctl -n hw.logicalcpu)
+
+    - name: Create app bundle and DMG
+      run: |
+        export PATH="$HOME/Qt/$QT_VERSION/${{ matrix.qt_arch }}/bin:$PATH"
+        cd build/release
+        macdeployqt YaRXP.app -dmg
+
+    - name: List artifacts
+      run: find build/release -type f
+
+    - name: Upload executable artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ matrix.archive }}
+        path: build/release/YaRXP.dmg
+
+    - name: Publish release
+      uses: "marvinpinto/action-automatic-releases@latest"
+      with:
+        repo_token: "${{ secrets.GITHUB_TOKEN }}"
+        automatic_release_tag: "latest-macos-${{ matrix.arch }}"
+        prerelease: true
+        title: "Automatic macOS ${{ matrix.arch }} Build"
+        files: |
+          build/release/YaRXP.dmg
