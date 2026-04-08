@@ -1,6 +1,8 @@
 #include "showtextdialog.h"
 #include "ui_showtextdialog.h"
 
+#include <QFontDatabase>
+
 ShowTextDialog::ShowTextDialog(QWidget *parent, int code) :
     QWidget(parent),
     ui(new Ui::ShowTextDialog)
@@ -12,8 +14,12 @@ ShowTextDialog::ShowTextDialog(QWidget *parent, int code) :
     }
     else if (code == 355 || code == 655)
     {
+#ifdef Q_OS_MAC
+        QFont font(QFontDatabase::systemFont(QFontDatabase::FixedFont));
+#else
         QFont font;
         font.setFamily("Monospace");
+#endif
         this->ui->plainTextEdit->setFont(font);
         this->setWindowTitle("Script");
     }

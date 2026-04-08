@@ -2,6 +2,8 @@
 #include "ui_editscripts.h"
 #include "highlighter.h"
 
+#include <QFontDatabase>
+
 #include "RXIO2/rpgdb.h"
 #include "RXIO2/rpgeditorcontroller.h"
 
@@ -11,7 +13,11 @@ EditScripts::EditScripts(QWidget *parent) :
 {
     ui->setupUi(this);
 
+#ifdef Q_OS_MAC
+    this->ui->textEdit->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
+#else
     this->ui->textEdit->setFontFamily("Monospace");
+#endif
     highlighter = new Highlighter(this->ui->textEdit->document());
 
     connect(this->ui->textEdit, SIGNAL(textChanged()), this, SLOT(save()));

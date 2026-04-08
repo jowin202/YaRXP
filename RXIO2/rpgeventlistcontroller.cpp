@@ -5,6 +5,8 @@
 
 #include "events/eventlistitem.h"
 
+#include <QFontDatabase>
+
 RPGEventListController::RPGEventListController(RPGMapController *mc, QListWidget *listwidget)
     : QObject{}
 {
@@ -14,8 +16,12 @@ RPGEventListController::RPGEventListController(RPGMapController *mc, QListWidget
     this->listwidget = listwidget;
 
 
+#ifdef Q_OS_MAC
+    QFont font(QFontDatabase::systemFont(QFontDatabase::FixedFont));
+#else
     QFont font("Monospace");
     font.setStyleHint(QFont::TypeWriter);
+#endif
     listwidget->setFont(font);
     listwidget->setSelectionMode(QListWidget::ContiguousSelection);
 

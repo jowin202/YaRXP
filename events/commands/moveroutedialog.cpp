@@ -1,6 +1,8 @@
 #include "moveroutedialog.h"
 #include "ui_moveroutedialog.h"
 
+#include <QFontDatabase>
+
 #include "RXIO2/rpgdb.h"
 #include "RXIO2/factory.h"
 #include "RXIO2/rpgmapcontroller.h"
@@ -19,8 +21,12 @@ MoveRouteDialog::MoveRouteDialog(RPGDB *db, RPGMapController *mc, QJsonArray par
     ui->setupUi(this);
     this->db = db;
 
+#ifdef Q_OS_MAC
+    QFont font(QFontDatabase::systemFont(QFontDatabase::FixedFont));
+#else
     QFont font("Monospace");
     font.setStyleHint(QFont::TypeWriter);
+#endif
     this->ui->listWidget->setFont(font);
 
     this->ui->listWidget->setDragDropMode(QAbstractItemView::InternalMove);
