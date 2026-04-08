@@ -80,7 +80,7 @@ YaRXP follows a layered, MVC-inspired architecture:
 ┌────────────────────────────────────────────────────┐
 │                 Qt Application                     │
 │              MainWindow / Menus / Toolbars         │
-└──────────────┬────────────────┬───────────────────┘
+└──────────────┬────────────────┬────────────────────┘
                │                │
    ┌───────────▼──────┐  ┌──────▼───────────┐
    │    Map Editor    │  │   Data Editors   │
@@ -99,7 +99,7 @@ YaRXP follows a layered, MVC-inspired architecture:
                        │
       ┌────────────────┼──────────────────┐
       │                │                  │
- ┌────▼────┐   ┌───────▼──────┐   ┌──────▼────┐
+ ┌────▼─────┐   ┌───────▼──────┐   ┌──────▼────┐
  │  Parser  │   │  Controllers │   │  Factory  │
  │  Writer  │   │  (RPGEditor  │   │  (object  │
  │  RGSSAD  │   │   RPGMap     │   │  creation)│
