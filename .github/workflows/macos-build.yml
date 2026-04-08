@@ -5,6 +5,8 @@ on:
 
 env:
   QT_VERSION: 6.5.0
+  QT_ARCH: clang_arm64
+  ARCHIVE_NAME: YaRXP-macos-arm-latest
 
 jobs:
 
@@ -13,19 +15,7 @@ jobs:
     permissions:
       contents: write
 
-    strategy:
-      matrix:
-        include:
-          - arch: intel
-            runner: macos-13
-            qt_arch: clang_64
-            archive: YaRXP-macos-intel-latest
-          - arch: arm
-            runner: macos-latest
-            qt_arch: clang_arm64
-            archive: YaRXP-macos-arm-latest
-
-    runs-on: ${{ matrix.runner }}
+    runs-on: macos-latest
 
     steps:
 
@@ -36,11 +26,11 @@ jobs:
 
     - name: Install Qt
       run: |
-        aqt install-qt mac desktop $QT_VERSION ${{ matrix.qt_arch }} -m qtmultimedia -O $HOME/Qt
+        aqt install-qt mac desktop $QT_VERSION $QT_ARCH -m qtmultimedia -O $HOME/Qt
 
     - name: Run qmake
       run: |
-        export PATH="$HOME/Qt/$QT_VERSION/${{ matrix.qt_arch }}/bin:$PATH"
+        export PATH="$HOME/Qt/$QT_VERSION/$QT_ARCH/bin:$PATH"
         qmake CONFIG+=release YaRXP.pro
 
     - name: Build
@@ -48,7 +38,7 @@ jobs:
 
     - name: Create app bundle and DMG
       run: |
-        export PATH="$HOME/Qt/$QT_VERSION/${{ matrix.qt_arch }}/bin:$PATH"
+        export PATH="$HOME/Qt/$QT_VERSION/$QT_ARCH/bin:$PATH"
         cd build/release
         macdeployqt YaRXP.app -dmg
 
@@ -58,15 +48,15 @@ jobs:
     - name: Upload executable artifact
       uses: actions/upload-artifact@v4
       with:
-        name: ${{ matrix.archive }}
+        name: ${{ env.ARCHIVE_NAME }}
         path: build/release/YaRXP.dmg
 
     - name: Publish release
       uses: "marvinpinto/action-automatic-releases@latest"
       with:
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
-        automatic_release_tag: "latest-macos-${{ matrix.arch }}"
+        automatic_release_tag: "latest-macos"
         prerelease: true
-        title: "Automatic macOS ${{ matrix.arch }} Build"
+        title: "Automatic macOS Build"
         files: |
           build/release/YaRXP.dmg

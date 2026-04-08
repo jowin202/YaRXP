@@ -185,8 +185,7 @@ All builds are triggered **manually** via `workflow_dispatch` in GitHub Actions.
 |---|---|---|---|
 | Windows | `windows-build.yml` | `windows-latest` | `.exe` + Qt DLLs (zip) |
 | Linux | `linux-build.yml` | `ubuntu-latest` | binary (zip) |
-| macOS Intel | `macos-build.yml` | `macos-13` (x86_64) | `.dmg` |
-| macOS ARM | `macos-build.yml` | `macos-latest` (Apple Silicon) | `.dmg` |
+| macOS | `macos-build.yml` | `macos-latest` (Apple Silicon) | `.dmg` |
 
 All pipelines install Qt 6.5.0 via `aqtinstall`, build in Release mode, upload artifacts, and publish a pre-release tag. A GitLab CI pipeline (`.gitlab-ci.yml`) is also available for the Windows build.
 
