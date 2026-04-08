@@ -5,7 +5,7 @@ on:
 
 env:
   QT_VERSION: 6.5.0
-  QT_ARCH: clang_arm64
+  QT_ARCH: clang_64
   ARCHIVE_NAME: YaRXP-macos-arm-latest
 
 jobs:
