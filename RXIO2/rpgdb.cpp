@@ -125,7 +125,10 @@ RPGEditorController* RPGDB::prepare_data_editor()
 
 QJsonObject RPGDB::get_tileset_by_id(int id)
 {
-    return this->tileset_file.array().at(id).toObject();
+    QJsonArray arr = this->tileset_file.array();
+    if (id < 0 || id >= arr.size())
+        return QJsonObject();
+    return arr.at(id).toObject();
 }
 
 int RPGDB::add_tileset(QJsonObject tileset)
@@ -195,8 +198,15 @@ void RPGDB::set_max_variables(int n)
 QJsonArray RPGDB::get_equipment_vars(int actor_id)
 {
     QJsonArray result;
-    QJsonObject actor = this->actor_file.array().at(actor_id).toObject();
-    QJsonObject class_obj = this->class_file.array().at(actor.value("@class_id").toInt()).toObject();
+    QJsonArray actors = this->actor_file.array();
+    if (actor_id < 0 || actor_id >= actors.size())
+        return result;
+    QJsonObject actor = actors.at(actor_id).toObject();
+    int class_id = actor.value("@class_id").toInt();
+    QJsonArray classes = this->class_file.array();
+    if (class_id < 0 || class_id >= classes.size())
+        return result;
+    QJsonObject class_obj = classes.at(class_id).toObject();
     result.append(class_obj.value("@weapon_set").toArray());
 
     QJsonArray shield;
@@ -204,10 +214,13 @@ QJsonArray RPGDB::get_equipment_vars(int actor_id)
     QJsonArray armor;
     QJsonArray accessory;
 
+    QJsonArray armor_file_arr = this->armor_file.array();
     for (int i = 0; i < class_obj.value("@armor_set").toArray().count(); i++)
     {
         int id = class_obj.value("@armor_set").toArray().at(i).toInt();
-        QJsonObject obj = this->armor_file.array().at(id).toObject();
+        if (id < 0 || id >= armor_file_arr.size())
+            continue;
+        QJsonObject obj = armor_file_arr.at(id).toObject();
         if (obj.value("@kind").toInt() == 0)
             shield.append(id);
         else if (obj.value("@kind").toInt() == 1)

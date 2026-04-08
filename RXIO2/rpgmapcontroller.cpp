@@ -70,7 +70,7 @@ int RPGMapController::get_autotile_nn(QPoint pos, int layer)
     if (pos.x() == this->get_width()-1 || data.at(array_position(QPoint(pos.x()+1,pos.y()),layer)).toInt()/48 == autotile_id)
         res |= 0x40;
 
-    if (pos.y() == this->get_height()+1 || data.at(array_position(QPoint(pos.x(),pos.y()+1),layer)).toInt()/48 == autotile_id)
+    if (pos.y() == this->get_height()-1 || data.at(array_position(QPoint(pos.x(),pos.y()+1),layer)).toInt()/48 == autotile_id)
         res |= 0x80;
 
     return res;

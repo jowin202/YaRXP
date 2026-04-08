@@ -27,6 +27,12 @@ public:
 
     void edit_cell();
 
+    QString direction_name(int dir) {
+        int idx = dir / 2 - 1;
+        if (idx >= 0 && idx < text_directions.size())
+            return text_directions.at(idx);
+        return QString::number(dir);
+    }
 
 private:
     QColor black = QColor(0,0,0);

@@ -48,7 +48,7 @@ public:
     QJsonDocument *get_mapfile_by_id(int id) {
         if (this->map_files.contains(id))
             return this->map_files.value(id);
-        else return 0;
+        else return nullptr;
     }
     void remove_map_file_by_id(int id){
         if (this->map_files.contains(id)){
@@ -60,7 +60,7 @@ public:
         if (this->map_files.contains(id))
         {
             qDebug() << "Error: ID already exists";
-            return 0;
+            return nullptr;
         }
         this->map_files.insert(id, Factory().create_new_map());
         return this->map_files.value(id);
@@ -69,7 +69,7 @@ public:
         if (this->map_files.contains(id))
         {
             qDebug() << "Error: ID already exists";
-            return 0;
+            return nullptr;
         }
         this->map_files.insert(id, new QJsonDocument(map));
         return this->map_files.value(id);

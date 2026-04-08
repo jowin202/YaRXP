@@ -934,20 +934,30 @@ QString EventListItem::get_text(QJsonObject obj)
                     .arg(parameters.at(1).toInt()+1)
                     .arg(parameters.at(2).toInt() == 0 ?
                              "appeared" : QString("[%1] inflicted").arg(db->get_object_name(RPGDB::STATES,parameters.at(3).toInt()))); break; // enemy
-        case 6: text += QString("%1 is facing %2")
+        case 6: {
+            int dir_idx = parameters.at(2).toInt()/2-1;
+            text += QString("%1 is facing %2")
                     .arg(parameters.at(1).toInt() == -1 ? "Player" :
                                                           parameters.at(1).toInt() == 0 ? "This event" : QString("[%1]").arg(
                                                                                               mc->current_map()->object().value("@events").toObject().value(QString::number(parameters.at(1).toInt())).toObject().value("@name").toString()))
-                    .arg(this->text_directions.at(parameters.at(2).toInt()/2-1));
-                    break; // character
+                    .arg(dir_idx >= 0 && dir_idx < this->text_directions.size() ? this->text_directions.at(dir_idx) : QString::number(parameters.at(2).toInt()));
+                    break; } // character
         case 7: text += QString("Gold %2 %3").arg(parameters.at(1).toInt())
                     .arg(parameters.at(2).toInt() == 0 ? "or more" : "or less"); break; // gold
         case 8: text += QString("[%1] in inventory").arg(db->get_object_name(RPGDB::ITEMS, parameters.at(1).toInt())); break; // item
         case 9: text += QString("[%1] in inventory").arg(db->get_object_name(RPGDB::WEAPONS, parameters.at(1).toInt())); break; // weapon
         case 10: text += QString("[%1] in inventory").arg(db->get_object_name(RPGDB::ARMORS, parameters.at(1).toInt())); break; // armor
-        case 11: text += QString("The %1 button is being pressed").arg(parameters.at(1).toInt() <= 8 ?
-                                                                           this->text_directions.at(parameters.at(1).toInt()/2-1)
-                                                                         : this->text_buttons.at(parameters.at(1).toInt()-11)); break; // button
+        case 11: {
+            int btn = parameters.at(1).toInt();
+            QString btn_name;
+            if (btn >= 2 && btn <= 8 && btn % 2 == 0)
+                btn_name = this->text_directions.at(btn/2-1);
+            else if (btn >= 11 && btn-11 < this->text_buttons.size())
+                btn_name = this->text_buttons.at(btn-11);
+            else
+                btn_name = QString::number(btn);
+            text += QString("The %1 button is being pressed").arg(btn_name);
+            break; } // button
         case 12: text += QString("Script: %1").arg(parameters.at(1).toString());break; // script
         }
     }
@@ -1071,7 +1081,7 @@ QString EventListItem::get_text(QJsonObject obj)
                                              .arg(parameters.at(1).toInt(),4,10,QChar('0'))
                                              .arg(parameters.at(2).toInt(),4,10,QChar('0'))
                                              .arg(parameters.at(3).toInt(),4,10,QChar('0')))
-                                             + (parameters.at(4).toInt() == 0 ? "" : ", " + this->text_directions.at(parameters.at(4).toInt()/2-1))
+                                             + (parameters.at(4).toInt() == 0 ? "" : ", " + this->direction_name(parameters.at(4).toInt()))
                                              + (parameters.at(5).toInt() == 1 ? ", No Fade" : "");
     else if (code == 202)
         text += "@>Set Event Location: " + (parameters.at(0).toInt() == 0 ?
@@ -1080,9 +1090,9 @@ QString EventListItem::get_text(QJsonObject obj)
                 + (parameters.at(1).toInt() == 0 ? QString("(%1,%2)").arg(parameters.at(2).toInt(),3,10,QChar('0')).arg(parameters.at(3).toInt(),3,10,QChar('0')) :
                   (parameters.at(1).toInt() == 1 ? QString("Variable [%1][%2]").arg(parameters.at(2).toInt(),4,10,QChar('0')).arg(parameters.at(3).toInt(),4,10,QChar('0')) :
                                                    QString("Switch with [%1]").arg(mc->current_map()->object().value("@events").toObject().value(QString::number(parameters.at(2).toInt())).toObject().value("@name").toString())))
-                + (parameters.at(4).toInt() != 0 ? ", " +this->text_directions.at(parameters.at(4).toInt()/2-1) : "");
+                + (parameters.at(4).toInt() != 0 ? ", " + this->direction_name(parameters.at(4).toInt()) : "");
     else if (code == 203)
-        text += "@>Scroll Map: " + this->text_directions.at(parameters.at(0).toInt()/2-1) + ", " + QString::number(parameters.at(1).toInt()) + ", " + QString::number(parameters.at(2).toInt());
+        text += "@>Scroll Map: " + this->direction_name(parameters.at(0).toInt()) + ", " + QString::number(parameters.at(1).toInt()) + ", " + QString::number(parameters.at(2).toInt());
     else if (code == 204)
         text += "@>Change Map Settings: " + (parameters.at(0).toInt() == 0 ?  QString("Panorama = '%1', %2").arg(parameters.at(1).toString()).arg(parameters.at(2).toInt()) :
                                             parameters.at(0).toInt() == 1 ? QString("Fog = '%1', %2, %3, %4, %5, %6, %7")
