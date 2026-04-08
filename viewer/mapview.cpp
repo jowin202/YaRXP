@@ -35,7 +35,7 @@ MapView::MapView(QWidget *parent) : QGraphicsView(parent)
     this->action_paste.setShortcut(QKeySequence(tr("Ctrl+V")));
     connect(&this->action_paste, SIGNAL(triggered()), this, SLOT(do_paste()));
     this->action_delete.setText("Delete");
-    this->action_delete.setShortcut(Qt::Key_Delete);
+    this->action_delete.setShortcut(Qt::Key_Delete); //also backspace from MainWindow
     connect(&this->action_delete, SIGNAL(triggered()), this, SLOT(do_delete()));
     this->action_set_start.setText("Set Starting Pos");
     this->action_follow_teleport.setText("Follow Teleport");

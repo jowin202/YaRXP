@@ -187,8 +187,10 @@ RPGEventListController::RPGEventListController(RPGMapController *mc, QListWidget
             ((EventListItem*)item)->edit_cell();
     });
 
-
-    this->action_delete.setShortcut(Qt::Key_Delete);
+    this->action_delete.setShortcuts({
+        QKeySequence(Qt::Key_Delete),
+        QKeySequence(Qt::Key_Backspace)
+    });
     this->action_delete.setShortcutContext(Qt::WidgetShortcut);
     listwidget->addAction(&this->action_delete);
     connect(&this->action_delete, &QAction::triggered, [=]()

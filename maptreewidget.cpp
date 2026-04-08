@@ -31,7 +31,7 @@ MapTreeWidget::MapTreeWidget(QWidget *parent) : QTreeWidget(parent)
     action4.setShortcutContext(Qt::WidgetShortcut);
     connect(&action4, SIGNAL(triggered()), this, SLOT(paste_map()));
     action5.setText("&Delete");
-    action5.setShortcut(QKeySequence(Qt::Key_Delete));
+    action5.setShortcut(QKeySequence(Qt::Key_Delete)); //also Backspace from MainWindow
     action5.setShortcutContext(Qt::WidgetShortcut);
     connect(&action5, SIGNAL(triggered()), this, SLOT(delete_map()));
     action6.setText("&Import");

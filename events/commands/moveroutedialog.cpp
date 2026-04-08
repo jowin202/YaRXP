@@ -54,7 +54,10 @@ MoveRouteDialog::MoveRouteDialog(RPGDB *db, RPGMapController *mc, QJsonArray par
         }
     });
 
-    this->action_delete.setShortcut(Qt::Key_Delete);
+    this->action_delete.setShortcuts({
+        QKeySequence(Qt::Key_Delete),
+        QKeySequence(Qt::Key_Backspace)
+    });
     this->action_delete.setShortcutContext(Qt::WidgetShortcut);
     this->ui->listWidget->addAction(&this->action_delete);
     connect(&this->action_delete, SIGNAL(triggered()), this, SLOT(do_delete()));

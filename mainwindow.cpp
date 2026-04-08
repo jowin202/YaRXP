@@ -39,6 +39,11 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(this->ui->map_tree_widget, SIGNAL(on_map_selected(int)), this, SLOT(change_map(int)));
 
+    //dialog does not support two keyboard shortcuts
+    this->ui->actionDelete->setShortcuts({
+        QKeySequence(Qt::Key_Delete),
+        QKeySequence(Qt::Key_Backspace)
+    });
 
     this->layergroup = new QActionGroup(this);
     this->layergroup->addAction(this->ui->actionLayer1);

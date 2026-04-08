@@ -25,7 +25,10 @@ MapPropertiesDialog::MapPropertiesDialog(RPGDB *db, RPGMapInfoController *mic, i
     this->ui->line_id->setText(QString::number(id));
     this->mic->get_db()->fill_combo(this->ui->combo_tileset, RPGDB::TILESETS, true, 3);
 
-    this->action_delete.setShortcut(Qt::Key_Delete);
+    this->action_delete.setShortcuts({
+        QKeySequence(Qt::Key_Delete),
+        QKeySequence(Qt::Key_Backspace)
+    });
     this->action_delete.setShortcutContext(Qt::WidgetShortcut);
     this->ui->widget_encounters->addAction(&this->action_delete);
     connect(&this->action_delete, SIGNAL(triggered()), this, SLOT(on_button_del_clicked()));

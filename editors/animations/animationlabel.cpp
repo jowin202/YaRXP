@@ -35,7 +35,10 @@ AnimationLabel::AnimationLabel(QWidget *parent) : QLabel(parent)
     connect(&this->action_paste, SIGNAL(triggered()), this, SLOT(do_paste()));
 
     this->action_delete.setText("Delete");
-    this->action_delete.setShortcut(Qt::Key_Delete);
+    this->action_delete.setShortcuts({
+        QKeySequence(Qt::Key_Delete),
+        QKeySequence(Qt::Key_Backspace)
+    });
     this->action_delete.setShortcutContext(Qt::WidgetShortcut);
     this->addAction(&this->action_delete);
     connect(&this->action_delete, SIGNAL(triggered()), this, SLOT(do_delete()));

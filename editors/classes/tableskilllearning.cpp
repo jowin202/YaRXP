@@ -21,7 +21,10 @@ TableSkillLearning::TableSkillLearning(QWidget *parent) : QTableWidget(parent)
     this->addAction(action_edit);
 
     action_delete = new QAction("Delete");
-    action_delete->setShortcut(Qt::Key_Delete);
+    action_delete->setShortcuts({
+        QKeySequence(Qt::Key_Delete),
+        QKeySequence(Qt::Key_Backspace)
+    });
     action_delete->setShortcutContext(Qt::WidgetShortcut);
     connect(action_delete, SIGNAL(triggered()), this, SLOT(item_delete()));
     this->addAction(action_delete);

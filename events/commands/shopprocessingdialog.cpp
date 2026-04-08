@@ -20,7 +20,10 @@ ShopProcessingDialog::ShopProcessingDialog(RPGDB *db, QJsonArray shop_params, QW
     action_armor.setText("New Armor");
 
 
-    action_delete.setShortcut(Qt::Key_Delete);
+    action_delete.setShortcuts({
+        QKeySequence(Qt::Key_Delete),
+        QKeySequence(Qt::Key_Backspace)
+    });
     action_delete.setShortcutContext(Qt::WidgetShortcut);
     this->ui->tableWidget->addAction(&action_delete);
 
