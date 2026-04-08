@@ -33,7 +33,7 @@ jobs:
           libxkbcommon-x11-0
 
     - name: Install aqtinstall
-      run: pip install aqtinstall
+      run: pip install --break-system-packages aqtinstall
 
     - name: Install Qt
       run: |
