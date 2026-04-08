@@ -28,17 +28,17 @@ jobs:
       run: |
         aqt install-qt mac desktop $QT_VERSION $QT_ARCH -m qtmultimedia -O $HOME/Qt
 
+    - name: Add Qt to PATH
+      run: echo "$HOME/Qt/$QT_VERSION/$QT_ARCH/bin" >> $GITHUB_PATH
+
     - name: Run qmake
-      run: |
-        export PATH="$HOME/Qt/$QT_VERSION/$QT_ARCH/bin:$PATH"
-        qmake CONFIG+=release YaRXP.pro
+      run: qmake CONFIG+=release YaRXP.pro
 
     - name: Build
       run: make -j$(sysctl -n hw.logicalcpu)
 
     - name: Create app bundle and DMG
       run: |
-        export PATH="$HOME/Qt/$QT_VERSION/$QT_ARCH/bin:$PATH"
         cd build/release
         macdeployqt YaRXP.app -dmg
 
