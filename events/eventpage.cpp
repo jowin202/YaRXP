@@ -7,6 +7,15 @@
 #include "RXIO2/rpgeventlistcontroller.h"
 #include "dialogs/imagedialog.h"
 #include "events/commands/moveroutedialog.h"
+#include "events/eventdslserializer.h"
+
+#include <QDesktopServices>
+#include <QDir>
+#include <QFile>
+#include <QLabel>
+#include <QMessageBox>
+#include <QUrl>
+#include <QUuid>
 
 EventPage::EventPage(QJsonObject page, RPGMapController *mc, QWidget *parent) :
     QWidget(parent),
@@ -121,6 +130,8 @@ EventPage::EventPage(RPGMapController *mc, QWidget *parent):
 
 EventPage::~EventPage()
 {
+    if (!yamlTempFilePath.isEmpty())
+        QFile::remove(yamlTempFilePath);
     delete ui;
 }
 
@@ -159,9 +170,100 @@ QJsonObject EventPage::getPage()
 
 void EventPage::on_button_add_command_clicked()
 {
-
     EventCommandDialog *evcommdia = new EventCommandDialog(this->ui->eventList,db,mc,this->ui->eventList->currentRow());
     evcommdia->show();
+}
+
+static void setStatusLabel(QLabel* label, bool success, const QString& msg)
+{
+    label->setVisible(true);
+    if (success) {
+        label->setStyleSheet(
+            "background: #d4edda; color: #155724;"
+            "border-radius: 3px; padding: 3px;");
+    } else {
+        label->setStyleSheet(
+            "background: #f8d7da; color: #721c24;"
+            "border-radius: 3px; padding: 3px;");
+    }
+    label->setText(msg);
+}
+
+void EventPage::on_button_edit_yaml_clicked()
+{
+    // Create temp file and watchers on first use
+    if (yamlTempFilePath.isEmpty()) {
+        yamlTempFilePath = QDir::tempPath() + "/yarxp_event_"
+                           + QUuid::createUuid().toString(QUuid::WithoutBraces)
+                           + ".txt";
+
+        yamlFileWatcher = new QFileSystemWatcher(this);
+        yamlReloadTimer = new QTimer(this);
+        yamlReloadTimer->setSingleShot(true);
+        yamlReloadTimer->setInterval(300); // debounce
+
+        yamlStatusTimer = new QTimer(this);
+        yamlStatusTimer->setSingleShot(true);
+        connect(yamlStatusTimer, &QTimer::timeout, this, [=]() {
+            ui->label_yaml_status->setVisible(false);
+        });
+
+        connect(yamlReloadTimer, &QTimer::timeout, this, &EventPage::reloadFromYaml);
+
+        connect(yamlFileWatcher, &QFileSystemWatcher::fileChanged,
+                this, [=](const QString& path) {
+            // Some editors replace the file; re-watch the path if needed
+            if (!yamlFileWatcher->files().contains(path))
+                yamlFileWatcher->addPath(path);
+            yamlReloadTimer->start();
+        });
+    }
+
+    // Write current list state to the YAML file
+    QFile file(yamlTempFilePath);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        QMessageBox::warning(this, tr("Error"),
+                             tr("Could not create temporary file:\n%1").arg(yamlTempFilePath));
+        return;
+    }
+    file.write(EventDslSerializer::toScript(this->evc->get_list()).toUtf8());
+    file.close();
+
+    // Reset status and hide it while the editor is open
+    ui->label_yaml_status->setVisible(false);
+    if (yamlStatusTimer) yamlStatusTimer->stop();
+
+    // Re-add path after writing (file might not have existed before)
+    if (!yamlFileWatcher->files().contains(yamlTempFilePath))
+        yamlFileWatcher->addPath(yamlTempFilePath);
+
+    QDesktopServices::openUrl(QUrl::fromLocalFile(yamlTempFilePath));
+}
+
+void EventPage::reloadFromYaml()
+{
+    QFile file(yamlTempFilePath);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+        return;
+    QString yaml = QString::fromUtf8(file.readAll());
+    file.close();
+
+    bool ok;
+    QString errMsg;
+    QJsonArray newList = EventDslSerializer::fromScript(yaml, &ok, &errMsg);
+
+    if (!ok) {
+        setStatusLabel(ui->label_yaml_status, false,
+                       tr("Parse error: %1").arg(errMsg));
+        // Keep error visible until next successful reload
+        if (yamlStatusTimer) yamlStatusTimer->stop();
+        return;
+    }
+
+    this->evc->fill_list(newList);
+    setStatusLabel(ui->label_yaml_status, true, tr("Reloaded successfully"));
+    // Auto-hide the success banner after 3 seconds
+    if (yamlStatusTimer) yamlStatusTimer->start(3000);
 }
 
 

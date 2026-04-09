@@ -140,6 +140,8 @@ SOURCES += \
     events/eventdialog.cpp \
     events/eventlistitem.cpp \
     events/eventpage.cpp \
+    events/eventdslserializer.cpp \
+    events/eventscriptserializer.cpp \
     events/commands/moveroutedialog.cpp \
     export/godotexporter.cpp \
     import/importdialog.cpp \
@@ -277,6 +279,8 @@ HEADERS += \
     events/eventdialog.h \
     events/eventlistitem.h \
     events/eventpage.h \
+    events/eventdslserializer.h \
+    events/eventscriptserializer.h \
     events/commands/moveroutedialog.h \
     export/godotexporter.h \
     import/importdialog.h \

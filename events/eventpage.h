@@ -5,6 +5,8 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QJsonValue>
+#include <QFileSystemWatcher>
+#include <QTimer>
 
 #include "eventcommanddialog.h"
 
@@ -30,10 +32,13 @@ public:
 
 private slots:
     void on_button_add_command_clicked();
+    void on_button_edit_yaml_clicked();
 
     void on_combo_move_type_currentIndexChanged(int index);
 
     void on_button_move_route_clicked();
+
+    void reloadFromYaml();
 
 private:
     Ui::EventPage *ui;
@@ -41,6 +46,11 @@ private:
     RPGDB *db;
     QJsonObject move_route;
     RPGEventListController *evc;
+
+    QString yamlTempFilePath;
+    QFileSystemWatcher *yamlFileWatcher = nullptr;
+    QTimer *yamlReloadTimer = nullptr;
+    QTimer *yamlStatusTimer = nullptr;
 };
 
 #endif // EVENTPAGE_H
