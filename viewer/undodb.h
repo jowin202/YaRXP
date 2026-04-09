@@ -10,7 +10,7 @@ class UndoDB : public QObject
     Q_OBJECT
 public:
     explicit UndoDB(QObject *parent = nullptr);
-    void push(int map, QJsonObject obj);
+    void push(int map, QJsonObject obj, bool isFirst = false);
     QJsonObject pop(int map);
 
 signals:

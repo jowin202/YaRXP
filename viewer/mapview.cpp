@@ -99,6 +99,7 @@ void MapView::set_map(int id)
     this->mc.setMap(id);
     this->changes_made = false;
     this->redraw();
+    this->undo.push(mc.get_current_map_id(),mc.current_map()->object(), true); //isFirst=true (only first load)
 }
 
 void MapView::set_layer(int layer)
