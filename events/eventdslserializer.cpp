@@ -181,8 +181,6 @@ QString EventDslSerializer::toScript(const QJsonArray &commands)
 
     QString out;
     out.reserve(commands.size() * 48);
-    out += "# YaRXP Event Script\n";
-
     int i = 0;
     while (i < commands.size()) {
         QJsonObject cmd = commands[i].toObject();
@@ -507,6 +505,13 @@ QString EventDslSerializer::toScript(const QJsonArray &commands)
         case 103:
             out += pfx + "input_number(var="+QString::number(p[0].toInt())+", digits="+QString::number(p[1].toInt())+")\n";
             i++; break;
+        case 104: {
+            static const char *const POS[] = {"top","middle","bottom"};
+            int pos2 = qBound(0,p[0].toInt(),2);
+            out += pfx + "text_options(pos="+QString(POS[pos2])
+                   +", window="+(p[1].toInt()==0?"show":"hide")+")\n";
+            i++; break;
+        }
         case 105: out += pfx + "button_input(var="+QString::number(p[0].toInt())+")\n"; i++; break;
 
         // ── Fallback: raw ─────────────────────────────────────
@@ -1469,6 +1474,16 @@ QJsonArray EventDslSerializer::fromScript(const QString &text, bool *ok, QString
             auto toks = tokenizeArgs(innerParens(line));
             QJsonArray p; p<<posInt(toks,0,0)<<findNamedInt(toks,"dur",0);
             result.append(makeCmd(206,ind,p)); i++; continue;
+        }
+
+        // ── text_options(pos=X, window=show|hide) ────────────
+        if (line.startsWith("text_options(")) {
+            auto toks = tokenizeArgs(innerParens(line));
+            static const QMap<QString,int> PM={{"top",0},{"middle",1},{"bottom",2}};
+            QJsonArray p;
+            p<<PM.value(findNamedStr(toks,"pos","top"),0)
+             <<(findNamedStr(toks,"window","show")=="show"?0:1);
+            result.append(makeCmd(104,ind,p)); i++; continue;
         }
 
         // ── input_number(var=N, digits=N) ────────────────────
