@@ -870,14 +870,10 @@ QJsonArray EventDslSerializer::fromScript(const QString &text, bool *ok, QString
         if (errMsg) *errMsg = msg;
     };
 
-    // Advance past blank lines and full-line comments (# …)
-    // Returns false if we're at end.
+    // Advance past blank/empty lines only (comments are real commands).
     auto skipBlank = [&]() {
-        while (i < lineCount) {
-            QString t = lines[i].trimmed();
-            if (!t.isEmpty() && !t.startsWith('#')) break;
+        while (i < lineCount && lines[i].trimmed().isEmpty())
             i++;
-        }
     };
 
     while (i < lineCount) {
@@ -888,9 +884,25 @@ QJsonArray EventDslSerializer::fromScript(const QString &text, bool *ok, QString
         const QString  line = raw.trimmed();
         int ind             = lineIndent(raw) / 4;
 
-        // ── Full-line comment → skip (already handled by skipBlank for standalone,
-        //    but a line might be "#" after real code on same line — not supported)
-        if (line.startsWith('#')) { i++; continue; }
+        // ── Comment (#) → code 108 + 408 continuations ──────
+        if (line.startsWith('#')) {
+            QString first = line.mid(1);
+            if (!first.isEmpty() && first[0]==' ') first = first.mid(1);
+            QJsonArray p0; p0.append(first);
+            result.append(makeCmd(108, ind, p0));
+            i++;
+            while (i < lineCount) {
+                const QString &r2 = lines[i];
+                QString l2 = r2.trimmed();
+                if (!l2.startsWith('#')) break;
+                QString cont = l2.mid(1);
+                if (!cont.isEmpty() && cont[0]==' ') cont = cont.mid(1);
+                QJsonArray pc; pc.append(cont);
+                result.append(makeCmd(408, lineIndent(r2)/4, pc));
+                i++;
+            }
+            continue;
+        }
 
         // ── show_text multiline block ────────────────────────
         if (line == "show_text:") {
@@ -1001,13 +1013,14 @@ QJsonArray EventDslSerializer::fromScript(const QString &text, bool *ok, QString
 
         // ── show_animation(who, anim=N) ──────────────────────
         if (line.startsWith("show_animation(")) {
-            static QRegularExpression re(R"(^show_animation\((player|this|event\((\d+)\)),\s*anim=(\d+)\)$)");
+            static QRegularExpression re(R"(^show_animation\((player|this|event\(\d+\)),\s*anim=(\d+)\)$)");
             auto m = re.match(line);
             if (m.hasMatch()) {
-                int who = m.captured(1)=="player" ? -1
-                        : m.captured(1)=="this"   ?  0
-                        : m.captured(2).toInt();
-                QJsonArray p; p << who << m.captured(3).toInt();
+                QString whoS = m.captured(1);
+                int who = whoS=="player" ? -1
+                        : whoS=="this"   ?  0
+                        : innerParens(whoS).toInt();
+                QJsonArray p; p << who << m.captured(2).toInt();
                 result.append(makeCmd(207,ind,p)); i++; continue;
             }
         }
@@ -1284,7 +1297,7 @@ QJsonArray EventDslSerializer::fromScript(const QString &text, bool *ok, QString
 
         // ── move_route(who, opts?): ──────────────────────────
         if (line.startsWith("move_route(") && line.endsWith(':')) {
-            auto toks = tokenizeArgs(line.mid(11, line.size()-12));
+            auto toks = tokenizeArgs(line.mid(11, line.size()-13));
             QString who = posStr(toks,0,"this");
             int evId = who=="player" ? -1
                      : who=="this"   ?  0
@@ -1418,6 +1431,74 @@ QJsonArray EventDslSerializer::fromScript(const QString &text, bool *ok, QString
                 QJsonArray p; p<<who<<op<<(isVar?1:0)<<val;
                 result.append(makeCmd(CM[m.captured(1)],ind,p)); i++; continue;
             }
+        }
+
+        // ── scroll_map(dir, dist, speed) ─────────────────────
+        if (line.startsWith("scroll_map(")) {
+            auto toks = tokenizeArgs(innerParens(line));
+            static const QMap<QString,int> DM={{"down",2},{"left",4},{"right",6},{"up",8}};
+            QJsonArray p; p<<DM.value(posStr(toks,0,"down"),2)<<posInt(toks,1,0)<<posInt(toks,2,0);
+            result.append(makeCmd(203,ind,p)); i++; continue;
+        }
+
+        // ── transparent(on|off) ───────────────────────────────
+        if (line.startsWith("transparent(")) {
+            QJsonArray p; p.append(innerParens(line).trimmed()=="on"?0:1);
+            result.append(makeCmd(208,ind,p)); i++; continue;
+        }
+
+        // ── rotate_picture(N, speed) ──────────────────────────
+        if (line.startsWith("rotate_picture(")) {
+            auto toks = tokenizeArgs(innerParens(line));
+            QJsonArray p; p<<posInt(toks,0,0)<<posInt(toks,1,0);
+            result.append(makeCmd(233,ind,p)); i++; continue;
+        }
+
+        // ── picture_tone(N, tone..., dur=N) ───────────────────
+        if (line.startsWith("picture_tone(")) {
+            auto toks = tokenizeArgs(innerParens(line));
+            int num = posInt(toks,0,0);
+            QJsonObject tone = parseTone(toks,1);
+            int dur = findNamedInt(toks,"dur",0);
+            QJsonArray p; p<<num<<tone<<dur;
+            result.append(makeCmd(234,ind,p)); i++; continue;
+        }
+
+        // ── fog_opacity(N, dur=N) ────────────────────────────
+        if (line.startsWith("fog_opacity(")) {
+            auto toks = tokenizeArgs(innerParens(line));
+            QJsonArray p; p<<posInt(toks,0,0)<<findNamedInt(toks,"dur",0);
+            result.append(makeCmd(206,ind,p)); i++; continue;
+        }
+
+        // ── input_number(var=N, digits=N) ────────────────────
+        if (line.startsWith("input_number(")) {
+            auto toks = tokenizeArgs(innerParens(line));
+            QJsonArray p; p<<findNamedInt(toks,"var",0)<<findNamedInt(toks,"digits",0);
+            result.append(makeCmd(103,ind,p)); i++; continue;
+        }
+
+        // ── button_input(var=N) ───────────────────────────────
+        if (line.startsWith("button_input(")) {
+            auto toks = tokenizeArgs(innerParens(line));
+            QJsonArray p; p<<findNamedInt(toks,"var",0);
+            result.append(makeCmd(105,ind,p)); i++; continue;
+        }
+
+        // ── recover_all(party|actor(N)) ───────────────────────
+        if (line.startsWith("recover_all(")) {
+            QString who = innerParens(line).trimmed();
+            int id = who=="party" ? 0 : innerParens(who).toInt();
+            QJsonArray p; p<<id;
+            result.append(makeCmd(314,ind,p)); i++; continue;
+        }
+
+        // ── enemy_recover(troop|enemy(N)) ────────────────────
+        if (line.startsWith("enemy_recover(")) {
+            QString who = innerParens(line).trimmed();
+            int id = who=="troop" ? -1 : innerParens(who).toInt()-1;
+            QJsonArray p; p<<id;
+            result.append(makeCmd(334,ind,p)); i++; continue;
         }
 
         // ── raw(code, [...]) fallback ─────────────────────────
