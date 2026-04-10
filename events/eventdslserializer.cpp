@@ -336,6 +336,22 @@ QString EventDslSerializer::toScript(const QJsonArray &commands)
             out += ")\n"; i++; break;
         }
 
+        // ── Set event location ───────────────────────────────
+        case 202: {
+            QString ev = p[0].toInt()==0 ? "this" : "event("+QString::number(p[0].toInt())+")";
+            int type = p[1].toInt();
+            if (type==2) {
+                out += pfx + "set_event_location("+ev+", exchange=event("+QString::number(p[2].toInt())+")";
+            } else {
+                QString xs = type==1 ? "variable("+QString::number(p[2].toInt())+")" : QString::number(p[2].toInt());
+                QString ys = type==1 ? "variable("+QString::number(p[3].toInt())+")" : QString::number(p[3].toInt());
+                out += pfx + "set_event_location("+ev+", x="+xs+", y="+ys;
+            }
+            int dir = p[4].toInt();
+            if (dir!=0) out += ", dir="+QString::number(dir);
+            out += ")\n"; i++; break;
+        }
+
         // ── Map effects ──────────────────────────────────────
         case 203: out += pfx + "scroll_map(" + dirName(p[0].toInt()) + ", " + QString::number(p[1].toInt()) + ", " + QString::number(p[2].toInt()) + ")\n"; i++; break;
         case 207: out += pfx + "show_animation(" + whoStr(p[0].toInt()) + ", anim=" + QString::number(p[1].toInt()) + ")\n"; i++; break;
@@ -399,7 +415,43 @@ QString EventDslSerializer::toScript(const QJsonArray &commands)
         }
         case 225: out += pfx + "screen_shake(power="+QString::number(p[0].toInt())+", speed="+QString::number(p[1].toInt())+", dur="+QString::number(p[2].toInt())+")\n"; i++; break;
 
+        // ── Change map settings ──────────────────────────────
+        case 204: {
+            int type = p[0].toInt();
+            if (type==0) {
+                out += pfx + "map_settings(panorama=\""+esc(p[1].toString())+"\", hue="+QString::number(p[2].toInt())+")\n";
+            } else if (type==1) {
+                out += pfx + "map_settings(fog=\""+esc(p[1].toString())+"\", hue="+QString::number(p[2].toInt())
+                       +", opacity="+QString::number(p[3].toInt())+", blend="+QString::number(p[4].toInt())
+                       +", zoom="+QString::number(p[5].toInt())+", sx="+QString::number(p[6].toInt())
+                       +", sy="+QString::number(p[7].toInt())+")\n";
+            } else {
+                out += pfx + "map_settings(battleback=\""+esc(p[1].toString())+"\")\n";
+            }
+            i++; break;
+        }
+
         // ── Pictures ─────────────────────────────────────────
+        case 231: {
+            QString origin = p[2].toInt()==0 ? "upper_left" : "center";
+            QString xs = p[3].toInt()==1 ? "variable("+QString::number(p[4].toInt())+")" : QString::number(p[4].toInt());
+            QString ys = p[3].toInt()==1 ? "variable("+QString::number(p[5].toInt())+")" : QString::number(p[5].toInt());
+            out += pfx + "show_picture("+QString::number(p[0].toInt())+", \""+esc(p[1].toString())
+                   +"\", origin="+origin+", x="+xs+", y="+ys
+                   +", zoom_x="+QString::number(p[6].toInt())+", zoom_y="+QString::number(p[7].toInt())
+                   +", opacity="+QString::number(p[8].toInt())+", blend="+QString::number(p[9].toInt())+")\n";
+            i++; break;
+        }
+        case 232: {
+            QString origin = p[2].toInt()==0 ? "upper_left" : "center";
+            QString xs = p[3].toInt()==1 ? "variable("+QString::number(p[4].toInt())+")" : QString::number(p[4].toInt());
+            QString ys = p[3].toInt()==1 ? "variable("+QString::number(p[5].toInt())+")" : QString::number(p[5].toInt());
+            out += pfx + "move_picture("+QString::number(p[0].toInt())+", dur="+QString::number(p[1].toInt())
+                   +", origin="+origin+", x="+xs+", y="+ys
+                   +", zoom_x="+QString::number(p[6].toInt())+", zoom_y="+QString::number(p[7].toInt())
+                   +", opacity="+QString::number(p[8].toInt())+", blend="+QString::number(p[9].toInt())+")\n";
+            i++; break;
+        }
         case 233: out += pfx + "rotate_picture("+QString::number(p[0].toInt())+", "+QString::number(p[1].toInt())+")\n"; i++; break;
         case 234: {
             QJsonObject t = p[1].toObject();
@@ -477,6 +529,11 @@ QString EventDslSerializer::toScript(const QJsonArray &commands)
         }
         case 605: i++; break;
 
+        // ── Name input processing ─────────────────────────────
+        case 303:
+            out += pfx + "name_input(actor("+QString::number(p[0].toInt())+"), max="+QString::number(p[1].toInt())+")\n";
+            i++; break;
+
         // ── Actor stats ──────────────────────────────────────
         case 311: case 312: case 315: case 316: {
             QString fn = (code==311?"change_hp":(code==312?"change_sp":(code==315?"change_exp":"change_level")));
@@ -489,15 +546,79 @@ QString EventDslSerializer::toScript(const QJsonArray &commands)
             QString who = p[0].toInt()==0 ? "party" : "actor("+QString::number(p[0].toInt())+")";
             out += pfx + "recover_all(" + who + ")\n"; i++; break;
         }
+        // ── Change actor/enemy state ─────────────────────────
+        case 313: {
+            QString who = p[0].toInt()==0 ? "party" : "actor("+QString::number(p[0].toInt())+")";
+            out += pfx + "change_state("+who+", "+(p[1].toInt()==0?"add":"remove")+", state("+QString::number(p[2].toInt())+"))\n";
+            i++; break;
+        }
+        case 333: {
+            QString who = p[0].toInt()==-1 ? "troop" : "enemy("+QString::number(p[0].toInt())+")";
+            out += pfx + "change_enemy_state("+who+", "+(p[1].toInt()==0?"add":"remove")+", state("+QString::number(p[2].toInt())+"))\n";
+            i++; break;
+        }
+
+        // ── Change parameters / skills / equipment ────────────
+        case 317: {
+            static const char *const PARAMS[] = {"MaxHP","MaxSP","STR","DEX","AGI","INT"};
+            int pidx = qBound(0, p[1].toInt(), 5);
+            QString op  = p[2].toInt()==0 ? "+=" : "-=";
+            QString rhs = p[3].toInt()==0 ? QString::number(p[4].toInt()) : "variable("+QString::number(p[4].toInt())+")";
+            out += pfx + "change_parameters(actor("+QString::number(p[0].toInt())+"), "+PARAMS[pidx]+", "+op+rhs+")\n";
+            i++; break;
+        }
+        case 318:
+            out += pfx + "change_skills(actor("+QString::number(p[0].toInt())+"), "
+                   +(p[1].toInt()==0?"learn":"forget")+", skill("+QString::number(p[2].toInt())+"))\n";
+            i++; break;
+        case 319: {
+            static const char *const SLOTS[] = {"weapon","shield","helmet","body_armor","accessory"};
+            out += pfx + "change_equipment(actor("+QString::number(p[0].toInt())+"), "
+                   +SLOTS[qBound(0,p[1].toInt(),4)]+", "+QString::number(p[2].toInt())+")\n";
+            i++; break;
+        }
+
+        // ── Change enemy HP / SP ──────────────────────────────
+        case 331: {
+            QString who = p[0].toInt()==-1 ? "troop" : "enemy("+QString::number(p[0].toInt())+")";
+            QString op  = p[1].toInt()==0 ? "+=" : "-=";
+            QString rhs = p[2].toInt()==0 ? QString::number(p[3].toInt()) : "variable("+QString::number(p[3].toInt())+")";
+            out += pfx + "change_enemy_hp("+who+", "+op+rhs+(p[4].toBool()?", knockout":"")+")\n";
+            i++; break;
+        }
+        case 332: {
+            QString who = p[0].toInt()==-1 ? "troop" : "enemy("+QString::number(p[0].toInt())+")";
+            QString op  = p[1].toInt()==0 ? "+=" : "-=";
+            QString rhs = p[2].toInt()==0 ? QString::number(p[3].toInt()) : "variable("+QString::number(p[3].toInt())+")";
+            out += pfx + "change_enemy_sp("+who+", "+op+rhs+")\n";
+            i++; break;
+        }
         case 334: {
             QString who = p[0].toInt()==-1 ? "troop" : "enemy("+QString::number(p[0].toInt()+1)+")";
             out += pfx + "enemy_recover(" + who + ")\n"; i++; break;
         }
 
+        // ── Enemy appear / transform ──────────────────────────
+        case 335:
+            out += pfx + "enemy_appear(enemy("+QString::number(p[0].toInt())+"))\n"; i++; break;
+        case 336:
+            out += pfx + "enemy_transform(enemy("+QString::number(p[0].toInt())+"), into=enemy("+QString::number(p[1].toInt())+"))\n";
+            i++; break;
+
         // ── Change actor name ────────────────────────────────
         case 320:
             out += pfx + "change_actor_name(actor(" + QString::number(p[0].toInt())
                    + "), \"" + esc(p[1].toString()) + "\")\n";
+            i++; break;
+
+        // ── Change actor class / graphic ─────────────────────
+        case 321:
+            out += pfx + "change_actor_class(actor("+QString::number(p[0].toInt())+"), class("+QString::number(p[1].toInt())+"))\n";
+            i++; break;
+        case 322:
+            out += pfx + "change_actor_graphic(actor("+QString::number(p[0].toInt())
+                   +"), char=\""+esc(p[1].toString())+"\", char_hue="+QString::number(p[2].toInt())
+                   +", battler=\""+esc(p[3].toString())+"\", battler_hue="+QString::number(p[4].toInt())+")\n";
             i++; break;
 
         // ── Force action ─────────────────────────────────────
@@ -511,6 +632,27 @@ QString EventDslSerializer::toScript(const QJsonArray &commands)
             QString seq = p[5].toInt()==1 ? "now" : "normal";
             out += pfx + "force_action(" + subject + ", " + action
                    + ", target=" + QString::number(p[4].toInt()) + ", " + seq + ")\n";
+            i++; break;
+        }
+
+        // ── Show battle animation ─────────────────────────────
+        case 337: {
+            QString subject = p[0].toInt()==0
+                ? "enemy(" + QString::number(p[1].toInt()) + ")"
+                : "actor(" + QString::number(p[1].toInt()) + ")";
+            out += pfx + "show_battle_animation(" + subject + ", anim=" + QString::number(p[2].toInt()) + ")\n";
+            i++; break;
+        }
+
+        // ── Deal damage ───────────────────────────────────────
+        case 338: {
+            QString subject = p[0].toInt()==0
+                ? "enemy(" + QString::number(p[1].toInt()) + ")"
+                : "actor(" + QString::number(p[1].toInt()) + ")";
+            QString rhs = p[2].toInt()==0
+                ? QString::number(p[3].toInt())
+                : "variable(" + QString::number(p[3].toInt()) + ")";
+            out += pfx + "deal_damage(" + subject + ", " + rhs + ")\n";
             i++; break;
         }
 
@@ -1181,6 +1323,28 @@ QJsonArray EventDslSerializer::fromScript(const QString &text, bool *ok, QString
             result.append(makeCmd(129,ind,p)); i++; continue;
         }
 
+        // ── set_event_location ───────────────────────────────
+        if (line.startsWith("set_event_location(")) {
+            auto toks = tokenizeArgs(line.mid(19, line.size()-20));
+            QString evStr = posStr(toks,0,"this");
+            int evId = evStr=="this" ? 0 : innerParens(evStr).toInt();
+            QJsonArray p;
+            if (hasNamedKey(toks,"exchange")) {
+                QString exStr = findNamedStr(toks,"exchange","event(0)");
+                int exId = innerParens(exStr).toInt();
+                int dir = findNamedInt(toks,"dir",0);
+                p<<evId<<2<<exId<<0<<dir;
+            } else {
+                bool xIsVar, yIsVar;
+                int xV = parseVarOrInt(findNamedStr(toks,"x","0"), xIsVar);
+                int yV = parseVarOrInt(findNamedStr(toks,"y","0"), yIsVar);
+                int type = xIsVar||yIsVar ? 1 : 0;
+                int dir = findNamedInt(toks,"dir",0);
+                p<<evId<<type<<xV<<yV<<dir;
+            }
+            result.append(makeCmd(202,ind,p)); i++; continue;
+        }
+
         // ── transfer(…) ──────────────────────────────────────
         if (line.startsWith("transfer(")) {
             auto toks = tokenizeArgs(innerParens(line));
@@ -1198,6 +1362,57 @@ QJsonArray EventDslSerializer::fromScript(const QString &text, bool *ok, QString
             int fade = hasNamedKey(toks,"no_fade") ? 1 : 0;
             QJsonArray p; p<<(useVar?1:0)<<mapV<<xV<<yV<<dir<<fade;
             result.append(makeCmd(201,ind,p)); i++; continue;
+        }
+
+        // ── map_settings ─────────────────────────────────────
+        if (line.startsWith("map_settings(")) {
+            auto toks = tokenizeArgs(innerParens(line));
+            QJsonArray p;
+            if (hasNamedKey(toks,"panorama")) {
+                p<<0<<findNamedStr(toks,"panorama","")<<findNamedInt(toks,"hue",0);
+            } else if (hasNamedKey(toks,"fog")) {
+                p<<1<<findNamedStr(toks,"fog","")<<findNamedInt(toks,"hue",0)
+                 <<findNamedInt(toks,"opacity",0)<<findNamedInt(toks,"blend",0)
+                 <<findNamedInt(toks,"zoom",100)<<findNamedInt(toks,"sx",0)<<findNamedInt(toks,"sy",0);
+            } else if (hasNamedKey(toks,"battleback")) {
+                p<<2<<findNamedStr(toks,"battleback","");
+            }
+            result.append(makeCmd(204,ind,p)); i++; continue;
+        }
+
+        // ── show_picture / move_picture ───────────────────────
+        if (line.startsWith("show_picture(") || line.startsWith("move_picture(")) {
+            bool isShow = line.startsWith("show_picture(");
+            auto toks = tokenizeArgs(innerParens(line));
+            int num = posInt(toks,0,0);
+            int origin = findNamedStr(toks,"origin","upper_left")=="center" ? 1 : 0;
+            bool xIsVar, yIsVar;
+            int xV = parseVarOrInt(findNamedStr(toks,"x","0"), xIsVar);
+            int yV = parseVarOrInt(findNamedStr(toks,"y","0"), yIsVar);
+            int posType = xIsVar||yIsVar ? 1 : 0;
+            int zx = findNamedInt(toks,"zoom_x",100);
+            int zy = findNamedInt(toks,"zoom_y",100);
+            int op = findNamedInt(toks,"opacity",255);
+            int bl = findNamedInt(toks,"blend",0);
+            QJsonArray p;
+            if (isShow) {
+                p<<num<<posStr(toks,1,"")<<origin<<posType<<xV<<yV<<zx<<zy<<op<<bl;
+                result.append(makeCmd(231,ind,p));
+            } else {
+                p<<num<<findNamedInt(toks,"dur",0)<<origin<<posType<<xV<<yV<<zx<<zy<<op<<bl;
+                result.append(makeCmd(232,ind,p));
+            }
+            i++; continue;
+        }
+
+        // ── name_input(actor(N), max=N) ───────────────────────
+        if (line.startsWith("name_input(")) {
+            static QRegularExpression re(R"(^name_input\(actor\((\d+)\),\s*max=(\d+)\)$)");
+            auto m = re.match(line);
+            if (m.hasMatch()) {
+                QJsonArray p; p<<m.captured(1).toInt()<<m.captured(2).toInt();
+                result.append(makeCmd(303,ind,p)); i++; continue;
+            }
         }
 
         // ── play_bgm/bgs/me/se("name", vol, pitch) ───────────
@@ -1530,6 +1745,118 @@ QJsonArray EventDslSerializer::fromScript(const QString &text, bool *ok, QString
             result.append(makeCmd(105,ind,p)); i++; continue;
         }
 
+        // ── change_state / change_enemy_state ────────────────
+        if (line.startsWith("change_state(")) {
+            static QRegularExpression re(R"(^change_state\((party|actor\((\d+)\)),\s*(add|remove),\s*state\((\d+)\)\)$)");
+            auto m = re.match(line);
+            if (m.hasMatch()) {
+                int who = m.captured(1)=="party" ? 0 : m.captured(2).toInt();
+                QJsonArray p; p<<who<<(m.captured(3)=="add"?0:1)<<m.captured(4).toInt();
+                result.append(makeCmd(313,ind,p)); i++; continue;
+            }
+        }
+        if (line.startsWith("change_enemy_state(")) {
+            static QRegularExpression re(R"(^change_enemy_state\((troop|enemy\((-?\d+)\)),\s*(add|remove),\s*state\((\d+)\)\)$)");
+            auto m = re.match(line);
+            if (m.hasMatch()) {
+                int who = m.captured(1)=="troop" ? -1 : m.captured(2).toInt();
+                QJsonArray p; p<<who<<(m.captured(3)=="add"?0:1)<<m.captured(4).toInt();
+                result.append(makeCmd(333,ind,p)); i++; continue;
+            }
+        }
+
+        // ── change_parameters(actor(N), STAT, +=/-= rhs) ─────
+        if (line.startsWith("change_parameters(")) {
+            static QRegularExpression re(R"(^change_parameters\(actor\((\d+)\),\s*(MaxHP|MaxSP|STR|DEX|AGI|INT),\s*(\+=|-=)(.+)\)$)");
+            static const QMap<QString,int> PMAP={{"MaxHP",0},{"MaxSP",1},{"STR",2},{"DEX",3},{"AGI",4},{"INT",5}};
+            auto m = re.match(line);
+            if (m.hasMatch()) {
+                bool isVar; int val = parseVarOrInt(m.captured(4).trimmed(), isVar);
+                QJsonArray p; p<<m.captured(1).toInt()<<PMAP[m.captured(2)]<<(m.captured(3)=="+="?0:1)<<(isVar?1:0)<<val;
+                result.append(makeCmd(317,ind,p)); i++; continue;
+            }
+        }
+
+        // ── change_skills(actor(N), learn|forget, skill(N)) ──
+        if (line.startsWith("change_skills(")) {
+            static QRegularExpression re(R"(^change_skills\(actor\((\d+)\),\s*(learn|forget),\s*skill\((\d+)\)\)$)");
+            auto m = re.match(line);
+            if (m.hasMatch()) {
+                QJsonArray p; p<<m.captured(1).toInt()<<(m.captured(2)=="learn"?0:1)<<m.captured(3).toInt();
+                result.append(makeCmd(318,ind,p)); i++; continue;
+            }
+        }
+
+        // ── change_equipment(actor(N), slot, N) ──────────────
+        if (line.startsWith("change_equipment(")) {
+            static QRegularExpression re(R"(^change_equipment\(actor\((\d+)\),\s*(weapon|shield|helmet|body_armor|accessory),\s*(\d+)\)$)");
+            static const QMap<QString,int> SMAP={{"weapon",0},{"shield",1},{"helmet",2},{"body_armor",3},{"accessory",4}};
+            auto m = re.match(line);
+            if (m.hasMatch()) {
+                QJsonArray p; p<<m.captured(1).toInt()<<SMAP[m.captured(2)]<<m.captured(3).toInt();
+                result.append(makeCmd(319,ind,p)); i++; continue;
+            }
+        }
+
+        // ── change_actor_class / change_actor_graphic ─────────
+        if (line.startsWith("change_actor_class(")) {
+            static QRegularExpression re(R"(^change_actor_class\(actor\((\d+)\),\s*class\((\d+)\)\)$)");
+            auto m = re.match(line);
+            if (m.hasMatch()) {
+                QJsonArray p; p<<m.captured(1).toInt()<<m.captured(2).toInt();
+                result.append(makeCmd(321,ind,p)); i++; continue;
+            }
+        }
+        if (line.startsWith("change_actor_graphic(")) {
+            static QRegularExpression re(R"x(^change_actor_graphic\(actor\((\d+)\),\s*char="([^"]*)",\s*char_hue=(-?\d+),\s*battler="([^"]*)",\s*battler_hue=(-?\d+)\)$)x");
+            auto m = re.match(line);
+            if (m.hasMatch()) {
+                QJsonArray p; p<<m.captured(1).toInt()<<m.captured(2)<<m.captured(3).toInt()<<m.captured(4)<<m.captured(5).toInt();
+                result.append(makeCmd(322,ind,p)); i++; continue;
+            }
+        }
+
+        // ── change_enemy_hp / change_enemy_sp ────────────────
+        if (line.startsWith("change_enemy_hp(")) {
+            static QRegularExpression re(R"(^change_enemy_hp\((troop|enemy\((-?\d+)\)),\s*(\+=|-=)(variable\(\d+\)|-?\d+)(,\s*knockout)?\)$)");
+            auto m = re.match(line);
+            if (m.hasMatch()) {
+                int who = m.captured(1)=="troop" ? -1 : m.captured(2).toInt();
+                bool isVar; int val = parseVarOrInt(m.captured(4).trimmed(), isVar);
+                bool ko = !m.captured(5).isEmpty();
+                QJsonArray p; p<<who<<(m.captured(3)=="+="?0:1)<<(isVar?1:0)<<val<<ko;
+                result.append(makeCmd(331,ind,p)); i++; continue;
+            }
+        }
+        if (line.startsWith("change_enemy_sp(")) {
+            static QRegularExpression re(R"(^change_enemy_sp\((troop|enemy\((-?\d+)\)),\s*(\+=|-=)(variable\(\d+\)|-?\d+)\)$)");
+            auto m = re.match(line);
+            if (m.hasMatch()) {
+                int who = m.captured(1)=="troop" ? -1 : m.captured(2).toInt();
+                bool isVar; int val = parseVarOrInt(m.captured(4).trimmed(), isVar);
+                QJsonArray p; p<<who<<(m.captured(3)=="+="?0:1)<<(isVar?1:0)<<val;
+                result.append(makeCmd(332,ind,p)); i++; continue;
+            }
+        }
+
+        // ── enemy_appear / enemy_transform ────────────────────
+        if (line.startsWith("enemy_appear(")) {
+            static QRegularExpression re(R"(^enemy_appear\(enemy\((\d+)\)\)$)");
+            auto m = re.match(line);
+            if (m.hasMatch()) {
+                QJsonArray p; p<<m.captured(1).toInt();
+                result.append(makeCmd(335,ind,p)); i++; continue;
+            }
+        }
+        if (line.startsWith("enemy_transform(")) {
+            static QRegularExpression re(R"(^enemy_transform\(enemy\((\d+)\),\s*into=enemy\((\d+)\)\)$)");
+            auto m = re.match(line);
+            if (m.hasMatch()) {
+                QJsonArray p; p<<m.captured(1).toInt()<<m.captured(2).toInt();
+                result.append(makeCmd(336,ind,p)); i++; continue;
+            }
+        }
+
         // ── recover_all(party|actor(N)) ───────────────────────
         if (line.startsWith("recover_all(")) {
             QString who = innerParens(line).trimmed();
@@ -1553,6 +1880,29 @@ QJsonArray EventDslSerializer::fromScript(const QString &text, bool *ok, QString
             if (m.hasMatch()) {
                 QJsonArray p; p<<m.captured(1).toInt()<<dslUnescape(m.captured(2));
                 result.append(makeCmd(320,ind,p)); i++; continue;
+            }
+        }
+
+        // ── show_battle_animation(enemy(N)|actor(N), anim=N) ─
+        if (line.startsWith("show_battle_animation(")) {
+            static QRegularExpression re(R"(^show_battle_animation\((enemy|actor)\((\d+)\),\s*anim=(\d+)\)$)");
+            auto m = re.match(line);
+            if (m.hasMatch()) {
+                int stype = m.captured(1)=="enemy" ? 0 : 1;
+                QJsonArray p; p<<stype<<m.captured(2).toInt()<<m.captured(3).toInt();
+                result.append(makeCmd(337,ind,p)); i++; continue;
+            }
+        }
+
+        // ── deal_damage(enemy(N)|actor(N), N|variable(N)) ────
+        if (line.startsWith("deal_damage(")) {
+            static QRegularExpression re(R"(^deal_damage\((enemy|actor)\((-?\d+)\),\s*(.+)\)$)");
+            auto m = re.match(line);
+            if (m.hasMatch()) {
+                int stype = m.captured(1)=="enemy" ? 0 : 1;
+                bool isVar; int val = parseVarOrInt(m.captured(3).trimmed(), isVar);
+                QJsonArray p; p<<stype<<m.captured(2).toInt()<<(isVar?1:0)<<val;
+                result.append(makeCmd(338,ind,p)); i++; continue;
             }
         }
 
