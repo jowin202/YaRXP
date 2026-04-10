@@ -494,6 +494,26 @@ QString EventDslSerializer::toScript(const QJsonArray &commands)
             out += pfx + "enemy_recover(" + who + ")\n"; i++; break;
         }
 
+        // ── Change actor name ────────────────────────────────
+        case 320:
+            out += pfx + "change_actor_name(actor(" + QString::number(p[0].toInt())
+                   + "), \"" + esc(p[1].toString()) + "\")\n";
+            i++; break;
+
+        // ── Force action ─────────────────────────────────────
+        case 339: {
+            QString subject = p[0].toInt()==0
+                ? "enemy(" + QString::number(p[1].toInt()) + ")"
+                : "actor(" + QString::number(p[1].toInt()) + ")";
+            QString action = p[2].toInt()==0
+                ? "basic(" + QString::number(p[3].toInt()) + ")"
+                : "skill(" + QString::number(p[3].toInt()) + ")";
+            QString seq = p[5].toInt()==1 ? "now" : "normal";
+            out += pfx + "force_action(" + subject + ", " + action
+                   + ", target=" + QString::number(p[4].toInt()) + ", " + seq + ")\n";
+            i++; break;
+        }
+
         // ── Simple no-arg battle commands ────────────────────
         case 340: out += pfx + "abort_battle\n";     i++; break;
         case 351: out += pfx + "call_menu\n";        i++; break;
@@ -976,10 +996,14 @@ QJsonArray EventDslSerializer::fromScript(const QString &text, bool *ok, QString
                 setErr(QString("Line %1: cannot parse if condition: '%2'").arg(i+1).arg(cond));
                 return QJsonArray();
             }
-            result.append(makeCmd(111,ind,params)); i++; continue;
+            result.append(makeCmd(111,ind,params));
+            result.append(makeCmd(0, ind+1, {}));
+            i++; continue;
         }
         if (line == "else:") {
-            result.append(makeCmd(411,ind,QJsonArray())); i++; continue;
+            result.append(makeCmd(411,ind,QJsonArray()));
+            result.append(makeCmd(0, ind+1, {}));
+            i++; continue;
         }
         if (line == "endif") {
             result.append(makeCmd(412,ind,QJsonArray())); i++; continue;
@@ -987,7 +1011,9 @@ QJsonArray EventDslSerializer::fromScript(const QString &text, bool *ok, QString
 
         // ── loop ─────────────────────────────────────────────
         if (line == "loop:") {
-            result.append(makeCmd(112,ind,QJsonArray())); i++; continue;
+            result.append(makeCmd(112,ind,QJsonArray()));
+            result.append(makeCmd(0, ind+1, {}));
+            i++; continue;
         }
         if (line == "break") {
             result.append(makeCmd(113,ind,QJsonArray())); i++; continue;
@@ -1277,10 +1303,14 @@ QJsonArray EventDslSerializer::fromScript(const QString &text, bool *ok, QString
                 if (c2==402) choiceIdx++;
             }
             QJsonArray p; p<<choiceIdx<<label;
-            result.append(makeCmd(402,ind,p)); i++; continue;
+            result.append(makeCmd(402,ind,p));
+            result.append(makeCmd(0, ind+1, {}));
+            i++; continue;
         }
         if (line=="when_cancel:") {
-            result.append(makeCmd(403,ind,{})); i++; continue;
+            result.append(makeCmd(403,ind,{}));
+            result.append(makeCmd(0, ind+1, {}));
+            i++; continue;
         }
         if (line=="end_choices") {
             result.append(makeCmd(404,ind,{})); i++; continue;
@@ -1295,9 +1325,9 @@ QJsonArray EventDslSerializer::fromScript(const QString &text, bool *ok, QString
              <<(hasNamedKey(toks,"lose")?true:false);
             result.append(makeCmd(301,ind,p)); i++; continue;
         }
-        if (line=="win:")    { result.append(makeCmd(601,ind,{})); i++; continue; }
-        if (line=="escape:") { result.append(makeCmd(602,ind,{})); i++; continue; }
-        if (line=="lose:")   { result.append(makeCmd(603,ind,{})); i++; continue; }
+        if (line=="win:")    { result.append(makeCmd(601,ind,{})); result.append(makeCmd(0, ind+1, {})); i++; continue; }
+        if (line=="escape:") { result.append(makeCmd(602,ind,{})); result.append(makeCmd(0, ind+1, {})); i++; continue; }
+        if (line=="lose:")   { result.append(makeCmd(603,ind,{})); result.append(makeCmd(0, ind+1, {})); i++; continue; }
         if (line=="end_battle"){ result.append(makeCmd(604,ind,{})); i++; continue; }
 
         // ── move_route(who, opts?): ──────────────────────────
@@ -1514,6 +1544,30 @@ QJsonArray EventDslSerializer::fromScript(const QString &text, bool *ok, QString
             int id = who=="troop" ? -1 : innerParens(who).toInt()-1;
             QJsonArray p; p<<id;
             result.append(makeCmd(334,ind,p)); i++; continue;
+        }
+
+        // ── change_actor_name(actor(N), "name") ──────────────
+        if (line.startsWith("change_actor_name(")) {
+            static QRegularExpression re(R"x(^change_actor_name\(actor\((\d+)\),\s*"(.*)"\)$)x");
+            auto m = re.match(line);
+            if (m.hasMatch()) {
+                QJsonArray p; p<<m.captured(1).toInt()<<dslUnescape(m.captured(2));
+                result.append(makeCmd(320,ind,p)); i++; continue;
+            }
+        }
+
+        // ── force_action(enemy(N)|actor(N), basic(N)|skill(N), target=N, now|normal) ──
+        if (line.startsWith("force_action(")) {
+            static QRegularExpression re(R"(^force_action\((enemy|actor)\((\d+)\),\s*(basic|skill)\((\d+)\),\s*target=(-?\d+),\s*(now|normal)\)$)");
+            auto m = re.match(line);
+            if (m.hasMatch()) {
+                int stype = m.captured(1)=="enemy" ? 0 : 1;
+                int atype = m.captured(3)=="basic" ? 0 : 1;
+                QJsonArray p;
+                p<<stype<<m.captured(2).toInt()<<atype<<m.captured(4).toInt()
+                 <<m.captured(5).toInt()<<(m.captured(6)=="now"?1:0);
+                result.append(makeCmd(339,ind,p)); i++; continue;
+            }
         }
 
         // ── raw(code, [...]) fallback ─────────────────────────
