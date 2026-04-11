@@ -332,7 +332,7 @@ QString EventDslSerializer::toScript(const QJsonArray &commands)
             out += pfx + "transfer(map=" + (useVar?"variable("+QString::number(p[1].toInt())+")":QString::number(p[1].toInt()))
                    + ", x=" + coord(2) + ", y=" + coord(3);
             if (p[4].toInt()!=0) out += ", dir=" + dirName(p[4].toInt());
-            if (p[5].toInt()==1) out += ", no_fade";
+            out += (p[5].toInt()==1) ? ", no_fading" : ", fading";
             out += ")\n"; i++; break;
         }
 
@@ -1359,7 +1359,7 @@ QJsonArray EventDslSerializer::fromScript(const QString &text, bool *ok, QString
             QString dirStr = findNamedStr(toks,"dir","");
             static const QMap<QString,int> DM={{"down",2},{"left",4},{"right",6},{"up",8}};
             int dir  = DM.value(dirStr,0);
-            int fade = hasNamedKey(toks,"no_fade") ? 1 : 0;
+            int fade = hasNamedKey(toks,"no_fading") ? 1 : 0;
             QJsonArray p; p<<(useVar?1:0)<<mapV<<xV<<yV<<dir<<fade;
             result.append(makeCmd(201,ind,p)); i++; continue;
         }

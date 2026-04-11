@@ -1,34 +1,49 @@
 # transfer – Spieler zu anderer Karte oder Position teleportieren
 # Optionale Parameter: dir (Blickrichtung nach Transfer)
-# Fading ist immer aktiv.
+#                      fading    – Bildschirm wird ein-/ausgeblendet (Standard)
+#                      no_fading – Fading wird übersprungen
 
-# Einfacher Transfer zu Map 5, Position (10, 8)
-transfer(map=5, x=10, y=8)
+# Einfacher Transfer zu Map 5, Position (10, 8) – mit Fading
+transfer(map=5, x=10, y=8, fading)
 
 # Transfer mit Blickrichtung nach unten
-transfer(map=5, x=10, y=8, dir=down)
+transfer(map=5, x=10, y=8, dir=down, fading)
+
+# Transfer ohne Fading (kein Bildschirm-Ausblenden)
+transfer(map=5, x=10, y=8, no_fading)
+
+# Transfer mit Richtung und ohne Fading
+transfer(map=3, x=7, y=3, dir=up, no_fading)
 
 # Alle Richtungen
-transfer(map=2, x=5, y=5, dir=down)
-transfer(map=2, x=5, y=5, dir=up)
-transfer(map=2, x=5, y=5, dir=left)
-transfer(map=2, x=5, y=5, dir=right)
+transfer(map=2, x=5, y=5, dir=down, fading)
+transfer(map=2, x=5, y=5, dir=up, fading)
+transfer(map=2, x=5, y=5, dir=left, fading)
+transfer(map=2, x=5, y=5, dir=right, fading)
 
 # Transfer via Variablen (map-ID und Koordinaten aus Variablen)
 variable(1) = 7
 variable(2) = 12
 variable(3) = 4
-transfer(map=variable(1), x=variable(2), y=variable(3))
+transfer(map=variable(1), x=variable(2), y=variable(3), fading)
+
+# Transfer via Variablen ohne Fading
+transfer(map=variable(1), x=variable(2), y=variable(3), no_fading)
 
 # Teleport-Stein: Auswahl per Choices
 show_choices("Dorf", "Burg", "Dungeon", cancel=-1):
     when("Dorf"):
         play_se("Teleport", 100, 100)
-        transfer(map=1, x=10, y=12, dir=down)
+        transfer(map=1, x=10, y=12, dir=down, fading)
     when("Burg"):
         play_se("Teleport", 100, 100)
-        transfer(map=4, x=5, y=15, dir=down)
+        transfer(map=4, x=5, y=15, dir=down, fading)
     when("Dungeon"):
         play_se("Teleport", 100, 100)
-        transfer(map=8, x=2, y=2, dir=down)
+        transfer(map=8, x=2, y=2, dir=down, fading)
 end_choices
+
+# Sofort-Schnitt ohne Fade (z.B. für nahtlose Übergänge mit eigenem Fade-Effekt)
+fade_out(color)
+transfer(map=6, x=1, y=1, dir=down, no_fading)
+fade_in(color)
