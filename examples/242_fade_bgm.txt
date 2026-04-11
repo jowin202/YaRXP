@@ -1,0 +1,14 @@
+# fade_bgm – Hintergrundmusik ausblenden
+# Dauer in Sekunden
+
+# 2 Sekunden ausblenden
+fade_bgm(2)
+
+# Sofort stoppen
+fade_bgm(0)
+
+# Dramatisches Ausblenden vor Bosskampf
+show_text("Es wird ruhig...")
+fade_bgm(3)
+wait(180)
+play_bgm("Boss1", 100, 100)

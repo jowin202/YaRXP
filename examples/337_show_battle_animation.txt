@@ -1,0 +1,20 @@
+# show_battle_animation – Animation im Kampf abspielen
+# Ziel: enemy(Index) | actor(ID)
+
+# Animation auf Gegner 1
+show_battle_animation(enemy(1), anim=5)
+
+# Animation auf Held 1
+show_battle_animation(actor(1), anim=3)
+
+# Animation auf Gegner 2
+show_battle_animation(enemy(2), anim=12)
+
+# Feuer-Angriff auf alle Gegner (muss einzeln wiederholt werden)
+show_battle_animation(enemy(1), anim=7)
+show_battle_animation(enemy(2), anim=7)
+
+# Kombination: Animation + Schaden
+show_battle_animation(enemy(1), anim=7)
+wait(30)
+change_enemy_hp(enemy(1), -=150, knockout)

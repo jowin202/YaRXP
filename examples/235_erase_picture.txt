@@ -1,0 +1,17 @@
+# erase_picture – Bild aus dem Speicher entfernen
+
+# Einzelnes Bild entfernen
+erase_picture(1)
+
+# Mehrere Bilder entfernen
+erase_picture(1)
+erase_picture(2)
+erase_picture(3)
+
+# Bild nach Cutscene entfernen
+show_picture(1, "Cutscene", origin=upper_left, x=0, y=0, zoom_x=100, zoom_y=100, opacity=255, blend=0)
+wait(180)
+# Ausblenden dann entfernen
+move_picture(1, dur=30, origin=upper_left, x=0, y=0, zoom_x=100, zoom_y=100, opacity=0, blend=0)
+wait(30)
+erase_picture(1)

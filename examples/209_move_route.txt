@@ -1,0 +1,102 @@
+# move_route – Bewegungsroute für Charakter festlegen
+# Ziel: player | this | event(ID)
+# Optionen: repeat (Loop), skip (überspringen wenn blockiert)
+# wait_for_move wartet bis die Route abgeschlossen ist
+
+# Einfache Route für dieses Event
+move_route(this):
+    move_right
+    move_right
+    move_up
+    move_up
+    move_left
+    turn_down
+end_move_route
+wait_for_move
+
+# Route mit Wiederholung und Skip
+move_route(this, repeat, skip):
+    move_random
+    wait(30)
+end_move_route
+
+# Route für den Spieler
+move_route(player):
+    move_down
+    move_down
+    move_right
+    turn_up
+end_move_route
+wait_for_move
+show_text("Du bist angekommen.")
+
+# Route für Event 3 (NPC geht weg)
+move_route(event(3)):
+    move_left
+    move_left
+    move_left
+    move_up
+    move_up
+end_move_route
+
+# Alle verfügbaren Bewegungskommandos
+move_route(this):
+    move_down
+    move_left
+    move_right
+    move_up
+    move_lower_left
+    move_lower_right
+    move_upper_left
+    move_upper_right
+    move_random
+    move_toward_player
+    move_away_from_player
+    step_forward
+    step_backward
+    jump(2, 1)
+    wait(20)
+    turn_down
+    turn_left
+    turn_right
+    turn_up
+    turn_90_right
+    turn_90_left
+    turn_180
+    turn_90_random
+    turn_random
+    turn_toward_player
+    turn_away_from_player
+    switch_on(1)
+    switch_off(1)
+    change_speed(4)
+    change_freq(3)
+    move_anim_on
+    move_anim_off
+    stop_anim_on
+    stop_anim_off
+    dir_fix_on
+    dir_fix_off
+    through_on
+    through_off
+    always_top_on
+    always_top_off
+    change_graphic("Actor1", 0, 0, 0)
+    change_opacity(200)
+    change_blend(normal)
+    play_se("Cursor", 80, 100)
+    script("$game_self_switches[[@map_id, @event_id, 'A']] = true")
+end_move_route
+
+# Verschachteltes Beispiel: Route + Branch danach
+move_route(this):
+    move_toward_player
+    move_toward_player
+    turn_toward_player
+end_move_route
+wait_for_move
+if actor(1) in_party:
+    show_text("Gut, du bist da!")
+else:
+    show_text("Wer bist du?")
+endif

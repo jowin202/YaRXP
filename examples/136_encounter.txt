@@ -1,0 +1,9 @@
+# encounter – Zufallskämpfe aktivieren oder deaktivieren
+
+# Zufallskämpfe deaktivieren (z.B. sichere Zone)
+encounter(disable)
+show_text("Hier passiert dir kein Zufallskampf.")
+
+# Zufallskämpfe wieder aktivieren
+encounter(enable)
+show_text("Vorsicht – hier lauern Monster!")

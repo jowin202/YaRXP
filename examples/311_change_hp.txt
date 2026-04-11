@@ -1,0 +1,36 @@
+# change_hp – HP eines Helden oder der ganzen Gruppe ändern
+# Ziel: actor(ID) | party
+# Menge: +Wert / -Wert | aus Variable
+
+# HP addieren (Heilung)
+change_hp(actor(1), +50)
+
+# HP abziehen (Schaden)
+change_hp(actor(1), -30)
+
+# Ganzer Gruppe HP addieren
+change_hp(party, +100)
+
+# HP aus Variable
+variable(1) = 75
+change_hp(actor(2), +variable(1))
+
+# HP abziehen mit Variablen-Menge
+change_hp(actor(1), -variable(2))
+
+# Heilungs-Gegenstand-Effekt
+if item(1) in_inventory:
+    item(1) -= 1
+    change_hp(actor(1), +100)
+    play_se("Recovery", 100, 100)
+    show_text("HP wurden um 100 geheilt!")
+else:
+    show_text("Kein Heiltrank vorhanden.")
+endif
+
+# Schwierige Situation: Schadenscheck
+change_hp(actor(1), -50)
+if actor(1) state(1):
+    show_text("Held 1 wurde besiegt!")
+    party_remove(1)
+endif

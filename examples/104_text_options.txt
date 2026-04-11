@@ -1,0 +1,22 @@
+# text_options – Position und Fenster-Sichtbarkeit des Textfensters
+# pos: top | middle | bottom
+# window: show | hide
+
+# Fenster oben, sichtbar
+text_options(pos=top, window=show)
+show_text("Ich erscheine oben.")
+
+# Fenster mitte, sichtbar
+text_options(pos=middle, window=show)
+show_text("Ich erscheine in der Mitte.")
+
+# Fenster unten (Standard), sichtbar
+text_options(pos=bottom, window=show)
+show_text("Ich erscheine unten.")
+
+# Fenster versteckt (Text im Hintergrund, kein Rahmen)
+text_options(pos=top, window=hide)
+show_text("Unsichtbares Fenster – nur Text.")
+
+# Zurücksetzen auf Standard
+text_options(pos=bottom, window=show)

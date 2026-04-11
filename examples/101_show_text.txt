@@ -1,0 +1,13 @@
+# show_text – einzeilig
+show_text("Hallo Welt!")
+
+# show_text – mehrzeilig (bis zu 4 Zeilen)
+show_text:
+    Das ist die erste Zeile.
+    Das ist die zweite Zeile.
+    Sonderzeichen: "Anführungszeichen"
+    Vierte und letzte Zeile.
+end_show_text
+
+# show_text – mit Anführungszeichen im Text
+show_text("Held sagt: \"Ich bin bereit!\"")

@@ -1,0 +1,16 @@
+# call_common_event – Gemeinsames Event aufrufen (Common Event ID)
+
+# Einfacher Aufruf
+call_common_event(1)
+
+# Aufruf nach Bedingungsprüfung
+if switch(5) == ON:
+    call_common_event(3)
+else:
+    call_common_event(4)
+endif
+
+# Mehrere Common Events in Folge
+call_common_event(10)
+call_common_event(11)
+show_text("Beide Common Events wurden ausgeführt.")

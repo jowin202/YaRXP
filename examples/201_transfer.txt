@@ -1,0 +1,34 @@
+# transfer – Spieler zu anderer Karte oder Position teleportieren
+# Optionale Parameter: dir (Blickrichtung nach Transfer)
+# Fading ist immer aktiv.
+
+# Einfacher Transfer zu Map 5, Position (10, 8)
+transfer(map=5, x=10, y=8)
+
+# Transfer mit Blickrichtung nach unten
+transfer(map=5, x=10, y=8, dir=down)
+
+# Alle Richtungen
+transfer(map=2, x=5, y=5, dir=down)
+transfer(map=2, x=5, y=5, dir=up)
+transfer(map=2, x=5, y=5, dir=left)
+transfer(map=2, x=5, y=5, dir=right)
+
+# Transfer via Variablen (map-ID und Koordinaten aus Variablen)
+variable(1) = 7
+variable(2) = 12
+variable(3) = 4
+transfer(map=variable(1), x=variable(2), y=variable(3))
+
+# Teleport-Stein: Auswahl per Choices
+show_choices("Dorf", "Burg", "Dungeon", cancel=-1):
+    when("Dorf"):
+        play_se("Teleport", 100, 100)
+        transfer(map=1, x=10, y=12, dir=down)
+    when("Burg"):
+        play_se("Teleport", 100, 100)
+        transfer(map=4, x=5, y=15, dir=down)
+    when("Dungeon"):
+        play_se("Teleport", 100, 100)
+        transfer(map=8, x=2, y=2, dir=down)
+end_choices

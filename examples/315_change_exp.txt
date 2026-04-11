@@ -1,0 +1,28 @@
+# change_exp – Erfahrungspunkte eines Helden oder der Gruppe ändern
+
+# EXP addieren
+change_exp(actor(1), +100)
+
+# EXP abziehen
+change_exp(actor(1), -50)
+
+# Ganzer Gruppe EXP geben
+change_exp(party, +200)
+
+# EXP aus Variable
+variable(1) = 500
+change_exp(actor(2), +variable(1))
+
+# Belohnung nach Quest
+show_text("Quest abgeschlossen!")
+change_exp(party, +300)
+play_me("Levelup", 100, 100)
+
+# EXP per Branch (schwierigere Quests geben mehr)
+if variable(5) >= 10:
+    change_exp(party, +1000)
+    show_text("Großartige Leistung! Viel EXP erhalten.")
+else:
+    change_exp(party, +200)
+    show_text("Etwas EXP erhalten.")
+endif

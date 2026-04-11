@@ -1,0 +1,16 @@
+# transparent – Transparenz des Spielers ein- oder ausschalten
+# on = Spieler unsichtbar, off = Spieler sichtbar
+
+# Spieler unsichtbar machen
+transparent(on)
+show_text("Du bist nun unsichtbar.")
+
+# Spieler wieder sichtbar machen
+transparent(off)
+show_text("Du bist wieder sichtbar.")
+
+# Unsichtbarer Durchgang
+transparent(on)
+wait(30)
+transfer(map=2, x=5, y=5)
+transparent(off)

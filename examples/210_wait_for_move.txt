@@ -1,0 +1,18 @@
+# wait_for_move – Warten bis alle laufenden Bewegungsrouten abgeschlossen sind
+
+move_route(event(2)):
+    move_right
+    move_right
+    move_up
+end_move_route
+move_route(event(3)):
+    move_left
+    move_up
+    move_up
+end_move_route
+
+# Warten bis beide Events fertig sind
+wait_for_move
+
+show_text("Alle Events haben ihre Route beendet.")
+play_se("Cursor", 80, 100)

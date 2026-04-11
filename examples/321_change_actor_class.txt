@@ -1,0 +1,26 @@
+# change_actor_class – Klasse eines Helden wechseln
+
+# Klasse zu Krieger (ID 2)
+change_actor_class(actor(1), class(2))
+
+# Klasse zu Magier
+change_actor_class(actor(1), class(3))
+
+# Klasse per Story-Event
+show_text("Du hast deine Ausbildung abgeschlossen!")
+play_me("Levelup", 100, 100)
+change_actor_class(actor(1), class(5))
+show_text("Deine Klasse hat sich zu Paladin entwickelt!")
+
+# Klassenauswahl per Choices
+show_choices("Krieger", "Magier", "Dieb", cancel=-1):
+    when("Krieger"):
+        change_actor_class(actor(1), class(1))
+        show_text("Du bist nun ein Krieger!")
+    when("Magier"):
+        change_actor_class(actor(1), class(2))
+        show_text("Du bist nun ein Magier!")
+    when("Dieb"):
+        change_actor_class(actor(1), class(3))
+        show_text("Du bist nun ein Dieb!")
+end_choices

@@ -1,0 +1,16 @@
+# return_to_title – Zurück zum Titelbildschirm
+
+# Nach Credits oder Ending
+show_text("Ende. Danke fürs Spielen!")
+wait(180)
+fade_bgm(3)
+wait(180)
+return_to_title
+
+# Oder nach bestimmter Story-Entscheidung
+show_choices("Spiel beenden?", "Weiterspielen", cancel=1):
+    when("Spiel beenden?"):
+        return_to_title
+    when("Weiterspielen"):
+        show_text("Weiter geht's!")
+end_choices

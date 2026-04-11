@@ -1,0 +1,25 @@
+# screen_flash – Bildschirmaufblitzen
+# r/g/b: 0-255, alpha: 0-255 (Intensität), dur: Frames
+
+# Weißer Blitz (Standard)
+screen_flash(r=255, g=255, b=255, alpha=255, dur=15)
+
+# Roter Blitz (Treffer, Schaden)
+screen_flash(r=255, g=0, b=0, alpha=200, dur=20)
+
+# Gelber Blitz (Blitz / Explosion)
+screen_flash(r=255, g=255, b=0, alpha=180, dur=10)
+
+# Blauer Blitz (Magie, Eis)
+screen_flash(r=0, g=100, b=255, alpha=200, dur=15)
+
+# Dunkler Blitz (Dunkelheit)
+screen_flash(r=0, g=0, b=0, alpha=200, dur=30)
+
+# Blitz-Sequenz
+play_se("Thunder", 100, 100)
+screen_flash(r=255, g=255, b=255, alpha=255, dur=10)
+wait(10)
+screen_flash(r=200, g=200, b=255, alpha=180, dur=8)
+wait(20)
+show_text("Blitzschlag!")

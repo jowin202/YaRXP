@@ -1,0 +1,24 @@
+# change_state – Zustand (Status-Effekt) hinzufügen oder entfernen
+# Ziel: actor(ID) | party
+# Operation: add | remove
+
+# Zustand hinzufügen (z.B. Vergiftet = state 2)
+change_state(actor(1), add, state(2))
+
+# Zustand entfernen
+change_state(actor(1), remove, state(2))
+
+# Ganzer Gruppe Zustand entfernen
+change_state(party, remove, state(2))
+
+# Falle: Vergiftung auslösen
+show_text("Du hast eine vergiftete Falle ausgelöst!")
+change_state(actor(1), add, state(2))
+play_se("Poison", 100, 100)
+
+# Prüfen und heilen
+if actor(1) state(2):
+    show_text("Du bist vergiftet! Heilkraut wird benutzt.")
+    item(6) -= 1
+    change_state(actor(1), remove, state(2))
+endif

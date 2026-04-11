@@ -1,0 +1,27 @@
+# change_actor_graphic – Grafik eines Helden ändern
+# char: Charakter-Sprite-Datei, char_hue: Farbton 0-360
+# battler: Battle-Grafik-Datei, battler_hue: Farbton 0-360
+
+# Grafik wechseln (normale Farbtöne)
+change_actor_graphic(actor(1), char="Actor1", char_hue=0, battler="Fighter", battler_hue=0)
+
+# Mit anderem Farbton (z.B. blauer Held)
+change_actor_graphic(actor(1), char="Actor1", char_hue=180, battler="Fighter", battler_hue=180)
+
+# Verkleidungs-Szenario
+show_text("Du legst eine Verkleidung an...")
+change_actor_graphic(actor(1), char="NPC_Guard", char_hue=0, battler="Fighter", battler_hue=0)
+show_text("Niemand wird dich erkennen.")
+
+# Verkleidung ablegen
+if switch(20) == ON:
+    change_actor_graphic(actor(1), char="Actor1", char_hue=0, battler="Fighter", battler_hue=0)
+    show_text("Verkleidung abgelegt.")
+endif
+
+# Grafik nach Klasse wechseln
+if switch(30) == ON:
+    change_actor_graphic(actor(1), char="Actor3", char_hue=0, battler="Knight", battler_hue=0)
+else:
+    change_actor_graphic(actor(1), char="Actor1", char_hue=0, battler="Fighter", battler_hue=0)
+endif

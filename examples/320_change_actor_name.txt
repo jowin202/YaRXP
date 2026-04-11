@@ -1,0 +1,20 @@
+# change_actor_name – Name eines Helden ändern
+
+# Name direkt setzen
+change_actor_name(actor(1), "Held")
+
+# Name nach Namenseingabe setzen (Workaround: erst input, dann umbenennen)
+show_text("Wie lautet dein richtiger Name?")
+name_input(actor(1), max=8)
+
+# Namensänderung durch Story
+show_text("Von nun an wirst du anders genannt...")
+change_actor_name(actor(1), "Auserwählter")
+show_text("Dein Name ist nun Auserwählter.")
+
+# Name per Branch
+if switch(5) == ON:
+    change_actor_name(actor(2), "Verbündeter")
+else:
+    change_actor_name(actor(2), "Fremder")
+endif

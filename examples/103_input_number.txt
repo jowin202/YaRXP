@@ -1,0 +1,24 @@
+# input_number – Spieler gibt eine Zahl ein, wird in Variable gespeichert
+# var=Variablen-ID, digits=maximale Stellen (1-8)
+
+# 4-stellige Zahl in Variable 1
+show_text("Gib deinen PIN ein:")
+input_number(var=1, digits=4)
+show_text("Du hast eingegeben!")
+
+# 1-stellige Zahl (z.B. für Menü-Auswahl)
+show_text("Wähle eine Stufe (1-9):")
+input_number(var=2, digits=1)
+if variable(2) == 1:
+    show_text("Stufe 1 gewählt.")
+endif
+
+# 6-stellige Zahl (z.B. für Geheimcode)
+show_text("Gib den 6-stelligen Code ein:")
+input_number(var=3, digits=6)
+if variable(3) == 123456:
+    show_text("Code korrekt!")
+    switch(10) = ON
+else:
+    show_text("Falscher Code!")
+endif

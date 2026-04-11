@@ -1,0 +1,32 @@
+# move_picture – Bild animiert bewegen/skalieren/einblenden
+# dur: Dauer in Frames
+
+# Bild nach rechts bewegen
+show_picture(1, "Icon", origin=upper_left, x=0, y=100, zoom_x=100, zoom_y=100, opacity=255, blend=0)
+move_picture(1, dur=60, origin=upper_left, x=300, y=100, zoom_x=100, zoom_y=100, opacity=255, blend=0)
+
+# Bild einblenden (opacity 0 → 255)
+show_picture(2, "Overlay", origin=upper_left, x=0, y=0, zoom_x=100, zoom_y=100, opacity=0, blend=0)
+move_picture(2, dur=60, origin=upper_left, x=0, y=0, zoom_x=100, zoom_y=100, opacity=255, blend=0)
+
+# Bild ausblenden
+move_picture(2, dur=60, origin=upper_left, x=0, y=0, zoom_x=100, zoom_y=100, opacity=0, blend=0)
+wait(60)
+erase_picture(2)
+
+# Bild vergrößern
+show_picture(3, "Splash", origin=center, x=320, y=240, zoom_x=50, zoom_y=50, opacity=255, blend=0)
+move_picture(3, dur=90, origin=center, x=320, y=240, zoom_x=150, zoom_y=150, opacity=255, blend=0)
+
+# Bild in Loop bewegen (pendeln)
+show_picture(4, "Arrow", origin=center, x=100, y=200, zoom_x=100, zoom_y=100, opacity=255, blend=0)
+loop:
+    move_picture(4, dur=30, origin=center, x=200, y=200, zoom_x=100, zoom_y=100, opacity=255, blend=0)
+    wait(30)
+    move_picture(4, dur=30, origin=center, x=100, y=200, zoom_x=100, zoom_y=100, opacity=255, blend=0)
+    wait(30)
+    if button(11) pressed:
+        break
+    endif
+end_loop
+erase_picture(4)

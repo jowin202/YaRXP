@@ -1,0 +1,8 @@
+# menu_access – Menü-Zugang erlauben oder sperren
+
+# Menü sperren (z.B. während einer Cutscene)
+menu_access(disable)
+
+# Menü wieder freigeben
+menu_access(enable)
+show_text("Du kannst das Menü wieder öffnen.")

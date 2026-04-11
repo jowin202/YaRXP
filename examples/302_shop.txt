@@ -1,0 +1,54 @@
+# shop – Shop öffnen
+# Warentypen: item(ID) | weapon(ID) | armor(ID)
+# Optional: price=X für individuellen Preis (sonst Datenbankpreis)
+
+# Einfacher Shop mit Items
+shop:
+    item(1)
+    item(2)
+    item(3)
+end_shop
+
+# Gemischter Shop (Items, Waffen, Rüstungen)
+shop:
+    item(1)
+    item(4)
+    weapon(2)
+    weapon(3)
+    armor(1)
+    armor(5)
+end_shop
+
+# Shop mit individuellen Preisen
+shop:
+    item(1, price=50)
+    weapon(3, price=1200)
+    armor(2, price=800)
+end_shop
+
+# Shop mit gemischten Preisen
+shop:
+    item(1)
+    item(2, price=30)
+    weapon(1)
+    weapon(5, price=5000)
+    armor(3, price=750)
+end_shop
+
+# Bedingter Shop (bessere Waren nach Quest)
+if switch(10) == ON:
+    show_text("Willkommen, Held! Hier ist unser bestes Sortiment.")
+    shop:
+        weapon(8, price=3000)
+        armor(7, price=2500)
+        item(10, price=500)
+    end_shop
+else:
+    show_text("Was darf's sein?")
+    shop:
+        item(1)
+        item(2)
+        weapon(1)
+        armor(1)
+    end_shop
+endif

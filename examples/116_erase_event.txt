@@ -1,0 +1,6 @@
+# erase_event – Dieses Event von der Karte entfernen (temporär bis Mapwechsel)
+
+show_text("Ich verschwinde jetzt!")
+play_se("Item", 100, 100)
+erase_event
+# Alles nach erase_event wird nicht mehr ausgeführt

@@ -1,0 +1,10 @@
+# abort_battle – Kampf sofort abbrechen (ohne Sieg/Niederlage/Flucht)
+
+# Kampf sofort beenden
+abort_battle
+
+# Typische Verwendung: Story-Unterbrechung während Kampf
+if switch(50) == ON:
+    show_text("Ein Verbündeter greift ein!")
+    abort_battle
+endif

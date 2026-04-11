@@ -1,0 +1,19 @@
+# weapon – Waffen zum Inventar hinzufügen oder entfernen
+
+# Waffe hinzufügen (Konstante)
+weapon(1) += 1
+
+# Waffe hinzufügen (mehrere)
+weapon(2) += 3
+
+# Waffe entfernen
+weapon(1) -= 1
+
+# Menge aus Variable
+variable(1) = 2
+weapon(3) += variable(1)
+
+# Belohnung nach einem Kampf
+show_text("Du hast ein mächtiges Schwert gefunden!")
+weapon(5) += 1
+play_se("Item", 100, 100)

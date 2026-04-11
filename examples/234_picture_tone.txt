@@ -1,0 +1,22 @@
+# picture_tone – Farbton eines Bildes ändern
+# r/g/b: -255 bis 255, gray: 0-255, dur: Frames
+
+show_picture(1, "Portrait", origin=upper_left, x=0, y=0, zoom_x=100, zoom_y=100, opacity=255, blend=0)
+
+# Normal (zurücksetzen)
+picture_tone(1, r=0, g=0, b=0, gray=0, dur=30)
+
+# Rötlich (verletzt)
+picture_tone(1, r=150, g=-50, b=-50, gray=0, dur=30)
+
+# Graustufen (tot / erinnert sich)
+picture_tone(1, r=0, g=0, b=0, gray=255, dur=60)
+
+# Gelblicher Ton (alt / Sepia)
+picture_tone(1, r=60, g=30, b=-60, gray=150, dur=60)
+
+# Bläulich (Geist / Magie)
+picture_tone(1, r=-50, g=-50, b=150, gray=0, dur=30)
+
+wait(120)
+erase_picture(1)

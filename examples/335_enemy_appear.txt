@@ -1,0 +1,13 @@
+# enemy_appear – Versteckten Gegner erscheinen lassen
+
+# Gegner 1 erscheinen lassen
+enemy_appear(enemy(1))
+
+# Gegner 2 erscheinen
+enemy_appear(enemy(2))
+
+# Hinterhalt-Szenario: Gegner tauchen auf
+show_text("Es ist ein Hinterhalt!")
+play_se("Surprise", 100, 100)
+enemy_appear(enemy(2))
+enemy_appear(enemy(3))

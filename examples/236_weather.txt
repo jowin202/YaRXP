@@ -1,0 +1,40 @@
+# weather – Wettereffekt setzen
+# Typen: none | rain | storm | snow
+# power: 1-9 (Intensität), dur: Dauer des Übergangs in Frames
+
+# Kein Wetter (Effekt entfernen)
+weather(none, dur=60)
+
+# Regen (leicht)
+weather(rain, power=3, dur=60)
+
+# Regen (stark)
+weather(rain, power=7, dur=30)
+
+# Sturm (Gewitter-Atmosphäre)
+weather(storm, power=5, dur=60)
+
+# Schnee (leicht)
+weather(snow, power=2, dur=90)
+
+# Schneesturm
+weather(snow, power=8, dur=30)
+
+# Wetter-Wechsel-Sequenz
+show_text("Ein Sturm zieht auf...")
+weather(rain, power=3, dur=120)
+wait(120)
+weather(storm, power=7, dur=60)
+play_se("Thunder", 100, 100)
+wait(300)
+weather(rain, power=4, dur=120)
+wait(240)
+weather(none, dur=120)
+show_text("Der Sturm hat sich gelegt.")
+
+# Wetter per Branch
+if switch(10) == ON:
+    weather(snow, power=5, dur=60)
+else:
+    weather(none, dur=60)
+endif

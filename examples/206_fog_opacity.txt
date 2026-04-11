@@ -1,0 +1,16 @@
+# fog_opacity – Nebel-Deckkraft ändern
+# opacity: 0 (unsichtbar) – 255 (voll), dur: Dauer in Frames
+
+# Nebel einblenden
+fog_opacity(128, dur=60)
+
+# Nebel voll sichtbar
+fog_opacity(255, dur=30)
+
+# Nebel ausblenden
+fog_opacity(0, dur=90)
+
+# Dramatisches Ein-/Ausblenden
+fog_opacity(200, dur=60)
+wait(120)
+fog_opacity(0, dur=60)

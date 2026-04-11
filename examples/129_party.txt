@@ -1,0 +1,28 @@
+# party_add / party_remove – Gruppenmitglieder hinzufügen oder entfernen
+
+# Held hinzufügen (ohne Initialisierung – behält aktuellen Status)
+party_add(2)
+
+# Held hinzufügen und initialisieren (setzt auf Start-Level zurück)
+party_add(3, initialize)
+
+# Held entfernen
+party_remove(2)
+
+# Typisches Rekrutierungs-Szenario
+show_text("Möchtest du mich in deine Gruppe aufnehmen?")
+show_choices("Ja", "Nein", cancel=1):
+    when("Ja"):
+        party_add(4)
+        show_text("Willkommen in der Gruppe!")
+        play_se("Item", 100, 100)
+    when("Nein"):
+        show_text("Wie du willst...")
+end_choices
+
+# Held entfernen nach Story-Event
+if actor(3) in_party:
+    show_text("Ich muss mich hier verabschieden...")
+    party_remove(3)
+    show_text("Auf Wiedersehen!")
+endif

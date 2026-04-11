@@ -1,0 +1,22 @@
+# screen_shake – Bildschirm schütteln
+# power: 1-9 (Stärke), speed: 1-9 (Geschwindigkeit), dur: Frames
+
+# Leichtes Beben (Schritt)
+screen_shake(power=2, speed=5, dur=20)
+
+# Mittleres Beben (Explosion)
+screen_shake(power=5, speed=5, dur=40)
+
+# Starkes Beben (Erdbeben)
+screen_shake(power=9, speed=3, dur=120)
+play_se("Earth", 100, 100)
+show_text("Die Erde bebt!")
+
+# Schnelles Zittern (Schreck)
+screen_shake(power=4, speed=9, dur=15)
+play_se("Thunder", 100, 80)
+
+# Kombiniert mit Flash
+screen_flash(r=255, g=255, b=255, alpha=200, dur=10)
+screen_shake(power=7, speed=6, dur=60)
+show_text("Ein gewaltiger Einschlag!")

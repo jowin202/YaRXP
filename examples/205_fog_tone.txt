@@ -1,0 +1,19 @@
+# fog_tone – Nebel-Farbton ändern
+# r/g/b: -255 bis 255, gray: 0-255, dur: Dauer in Frames
+
+# Nebel rötlich einfärben
+fog_tone(r=100, g=-50, b=-50, gray=0, dur=60)
+
+# Nebel bläulich
+fog_tone(r=-50, g=-50, b=100, gray=0, dur=60)
+
+# Nebel ausbleichen (grau)
+fog_tone(r=0, g=0, b=0, gray=200, dur=90)
+
+# Zurück auf normal (sofort)
+fog_tone(r=0, g=0, b=0, gray=0, dur=0)
+
+# Stimmungswechsel-Sequenz
+fog_tone(r=150, g=0, b=0, gray=0, dur=120)
+wait(180)
+fog_tone(r=0, g=0, b=0, gray=0, dur=120)

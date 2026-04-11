@@ -1,0 +1,32 @@
+# show_picture – Bild anzeigen
+# ID: 1-50 (Bild-Slot), origin: upper_left | center
+# x/y: Konstante oder variable(...), zoom_x/zoom_y: % (100=normal)
+# opacity: 0-255, blend: 0=normal/1=add/2=sub
+
+# Einfaches Bild oben links
+show_picture(1, "GameOver", origin=upper_left, x=0, y=0, zoom_x=100, zoom_y=100, opacity=255, blend=0)
+
+# Bild zentriert auf dem Bildschirm (320x240 Mitte bei 640x480)
+show_picture(1, "Title", origin=center, x=320, y=240, zoom_x=100, zoom_y=100, opacity=255, blend=0)
+
+# Bild halbtransparent
+show_picture(2, "Shadow", origin=upper_left, x=0, y=0, zoom_x=100, zoom_y=100, opacity=128, blend=0)
+
+# Bild verkleinert
+show_picture(3, "Icon", origin=center, x=100, y=100, zoom_x=50, zoom_y=50, opacity=255, blend=0)
+
+# Bild vergrößert
+show_picture(4, "Splash", origin=center, x=320, y=240, zoom_x=200, zoom_y=200, opacity=255, blend=0)
+
+# Add-Blend (heller Effekt)
+show_picture(5, "Light", origin=center, x=320, y=240, zoom_x=100, zoom_y=100, opacity=200, blend=1)
+
+# Position aus Variablen
+variable(10) = 160
+variable(11) = 120
+show_picture(6, "Cursor", origin=center, x=variable(10), y=variable(11), zoom_x=100, zoom_y=100, opacity=255, blend=0)
+
+# Cutscene-Bild anzeigen und warten
+show_picture(1, "Cutscene01", origin=upper_left, x=0, y=0, zoom_x=100, zoom_y=100, opacity=255, blend=0)
+wait(180)
+erase_picture(1)

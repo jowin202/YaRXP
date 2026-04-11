@@ -1,0 +1,29 @@
+# gold – Gold hinzufügen oder abziehen
+
+# Gold addieren (Konstante)
+gold += 500
+
+# Gold abziehen (Konstante)
+gold -= 100
+
+# Gold addieren (aus Variable)
+variable(1) = 200
+gold += variable(1)
+
+# Gold abziehen (aus Variable)
+gold -= variable(2)
+
+# Kauf-Beispiel mit Prüfung
+if gold >= 300:
+    show_choices("Schwert kaufen (300 G)?", "Nein", cancel=1):
+        when("Schwert kaufen (300 G)?"):
+            gold -= 300
+            item(5) += 1
+            show_text("Schwert gekauft!")
+            play_se("Shop", 100, 100)
+        when("Nein"):
+            show_text("Vielleicht ein anderes Mal.")
+    end_choices
+else:
+    show_text("Du hast nicht genug Gold.")
+endif

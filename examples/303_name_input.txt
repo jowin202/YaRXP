@@ -1,0 +1,22 @@
+# name_input – Namenseingabe für einen Held
+# actor: Held-ID, max: maximale Zeichenanzahl
+
+# Standard-Namenseingabe (bis 8 Zeichen)
+name_input(actor(1), max=8)
+show_text("Dein Name wurde gespeichert.")
+
+# Kurzer Name (bis 4 Zeichen)
+name_input(actor(2), max=4)
+
+# Namenseingabe am Spielstart
+show_text("Bitte gib deinen Namen ein.")
+name_input(actor(1), max=6)
+
+# Mehrere Helden benennen
+show_text("Wie heißt du?")
+name_input(actor(1), max=8)
+if actor(2) in_party:
+    show_text("Und dein Begleiter?")
+    name_input(actor(2), max=8)
+endif
+show_text("Schön, euch kennenzulernen!")

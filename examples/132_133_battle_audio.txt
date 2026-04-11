@@ -1,0 +1,20 @@
+# battle_bgm / battle_me – Kampfmusik und Sieges-Jingle setzen
+# Format: ("Dateiname", Lautstärke 0-100, Tonhöhe 50-150)
+
+# Kampf-BGM setzen
+battle_bgm("Battle1", 100, 100)
+
+# Leise und höher gestimmte Kampfmusik
+battle_bgm("Battle2", 70, 120)
+
+# Sieges-ME setzen
+battle_me("Victory", 100, 100)
+
+# Boss-Kampf Musik setzen
+if switch(30) == ON:
+    battle_bgm("Boss", 100, 90)
+    battle_me("BossVictory", 100, 100)
+else:
+    battle_bgm("Battle1", 100, 100)
+    battle_me("Victory", 100, 100)
+endif

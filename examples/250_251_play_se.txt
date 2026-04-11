@@ -1,0 +1,38 @@
+# play_se / stop_se – Soundeffekt abspielen und stoppen
+# Format: ("Dateiname", Lautstärke 0-100, Tonhöhe 50-150)
+
+# Einfacher SE
+play_se("Cursor", 80, 100)
+
+# Laut
+play_se("Explosion", 100, 100)
+
+# Leise und höher
+play_se("Step", 50, 120)
+
+# Tief (düsterer Effekt)
+play_se("Thunder", 90, 70)
+
+# Alle SEs stoppen
+stop_se
+
+# SE-Kette mit Pausen
+play_se("Door", 80, 100)
+wait(20)
+play_se("Footstep", 60, 100)
+wait(20)
+play_se("Footstep", 60, 105)
+wait(20)
+play_se("Footstep", 60, 95)
+
+# SE per Branch
+if switch(5) == ON:
+    play_se("Magic2", 100, 100)
+else:
+    play_se("Attack1", 100, 100)
+endif
+
+# SE dann SEs stoppen
+play_se("Wind", 80, 100)
+wait(60)
+stop_se

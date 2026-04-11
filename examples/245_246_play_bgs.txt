@@ -1,0 +1,26 @@
+# play_bgs / fade_bgs – Hintergrund-Sound abspielen und ausblenden
+# BGS läuft parallel zur BGM (z.B. Regen, Wind, Fluss)
+
+# BGS abspielen
+play_bgs("Rain", 80, 100)
+
+# BGS leiser
+play_bgs("Wind", 50, 100)
+
+# BGS mit anderer Tonhöhe
+play_bgs("River", 100, 120)
+
+# BGS ausblenden (3 Sekunden)
+fade_bgs(3)
+
+# BGS sofort stoppen
+fade_bgs(0)
+
+# BGS situativ einsetzen
+if switch(10) == ON:
+    play_bgs("Rain", 80, 100)
+    play_bgm("Town_Rain", 80, 100)
+else:
+    fade_bgs(2)
+    play_bgm("Town1", 100, 100)
+endif

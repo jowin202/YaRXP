@@ -1,0 +1,24 @@
+# prepare_transition / transition – Bildschirmübergang
+
+# Standard-Ablauf: Einfrieren → Aktion → Überblenden
+prepare_transition
+transfer(map=3, x=5, y=5, no_fade)
+transition("")
+
+# Übergang mit benannter Transition-Datei
+prepare_transition
+switch(1) = ON
+transition("BlindsClose")
+
+# Übergang ohne Datei (einfaches Einblenden)
+prepare_transition
+show_text("Szene ändert sich...")
+transition("")
+
+# Kombination mit Screen-Tone
+screen_tone(r=-255, g=-255, b=-255, gray=0, dur=30)
+wait(30)
+prepare_transition
+transfer(map=5, x=10, y=10, no_fade)
+transition("FadeIn")
+screen_tone(r=0, g=0, b=0, gray=0, dur=30)

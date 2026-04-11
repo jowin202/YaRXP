@@ -1,0 +1,67 @@
+# variable – Variablen setzen, alle Operationen und Quelltypen
+
+# Operation: = (setzen)
+variable(1) = 42
+variable(2) = 0
+
+# Operation: += (addieren)
+variable(1) += 10
+
+# Operation: -= (subtrahieren)
+variable(1) -= 5
+
+# Operation: *= (multiplizieren)
+variable(1) *= 3
+
+# Operation: /= (dividieren)
+variable(1) /= 2
+
+# Operation: %= (Modulo)
+variable(1) %= 7
+
+# Bereich von Variablen gleichzeitig setzen
+variable(1..5) = 0
+
+# Quelle: andere Variable
+variable(2) = variable(1)
+variable(3) += variable(2)
+
+# Quelle: Zufallszahl (von 1 bis 100)
+variable(4) = random(1, 100)
+
+# Quelle: Anzahl eines Items im Inventar
+variable(5) = item_count(3)
+
+# Quelle: Actor-Stat
+# Stats: Level, EXP, HP, SP, MaxHP, MaxSP, STR, DEX, AGI, INT, ATK, PDEF, MDEF, EVA
+variable(6) = actor_stat(1, Level)
+variable(7) = actor_stat(1, HP)
+variable(8) = actor_stat(2, STR)
+
+# Quelle: Enemy-Stat (im Kampf)
+variable(9) = enemy_stat(1, HP)
+variable(10) = enemy_stat(2, ATK)
+
+# Quelle: Charakter-Map-Info
+# Props: x, y, dir, screen_x, screen_y, terrain_tag
+variable(11) = char_prop(player, x)
+variable(12) = char_prop(player, y)
+variable(13) = char_prop(this, dir)
+variable(14) = char_prop(event(3), terrain_tag)
+
+# Quelle: Andere System-Werte
+# other: map_id, party_size, gold, steps, play_time, timer, save_count
+variable(15) = other(map_id)
+variable(16) = other(gold)
+variable(17) = other(play_time)
+variable(18) = other(party_size)
+
+# Kombination mit if-Branch
+variable(1) = random(1, 6)
+if variable(1) >= 4:
+    show_text("Hohe Zahl!")
+    variable(2) += variable(1)
+else:
+    show_text("Niedrige Zahl.")
+    variable(2) -= 1
+endif

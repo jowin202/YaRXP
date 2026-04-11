@@ -1,0 +1,14 @@
+# windowskin – Fensterhintergrund wechseln
+
+# Standard-Skin setzen
+windowskin("Window")
+
+# Alternativen Skin setzen
+windowskin("Window2")
+
+# Skin wechseln basierend auf Bedingung
+if switch(20) == ON:
+    windowskin("DarkWindow")
+else:
+    windowskin("Window")
+endif

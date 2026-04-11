@@ -1,0 +1,13 @@
+# enemy_recover – Gegner vollständig heilen (HP, SP, Zustände)
+
+# Einzelnen Gegner heilen
+enemy_recover(enemy(1))
+
+# Alle Gegner heilen
+enemy_recover(troop)
+
+# Heilungs-Phase (Boss heilt sich selbst)
+show_text("Der Boss heilt sich!")
+play_se("Recovery", 100, 100)
+show_battle_animation(enemy(1), anim=6)
+enemy_recover(enemy(1))

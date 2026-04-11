@@ -1,0 +1,25 @@
+# scroll_map – Karte scrollen
+# Richtungen: down, left, right, up
+# Geschwindigkeit: 1 (langsam) – 6 (schnell), Distanz in Tiles
+
+# Karte nach rechts scrollen (4 Tiles, Geschwindigkeit 3)
+scroll_map(right, 4, 3)
+
+# Karte nach unten scrollen
+scroll_map(down, 3, 2)
+
+# Karte nach links scrollen (schnell)
+scroll_map(left, 6, 5)
+
+# Karte nach oben scrollen
+scroll_map(up, 2, 4)
+
+# Dramatischer Effekt: hin und her scrollen
+scroll_map(right, 5, 4)
+wait(60)
+scroll_map(left, 5, 4)
+
+# Scrollen mit anschließendem Text
+scroll_map(down, 8, 3)
+wait(90)
+show_text("Schau dir das an!")

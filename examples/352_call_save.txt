@@ -1,0 +1,10 @@
+# call_save – Speicher-Bildschirm öffnen
+
+show_text("Möchtest du speichern?")
+show_choices("Ja", "Nein", cancel=1):
+    when("Ja"):
+        call_save
+        show_text("Gespeichert!")
+    when("Nein"):
+        show_text("OK, kein Speichern.")
+end_choices

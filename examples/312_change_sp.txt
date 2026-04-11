@@ -1,0 +1,22 @@
+# change_sp – SP (Magiepunkte) eines Helden oder der Gruppe ändern
+
+# SP addieren
+change_sp(actor(1), +20)
+
+# SP abziehen
+change_sp(actor(1), -10)
+
+# Ganzer Gruppe SP auffüllen
+change_sp(party, +50)
+
+# SP aus Variable
+variable(1) = 30
+change_sp(actor(2), +variable(1))
+
+# SP-Trank Beispiel
+if item(5) in_inventory:
+    item(5) -= 1
+    change_sp(actor(1), +30)
+    play_se("Recovery", 100, 100)
+    show_text("SP wurden um 30 aufgefüllt!")
+endif

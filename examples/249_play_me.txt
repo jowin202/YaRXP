@@ -1,0 +1,19 @@
+# play_me – Music Effect abspielen (einmalig, danach BGM weiter)
+# Typisch: Fanfare, Sieg, Levelup, Jingle
+
+# Sieges-Jingle
+play_me("Victory", 100, 100)
+
+# Level-Up Fanfare
+play_me("Levelup", 100, 100)
+show_text("Level up!")
+
+# Geheimnis-Jingle
+play_me("Mystery", 80, 100)
+show_text("Du hast etwas entdeckt!")
+item(1) += 1
+
+# ME nach einem Kampf
+play_me("Victory", 100, 100)
+wait(180)
+play_bgm("Field1", 100, 100)

@@ -1,0 +1,34 @@
+# switch – Schalter setzen (ON / OFF)
+
+# Einzelnen Schalter auf ON setzen
+switch(1) = ON
+
+# Einzelnen Schalter auf OFF setzen
+switch(1) = OFF
+
+# Bereich von Schaltern auf ON setzen (1 bis 5)
+switch(1..5) = ON
+
+# Bereich auf OFF setzen
+switch(3..7) = OFF
+
+# Schalter innerhalb eines Branches setzen
+if variable(1) >= 10:
+    switch(10) = ON
+    switch(11) = OFF
+else:
+    switch(10) = OFF
+endif
+
+# Schalter in einem Loop prüfen und setzen
+variable(1) = 1
+loop:
+    switch(1) = ON
+    wait(30)
+    switch(1) = OFF
+    wait(30)
+    variable(1) += 1
+    if variable(1) > 3:
+        break
+    endif
+end_loop

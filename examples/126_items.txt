@@ -1,0 +1,32 @@
+# item – Items zum Inventar hinzufügen oder entfernen
+
+# Item hinzufügen (Konstante)
+item(1) += 1
+
+# Item hinzufügen (mehrere)
+item(3) += 5
+
+# Item entfernen
+item(1) -= 1
+
+# Item hinzufügen (Menge aus Variable)
+variable(1) = 3
+item(2) += variable(1)
+
+# Item entfernen (Menge aus Variable)
+item(2) -= variable(2)
+
+# Item-Verwendung im Kontext
+if item(4) in_inventory:
+    show_choices("Heiltrank benutzen?", "Nein", cancel=1):
+        when("Heiltrank benutzen?"):
+            item(4) -= 1
+            change_hp(actor(1), +50)
+            play_se("Recovery", 100, 100)
+            show_text("HP wurden wiederhergestellt!")
+        when("Nein"):
+            show_text("OK.")
+    end_choices
+else:
+    show_text("Kein Heiltrank im Inventar.")
+endif

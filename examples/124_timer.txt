@@ -1,0 +1,28 @@
+# timer – Timer starten oder stoppen
+
+# Timer starten (Sekunden)
+timer(start, 60)
+show_text("60-Sekunden-Timer gestartet!")
+
+# Timer stoppen
+timer(stop)
+show_text("Timer gestoppt.")
+
+# Typische Verwendung: Countdown mit Prüfung
+timer(start, 30)
+loop:
+    if timer <= 0sec:
+        show_text("Zeit abgelaufen!")
+        timer(stop)
+        break
+    endif
+    if button(11) pressed:
+        show_text("Rechtzeitig gedrückt!")
+        timer(stop)
+        break
+    endif
+    wait(10)
+end_loop
+
+# Langer Timer für Tages-Zyklus
+timer(start, 300)

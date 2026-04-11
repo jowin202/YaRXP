@@ -1,0 +1,19 @@
+# memorize_bgm_bgs / restore_bgm_bgs – Aktuelle Musik merken und wiederherstellen
+# Nützlich z.B. wenn ein Event die Musik kurz ändert
+
+# Aktuelle BGM/BGS merken
+memorize_bgm_bgs
+
+# Neue Musik für Zwischensequenz
+fade_bgm(1)
+wait(60)
+play_bgm("Mystery", 90, 100)
+
+show_text("Eine mysteriöse Stimme spricht...")
+wait(120)
+show_text("Das Geheimnis bleibt ungelöst.")
+
+# Gespeicherte BGM/BGS wiederherstellen
+fade_bgm(1)
+wait(60)
+restore_bgm_bgs

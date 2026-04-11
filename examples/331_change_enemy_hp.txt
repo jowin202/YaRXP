@@ -1,0 +1,30 @@
+# change_enemy_hp – HP eines Gegners im Kampf ändern
+# Ziel: enemy(Index) | troop (alle)
+# Optional: knockout (KO wenn HP auf 0)
+
+# Einzelnem Gegner HP abziehen
+change_enemy_hp(enemy(1), -=100)
+
+# Mit Knockout-Flag
+change_enemy_hp(enemy(1), -=9999, knockout)
+
+# Gegner heilen
+change_enemy_hp(enemy(2), +=50)
+
+# Allen Gegnern Schaden
+change_enemy_hp(troop, -=30)
+
+# Allen Gegnern Schaden mit Knockout
+change_enemy_hp(troop, -=9999, knockout)
+
+# HP aus Variable
+variable(1) = 200
+change_enemy_hp(enemy(1), -=variable(1))
+
+# Konditionaler Schaden
+if switch(5) == ON:
+    change_enemy_hp(enemy(1), -=300, knockout)
+    show_text("Magischer Treffer!")
+else:
+    change_enemy_hp(enemy(1), -=100)
+endif

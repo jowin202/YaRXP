@@ -1,0 +1,26 @@
+# show_animation – Animation auf Charakter oder Event abspielen
+# Ziel: player | this | event(ID)
+
+# Animation auf dem Spieler
+show_animation(player, anim=1)
+
+# Animation auf diesem Event
+show_animation(this, anim=5)
+
+# Animation auf einem bestimmten Event
+show_animation(event(3), anim=10)
+
+# Animation als Reaktion auf Aktion
+show_text("Du hast den Kristall berührt!")
+show_animation(this, anim=8)
+wait(60)
+show_text("Ein Licht erscheint...")
+
+# Animation mit Branch
+if switch(1) == ON:
+    show_animation(player, anim=12)
+    play_se("Thunder", 100, 100)
+else:
+    show_animation(player, anim=3)
+    play_se("Ice", 100, 100)
+endif

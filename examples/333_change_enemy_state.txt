@@ -1,0 +1,20 @@
+# change_enemy_state – Zustand eines Gegners hinzufügen oder entfernen
+
+# Vergiftet hinzufügen
+change_enemy_state(enemy(1), add, state(2))
+
+# Zustand entfernen
+change_enemy_state(enemy(1), remove, state(2))
+
+# Allen Gegnern Zustand hinzufügen
+change_enemy_state(troop, add, state(3))
+
+# Allen Gegnern Zustand entfernen
+change_enemy_state(troop, remove, state(3))
+
+# Kampf-Script: Boss vergiften
+if switch(10) == ON:
+    show_text("Das Gift wirkt!")
+    change_enemy_state(enemy(1), add, state(2))
+    show_battle_animation(enemy(1), anim=4)
+endif

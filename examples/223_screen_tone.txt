@@ -1,0 +1,30 @@
+# screen_tone – Bildschirmfarbton ändern
+# r/g/b: -255 bis 255, gray: 0-255 (Graustufen-Stärke), dur: Frames
+
+# Normaler Ton (zurücksetzen)
+screen_tone(r=0, g=0, b=0, gray=0, dur=30)
+
+# Roter Ton (Gefahr / Alarm)
+screen_tone(r=100, g=-50, b=-50, gray=0, dur=60)
+
+# Blauer Ton (Nacht / Trauer)
+screen_tone(r=-50, g=-50, b=100, gray=0, dur=60)
+
+# Komplett dunkel (Schwarz)
+screen_tone(r=-255, g=-255, b=-255, gray=0, dur=30)
+
+# Komplett hell (Weiß)
+screen_tone(r=255, g=255, b=255, gray=0, dur=20)
+
+# Graustufen (Monochrom-Effekt)
+screen_tone(r=0, g=0, b=0, gray=255, dur=60)
+
+# Warmer Sonnenuntergangs-Ton
+screen_tone(r=80, g=20, b=-60, gray=0, dur=90)
+
+# Dramatische Sequenz: Aufblitzen dann dunkel
+screen_tone(r=255, g=255, b=255, gray=0, dur=5)
+wait(10)
+screen_tone(r=-255, g=-255, b=-255, gray=0, dur=30)
+wait(60)
+screen_tone(r=0, g=0, b=0, gray=0, dur=60)

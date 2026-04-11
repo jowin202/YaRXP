@@ -1,0 +1,25 @@
+# map_settings – Panorama, Nebel oder Kampf-Hintergrund setzen
+
+# Panorama setzen (Dateiname, Farbton 0-360)
+map_settings(panorama="Sky", hue=0)
+map_settings(panorama="Forest", hue=180)
+
+# Kein Panorama
+map_settings(panorama="", hue=0)
+
+# Nebel setzen
+# opacity: 0-255, blend: 0=normal/1=add/2=sub, zoom: %, sx/sy: Scroll-Geschwindigkeit
+map_settings(fog="Fog", hue=0, opacity=128, blend=0, zoom=100, sx=2, sy=0)
+map_settings(fog="Fog02", hue=120, opacity=200, blend=1, zoom=200, sx=-1, sy=1)
+
+# Nebel entfernen
+map_settings(fog="", hue=0, opacity=0, blend=0, zoom=100, sx=0, sy=0)
+
+# Kampfhintergrund setzen
+map_settings(battleback="Dungeon")
+map_settings(battleback="Castle")
+
+# Kombination: Panorama und dann Nebel
+map_settings(panorama="Mountains", hue=0)
+wait(30)
+map_settings(fog="Fog", hue=0, opacity=100, blend=0, zoom=100, sx=1, sy=0)

@@ -1,0 +1,11 @@
+# exit_event – Event-Ausführung sofort beenden
+
+# Frühzeitiger Abbruch bei Bedingung
+if switch(1) == ON:
+    show_text("Schon erledigt.")
+    exit_event
+endif
+
+show_text("Event läuft weiter...")
+switch(1) = ON
+show_text("Fertig!")

@@ -1,0 +1,9 @@
+# save_access – Speichern erlauben oder verbieten
+
+# Speichern verbieten (z.B. während eines Dungeons)
+save_access(disable)
+show_text("Das Speichern ist hier nicht möglich.")
+
+# Speichern wieder erlauben
+save_access(enable)
+show_text("Du kannst jetzt wieder speichern.")

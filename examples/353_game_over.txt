@@ -1,0 +1,16 @@
+# game_over – Game Over Bildschirm anzeigen
+
+# Direktes Game Over
+show_text("Du wurdest besiegt...")
+wait(60)
+game_over
+
+# Game Over nach Niederlage (mit Prüfung)
+if actor(1) state(1):
+    if actor(2) state(1):
+        show_text("Alle Helden sind gefallen!")
+        play_me("Gameover", 100, 100)
+        wait(120)
+        game_over
+    endif
+endif

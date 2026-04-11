@@ -1,0 +1,46 @@
+# loop / break / end_loop – Endlosschleife mit Abbruchbedingung
+
+# Einfacher Loop mit Zähler
+variable(1) = 0
+loop:
+    variable(1) += 1
+    play_se("Cursor", 80, 100)
+    wait(10)
+    if variable(1) >= 5:
+        show_text("5 Mal wiederholt – Abbruch!")
+        break
+    endif
+end_loop
+
+# Loop mit Choices innen drin
+loop:
+    show_choices("Weiter kämpfen", "Aufhören", cancel=-1):
+        when("Weiter kämpfen"):
+            show_text("Du kämpfst weiter!")
+            play_se("Battle2", 80, 100)
+            wait(30)
+        when("Aufhören"):
+            show_text("Du hörst auf.")
+            break
+    end_choices
+end_loop
+
+# Verschachtelter Loop (outer/inner)
+variable(1) = 0
+loop:
+    variable(1) += 1
+    variable(2) = 0
+    loop:
+        variable(2) += 1
+        play_se("Cursor", 60, 100)
+        wait(5)
+        if variable(2) >= 3:
+            break
+        endif
+    end_loop
+    show_text("Äußerer Durchlauf abgeschlossen.")
+    if variable(1) >= 2:
+        break
+    endif
+end_loop
+show_text("Beide Loops beendet.")

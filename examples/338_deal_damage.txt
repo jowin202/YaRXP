@@ -1,0 +1,22 @@
+# deal_damage – Schaden an Gegner oder Held verursachen (Kampf)
+# Ziel: enemy(Index) | actor(ID)
+
+# Fixer Schaden an Gegner
+deal_damage(enemy(1), 100)
+
+# Schaden an Held
+deal_damage(actor(1), 50)
+
+# Schaden aus Variable
+variable(1) = 250
+deal_damage(enemy(1), variable(1))
+
+# Gegner 2 Schaden aus Variable
+variable(2) = 80
+deal_damage(enemy(2), variable(2))
+
+# Explosions-Schaden an beide Gegner
+play_se("Explosion", 100, 100)
+screen_flash(r=255, g=200, b=0, alpha=200, dur=15)
+deal_damage(enemy(1), 200)
+deal_damage(enemy(2), 200)

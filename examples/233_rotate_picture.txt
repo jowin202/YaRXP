@@ -1,0 +1,19 @@
+# rotate_picture – Bild drehen
+# speed: negativ = gegen den Uhrzeigersinn, positiv = im Uhrzeigersinn
+
+# Im Uhrzeigersinn drehen
+show_picture(1, "Gear", origin=center, x=320, y=240, zoom_x=100, zoom_y=100, opacity=255, blend=0)
+rotate_picture(1, 5)
+wait(120)
+rotate_picture(1, 0)
+
+# Gegen den Uhrzeigersinn
+rotate_picture(1, -5)
+wait(120)
+rotate_picture(1, 0)
+
+# Schnelle Rotation (Spin-Effekt)
+rotate_picture(1, 20)
+wait(60)
+rotate_picture(1, 0)
+erase_picture(1)

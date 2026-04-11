@@ -1,0 +1,21 @@
+# wait – Pause in Frames (60 Frames = 1 Sekunde bei 60 FPS)
+
+# 1 Sekunde warten
+wait(60)
+
+# Kurze Pause (halbe Sekunde)
+wait(30)
+
+# Längere Pause für Dramatik
+show_text("Das Ende naht...")
+wait(120)
+show_text("Jetzt!")
+
+# Warten innerhalb eines Loops
+loop:
+    play_se("Cursor", 80, 100)
+    wait(30)
+    show_text("Tick!")
+    wait(30)
+    break
+end_loop

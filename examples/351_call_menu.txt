@@ -1,0 +1,5 @@
+# call_menu – Menü-Bildschirm öffnen
+
+show_text("Drücke OK um das Menü zu öffnen.")
+call_menu
+show_text("Du hast das Menü geschlossen.")

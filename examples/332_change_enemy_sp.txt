@@ -1,0 +1,14 @@
+# change_enemy_sp – SP eines Gegners im Kampf ändern
+
+# SP abziehen (Mana drain)
+change_enemy_sp(enemy(1), -=30)
+
+# SP addieren
+change_enemy_sp(enemy(2), +=20)
+
+# Allen Gegnern SP abziehen
+change_enemy_sp(troop, -=50)
+
+# SP aus Variable
+variable(1) = 15
+change_enemy_sp(enemy(1), -=variable(1))

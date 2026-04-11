@@ -1,0 +1,129 @@
+# if – Bedingte Verzweigung, alle Bedingungstypen
+
+# Typ 0: Switch
+if switch(1) == ON:
+    show_text("Schalter 1 ist AN.")
+else:
+    show_text("Schalter 1 ist AUS.")
+endif
+
+# Typ 1: Variable – Vergleich mit Konstante (==, >=, <=, >, <, !=)
+if variable(2) == 10:
+    show_text("Variable 2 ist genau 10.")
+endif
+if variable(2) >= 5:
+    show_text("Variable 2 ist mindestens 5.")
+endif
+if variable(2) != 0:
+    show_text("Variable 2 ist nicht null.")
+    play_se("Cursor", 80, 100)
+endif
+
+# Typ 1: Variable – Vergleich mit anderer Variable
+if variable(3) == variable(4):
+    show_text("Variable 3 und 4 sind gleich.")
+endif
+
+# Typ 2: Self Switch
+if self_switch(A) == ON:
+    show_text("Self Switch A ist AN.")
+    erase_event
+endif
+if self_switch(B) == OFF:
+    show_text("Self Switch B ist AUS.")
+endif
+
+# Typ 3: Timer
+if timer <= 30sec:
+    show_text("Weniger als 30 Sekunden übrig!")
+endif
+if timer >= 60sec:
+    show_text("Noch mindestens 60 Sekunden.")
+endif
+
+# Typ 4: Actor
+if actor(1) in_party:
+    show_text("Held 1 ist in der Gruppe.")
+endif
+if actor(1) name == "Held":
+    show_text("Held 1 heißt Held.")
+endif
+if actor(1) learned(5):
+    show_text("Held 1 kennt Skill 5.")
+endif
+if actor(1) weapon(3):
+    show_text("Held 1 trägt Waffe 3.")
+endif
+if actor(1) armor(2):
+    show_text("Held 1 trägt Rüstung 2.")
+endif
+if actor(1) state(4):
+    show_text("Held 1 hat Zustand 4.")
+endif
+
+# Typ 5: Enemy
+if enemy(1) appeared:
+    show_text("Gegner 1 ist sichtbar.")
+endif
+if enemy(2) state(1):
+    show_text("Gegner 2 hat Zustand 1.")
+endif
+
+# Typ 6: Charakter-Blickrichtung
+if character(player) facing(down):
+    show_text("Spieler schaut nach unten.")
+endif
+if character(this) facing(up):
+    show_text("Dieses Event schaut nach oben.")
+endif
+if character(event(3)) facing(left):
+    show_text("Event 3 schaut nach links.")
+endif
+
+# Typ 7: Gold
+if gold >= 500:
+    show_text("Du hast genug Gold.")
+    gold -= 500
+else:
+    show_text("Nicht genug Gold!")
+endif
+if gold <= 0:
+    show_text("Du bist pleite!")
+endif
+
+# Typ 8–10: Items / Waffen / Rüstungen im Inventar
+if item(1) in_inventory:
+    show_text("Gegenstand 1 ist im Inventar.")
+endif
+if weapon(2) in_inventory:
+    show_text("Waffe 2 ist im Inventar.")
+endif
+if armor(3) in_inventory:
+    show_text("Rüstung 3 ist im Inventar.")
+endif
+
+# Typ 11: Button gedrückt
+if button(11) pressed:
+    show_text("Enter/C wurde gedrückt.")
+endif
+
+# Typ 12: Script-Bedingung
+if script("$game_switches[5] == true"):
+    show_text("Schalter 5 via Ruby ist true.")
+endif
+
+# Verschachtelung: branch in branch in branch
+if switch(1) == ON:
+    if variable(1) >= 10:
+        if actor(1) in_party:
+            show_text("Alle drei Bedingungen erfüllt!")
+            play_se("Item", 100, 100)
+        else:
+            show_text("Held 1 nicht in der Gruppe.")
+        endif
+    else:
+        show_text("Variable 1 zu klein.")
+    endif
+else:
+    show_text("Schalter 1 ist AUS.")
+endif

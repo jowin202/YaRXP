@@ -1,0 +1,22 @@
+# armor – Rüstungen zum Inventar hinzufügen oder entfernen
+
+# Rüstung hinzufügen
+armor(1) += 1
+
+# Rüstung entfernen
+armor(1) -= 1
+
+# Menge aus Variable
+variable(1) = 2
+armor(2) += variable(1)
+
+# Belohnung-Beispiel
+show_text("Du hast einen Schild gefunden!")
+armor(3) += 1
+play_se("Item", 100, 100)
+
+# Rüstung prüfen und entfernen
+if armor(1) in_inventory:
+    armor(1) -= 1
+    show_text("Rüstung 1 wurde abgenommen.")
+endif

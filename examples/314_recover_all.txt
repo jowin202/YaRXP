@@ -1,0 +1,20 @@
+# recover_all – Alle HP/SP und Zustände eines Helden oder der Gruppe heilen
+
+# Einzelnen Helden vollständig heilen
+recover_all(actor(1))
+
+# Ganzer Gruppe
+recover_all(party)
+
+# Heilbrunnen-Beispiel
+show_text("Der Heilbrunnen leuchtet golden...")
+play_se("Recovery", 100, 100)
+recover_all(party)
+wait(30)
+show_text("Deine Gruppe wurde vollständig geheilt!")
+
+# Heilung nach Kampf per Branch
+if switch(5) == ON:
+    recover_all(party)
+    show_text("Du wurdest gerettet und geheilt.")
+endif

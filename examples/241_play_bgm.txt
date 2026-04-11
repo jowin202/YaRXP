@@ -1,0 +1,21 @@
+# play_bgm – Hintergrundmusik abspielen
+# Format: ("Dateiname", Lautstärke 0-100, Tonhöhe 50-150)
+
+# Normale Musik
+play_bgm("Field1", 100, 100)
+
+# Leiser
+play_bgm("Town1", 70, 100)
+
+# Höher gestimmt
+play_bgm("Dungeon1", 100, 115)
+
+# Tiefer gestimmt (düstere Stimmung)
+play_bgm("Boss1", 90, 85)
+
+# BGM per Branch
+if switch(5) == ON:
+    play_bgm("Battle1", 100, 100)
+else:
+    play_bgm("Field1", 100, 100)
+endif

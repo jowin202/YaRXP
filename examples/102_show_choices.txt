@@ -1,0 +1,41 @@
+# show_choices – 2 Optionen, keine Cancel-Option (cancel=-1)
+show_text("Was möchtest du tun?")
+show_choices("Angreifen", "Fliehen", cancel=-1):
+    when("Angreifen"):
+        show_text("Du greifst an!")
+        play_se("Battle2", 80, 100)
+    when("Fliehen"):
+        show_text("Du fliehst!")
+        self_switch(A) = ON
+    when_cancel:
+        show_text("Kein Cancel möglich – wird nie erreicht bei cancel=-1")
+end_choices
+
+# show_choices – 4 Optionen, cancel zeigt auf Option 4 (index 3)
+show_choices("Kämpfen", "Magie", "Gegenstand", "Fliehen", cancel=3):
+    when("Kämpfen"):
+        show_text("Angriff!")
+    when("Magie"):
+        show_text("Magie einsetzen!")
+        play_se("Magic1", 100, 100)
+    when("Gegenstand"):
+        show_text("Gegenstand benutzen!")
+    when("Fliehen"):
+        show_text("Du fliehst...")
+        transfer(map=1, x=5, y=8, dir=down)
+end_choices
+
+# show_choices – cancel=5 (Disallow), verschachtelt mit branch
+show_choices("Ja", "Nein", cancel=5):
+    when("Ja"):
+        if switch(1) == ON:
+            show_text("Schalter war AN – Ja gewählt.")
+            switch(1) = OFF
+        else:
+            show_text("Schalter war AUS – Ja gewählt.")
+            switch(1) = ON
+        endif
+    when("Nein"):
+        show_text("Du hast Nein gewählt.")
+        exit_event
+end_choices

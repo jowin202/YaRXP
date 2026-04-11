@@ -1,0 +1,14 @@
+# button_input – Wartet auf Tastendruck und speichert Button-Code in Variable
+# Läuft parallel; der Button-Code bleibt bis zum nächsten Frame gespeichert
+
+button_input(var=1)
+show_text("Gedrückter Button-Code wurde in Variable 1 gespeichert.")
+
+# Typische Verwendung: auf bestimmten Button prüfen
+button_input(var=5)
+if variable(5) == 11:
+    show_text("C / Enter wurde gedrückt!")
+endif
+if variable(5) == 12:
+    show_text("B / Escape wurde gedrückt!")
+endif

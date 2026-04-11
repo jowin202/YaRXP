@@ -1,0 +1,23 @@
+# change_level – Level eines Helden oder der Gruppe ändern
+
+# Level erhöhen
+change_level(actor(1), +1)
+
+# Level erhöhen (mehrfach)
+change_level(actor(1), +5)
+
+# Level senken
+change_level(actor(1), -1)
+
+# Ganzer Gruppe
+change_level(party, +1)
+
+# Level aus Variable
+variable(1) = 3
+change_level(actor(2), +variable(1))
+
+# Cheat-Brunnen (Level boost)
+show_text("Der magische Brunnen strahlt Energie aus...")
+play_se("Levelup", 100, 100)
+change_level(party, +2)
+show_text("Die Gruppe ist stärker geworden!")

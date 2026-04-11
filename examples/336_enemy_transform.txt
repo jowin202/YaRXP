@@ -1,0 +1,14 @@
+# enemy_transform – Gegner in einen anderen Gegnertyp verwandeln
+
+# Gegner 1 in Gegnertyp 5 verwandeln
+enemy_transform(enemy(1), into=enemy(5))
+
+# Gegner 2 verwandeln
+enemy_transform(enemy(2), into=enemy(8))
+
+# Boss-Transformation (zweite Phase)
+show_text("Der Boss verwandelt sich!")
+screen_flash(r=255, g=0, b=0, alpha=200, dur=20)
+play_se("Thunder", 100, 100)
+enemy_transform(enemy(1), into=enemy(10))
+show_text("Er ist viel stärker geworden!")

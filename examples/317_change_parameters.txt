@@ -1,0 +1,32 @@
+# change_parameters – Basis-Werte eines Helden permanent ändern
+# Stats: MaxHP | MaxSP | STR | DEX | AGI | INT
+# Operation: += (erhöhen) | -= (senken)
+
+# MaxHP erhöhen
+change_parameters(actor(1), MaxHP, +=50)
+
+# MaxSP erhöhen
+change_parameters(actor(1), MaxSP, +=20)
+
+# Stärke erhöhen
+change_parameters(actor(1), STR, +=5)
+
+# Geschicklichkeit senken
+change_parameters(actor(1), DEX, -=2)
+
+# Agilität erhöhen
+change_parameters(actor(1), AGI, +=3)
+
+# Intelligenz aus Variable
+variable(1) = 10
+change_parameters(actor(2), INT, +=variable(1))
+
+# Alle Stats boosten (z.B. nach speziellem Item)
+show_text("Das Elixier verleiht enorme Kraft!")
+play_se("Powerup", 100, 100)
+change_parameters(actor(1), MaxHP, +=100)
+change_parameters(actor(1), MaxSP, +=50)
+change_parameters(actor(1), STR, +=10)
+change_parameters(actor(1), DEX, +=5)
+change_parameters(actor(1), AGI, +=5)
+change_parameters(actor(1), INT, +=8)

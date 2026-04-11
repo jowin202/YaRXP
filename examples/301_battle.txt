@@ -1,0 +1,66 @@
+# battle – Kampf starten
+# troop: Gegnertrupp-ID
+# Optionen: escape (Flucht erlaubt), lose (Niederlage erlaubt)
+# Branches: win / escape / lose / end_battle
+
+# Einfacher Kampf (kein Fliehen, Niederlage = Game Over)
+battle(troop=1):
+    win:
+        show_text("Du hast gewonnen!")
+        play_me("Victory", 100, 100)
+        gold += 200
+        item(3) += 1
+    escape:
+        show_text("Flucht nicht möglich!")
+    lose:
+        show_text("Du wurdest besiegt!")
+        game_over
+end_battle
+
+# Kampf mit Flucht-Option
+battle(troop=5, escape):
+    win:
+        show_text("Sieg!")
+        play_me("Victory", 100, 100)
+        switch(10) = ON
+    escape:
+        show_text("Du bist geflohen.")
+        transfer(map=1, x=10, y=8)
+    lose:
+        show_text("Niederlage!")
+        game_over
+end_battle
+
+# Kampf mit Niederlage erlaubt (Story-Boss)
+battle(troop=10, escape, lose):
+    win:
+        show_text("Unglaublich! Du hast den Boss besiegt!")
+        switch(20) = ON
+        play_me("Victory", 100, 100)
+        wait(180)
+        transfer(map=5, x=5, y=5)
+    escape:
+        show_text("Du fliehst gerade noch so...")
+        variable(1) += 1
+    lose:
+        show_text("Du wurdest überwältigt, aber gerettet.")
+        change_hp(party, +1000)
+        recover_all(party)
+        transfer(map=2, x=10, y=10)
+end_battle
+
+# Bosskampf mit verschachtelten Bedingungen danach
+battle(troop=7, escape):
+    win:
+        show_text("Der Drache fällt!")
+        play_me("Victory", 100, 100)
+        if actor(1) in_party:
+            show_text("Gut gemacht, Held!")
+            change_exp(actor(1), +500)
+        endif
+        switch(15) = ON
+    escape:
+        show_text("Feigling!")
+    lose:
+        game_over
+end_battle

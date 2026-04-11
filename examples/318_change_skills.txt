@@ -1,0 +1,30 @@
+# change_skills – Held lernt oder vergisst einen Skill
+# Operation: learn | forget
+
+# Skill lernen
+change_skills(actor(1), learn, skill(5))
+
+# Skill vergessen
+change_skills(actor(1), forget, skill(5))
+
+# Mehrere Skills lernen
+change_skills(actor(1), learn, skill(3))
+change_skills(actor(1), learn, skill(7))
+change_skills(actor(1), learn, skill(12))
+
+# Skill-Buch: Skill durch Item lernen
+if item(20) in_inventory:
+    item(20) -= 1
+    change_skills(actor(1), learn, skill(8))
+    play_se("Levelup", 100, 100)
+    show_text("Du hast \"Feuerball\" gelernt!")
+else:
+    show_text("Du brauchst das Skill-Buch.")
+endif
+
+# Skill vergessen als Strafe
+if switch(30) == ON:
+    show_text("Der Fluch löscht dein Wissen...")
+    change_skills(actor(1), forget, skill(5))
+    change_skills(actor(1), forget, skill(6))
+endif

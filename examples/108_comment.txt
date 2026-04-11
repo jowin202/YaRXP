@@ -1,0 +1,21 @@
+# comment – Kommentare im Event-Script (werden nicht ausgeführt)
+
+# Das ist ein einzeiliger Kommentar.
+
+# Mehrzeilige Kommentare: einfach mehrere # hintereinander
+# Zeile 1 des Kommentars
+# Zeile 2 des Kommentars
+# Zeile 3 des Kommentars
+
+# Kommentare können überall stehen – auch mitten im Script
+show_text("Vor dem Kommentar")
+# Dieser Kommentar liegt zwischen zwei Befehlen
+show_text("Nach dem Kommentar")
+
+# Kommentare zur Dokumentation von Abschnitten
+# === INITIALISIERUNG ===
+switch(1) = ON
+variable(1) = 0
+
+# === HAUPTLOGIK ===
+show_text("Bereit.")

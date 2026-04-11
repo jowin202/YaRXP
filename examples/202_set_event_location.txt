@@ -1,0 +1,27 @@
+# set_event_location – Event auf der Karte verschieben
+# Ziel: this | event(ID)
+# Typ: direkte Koordinaten | Variable | Tausch mit anderem Event
+
+# Dieses Event zu festen Koordinaten (10, 5)
+set_event_location(this, x=10, y=5)
+
+# Ein bestimmtes Event zu Koordinaten
+set_event_location(event(3), x=7, y=3)
+
+# Mit Blickrichtung setzen (2=down, 4=left, 6=right, 8=up)
+set_event_location(this, x=10, y=5, dir=8)
+
+# Koordinaten aus Variablen
+variable(1) = 8
+variable(2) = 4
+set_event_location(event(2), x=variable(1), y=variable(2))
+
+# Tausch: Position mit einem anderen Event tauschen
+set_event_location(this, exchange=event(4))
+
+# Gegner-Event nach Branch repositionieren
+if switch(5) == ON:
+    set_event_location(event(5), x=15, y=10)
+else:
+    set_event_location(event(5), x=1, y=1)
+endif

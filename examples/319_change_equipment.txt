@@ -1,0 +1,35 @@
+# change_equipment – Ausrüstung eines Helden erzwungen wechseln
+# Slots: weapon | shield | helmet | body_armor | accessory
+# Item-ID 0 = Slot leeren
+
+# Waffe anlegen
+change_equipment(actor(1), weapon, 5)
+
+# Schild anlegen
+change_equipment(actor(1), shield, 3)
+
+# Helm anlegen
+change_equipment(actor(1), helmet, 2)
+
+# Körperrüstung anlegen
+change_equipment(actor(1), body_armor, 4)
+
+# Accessoire anlegen
+change_equipment(actor(1), accessory, 1)
+
+# Slot leeren (Waffe entfernen)
+change_equipment(actor(1), weapon, 0)
+
+# Story-Ausrüstung anlegen
+show_text("Der König überreicht dir eine legendäre Rüstung!")
+play_se("Item", 100, 100)
+change_equipment(actor(1), weapon, 10)
+change_equipment(actor(1), body_armor, 8)
+show_text("Du bist nun für den Kampf gerüstet.")
+
+# Entwaffnen nach Niederlage
+if switch(40) == ON:
+    show_text("Die Diebe stehlen deine Ausrüstung!")
+    change_equipment(actor(1), weapon, 0)
+    change_equipment(actor(1), shield, 0)
+endif

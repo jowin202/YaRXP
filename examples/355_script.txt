@@ -1,0 +1,55 @@
+# script – Ruby-Code direkt ausführen (einzeilig oder mehrzeilig)
+
+# Einzeilig (implizit – wird als script: ... end_script serialisiert)
+script:
+    $game_switches[1] = true
+end_script
+
+# Mehrere Zeilen
+script:
+    $game_variables[1] = $game_party.gold
+    $game_variables[2] = $game_party.actors.size
+    $game_variables[3] = $game_map.map_id
+end_script
+
+# Komplexes Skript (Ruby-Logik)
+script:
+    actor = $game_actors[1]
+    if actor.hp < actor.maxhp / 2
+      $game_switches[10] = true
+    else
+      $game_switches[10] = false
+    end
+end_script
+
+# Script dann Branch basierend auf Ergebnis
+script:
+    $game_variables[5] = rand(100)
+end_script
+if variable(5) >= 50:
+    show_text("Glück gehabt! (Zufallszahl >= 50)")
+else:
+    show_text("Kein Glück. (Zufallszahl < 50)")
+endif
+
+# Ruby-Methode aufrufen
+script:
+    $game_system.bgm_memorize
+    Audio.bgm_play("Audio/BGM/Mystery", 90, 100)
+end_script
+wait(180)
+script:
+    $game_system.bgm_restore
+end_script
+
+# Script mit Loop-Abbruch-Logik
+variable(1) = 0
+loop:
+    script:
+        $game_variables[1] += 1
+    end_script
+    if variable(1) >= 10:
+        break
+    endif
+end_loop
+show_text("Loop via Script 10x durchlaufen.")

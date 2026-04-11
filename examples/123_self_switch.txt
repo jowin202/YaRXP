@@ -1,0 +1,24 @@
+# self_switch – Self-Switch dieses Events setzen (A, B, C, D)
+
+# Self Switch A auf ON (klassisch: "Event abgeschlossen")
+self_switch(A) = ON
+
+# Self Switch A auf OFF
+self_switch(A) = OFF
+
+# Alle vier Self Switches setzen
+self_switch(A) = ON
+self_switch(B) = ON
+self_switch(C) = OFF
+self_switch(D) = OFF
+
+# Typisches Muster: Event einmalig ausführen
+if self_switch(A) == ON:
+    exit_event
+endif
+show_text("Hallo! Ich werde nur einmal angezeigt.")
+self_switch(A) = ON
+
+# Self Switch B für zweite Seite
+show_text("Erste Seite abgeschlossen.")
+self_switch(B) = ON
