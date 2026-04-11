@@ -843,6 +843,13 @@ static bool hasNamedKey(const QList<Token> &toks, const QString &key)
     for (const Token &t : toks) if (t.key==key) return true;
     return false;
 }
+// Checks for a standalone flag (no "="), e.g. "no_fading" in "transfer(..., no_fading)"
+static bool hasFlag(const QList<Token> &toks, const QString &name)
+{
+    for (const Token &t : toks)
+        if (t.key.isEmpty() && t.value.trimmed() == name) return true;
+    return false;
+}
 static int posInt(const QList<Token> &toks, int idx, int def=0)
 {
     int n = 0;
@@ -1359,7 +1366,7 @@ QJsonArray EventDslSerializer::fromScript(const QString &text, bool *ok, QString
             QString dirStr = findNamedStr(toks,"dir","");
             static const QMap<QString,int> DM={{"down",2},{"left",4},{"right",6},{"up",8}};
             int dir  = DM.value(dirStr,0);
-            int fade = hasNamedKey(toks,"no_fading") ? 1 : 0;
+            int fade = hasFlag(toks,"no_fading") ? 1 : 0;
             QJsonArray p; p<<(useVar?1:0)<<mapV<<xV<<yV<<dir<<fade;
             result.append(makeCmd(201,ind,p)); i++; continue;
         }
