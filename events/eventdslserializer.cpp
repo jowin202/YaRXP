@@ -1146,28 +1146,28 @@ QJsonArray EventDslSerializer::fromScript(const QString &text, bool *ok, QString
                 return QJsonArray();
             }
             result.append(makeCmd(111,ind,params));
-            result.append(makeCmd(0, ind+1, {}));
             i++; continue;
         }
         if (line == "else:") {
-            result.append(makeCmd(411,ind,QJsonArray()));
             result.append(makeCmd(0, ind+1, {}));
+            result.append(makeCmd(411,ind,QJsonArray()));
             i++; continue;
         }
         if (line == "endif") {
+            result.append(makeCmd(0, ind+1, {}));
             result.append(makeCmd(412,ind,QJsonArray())); i++; continue;
         }
 
         // ── loop ─────────────────────────────────────────────
         if (line == "loop:") {
             result.append(makeCmd(112,ind,QJsonArray()));
-            result.append(makeCmd(0, ind+1, {}));
             i++; continue;
         }
         if (line == "break") {
             result.append(makeCmd(113,ind,QJsonArray())); i++; continue;
         }
         if (line == "end_loop") {
+            result.append(makeCmd(0, ind+1, {}));
             result.append(makeCmd(413,ind,QJsonArray())); i++; continue;
         }
 
@@ -1524,17 +1524,20 @@ QJsonArray EventDslSerializer::fromScript(const QString &text, bool *ok, QString
                 if (c2==102) break;
                 if (c2==402) choiceIdx++;
             }
+            // Placeholder ends the previous when-block (not before the first when)
+            if (choiceIdx > 0)
+                result.append(makeCmd(0, ind+1, {}));
             QJsonArray p; p<<choiceIdx<<label;
             result.append(makeCmd(402,ind,p));
-            result.append(makeCmd(0, ind+1, {}));
             i++; continue;
         }
         if (line=="when_cancel:") {
-            result.append(makeCmd(403,ind,{}));
             result.append(makeCmd(0, ind+1, {}));
+            result.append(makeCmd(403,ind,{}));
             i++; continue;
         }
         if (line=="end_choices") {
+            result.append(makeCmd(0, ind+1, {}));
             result.append(makeCmd(404,ind,{})); i++; continue;
         }
 
@@ -1547,10 +1550,10 @@ QJsonArray EventDslSerializer::fromScript(const QString &text, bool *ok, QString
              <<(hasNamedKey(toks,"lose")?true:false);
             result.append(makeCmd(301,ind,p)); i++; continue;
         }
-        if (line=="win:")    { result.append(makeCmd(601,ind,{})); result.append(makeCmd(0, ind+1, {})); i++; continue; }
-        if (line=="escape:") { result.append(makeCmd(602,ind,{})); result.append(makeCmd(0, ind+1, {})); i++; continue; }
-        if (line=="lose:")   { result.append(makeCmd(603,ind,{})); result.append(makeCmd(0, ind+1, {})); i++; continue; }
-        if (line=="end_battle"){ result.append(makeCmd(604,ind,{})); i++; continue; }
+        if (line=="win:")    { result.append(makeCmd(601,ind,{})); i++; continue; }
+        if (line=="escape:") { result.append(makeCmd(0, ind+1, {})); result.append(makeCmd(602,ind,{})); i++; continue; }
+        if (line=="lose:")   { result.append(makeCmd(0, ind+1, {})); result.append(makeCmd(603,ind,{})); i++; continue; }
+        if (line=="end_battle"){ result.append(makeCmd(0, ind+1, {})); result.append(makeCmd(604,ind,{})); i++; continue; }
 
         // ── move_route(who, opts?): ──────────────────────────
         if (line.startsWith("move_route(") && line.endsWith(':')) {
