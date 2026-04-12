@@ -42,6 +42,9 @@ void MapTile::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, Q
 
     if (opt->mode == MapView::EVENT)
     {
+        QPen gridPen(QColor(0, 0, 0, 160));
+        gridPen.setWidth(1);
+        painter->setPen(gridPen);
         painter->drawRect(0,0,32,32);
         QJsonObject event = mc->event_on_pos(pos);
         if (event.contains("RXClass"))

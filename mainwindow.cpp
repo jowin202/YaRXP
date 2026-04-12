@@ -358,6 +358,30 @@ void MainWindow::on_actionSave_triggered()
     this->db.save_project();
 }
 
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    if (this->db.project_dir.isEmpty()) {
+        event->accept();
+        return;
+    }
+
+    auto reply = QMessageBox::question(
+        this,
+        tr("Save Changes?"),
+        tr("Do you want to save your changes before closing?"),
+        QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel,
+        QMessageBox::Yes);
+
+    if (reply == QMessageBox::Yes) {
+        this->db.save_project();
+        event->accept();
+    } else if (reply == QMessageBox::No) {
+        event->accept();
+    } else {
+        event->ignore();
+    }
+}
+
 void MainWindow::on_actionshift_up_triggered()
 {
     this->ui->mapView->shift(MapView::UP, 1);

@@ -7,6 +7,7 @@
 #include <QFileDialog>
 #include <QInputDialog>
 #include <QSettings>
+#include <QCloseEvent>
 #include <QMessageBox>
 
 #include <QDesktopServices>
@@ -52,6 +53,9 @@ public slots:
     void on_actionFlood_Fill_triggered();
     void on_actionAll_Layers_triggered();
     void on_actionCurrent_Layers_and_below_triggered();
+
+protected:
+    void closeEvent(QCloseEvent *event) override;
 
 private slots:
     void show_current_coordinates(int x,int y);
