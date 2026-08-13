@@ -96,13 +96,10 @@ void RPGDB::save_project()
     Writer mapinfo_writer(&mapinfo_file,            FileOpener(this->data_dir, "MapInfos.rxdata").get_existing_file());
 
 
-    for (int i = 0; i < 999; i++)
+    foreach (int i, map_files.keys())
     {
-        if (map_files.contains(i))
-        {
-            QJsonDocument *doc = map_files.value(i);
-            Writer map_writer(doc, QString(this->data_dir + "Map%1.rxdata").arg(i,3,10,QChar('0')));
-        }
+        QJsonDocument *doc = map_files.value(i);
+        Writer map_writer(doc, QString(this->data_dir + "Map%1.rxdata").arg(i,3,10,QChar('0')));
     }
 
 

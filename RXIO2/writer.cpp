@@ -236,24 +236,34 @@ void Writer::write_fixnum(int n)
     else { // negative
         if (n < 0 && n > -124)
             write_one_byte(n-5);
+        else if (n >= -256)
+        {
+            this->write_one_byte(0xFF); //negative and 1 byte number
+            this->write_one_byte(((-n-1) & 0xFF) ^ 0xFF);
+        }
+        else if (n >= -65536)
+        {
+            this->write_one_byte(0xFE); //negative and 2 byte number
+            int offset = 0xFEFF -(-n-257);
+            this->write_one_byte( 0xFF & offset);
+            this->write_one_byte( 0xFF & (offset >> 8));
+        }
+        else if (n >= -16777216)
+        {
+            this->write_one_byte(0xFD); //negative and 3 byte number
+            quint32 tmp = (quint32)(n + 0x1000000);
+            this->write_one_byte(tmp & 0xFF);
+            this->write_one_byte((tmp >> 8) & 0xFF);
+            this->write_one_byte((tmp >> 16) & 0xFF);
+        }
         else
         {
-            if (n <= -124 && n >= -256)
-            {
-                this->write_one_byte(0xFF); //negative and 1 byte number
-                this->write_one_byte(((-n-1) & 0xFF) ^ 0xFF);
-
-            }
-            else
-            {
-                this->write_one_byte(0xFE); //negative and 2 byte number
-                int offset = 0xFEFF -(-n-257);
-                this->write_one_byte( 0xFF & offset);
-                this->write_one_byte( 0xFF & (offset >> 8));
-
-                //assuming -65535 is min (TODO, maybe)
-
-            }
+            this->write_one_byte(0xFC); //negative and 4 byte number
+            quint32 tmp = (quint32)n; //full 32 bit two's complement pattern
+            this->write_one_byte(tmp & 0xFF);
+            this->write_one_byte((tmp >> 8) & 0xFF);
+            this->write_one_byte((tmp >> 16) & 0xFF);
+            this->write_one_byte((tmp >> 24) & 0xFF);
         }
     }
 

@@ -24,6 +24,8 @@ public:
     int read_16_bit();
     int read_16_bit_signed();
     int read_32_bit();
+    double read_double();
+    QByteArray read_bytes(int n);
     QString read_symbol_or_link(bool save_symbol = true);
 
 

@@ -100,7 +100,7 @@ QJsonValue Parser::parse_token()
     else if (byte == 0x22) //" string
     {
         int len = this->read_fixnum();
-        QByteArray content = this->f.read(len);
+        QByteArray content = this->read_bytes(len);
 
         QString str;
         if (strings_to_base_64)
@@ -142,7 +142,9 @@ QJsonValue Parser::parse_token()
             int z = this->read_32_bit();
             int num_elements = this->read_32_bit();
 
-            if (x*y*z != num_elements)
+            if (x < 0 || y < 0 || z < 0 || num_elements < 0)
+                throw RXException("Invalid Table");
+            if ((qint64)x * (qint64)y * (qint64)z != (qint64)num_elements)
                 throw RXException("Invalid Table");
 
 
@@ -168,14 +170,12 @@ QJsonValue Parser::parse_token()
         }
         else if (symbol == "Color" || symbol == "Tone")
         {
-            double r,g,b, alpha;
-
             this->read_fixnum(); //32 byte size, ignore it
 
-            this->f.read((char*)&r, 8);
-            this->f.read((char*)&g, 8);
-            this->f.read((char*)&b, 8);
-            this->f.read((char*)&alpha, 8);
+            double r = this->read_double();
+            double g = this->read_double();
+            double b = this->read_double();
+            double alpha = this->read_double();
 
             QJsonObject obj;
             obj.insert("RXClass", symbol);
@@ -186,7 +186,10 @@ QJsonValue Parser::parse_token()
             this->reference_table.insert(curr_obj_count, obj);
             return QJsonValue(obj);
         }
-
+        else
+        {
+            throw RXException("Undefined Command: unknown user-defined class '" + symbol + "' at " + QString::number(f.pos(),16));
+        }
     }
     else if (byte == 0x6F) //o obj
     {
@@ -255,17 +258,33 @@ QJsonValue Parser::parse_token()
 
 int Parser::read_one_byte()
 {
-    QByteArray one_byte = f.read(1);
-    if (one_byte.length() != 1)
+    QByteArray one_byte = this->read_bytes(1);
+    return 0xFF & (one_byte.at(0));
+}
+
+QByteArray Parser::read_bytes(int n)
+{
+    QByteArray data = f.read(n);
+    if (data.length() != n)
     {
         throw RXException("Unexpected EOF");
     }
-    return 0xFF & (one_byte.at(0));
+    return data;
+}
+
+double Parser::read_double()
+{
+    double v;
+    if (this->f.read((char*)&v, 8) != 8)
+    {
+        throw RXException("Unexpected EOF");
+    }
+    return v;
 }
 
 int Parser::read_fixnum()
 {
-    int num = (signed char)f.read(1).at(0);
+    int num = (signed char)this->read_bytes(1).at(0);
 
     if (num == 0)
         return num;
@@ -296,6 +315,23 @@ int Parser::read_fixnum()
             tmp |= ((this->read_one_byte()) & 0xFF) << 8;
 
             return -257 - (0xfeff-tmp);
+        }
+        else if (num == -3)
+        {
+            quint32 v = 0;
+            v |= (quint32)this->read_one_byte();
+            v |= (quint32)this->read_one_byte() << 8;
+            v |= (quint32)this->read_one_byte() << 16;
+            return (int)(v - 0x1000000); //3 byte two's complement: v - 2^24
+        }
+        else if (num == -4)
+        {
+            quint32 v = 0;
+            v |= (quint32)this->read_one_byte();
+            v |= (quint32)this->read_one_byte() << 8;
+            v |= (quint32)this->read_one_byte() << 16;
+            v |= (quint32)this->read_one_byte() << 24;
+            return (int)v; //4 byte two's complement: full 32 bit pattern
         }
 
         return num;
@@ -346,13 +382,15 @@ QString Parser::read_symbol_or_link(bool save_symbol)
     if (current_byte == ':')
     {
         int symbol_len = this->read_fixnum();
-        symbol = QString(this->f.read(symbol_len));
+        symbol = QString(this->read_bytes(symbol_len));
         if (save_symbol)
             this->symbol_cache << symbol;
     }
     else if (current_byte == ';')
     {
         int symbol_index = this->read_fixnum();
+        if (symbol_index < 0 || symbol_index >= this->symbol_cache.size())
+            throw RXException("Undefined Symbol Link: " + QString::number(symbol_index) + " at " + QString::number(f.pos(),16));
         symbol = this->symbol_cache.at(symbol_index);
     }
     else
