@@ -1,4 +1,5 @@
 #include "imagedialog.h"
+#include <QFileInfo>
 #include "ui_imagedialog.h"
 
 #include "RXIO2/rpgdb.h"
@@ -148,7 +149,7 @@ void ImageDialog::update_image_list()
     {
         if (entry == "." || entry == "..") continue;
         this->ui->list->addItem(entry);
-        if (this->current == entry.chopped(4))
+        if (this->current == QFileInfo(entry).completeBaseName())
         {
             this->ui->list->setCurrentItem(this->ui->list->item(this->ui->list->count()-1));
         }
@@ -189,7 +190,7 @@ void ImageDialog::on_button_ok_clicked()
         if (this->ui->list->currentRow() == 0)
             emit ok_clicked("");
         else
-            emit ok_clicked(QString(this->ui->list->currentItem()->text()).chopped(4));
+            emit ok_clicked(QFileInfo(this->ui->list->currentItem()->text()).completeBaseName());
 
     if (this->visible_hue)
         emit ok_clicked_with_hue(this->ui->slider_hue->value());

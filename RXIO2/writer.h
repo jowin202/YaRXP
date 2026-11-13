@@ -7,7 +7,8 @@
 #include <QJsonValue>
 #include <QJsonArray>
 
-#include <QFile>
+#include <QSaveFile>
+#include <QHash>
 
 #include <QDebug>
 
@@ -27,7 +28,8 @@ public:
     void write_symbol_or_link(QString str);
     void write_one_byte(int byte);
     void write_fixnum(int n);
-    void write_integer(int n);
+    void write_integer(qint64 n);
+    void write_bignum(qint64 n);
     void write_string(QString str);
 
 
@@ -35,13 +37,9 @@ signals:
 
 
 private:
-    QFile f;
-    QStringList symbol_cache;
+    QSaveFile f;
+    QHash<QString,int> symbol_cache;
     QJsonDocument *doc;
-
-    QMap<int,QJsonValue> reference_table;
-    int object_count = -1;
-
 
     bool strings_from_base_64 = false;
     bool extended_dictionary = false;

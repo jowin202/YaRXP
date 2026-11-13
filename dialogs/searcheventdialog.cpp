@@ -50,11 +50,20 @@ void SearchEventDialog::on_button_ok_clicked()
         cs = Qt::CaseInsensitive;
 
 
-    SearchThread *thread = new SearchThread(db,mode,this->ui->line_text->text(),sw_var,cs);
+    QMap<int,QJsonObject> maps;
+    const QStringList map_ids = db->get_mapinfos()->object().keys();
+    for (const QString &key : map_ids)
+    {
+        QJsonDocument *map = db->get_mapfile_by_id(key.toInt());
+        if (map != nullptr)
+            maps.insert(key.toInt(), map->object());
+    }
+
+    SearchThread *thread = new SearchThread(maps,mode,this->ui->line_text->text(),sw_var,cs);
 
 
-    connect(thread, &SearchThread::finished, this, &SearchEventDialog::update_gui);
-    connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+    connect(thread, &SearchThread::search_finished, this, &SearchEventDialog::update_gui);
+    connect(thread, &QThread::finished, thread, &QObject::deleteLater);
     thread->start();
 }
 
@@ -71,13 +80,17 @@ void SearchEventDialog::update_gui(QList<int> result)
     int num = (result.count()) >> 2; //4 nums by res
     this->ui->table_result->setRowCount(num);
 
-    for (int r = 0; r < num; r++)
+    int r = 0;
+    for (int n = 0; n < num; n++)
     {
-        int map_id = result.at(4*r);
-        int event_id = result.at(4*r+1);
-        int page_id = result.at(4*r+2);
-        int line_id = result.at(4*r+3);
-        QJsonObject event_obj = db->get_mapfile_by_id(map_id)->object().value("@events").toObject().value(QString::number(event_id)).toObject();
+        int map_id = result.at(4*n);
+        int event_id = result.at(4*n+1);
+        int page_id = result.at(4*n+2);
+        int line_id = result.at(4*n+3);
+        QJsonDocument *map = db->get_mapfile_by_id(map_id);
+        if (map == nullptr)
+            continue; //map deleted while searching
+        QJsonObject event_obj = map->object().value("@events").toObject().value(QString::number(event_id)).toObject();
         QJsonObject command = event_obj.value("@pages").toArray().at(page_id).toObject().value("@list").toArray().at(line_id).toObject();
         QString map_cell = QString("%1 (%2)").arg(mic->get_name(map_id)).arg(map_id);
         QString event_cell = QString("Event %1 (%2), Page: %3").arg(event_obj.value("@name").toString()).arg(event_id).arg(page_id+1);
@@ -93,7 +106,9 @@ void SearchEventDialog::update_gui(QList<int> result)
         this->ui->table_result->item(r,4)->setFlags(this->ui->table_result->item(r,4)->flags() & ~Qt::ItemIsEditable);
         this->ui->table_result->item(r,5)->setFlags(this->ui->table_result->item(r,5)->flags() & ~Qt::ItemIsEditable);
         this->ui->table_result->item(r,6)->setFlags(this->ui->table_result->item(r,6)->flags() & ~Qt::ItemIsEditable);
+        r++;
     }
+    this->ui->table_result->setRowCount(r);
     this->ui->table_result->resizeColumnsToContents();
 }
 

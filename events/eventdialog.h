@@ -55,6 +55,7 @@ private:
     Ui::EventDialog *ui;
     QJsonObject event;
     RPGMapController *mc;
+    int map_id; //the map this event belongs to, the map view might show another map when applying
 };
 
 #endif // EVENTDIALOG_H

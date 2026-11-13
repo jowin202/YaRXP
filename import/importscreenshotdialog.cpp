@@ -112,6 +112,7 @@ void ImportScreenshotDialog::on_button_similartiles_clicked()
     connect(thread, &ScreenshotAnalysisThread::finished, [=](QMap<QPair<int,int>, int > result) {
         this->similar_tiles = result;
     });
+    connect(thread, &QThread::finished, thread, &QObject::deleteLater);
     thread->start();
 }
 

@@ -5,6 +5,7 @@
 #include <QFileDialog>
 #include <QWidget>
 #include <QKeyEvent>
+#include <QCloseEvent>
 #include <QDir>
 #include <QDirIterator>
 #include <QSoundEffect>
@@ -28,7 +29,12 @@ public:
     ~AudioDialog();
     enum {BGM, BGS, ME, SE};
 
-    void keyPressEvent(QKeyEvent *e) {
+    void closeEvent(QCloseEvent *e) override {
+        this->player.stop(); //the dialog is not deleted when closed, do not keep playing
+        QWidget::closeEvent(e);
+    }
+
+    void keyPressEvent(QKeyEvent *e) override {
         if(e->key() == Qt::Key_Escape)
             this->close();
         else if(e->key() == Qt::Key_Return || e->key() == Qt::Key_Enter)

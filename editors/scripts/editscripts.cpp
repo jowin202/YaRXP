@@ -32,7 +32,7 @@ EditScripts::~EditScripts()
 void EditScripts::setEC(RPGEditorController *ec)
 {
     this->ec = ec;
-    connect(ec, &RPGEditorController::current_script_changed, [=](){
+    connect(ec, &RPGEditorController::current_script_changed, this, [=](){
         QJsonArray array = ec->get_script_by_id(ec->current_script);
         if (array.count() == 3)
         {

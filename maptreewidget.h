@@ -64,6 +64,7 @@ public slots:
 
 signals:
     void on_map_selected(int);
+    void map_about_to_be_deleted(int);
 
 private:
     QHash<int,QTreeWidgetItem*> id_map;
@@ -78,8 +79,10 @@ private:
     QAction action7;
     QAction action8;
 
-    RPGDB *db;
-    RPGMapInfoController *mic;
+    int current_map_id(); //-1 if nothing is selected
+
+    RPGDB *db = nullptr;
+    RPGMapInfoController *mic = nullptr;
 
 };
 #endif // MAPTREEWIDGET_H

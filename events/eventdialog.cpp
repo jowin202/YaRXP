@@ -3,6 +3,9 @@
 
 #include "eventpage.h"
 #include "RXIO2/rpgmapcontroller.h"
+#include "RXIO2/rpgdb.h"
+
+#include <QMessageBox>
 
 
 EventDialog::EventDialog(RPGMapController *mc, QJsonObject event, QWidget *parent) :
@@ -13,6 +16,7 @@ EventDialog::EventDialog(RPGMapController *mc, QJsonObject event, QWidget *paren
 
     this->event = event;
     this->mc = mc;
+    this->map_id = mc->get_current_map_id();
 
     /*
     //for Debugging
@@ -92,7 +96,16 @@ void EventDialog::on_button_cancel_clicked()
 
 void EventDialog::on_button_apply_clicked()
 {
-    emit ok_clicked(); //first do this for undo-redo
+    bool is_current_map = (mc->current_map_is_valid() && mc->get_current_map_id() == this->map_id);
+    QJsonDocument *map = mc->getDB()->get_mapfile_by_id(this->map_id);
+    if (map == nullptr)
+    {
+        QMessageBox::warning(this, "Event", "The map of this event does not exist anymore.");
+        return;
+    }
+
+    if (is_current_map)
+        emit ok_clicked(); //first do this for undo-redo
 
     QJsonArray pages;
     for (int i = 0; i < this->ui->tab_widget->count(); i++)
@@ -102,7 +115,13 @@ void EventDialog::on_button_apply_clicked()
     this->event.insert("@pages", pages);
     this->event.insert("@name", this->ui->line_name->text());
     int id = this->event.value("@id").toInt();
-    mc->set_event_by_id(id, this->event);
+
+    QJsonObject map_object = map->object();
+    QJsonObject events = map_object.value("@events").toObject();
+    events.insert(QString::number(id), this->event);
+    map_object.insert("@events", events);
+    map->setObject(map_object);
+
     this->do_numbers_of_tabs_right();
 }
 

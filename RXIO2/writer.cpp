@@ -6,8 +6,14 @@ Writer::Writer(QJsonDocument *doc, QString file_location, bool strings_from_base
 {
     this->strings_from_base_64 = strings_from_base_64;
     this->extended_dictionary = extended_dictionary;
+    if (file_location.isEmpty())
+        throw RXException("No file name given for writing");
+
+    //QSaveFile writes to a temporary file and replaces the target only on commit(),
+    //so the original file stays intact if anything goes wrong while writing
     this->f.setFileName(file_location);
-    f.open(QIODevice::WriteOnly);
+    if (!f.open(QIODevice::WriteOnly))
+        throw RXException("Could not open " + file_location + " for writing: " + f.errorString());
 
     this->write_one_byte(0x04);
     this->write_one_byte(0x08);
@@ -20,23 +26,23 @@ Writer::Writer(QJsonDocument *doc, QString file_location, bool strings_from_base
         this->write_token(doc->array());
     else if (doc->isObject())
         this->write_token(doc->object());
+    else
+        throw RXException("Nothing to write for " + file_location);
 
-    f.close();
+    if (!f.commit())
+        throw RXException("Could not write " + file_location + ": " + f.errorString());
 }
 
 void Writer::write_token(QJsonValue token)
 {
-    //TODO
     if (token.isArray())
     {
+        const QJsonArray array = token.toArray();
         this->write_one_byte(0x5B);
-        int len = token.toArray().size();
-        this->write_fixnum(len);
+        this->write_fixnum(array.size());
 
-        for (int i = 0; i < len; i++)
-        {
-            this->write_token(token.toArray().at(i));
-        }
+        for (const QJsonValue &value : array)
+            this->write_token(value);
     }
     else if (token.isObject() && token.toObject().contains("RXClass"))
     {
@@ -49,15 +55,20 @@ void Writer::write_token(QJsonValue token)
             {
                 QJsonArray dict_list = obj.value("dict_list").toArray();
 
+                //only key-value pairs can be written, the count must match the written entries
+                QList<QJsonArray> pairs;
+                for (const QJsonValue &entry : dict_list)
+                    if (entry.toArray().count() == 2)
+                        pairs.append(entry.toArray());
+
                 //do extended dictionary stuff
                 this->write_one_byte(0x7B);
-                this->write_fixnum(dict_list.count());
+                this->write_fixnum(pairs.count());
 
-                for (int i = 0; i < dict_list.count(); i++)
+                for (const QJsonArray &pair : pairs)
                 {
-                    if (dict_list.at(i).toArray().count() != 2) continue;
-                    this->write_token(dict_list.at(i).toArray().at(0));
-                    this->write_token(dict_list.at(i).toArray().at(1));
+                    this->write_token(pair.at(0));
+                    this->write_token(pair.at(1));
                 }
             }
             else
@@ -141,7 +152,7 @@ void Writer::write_token(QJsonValue token)
     else if (token.isDouble())
     {
         //it is actually integer
-        this->write_integer(token.toInt());
+        this->write_integer(token.toInteger());
     }
     else if (token.type() == QJsonValue::Type::Bool)
     {
@@ -158,6 +169,11 @@ void Writer::write_token(QJsonValue token)
     {
         this->write_string(token.toString());
     }
+    else
+    {
+        //writing nothing would corrupt the whole file (counts would not match anymore)
+        throw RXException("Cannot write value (object without RXClass or undefined value) to " + f.fileName());
+    }
 }
 
 void Writer::write_32_bit(int n)
@@ -170,17 +186,20 @@ void Writer::write_32_bit(int n)
 
 void Writer::write_symbol_or_link(QString str)
 {
-    if (symbol_cache.contains(str))
+    auto it = symbol_cache.constFind(str);
+    if (it != symbol_cache.constEnd())
     {
         write_one_byte((int)';');
-        write_fixnum(symbol_cache.indexOf(str));
+        write_fixnum(it.value());
     }
     else
     {
+        QByteArray bytes = str.toUtf8();
         write_one_byte((int)':');
-        write_fixnum(str.length());
-        f.write(str.toUtf8());
-        this->symbol_cache << str;
+        write_fixnum(bytes.length());
+        f.write(bytes);
+        int index = symbol_cache.size();
+        this->symbol_cache.insert(str, index);
     }
 }
 
@@ -269,10 +288,35 @@ void Writer::write_fixnum(int n)
 
 }
 
-void Writer::write_integer(int n)
+void Writer::write_integer(qint64 n)
 {
+    //Fixnums in RGSS1 (Ruby 1.8, 32 bit) are 31 bit wide, everything else is a Bignum
+    if (n < -(1LL << 30) || n >= (1LL << 30))
+    {
+        this->write_bignum(n);
+        return;
+    }
     write_one_byte((int)'i');
-    write_fixnum(n);
+    write_fixnum((int)n);
+}
+
+void Writer::write_bignum(qint64 n)
+{
+    write_one_byte((int)'l');
+    write_one_byte(n < 0 ? '-' : '+');
+
+    quint64 abs_value = (n < 0) ? (quint64)(-(n + 1)) + 1 : (quint64)n;
+    QByteArray bytes;
+    while (abs_value > 0)
+    {
+        bytes.append((char)(abs_value & 0xFF));
+        abs_value >>= 8;
+    }
+    if (bytes.length() % 2 == 1)
+        bytes.append((char)0); //length is given in 16 bit words
+
+    write_fixnum(bytes.length() / 2);
+    f.write(bytes);
 }
 
 void Writer::write_string(QString str)
@@ -286,7 +330,8 @@ void Writer::write_string(QString str)
     }
     else
     {
-        write_fixnum(str.toUtf8().length());
-        f.write(str.toUtf8());
+        QByteArray bytes = str.toUtf8();
+        write_fixnum(bytes.length());
+        f.write(bytes);
     }
 }

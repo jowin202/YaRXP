@@ -62,8 +62,8 @@ private slots:
 
 private:
     Ui::DataEditor *ui;
-    RPGDB *db;
-    RPGEditorController *ec;
+    RPGDB *db = nullptr;
+    RPGEditorController *ec = nullptr;
 
 
     QAction action_actors_copy;

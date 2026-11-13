@@ -24,8 +24,10 @@ class RPGDB : public QObject
     Q_OBJECT
 public:
     explicit RPGDB(QObject *parent = nullptr);
+    ~RPGDB();
 
-    RPGMapController *mc;
+    RPGMapController *mc = nullptr;
+    //all three throw RXException on failure
     void load_project(QString dir);
     void save_project();
     void close_project();

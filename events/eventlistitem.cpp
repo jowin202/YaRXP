@@ -105,8 +105,8 @@ void EventListItem::edit_cell()
         dialog->show();
 
         QObject::connect(dialog, &ShowTextDialog::ok_clicked, [=](QString text){
-            for (int i = 1; dynamic_cast<EventListItem*>(parent->item(row+1)) != nullptr
-                 && ((EventListItem*)parent->item(row+1))->get_obj().value("@code").toInt() == multiline_id; i++) {
+            while (dynamic_cast<EventListItem*>(parent->item(row+1)) != nullptr
+                 && ((EventListItem*)parent->item(row+1))->get_obj().value("@code").toInt() == multiline_id) {
                 delete parent->takeItem(row+1);
             }
             QStringList list = text.split('\n');
@@ -157,8 +157,8 @@ void EventListItem::edit_cell()
             this->update_text();
 
             //delete all 509
-            for (int i = 1; dynamic_cast<EventListItem*>(parent->item(row+1)) != nullptr
-                 && ((EventListItem*)parent->item(row+1))->get_obj().value("@code").toInt() == 509; i++) {
+            while (dynamic_cast<EventListItem*>(parent->item(row+1)) != nullptr
+                 && ((EventListItem*)parent->item(row+1))->get_obj().value("@code").toInt() == 509) {
                 delete parent->takeItem(row+1);
             }
 
@@ -343,8 +343,8 @@ void EventListItem::edit_cell()
         QObject::connect(dialog, &ShopProcessingDialog::ok_clicked, [=](QJsonArray shop_params) {
             this->obj.insert("@parameters", shop_params.at(0).toArray());
             this->update_text();
-            for (int i = 1; dynamic_cast<EventListItem*>(parent->item(row+1)) != nullptr
-                 && ((EventListItem*)parent->item(row+1))->get_obj().value("@code").toInt() == 605; i++) {
+            while (dynamic_cast<EventListItem*>(parent->item(row+1)) != nullptr
+                 && ((EventListItem*)parent->item(row+1))->get_obj().value("@code").toInt() == 605) {
                 delete parent->takeItem(row+1);
             }
             for (int i = shop_params.count()-1; i > 0; i--)
@@ -939,7 +939,7 @@ QString EventListItem::get_text(QJsonObject obj)
             text += QString("%1 is facing %2")
                     .arg(parameters.at(1).toInt() == -1 ? "Player" :
                                                           parameters.at(1).toInt() == 0 ? "This event" : QString("[%1]").arg(
-                                                                                              mc->current_map()->object().value("@events").toObject().value(QString::number(parameters.at(1).toInt())).toObject().value("@name").toString()))
+                                                                                              mc->current_map_object().value("@events").toObject().value(QString::number(parameters.at(1).toInt())).toObject().value("@name").toString()))
                     .arg(dir_idx >= 0 && dir_idx < this->text_directions.size() ? this->text_directions.at(dir_idx) : QString::number(parameters.at(2).toInt()));
                     break; } // character
         case 7: text += QString("Gold %2 %3").arg(parameters.at(1).toInt())
@@ -1015,7 +1015,7 @@ QString EventListItem::get_text(QJsonObject obj)
             text += QString("%1's %2")
                     .arg( (parameters.at(4).toInt() == -1 ? "Player" : (
                                                                 (parameters.at(4).toInt() == 0 ? "This event" :
-                                                                                                "[" + mc->current_map()->object().value("@events").toObject().value(QString::number(parameters.at(4).toInt())).toObject().value("@name").toString() + "]") )  ))
+                                                                                                "[" + mc->current_map_object().value("@events").toObject().value(QString::number(parameters.at(4).toInt())).toObject().value("@name").toString() + "]") )  ))
                     .arg(this->text_map_vars.at(parameters.at(5).toInt())); break;
         case 7: text += this->text_other_vars.at(parameters.at(4).toInt());  break;
         }
@@ -1086,10 +1086,10 @@ QString EventListItem::get_text(QJsonObject obj)
     else if (code == 202)
         text += "@>Set Event Location: " + (parameters.at(0).toInt() == 0 ?
                                                 "This event, " :
-                                                "[" + mc->current_map()->object().value("@events").toObject().value(QString::number(parameters.at(0).toInt())).toObject().value("@name").toString() +"], ")
+                                                "[" + mc->current_map_object().value("@events").toObject().value(QString::number(parameters.at(0).toInt())).toObject().value("@name").toString() +"], ")
                 + (parameters.at(1).toInt() == 0 ? QString("(%1,%2)").arg(parameters.at(2).toInt(),3,10,QChar('0')).arg(parameters.at(3).toInt(),3,10,QChar('0')) :
                   (parameters.at(1).toInt() == 1 ? QString("Variable [%1][%2]").arg(parameters.at(2).toInt(),4,10,QChar('0')).arg(parameters.at(3).toInt(),4,10,QChar('0')) :
-                                                   QString("Switch with [%1]").arg(mc->current_map()->object().value("@events").toObject().value(QString::number(parameters.at(2).toInt())).toObject().value("@name").toString())))
+                                                   QString("Switch with [%1]").arg(mc->current_map_object().value("@events").toObject().value(QString::number(parameters.at(2).toInt())).toObject().value("@name").toString())))
                 + (parameters.at(4).toInt() != 0 ? ", " + this->direction_name(parameters.at(4).toInt()) : "");
     else if (code == 203)
         text += "@>Scroll Map: " + this->direction_name(parameters.at(0).toInt()) + ", " + QString::number(parameters.at(1).toInt()) + ", " + QString::number(parameters.at(2).toInt());
@@ -1118,7 +1118,7 @@ QString EventListItem::get_text(QJsonObject obj)
                 .arg(parameters.at(1).toInt());
     else if (code == 207)
         text += "@>Show Animation: " + (parameters.at(0).toInt() == -1 ? "Player"
-                                                                       : (parameters.at(0).toInt() == 0 ? "This event" : "[" + QString(mc->current_map()->object().value("@events").toObject().value(QString::number(parameters.at(0).toInt())).toObject().value("@name").toString() +"]")))
+                                                                       : (parameters.at(0).toInt() == 0 ? "This event" : "[" + QString(mc->current_map_object().value("@events").toObject().value(QString::number(parameters.at(0).toInt())).toObject().value("@name").toString() +"]")))
                 + ", " + QString("[%1]").arg(db->get_object_name(RPGDB::ANIMATIONS,parameters.at(1).toInt()));
     else if (code == 208)
         text += "@>Change Transparent Flag: " + QString(parameters.at(0).toInt() == 0 ? "Transparency" : "Normal");
@@ -1126,7 +1126,7 @@ QString EventListItem::get_text(QJsonObject obj)
     {
         text += "@>Set Move Route: " + QString(parameters.at(0).toInt() == -1 ? "Player" :
                                        (parameters.at(0).toInt() == 0 ? "This event" :
-                                                                        "[" +mc->current_map()->object().value("@events").toObject().value(QString::number(parameters.at(0).toInt())).toObject().value("@name").toString() + "]"));
+                                                                        "[" +mc->current_map_object().value("@events").toObject().value(QString::number(parameters.at(0).toInt())).toObject().value("@name").toString() + "]"));
         if (parameters.at(1).toObject().value("@repeat").toBool() || parameters.at(1).toObject().value("@skippable").toBool() )
         {
             text += " (";

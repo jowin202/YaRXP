@@ -18,7 +18,7 @@ ControlVariablesDialog::ControlVariablesDialog(RPGDB *db, RPGMapController *mc, 
     this->ui->combo_character->addItem("Player", -1);
     this->ui->combo_character->addItem("This event", 0);
 
-    QJsonObject events = mc->current_map()->object().value("@events").toObject();
+    QJsonObject events = mc->current_map_object().value("@events").toObject();
     //THX to https://stackoverflow.com/questions/54427846/how-can-i-do-a-numeric-sort-of-a-qstringlist-in-qt-4-6-2-where-qcollator-is-not
     QStringList keys = events.keys();
     keys.remove(keys.indexOf("RXClass"));

@@ -18,7 +18,7 @@ SetEventLocationDialog::SetEventLocationDialog(RPGDB *db, RPGMapController *mc, 
     this->ui->widget_var_x->setVariableWidget(db);
     this->ui->widget_var_y->setVariableWidget(db);
 
-    QJsonObject events = mc->current_map()->object().value("@events").toObject();
+    QJsonObject events = mc->current_map_object().value("@events").toObject();
 
     //THX to https://stackoverflow.com/questions/54427846/how-can-i-do-a-numeric-sort-of-a-qstringlist-in-qt-4-6-2-where-qcollator-is-not
     QStringList keys = events.keys();

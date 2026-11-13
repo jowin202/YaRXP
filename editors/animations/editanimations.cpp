@@ -17,7 +17,7 @@ EditAnimations::EditAnimations(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    connect(this->ui->graphic_preview_label, &AnimationGraphicPreview::max_pattern, [=](int m) { this->ui->animation_label->set_max_pattern(m); });
+    connect(this->ui->graphic_preview_label, &AnimationGraphicPreview::max_pattern, this, [=](int m) { this->ui->animation_label->set_max_pattern(m); });
 }
 
 EditAnimations::~EditAnimations()
@@ -154,7 +154,7 @@ void EditAnimations::on_button_copy_clicked()
 {
     CopyFramesDialog *dialog = new CopyFramesDialog(this->ui->frame_list->count(),true);
     dialog->show();
-    connect(dialog, &CopyFramesDialog::ok_clicked, [=](int from, int to, int dest){
+    connect(dialog, &CopyFramesDialog::ok_clicked, this, [=](int from, int to, int dest){
         int min_frame = qMin(from,to);
         int max_frame = qMax(from, to);
         int delta = dest-from;
@@ -176,7 +176,7 @@ void EditAnimations::on_button_clear_frames_clicked()
 {
     CopyFramesDialog *dialog = new CopyFramesDialog(this->ui->frame_list->count(),false);
     dialog->show();
-    connect(dialog, &CopyFramesDialog::ok_clicked, [=](int from, int to, int dest){
+    connect(dialog, &CopyFramesDialog::ok_clicked, this, [=](int from, int to, int dest){
         Q_UNUSED(dest);
         int min_frame = qMin(from,to);
         int max_frame = qMax(from, to);
@@ -203,7 +203,7 @@ void EditAnimations::on_button_tweening_clicked()
 {
     TweeningDialog *dialog = new TweeningDialog(this->ui->frame_list->count());
     dialog->show();
-    connect(dialog, &TweeningDialog::ok_clicked, [=](int from_frame, int to_frame, int from_cell, int to_cell,
+    connect(dialog, &TweeningDialog::ok_clicked, this, [=](int from_frame, int to_frame, int from_cell, int to_cell,
                                                       bool pattern, bool position, bool opacity){
         int min_frame = qMin(from_frame,to_frame);
         int max_frame = qMax(from_frame, to_frame);
@@ -304,7 +304,7 @@ void EditAnimations::on_button_cell_batch_clicked()
 {
     CellBatchDialog *dialog = new CellBatchDialog(this->ui->frame_list->count());
     dialog->show();
-    connect(dialog, &CellBatchDialog::ok_clicked, [=](int from_frame, int to_frame, int from_cell, int to_cell,
+    connect(dialog, &CellBatchDialog::ok_clicked, this, [=](int from_frame, int to_frame, int from_cell, int to_cell,
                                                       int pattern, int x, int y, int zoom,
                                                       int angle, int flip, int opacity, int blending){
         int min_frame = qMin(from_frame,to_frame);
@@ -379,7 +379,7 @@ void EditAnimations::on_button_entire_slide_clicked()
 {
     EntireSlideDialog *dialog = new EntireSlideDialog(this->ui->frame_list->count());
     dialog->show();
-    connect(dialog, &EntireSlideDialog::ok_clicked, [=](int from_frame, int to_frame,
+    connect(dialog, &EntireSlideDialog::ok_clicked, this, [=](int from_frame, int to_frame,
                                                         int x, int y){
         int min_frame = qMin(from_frame,to_frame);
         int max_frame = qMax(from_frame, to_frame);

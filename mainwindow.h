@@ -107,6 +107,11 @@ private slots:
     void on_actionSearch_triggered();
 
 private:
+    bool save_project(); //shows an error message on failure
+    bool maybe_save(); //asks to save, returns false if the user cancelled (or saving failed)
+    bool extract_rgssad(QString archive, QString output_dir);
+    void update_window_title();
+
     Ui::MainWindow *ui;
     QActionGroup *layergroup;
     QActionGroup *modegroup;

@@ -10,10 +10,18 @@ DataEditor::DataEditor(QWidget *parent) :
     ui(new Ui::DataEditor)
 {
     ui->setupUi(this);
+    //editors are opened as independent windows, free them when closed
+    this->setAttribute(Qt::WA_DeleteOnClose);
 }
 
 DataEditor::~DataEditor()
 {
+    //child widgets are destroyed after this destructor and may still emit signals
+    //(e.g. selection changes) whose handlers use the editor controller
+    const QList<QObject*> children = this->findChildren<QObject*>();
+    for (QObject *child : children)
+        child->blockSignals(true);
+
     delete ui;
     delete ec;
 }
@@ -102,7 +110,7 @@ void DataEditor::setDB(RPGDB *db)
     //ACTORS: CTRL+C  -- CTRL+V
     action_actors_copy.setShortcut(QKeySequence(tr("Ctrl+C")));
     action_actors_copy.setShortcutContext(Qt::WidgetShortcut);
-    connect(&action_actors_copy, &QAction::triggered, [=](){
+    connect(&action_actors_copy, &QAction::triggered, this, [=](){
         QSettings settings;
         settings.setValue("copied_actor", QJsonDocument(ec->get_object_by_id(RPGDB::ACTORS,this->ui->actor_list->currentRow()+1)).toJson(QJsonDocument::Compact));
     });
@@ -110,7 +118,7 @@ void DataEditor::setDB(RPGDB *db)
 
     action_actors_paste.setShortcut(QKeySequence(tr("Ctrl+V")));
     action_actors_paste.setShortcutContext(Qt::WidgetShortcut);
-    connect(&action_actors_paste, &QAction::triggered, [=](){
+    connect(&action_actors_paste, &QAction::triggered, this, [=](){
         QSettings settings;
         QJsonParseError error;
         QJsonDocument doc = QJsonDocument::fromJson(settings.value("copied_actor").toByteArray(), &error);
@@ -125,7 +133,7 @@ void DataEditor::setDB(RPGDB *db)
     //CLASSES: CTRL+C  -- CTRL+V
     action_classes_copy.setShortcut(QKeySequence(tr("Ctrl+C")));
     action_classes_copy.setShortcutContext(Qt::WidgetShortcut);
-    connect(&action_classes_copy, &QAction::triggered, [=](){
+    connect(&action_classes_copy, &QAction::triggered, this, [=](){
         QSettings settings;
         settings.setValue("copied_class", QJsonDocument(ec->get_object_by_id(RPGDB::CLASSES,this->ui->classes_list->currentRow()+1)).toJson(QJsonDocument::Compact));
     });
@@ -133,7 +141,7 @@ void DataEditor::setDB(RPGDB *db)
 
     action_classes_paste.setShortcut(QKeySequence(tr("Ctrl+V")));
     action_classes_paste.setShortcutContext(Qt::WidgetShortcut);
-    connect(&action_classes_paste, &QAction::triggered, [=](){
+    connect(&action_classes_paste, &QAction::triggered, this, [=](){
         QSettings settings;
         QJsonParseError error;
         QJsonDocument doc = QJsonDocument::fromJson(settings.value("copied_class").toByteArray(), &error);
@@ -149,7 +157,7 @@ void DataEditor::setDB(RPGDB *db)
     //SKILLS: CTRL+C  -- CTRL+V
     action_skills_copy.setShortcut(QKeySequence(tr("Ctrl+C")));
     action_skills_copy.setShortcutContext(Qt::WidgetShortcut);
-    connect(&action_skills_copy, &QAction::triggered, [=](){
+    connect(&action_skills_copy, &QAction::triggered, this, [=](){
         QSettings settings;
         settings.setValue("copied_skill", QJsonDocument(ec->get_object_by_id(RPGDB::SKILLS,this->ui->skills_list->currentRow()+1)).toJson(QJsonDocument::Compact));
     });
@@ -157,7 +165,7 @@ void DataEditor::setDB(RPGDB *db)
 
     action_skills_paste.setShortcut(QKeySequence(tr("Ctrl+V")));
     action_skills_paste.setShortcutContext(Qt::WidgetShortcut);
-    connect(&action_skills_paste, &QAction::triggered, [=](){
+    connect(&action_skills_paste, &QAction::triggered, this, [=](){
         QSettings settings;
         QJsonParseError error;
         QJsonDocument doc = QJsonDocument::fromJson(settings.value("copied_skill").toByteArray(), &error);
@@ -172,7 +180,7 @@ void DataEditor::setDB(RPGDB *db)
     //ITEMS: CTRL+C  -- CTRL+V
     action_items_copy.setShortcut(QKeySequence(tr("Ctrl+C")));
     action_items_copy.setShortcutContext(Qt::WidgetShortcut);
-    connect(&action_items_copy, &QAction::triggered, [=](){
+    connect(&action_items_copy, &QAction::triggered, this, [=](){
         QSettings settings;
         settings.setValue("copied_item", QJsonDocument(ec->get_object_by_id(RPGDB::ITEMS,this->ui->items_list->currentRow()+1)).toJson(QJsonDocument::Compact));
     });
@@ -180,7 +188,7 @@ void DataEditor::setDB(RPGDB *db)
 
     action_items_paste.setShortcut(QKeySequence(tr("Ctrl+V")));
     action_items_paste.setShortcutContext(Qt::WidgetShortcut);
-    connect(&action_items_paste, &QAction::triggered, [=](){
+    connect(&action_items_paste, &QAction::triggered, this, [=](){
         QSettings settings;
         QJsonParseError error;
         QJsonDocument doc = QJsonDocument::fromJson(settings.value("copied_item").toByteArray(), &error);
@@ -195,7 +203,7 @@ void DataEditor::setDB(RPGDB *db)
     //WEAPONS: CTRL+C  -- CTRL+V
     action_weapons_copy.setShortcut(QKeySequence(tr("Ctrl+C")));
     action_weapons_copy.setShortcutContext(Qt::WidgetShortcut);
-    connect(&action_weapons_copy, &QAction::triggered, [=](){
+    connect(&action_weapons_copy, &QAction::triggered, this, [=](){
         QSettings settings;
         settings.setValue("copied_weapon", QJsonDocument(ec->get_object_by_id(RPGDB::WEAPONS,this->ui->weapons_list->currentRow()+1)).toJson(QJsonDocument::Compact));
     });
@@ -203,7 +211,7 @@ void DataEditor::setDB(RPGDB *db)
 
     action_weapons_paste.setShortcut(QKeySequence(tr("Ctrl+V")));
     action_weapons_paste.setShortcutContext(Qt::WidgetShortcut);
-    connect(&action_weapons_paste, &QAction::triggered, [=](){
+    connect(&action_weapons_paste, &QAction::triggered, this, [=](){
         QSettings settings;
         QJsonParseError error;
         QJsonDocument doc = QJsonDocument::fromJson(settings.value("copied_weapon").toByteArray(), &error);
@@ -218,7 +226,7 @@ void DataEditor::setDB(RPGDB *db)
     //ARMOR: CTRL+C  -- CTRL+V
     action_armors_copy.setShortcut(QKeySequence(tr("Ctrl+C")));
     action_armors_copy.setShortcutContext(Qt::WidgetShortcut);
-    connect(&action_armors_copy, &QAction::triggered, [=](){
+    connect(&action_armors_copy, &QAction::triggered, this, [=](){
         QSettings settings;
         settings.setValue("copied_armor", QJsonDocument(ec->get_object_by_id(RPGDB::ARMORS,this->ui->armors_list->currentRow()+1)).toJson(QJsonDocument::Compact));
     });
@@ -226,7 +234,7 @@ void DataEditor::setDB(RPGDB *db)
 
     action_armors_paste.setShortcut(QKeySequence(tr("Ctrl+V")));
     action_armors_paste.setShortcutContext(Qt::WidgetShortcut);
-    connect(&action_armors_paste, &QAction::triggered, [=](){
+    connect(&action_armors_paste, &QAction::triggered, this, [=](){
         QSettings settings;
         QJsonParseError error;
         QJsonDocument doc = QJsonDocument::fromJson(settings.value("copied_armor").toByteArray(), &error);
@@ -241,7 +249,7 @@ void DataEditor::setDB(RPGDB *db)
     //ENEMIES: CTRL+C  -- CTRL+V
     action_enemies_copy.setShortcut(QKeySequence(tr("Ctrl+C")));
     action_enemies_copy.setShortcutContext(Qt::WidgetShortcut);
-    connect(&action_enemies_copy, &QAction::triggered, [=](){
+    connect(&action_enemies_copy, &QAction::triggered, this, [=](){
         QSettings settings;
         settings.setValue("copied_enemy", QJsonDocument(ec->get_object_by_id(RPGDB::ENEMIES,this->ui->enemies_list->currentRow()+1)).toJson(QJsonDocument::Compact));
     });
@@ -249,7 +257,7 @@ void DataEditor::setDB(RPGDB *db)
 
     action_enemies_paste.setShortcut(QKeySequence(tr("Ctrl+V")));
     action_enemies_paste.setShortcutContext(Qt::WidgetShortcut);
-    connect(&action_enemies_paste, &QAction::triggered, [=](){
+    connect(&action_enemies_paste, &QAction::triggered, this, [=](){
         QSettings settings;
         QJsonParseError error;
         QJsonDocument doc = QJsonDocument::fromJson(settings.value("copied_enemy").toByteArray(), &error);
@@ -263,7 +271,7 @@ void DataEditor::setDB(RPGDB *db)
     //TROOPS: CTRL+C  -- CTRL+V
     action_troops_copy.setShortcut(QKeySequence(tr("Ctrl+C")));
     action_troops_copy.setShortcutContext(Qt::WidgetShortcut);
-    connect(&action_troops_copy, &QAction::triggered, [=](){
+    connect(&action_troops_copy, &QAction::triggered, this, [=](){
         QSettings settings;
         settings.setValue("copied_troop", QJsonDocument(ec->get_object_by_id(RPGDB::TROOPS,this->ui->troops_list->currentRow()+1)).toJson(QJsonDocument::Compact));
     });
@@ -271,7 +279,7 @@ void DataEditor::setDB(RPGDB *db)
 
     action_troops_paste.setShortcut(QKeySequence(tr("Ctrl+V")));
     action_troops_paste.setShortcutContext(Qt::WidgetShortcut);
-    connect(&action_troops_paste, &QAction::triggered, [=](){
+    connect(&action_troops_paste, &QAction::triggered, this, [=](){
         QSettings settings;
         QJsonParseError error;
         QJsonDocument doc = QJsonDocument::fromJson(settings.value("copied_troop").toByteArray(), &error);
@@ -288,7 +296,7 @@ void DataEditor::setDB(RPGDB *db)
     //STATES: CTRL+C  -- CTRL+V
     action_states_copy.setShortcut(QKeySequence(tr("Ctrl+C")));
     action_states_copy.setShortcutContext(Qt::WidgetShortcut);
-    connect(&action_states_copy, &QAction::triggered, [=](){
+    connect(&action_states_copy, &QAction::triggered, this, [=](){
         QSettings settings;
         settings.setValue("copied_state", QJsonDocument(ec->get_object_by_id(RPGDB::STATES,this->ui->states_list->currentRow()+1)).toJson(QJsonDocument::Compact));
     });
@@ -296,7 +304,7 @@ void DataEditor::setDB(RPGDB *db)
 
     action_states_paste.setShortcut(QKeySequence(tr("Ctrl+V")));
     action_states_paste.setShortcutContext(Qt::WidgetShortcut);
-    connect(&action_states_paste, &QAction::triggered, [=](){
+    connect(&action_states_paste, &QAction::triggered, this, [=](){
         QSettings settings;
         QJsonParseError error;
         QJsonDocument doc = QJsonDocument::fromJson(settings.value("copied_state").toByteArray(), &error);
@@ -311,7 +319,7 @@ void DataEditor::setDB(RPGDB *db)
     //ANIMATIONS: CTRL+C  -- CTRL+V
     action_animations_copy.setShortcut(QKeySequence(tr("Ctrl+C")));
     action_animations_copy.setShortcutContext(Qt::WidgetShortcut);
-    connect(&action_animations_copy, &QAction::triggered, [=](){
+    connect(&action_animations_copy, &QAction::triggered, this, [=](){
         QSettings settings;
         settings.setValue("copied_animation", QJsonDocument(ec->get_object_by_id(RPGDB::ANIMATIONS,this->ui->animations_list->currentRow()+1)).toJson(QJsonDocument::Compact));
     });
@@ -319,7 +327,7 @@ void DataEditor::setDB(RPGDB *db)
 
     action_animations_paste.setShortcut(QKeySequence(tr("Ctrl+V")));
     action_animations_paste.setShortcutContext(Qt::WidgetShortcut);
-    connect(&action_animations_paste, &QAction::triggered, [=](){
+    connect(&action_animations_paste, &QAction::triggered, this, [=](){
         QSettings settings;
         QJsonParseError error;
         QJsonDocument doc = QJsonDocument::fromJson(settings.value("copied_animation").toByteArray(), &error);
@@ -334,7 +342,7 @@ void DataEditor::setDB(RPGDB *db)
     //TILESETS: CTRL+C  -- CTRL+V
     action_tilesets_copy.setShortcut(QKeySequence(tr("Ctrl+C")));
     action_tilesets_copy.setShortcutContext(Qt::WidgetShortcut);
-    connect(&action_tilesets_copy, &QAction::triggered, [=](){
+    connect(&action_tilesets_copy, &QAction::triggered, this, [=](){
         QSettings settings;
         settings.setValue("copied_tilesets", QJsonDocument(ec->get_object_by_id(RPGDB::TILESETS,this->ui->tilesets_list->currentRow()+1)).toJson(QJsonDocument::Compact));
         settings.setValue("copied_tilesets_path", db->tileset_dir);
@@ -344,7 +352,7 @@ void DataEditor::setDB(RPGDB *db)
 
     action_tilesets_paste.setShortcut(QKeySequence(tr("Ctrl+V")));
     action_tilesets_paste.setShortcutContext(Qt::WidgetShortcut);
-    connect(&action_tilesets_paste, &QAction::triggered, [=](){
+    connect(&action_tilesets_paste, &QAction::triggered, this, [=](){
         QSettings settings;
         QJsonParseError error;
         QJsonDocument doc = QJsonDocument::fromJson(settings.value("copied_tilesets").toByteArray(), &error);
@@ -376,7 +384,7 @@ void DataEditor::setDB(RPGDB *db)
     //COMMONEVENTS: CTRL+C  -- CTRL+V
     action_common_events_copy.setShortcut(QKeySequence(tr("Ctrl+C")));
     action_common_events_copy.setShortcutContext(Qt::WidgetShortcut);
-    connect(&action_common_events_copy, &QAction::triggered, [=](){
+    connect(&action_common_events_copy, &QAction::triggered, this, [=](){
         QSettings settings;
         settings.setValue("copied_common_event", QJsonDocument(ec->get_object_by_id(RPGDB::COMMONEVENTS,this->ui->common_events_list->currentRow()+1)).toJson(QJsonDocument::Compact));
     });
@@ -384,7 +392,7 @@ void DataEditor::setDB(RPGDB *db)
 
     action_common_events_paste.setShortcut(QKeySequence(tr("Ctrl+V")));
     action_common_events_paste.setShortcutContext(Qt::WidgetShortcut);
-    connect(&action_common_events_paste, &QAction::triggered, [=](){
+    connect(&action_common_events_paste, &QAction::triggered, this, [=](){
         QSettings settings;
         QJsonParseError error;
         QJsonDocument doc = QJsonDocument::fromJson(settings.value("copied_common_event").toByteArray(), &error);
@@ -400,7 +408,7 @@ void DataEditor::setDB(RPGDB *db)
     //SCRIPTS: CTRL+C  -- CTRL+V
     action_scripts_copy.setShortcut(QKeySequence(tr("Ctrl+C")));
     action_scripts_copy.setShortcutContext(Qt::WidgetShortcut);
-    connect(&action_scripts_copy, &QAction::triggered, [=](){
+    connect(&action_scripts_copy, &QAction::triggered, this, [=](){
         QSettings settings;
         settings.setValue("copied_script", QJsonDocument(ec->get_script_by_id(this->ui->scripts_list->currentRow())).toJson(QJsonDocument::Compact));
     });
@@ -408,7 +416,7 @@ void DataEditor::setDB(RPGDB *db)
 
     action_scripts_paste.setShortcut(QKeySequence(tr("Ctrl+V")));
     action_scripts_paste.setShortcutContext(Qt::WidgetShortcut);
-    connect(&action_scripts_paste, &QAction::triggered, [=](){
+    connect(&action_scripts_paste, &QAction::triggered, this, [=](){
         QSettings settings;
         QJsonParseError error;
         QJsonDocument doc = QJsonDocument::fromJson(settings.value("copied_script").toByteArray(), &error);
@@ -450,7 +458,8 @@ void DataEditor::on_button_ok_clicked()
 
 void DataEditor::on_tabWidget_currentChanged(int index)
 {
-    this->ec->refresh(index);
+    if (this->ec)
+        this->ec->refresh(index);
 }
 
 
@@ -512,8 +521,8 @@ void DataEditor::on_button_troops_max_clicked()
 
 void DataEditor::on_button_states_max_clicked()
 {
-    this->set_maximum(RPGDB::STATES);
-    this->ec->fill_list(this->ui->states_list, RPGDB::STATES, true, 3, false);
+    if (this->set_maximum(RPGDB::STATES))
+        this->ec->fill_list(this->ui->states_list, RPGDB::STATES, true, 3, false);
 }
 
 

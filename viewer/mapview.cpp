@@ -97,9 +97,31 @@ void MapView::set_map(int id)
         this->select_rectangle->save_to_map();
     }
     this->mc.setMap(id);
-    this->changes_made = false;
     this->redraw();
     this->undo.push(mc.get_current_map_id(),mc.current_map()->object(), true); //isFirst=true (only first load)
+}
+
+void MapView::close_map(bool clear_undo)
+{
+    //drop a floating selection without writing it back, the map might not exist anymore
+    if (this->select_rectangle != 0)
+    {
+        this->scene()->removeItem(this->select_rectangle);
+        delete this->select_rectangle;
+        this->select_rectangle = 0;
+    }
+    this->is_moving = false;
+    this->select_mouse_button_pressed = false;
+    this->left_button_clicked = false;
+    this->right_button_clicked = false;
+    this->event_left_button_for_moving = false;
+
+    this->mc.unset_map();
+    this->scene()->clear();
+    this->rectangle = 0;
+    this->scene()->setSceneRect(0,0,0,0);
+    if (clear_undo)
+        this->undo.clear();
 }
 
 void MapView::set_layer(int layer)
@@ -122,6 +144,8 @@ void MapView::set_brush(QList<int> data)
         this->set_mode(PEN);
     this->brush = data;
     this->rectangle_offset = QPoint(0,0);
+    if (this->rectangle == 0)
+        return;
     if (data.length() > 2)
         this->rectangle->setSize(data.at(0), data.at(1));
     this->rectangle->update();
@@ -129,12 +153,17 @@ void MapView::set_brush(QList<int> data)
 
 void MapView::edit_event_on_pos(QPoint pos, int page)
 {
+    if (!mc.current_map_is_valid()) return;
     QJsonObject event = this->mc.event_on_pos(pos);
     if (event.keys().count() > 1)
     {
         EventDialog *dialog = new EventDialog(&this->mc, event);
         dialog->set_page(page);
         dialog->show();
+
+        connect(dialog, &EventDialog::ok_clicked, this, [=](){ //emitted before the event is changed
+            this->undo.push(mc.get_current_map_id(),mc.current_map()->object());
+        });
     }
     else
     {
@@ -153,7 +182,7 @@ void MapView::edit_event_on_pos(QPoint pos, int page)
 
 void MapView::mouseMoveEvent(QMouseEvent *event)
 {
-    if (this->rectangle == 0) return;
+    if (!mc.current_map_is_valid()) return;
     if (mapToScene(event->pos()).x() <= 0 || mapToScene(event->pos()).x() >= 32*mc.get_width()) return;
     if (mapToScene(event->pos()).y() <= 0 || mapToScene(event->pos()).y() >= 32*mc.get_height()) return;
 
@@ -164,7 +193,7 @@ void MapView::mouseMoveEvent(QMouseEvent *event)
 
     emit mouse_over_coordinates(pos.x(), pos.y());
 
-    if (opt.mode == PEN)
+    if (opt.mode == PEN && this->rectangle != 0)
     {
         if (this->left_button_clicked)
         {
@@ -208,6 +237,7 @@ void MapView::mouseMoveEvent(QMouseEvent *event)
 
 void MapView::mousePressEvent(QMouseEvent *event)
 {
+    if (!mc.current_map_is_valid()) return;
     QPointF posf = mapToScene(event->pos());
     QPoint pos = QPoint((int)posf.x()/32, (int)posf.y()/32);
 
@@ -317,7 +347,7 @@ void MapView::mouseReleaseEvent(QMouseEvent *event)
         if (this->brush.length() > 2 && this->brush.at(0) == 1 && this->brush.at(1) == 1 && this->brush.length() == 3)
             emit one_tile_selected(this->brush.at(2));
     }
-    else if (opt.mode == SELECT)
+    else if (opt.mode == SELECT && this->select_rectangle != 0 && this->select_mouse_button_pressed)
     {
         this->select_mouse_button_pressed = false;
         if (!is_moving)
@@ -361,6 +391,7 @@ void MapView::mouseReleaseEvent(QMouseEvent *event)
 
 void MapView::mouseDoubleClickEvent(QMouseEvent *event)
 {
+    if (!mc.current_map_is_valid()) return;
     if (mapToScene(event->pos()).x() <= 0 || mapToScene(event->pos()).x() >= 32*mc.get_width()) return;
     if (mapToScene(event->pos()).y() <= 0 || mapToScene(event->pos()).y() >= 32*mc.get_height()) return;
 
@@ -416,6 +447,7 @@ void MapView::redraw()
         this->select_rectangle = 0;
     }
     this->scene()->clear();
+    this->rectangle = 0; //deleted by clear()
 
     for (int y = 0; y < mc.get_height(); y++)
     {

@@ -8,6 +8,10 @@ class RXException
 {
 public:
     RXException(QString message);
+    const QString &message() const { return this->msg; }
+
+private:
+    QString msg;
 };
 
 #endif // RXEXCEPTION_H

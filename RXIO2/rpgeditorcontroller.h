@@ -63,6 +63,7 @@ public:
     //max object and count
     int count_objects(int obj_type);
     void set_max(int obj_type, int count);
+    QJsonObject create_new_object(int obj_type, int id);
 
     void set_files(QJsonDocument actor_file,
             QJsonDocument animation_file,

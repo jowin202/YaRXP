@@ -23,7 +23,7 @@ ComboComboDialog::ComboComboDialog(RPGDB *db, RPGMapController *mc, int code, QJ
         if (parameters.at(0).toInt() == 0)
             this->ui->comboBox->setCurrentIndex(1);
 
-        QJsonObject events = mc->current_map()->object().value("@events").toObject();
+        QJsonObject events = mc->current_map_object().value("@events").toObject();
 
 
         //THX to https://stackoverflow.com/questions/54427846/how-can-i-do-a-numeric-sort-of-a-qstringlist-in-qt-4-6-2-where-qcollator-is-not

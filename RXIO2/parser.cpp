@@ -7,16 +7,16 @@ Parser::Parser(QJsonDocument *doc, QString file_location, bool strings_to_base_6
     this->strings_to_base_64 = strings_to_base_64;
     this->extended_dictionary = extended_dictionary;
     this->f.setFileName(file_location);
-    f.open(QIODevice::ReadOnly);
-
     if (!f.exists())
-        throw RXException("File not exist");
+        throw RXException("File does not exist: " + file_location);
+    if (!f.open(QIODevice::ReadOnly))
+        throw RXException("Could not open " + file_location + ": " + f.errorString());
 
     QByteArray buffer = f.read(2);
     if (buffer.length() < 2)
-        throw RXException("File too short");
+        throw RXException("File too short: " + file_location);
     if (buffer.at(0) != 0x04 || buffer.at(1) != 0x08)
-        throw RXException("wrong version in header");
+        throw RXException("Wrong Marshal version in header: " + file_location);
 
 
 

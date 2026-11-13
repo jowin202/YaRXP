@@ -1,11 +1,11 @@
 #include "searchthread.h"
 
-#include "rpgdb.h"
+#include <QJsonArray>
 
-SearchThread::SearchThread(RPGDB *db, int mode, QString text, int sw_var, Qt::CaseSensitivity cs)
+SearchThread::SearchThread(QMap<int,QJsonObject> maps, int mode, QString text, int sw_var, Qt::CaseSensitivity cs)
     : QThread{}
 {
-    this->db = db;
+    this->maps = maps;
     this->mode = mode;
     this->text = text;
     this->sw_var = sw_var;
@@ -14,7 +14,6 @@ SearchThread::SearchThread(RPGDB *db, int mode, QString text, int sw_var, Qt::Ca
 
 void SearchThread::run()
 {
-    QJsonDocument *doc;
     QJsonObject map;
     QJsonObject events;
     QJsonObject event;
@@ -25,11 +24,11 @@ void SearchThread::run()
     QJsonArray param;
     int code = 0;
     bool ok = true;
-    for (int id = 0; id < 1000; id++)
+    for (auto it = maps.constBegin(); it != maps.constEnd(); ++it)
     {
-        if ((doc = db->get_mapfile_by_id(id)) != 0)
+        int id = it.key();
         {
-            map = doc->object();
+            map = it.value();
             events = map.value("@events").toObject();
 
             //iterate over map events
@@ -62,6 +61,7 @@ void SearchThread::run()
                                         result << event.value("@id").toInt();
                                         result << i;
                                         result << j;
+                                        break; //list every command only once
                                     }
                                 }
                             }
@@ -93,5 +93,5 @@ void SearchThread::run()
             }
         }
     }
-    emit finished(result);
+    emit search_finished(result);
 }

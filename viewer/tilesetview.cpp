@@ -28,6 +28,9 @@ void TilesetView::set_tileset(int id)
     QJsonArray autotiles = current.value("@autotile_names").toArray();
 
     this->scene()->clear();
+    this->rectangle = 0; //deleted by clear()
+    this->clicked = false;
+    this->press_valid = false;
     this->setBackgroundBrush(db->transparent);
     if (tileset_image.isNull())
     {
@@ -88,6 +91,7 @@ void TilesetView::mousePressEvent(QMouseEvent *event)
 
     if (this->rectangle == 0) return;
 
+    this->press_valid = true;
     if (mapToScene(event->pos()).y() > 32)
         this->clicked = true; //only allow bigger rectangle for non-autotiles
 
@@ -101,18 +105,18 @@ void TilesetView::mousePressEvent(QMouseEvent *event)
     this->rectangle->update();
 }
 
-void TilesetView::mouseReleaseEvent(QMouseEvent *event)
+void TilesetView::mouseReleaseEvent(QMouseEvent *)
 {
-    Q_UNUSED(event);
-
-    if (this->rectangle == 0) return;
+    if (this->rectangle == 0 || !this->press_valid) return;
 
     this->clicked = false;
+    this->press_valid = false;
     QList<int> data;
 
-    if (mapToScene(event->pos()).y() < 32)
+    if (this->rectangle->pos().y() < 32)
     {
-        int x = mapToScene(event->pos()).x()/32;
+        //autotiles: the rectangle is always at the clicked autotile
+        int x = this->rectangle->pos().x()/32;
 
         data.append(1);
         data.append(1);
@@ -162,6 +166,7 @@ void TilesetView::mouseDoubleClickEvent(QMouseEvent *event)
 
 void TilesetView::select_tile(int value)
 {
+    if (this->rectangle == 0) return;
     int x,y;
 
     if (value >= 0x180)

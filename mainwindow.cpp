@@ -9,12 +9,14 @@
 
 #include "PBS/pbseditor.h"
 #include "dialogs/searcheventdialog.h"
+#include "RXIO2/rxexception.h"
 
 
 #include <QDebug>
 #include <QToolButton>
 #include <QActionGroup>
 #include <QtMath>
+#include <QApplication>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -38,6 +40,7 @@ MainWindow::MainWindow(QWidget *parent)
     this->ui->splitter->setSizes(QList<int>({3, 3}));
 
     connect(this->ui->map_tree_widget, SIGNAL(on_map_selected(int)), this, SLOT(change_map(int)));
+    connect(this->ui->map_tree_widget, &MapTreeWidget::map_about_to_be_deleted, this->ui->mapView, &MapView::forget_map);
 
     //dialog does not support two keyboard shortcuts
     this->ui->actionDelete->setShortcuts({
@@ -57,8 +60,8 @@ MainWindow::MainWindow(QWidget *parent)
     this->modegroup->addAction(this->ui->actionEvents);
 
     this->viewgroup = new QActionGroup(this);
-    this->modegroup->addAction(this->ui->actionCurrent_Layers_and_below);
-    this->modegroup->addAction(this->ui->actionAll_Layers);
+    this->viewgroup->addAction(this->ui->actionCurrent_Layers_and_below);
+    this->viewgroup->addAction(this->ui->actionAll_Layers);
 
     this->ui->actionLayer1->setChecked(true);
     this->ui->actionPen->setChecked(true);
@@ -79,13 +82,70 @@ void MainWindow::open_project(QString project_path)
 {
     QFileInfo fi(project_path);
 
-    if (project_path != "" && fi.exists() && fi.isFile())
+    if (project_path.isEmpty() || !fi.exists() || !fi.isFile())
+        return;
+
+    //editors and dialogs of the old project would write their data into the new one
+    const QWidgetList windows = QApplication::topLevelWidgets();
+    for (QWidget *window : windows)
+        if (window != this && window->isVisible())
+            window->close();
+
+    //the map view holds pointers into the old project
+    this->ui->mapView->close_map(true);
+
+    try
     {
         //RXIO2
         this->db.load_project(fi.absoluteDir().path());
     }
+    catch (const RXException &e)
+    {
+        QMessageBox::critical(this, "Error", "Could not open project:\n" + e.message());
+    }
 
+    this->update_window_title();
     this->ui->map_tree_widget->list_maps();
+}
+
+bool MainWindow::save_project()
+{
+    try
+    {
+        this->db.save_project();
+        this->ui->statusbar->showMessage("Project saved", 3000);
+        return true;
+    }
+    catch (const RXException &e)
+    {
+        QMessageBox::critical(this, "Error", "Could not save project:\n" + e.message());
+        return false;
+    }
+}
+
+bool MainWindow::maybe_save()
+{
+    if (this->db.project_dir.isEmpty())
+        return true;
+
+    auto reply = QMessageBox::question(
+        this,
+        tr("Save Changes?"),
+        tr("Do you want to save your changes to the current project?"),
+        QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel,
+        QMessageBox::Yes);
+
+    if (reply == QMessageBox::Yes)
+        return this->save_project();
+    return reply == QMessageBox::No;
+}
+
+void MainWindow::update_window_title()
+{
+    if (this->db.project_dir.isEmpty())
+        this->setWindowTitle("YaRXP");
+    else
+        this->setWindowTitle("YaRXP - " + QDir::toNativeSeparators(QDir::cleanPath(this->db.project_dir)));
 }
 
 void MainWindow::change_map(int id)
@@ -127,21 +187,22 @@ void MainWindow::on_actionOpen_triggered()
         dir = QDir::homePath();
 
     QString name = QFileDialog::getOpenFileName(this, "Choose Project", dir, "RPG Maker Project Files (*.rxproj *.rgssad *.rxdata);;");
+    if (name.isEmpty())
+        return;
 
+    if (!this->maybe_save())
+        return;
 
     QFileInfo fi(name);
     QString export_dir = fi.dir().absolutePath() + QDir::separator();
+    settings.setValue("lastopened", export_dir);
 
-    if (export_dir != "" && name != "")
-        settings.setValue("lastopened", export_dir);
-
-    if (export_dir != "")
-    if (name.toLower().endsWith("rgssad"))
+    if (name.toLower().endsWith("rgssad") && !QFile(export_dir + "Game.rxproj").exists())
     {
-        if (!QFile(export_dir + "Game.rxproj").exists())
-            IORGSSAD rgssad_file(name,export_dir);
+        if (!this->extract_rgssad(name, export_dir))
+            return;
+        name = export_dir + "Game.rxproj";
     }
-
 
     this->open_project(name);
 }
@@ -223,17 +284,34 @@ void MainWindow::on_actionImport_RGSSAD_triggered()
         dir = QDir::homePath();
 
     QString name = QFileDialog::getOpenFileName(this, "Choose Project", dir, "RGSSAD File (*.rgssad);;");
-    settings.setValue("lastopened", name);
     QFileInfo fi(name);
+    if (name.isEmpty() || !fi.exists() || !fi.isFile())
+        return;
 
-    if (name != "" && fi.exists() && fi.isFile())
+    if (!this->maybe_save())
+        return;
+
+    QString export_dir = fi.dir().absolutePath() + QDir::separator();
+    settings.setValue("lastopened", export_dir);
+
+    if (!this->extract_rgssad(name, export_dir))
+        return;
+
+    this->open_project(export_dir + "Game.rxproj");
+}
+
+bool MainWindow::extract_rgssad(QString archive, QString output_dir)
+{
+    try
     {
-        QString export_dir = fi.dir().absolutePath() + QDir::separator();
-        //QDir().mkdir(fi.dir().absolutePath() + QDir::separator());
-        IORGSSAD rgssad_file(name,export_dir);
+        IORGSSAD rgssad_file(archive, output_dir);
+        return true;
     }
-
-    this->open_project(name);
+    catch (const RXException &e)
+    {
+        QMessageBox::critical(this, "Error", "Could not extract archive:\n" + e.message());
+        return false;
+    }
 }
 
 void MainWindow::show_current_coordinates(int x, int y)
@@ -355,31 +433,19 @@ void MainWindow::on_actionScripting_Editor_triggered()
 
 void MainWindow::on_actionSave_triggered()
 {
-    this->db.save_project();
+    this->save_project();
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-    if (this->db.project_dir.isEmpty()) {
+    if (this->maybe_save())
+    {
         event->accept();
-        return;
+        //other top level windows (editors, dialogs) would keep the application running without a way to save
+        QApplication::quit();
     }
-
-    auto reply = QMessageBox::question(
-        this,
-        tr("Save Changes?"),
-        tr("Do you want to save your changes before closing?"),
-        QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel,
-        QMessageBox::Yes);
-
-    if (reply == QMessageBox::Yes) {
-        this->db.save_project();
-        event->accept();
-    } else if (reply == QMessageBox::No) {
-        event->accept();
-    } else {
+    else
         event->ignore();
-    }
 }
 
 void MainWindow::on_actionshift_up_triggered()
@@ -425,7 +491,9 @@ void MainWindow::on_actionExtend_Down_triggered()
 void MainWindow::on_actionCrop_Left_triggered()
 {
     bool ok;
-    int val = QInputDialog::getInt(this, "Crop Left", "How many tiles should be cropped?", 1, 1, 20, 1, &ok);
+    int max = this->ui->mapView->get_mc()->get_width() - 1;
+    if (max < 1) return;
+    int val = QInputDialog::getInt(this, "Crop Left", "How many tiles should be cropped?", 1, 1, qMin(20, max), 1, &ok);
     if (ok)
         this->ui->mapView->crop(MapView::LEFT, val);
 }
@@ -433,7 +501,9 @@ void MainWindow::on_actionCrop_Left_triggered()
 void MainWindow::on_actionCrop_Right_triggered()
 {
     bool ok;
-    int val = QInputDialog::getInt(this, "Crop Right", "How many tiles should be cropped?", 1, 1, 20, 1, &ok);
+    int max = this->ui->mapView->get_mc()->get_width() - 1;
+    if (max < 1) return;
+    int val = QInputDialog::getInt(this, "Crop Right", "How many tiles should be cropped?", 1, 1, qMin(20, max), 1, &ok);
     if (ok)
         this->ui->mapView->crop(MapView::RIGHT, val);
 }
@@ -441,7 +511,9 @@ void MainWindow::on_actionCrop_Right_triggered()
 void MainWindow::on_actionCrop_Up_triggered()
 {
     bool ok;
-    int val = QInputDialog::getInt(this, "Crop Up", "How many tiles should be cropped?", 1, 1, 20, 1, &ok);
+    int max = this->ui->mapView->get_mc()->get_height() - 1;
+    if (max < 1) return;
+    int val = QInputDialog::getInt(this, "Crop Up", "How many tiles should be cropped?", 1, 1, qMin(20, max), 1, &ok);
     if (ok)
         this->ui->mapView->crop(MapView::UP, val);
 }
@@ -449,7 +521,9 @@ void MainWindow::on_actionCrop_Up_triggered()
 void MainWindow::on_actionCrop_Down_triggered()
 {
     bool ok;
-    int val = QInputDialog::getInt(this, "Crop Down", "How many tiles should be cropped?", 1, 1, 20, 1, &ok);
+    int max = this->ui->mapView->get_mc()->get_height() - 1;
+    if (max < 1) return;
+    int val = QInputDialog::getInt(this, "Crop Down", "How many tiles should be cropped?", 1, 1, qMin(20, max), 1, &ok);
     if (ok)
         this->ui->mapView->crop(MapView::DOWN, val);
 }
@@ -504,7 +578,8 @@ void MainWindow::on_actionSave_Map_Pic_triggered()
     this->ui->mapView->scene()->render(&painter);
     this->ui->mapView->opt.layer = layer;
     painter.end();
-    img.save(path);
+    if (!img.save(path))
+        QMessageBox::critical(this, "Error", "Could not save image to " + path);
 }
 
 
@@ -521,6 +596,8 @@ void MainWindow::on_actionSearch_triggered()
     SearchEventDialog *dialog = new SearchEventDialog(&this->db);
     connect(dialog, &SearchEventDialog::select_event, [=](int map_id,int event_id,int page,int){
         this->ui->map_tree_widget->jump_to_item(map_id);
+        if (this->ui->mapView->get_mc()->get_current_map_id() != map_id)
+            return; //map does not exist anymore
         this->on_actionEvents_triggered();
         this->ui->mapView->goto_event(event_id,true,page);
     });

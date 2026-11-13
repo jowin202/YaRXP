@@ -157,6 +157,25 @@ static QString rawLine(const QString &pfx, int code, const QJsonArray &p)
            + QString::fromUtf8(QJsonDocument(p).toJson(QJsonDocument::Compact)) + ")\n";
 }
 
+// Block forms (show_text:, # comments, script:) write one line per command.
+// Text that contains line breaks itself cannot be written that way without changing
+// the command structure, so these commands are written as raw() lines instead.
+static bool writeRawIfMultiline(QString &out, const QJsonArray &commands, int from, int to, const QStringList &lines)
+{
+    bool multiline = false;
+    for (const QString &l : lines)
+        if (l.contains('\n') || l.contains('\r'))
+            multiline = true;
+    if (!multiline)
+        return false;
+
+    for (int k = from; k < to; k++) {
+        QJsonObject cmd = commands[k].toObject();
+        out += rawLine(QString(cmd["@indent"].toInt() * 4, ' '), cmd["@code"].toInt(), cmd["@parameters"].toArray());
+    }
+    return true;
+}
+
 // ============================================================
 //  toScript – serializer
 // ============================================================
@@ -196,6 +215,7 @@ QString EventDslSerializer::toScript(const QJsonArray &commands)
 
         // ── Text (101 + 401 continuations) ──────────────────
         case 101: {
+            int from = i;
             QStringList lines;
             lines += p[0].toString();
             i++;
@@ -203,6 +223,8 @@ QString EventDslSerializer::toScript(const QJsonArray &commands)
                 lines += commands[i].toObject()["@parameters"].toArray()[0].toString();
                 i++;
             }
+            if (writeRawIfMultiline(out, commands, from, i, lines))
+                break;
             if (lines.size() == 1) {
                 out += pfx + "show_text(\"" + esc(lines[0]) + "\")\n";
             } else {
@@ -217,6 +239,14 @@ QString EventDslSerializer::toScript(const QJsonArray &commands)
 
         // ── Comment (108 + 408) ─────────────────────────────
         case 108: {
+            //consecutive '#' lines are read back as one multi-line comment,
+            //so a separate comment directly after another one needs a blank line in between
+            {
+                int last_line_start = out.lastIndexOf('\n', -2) + 1;
+                if (!out.isEmpty() && out.mid(last_line_start).trimmed().startsWith('#'))
+                    out += "\n";
+            }
+            int from = i;
             QStringList lines;
             lines += p[0].toString();
             i++;
@@ -224,6 +254,8 @@ QString EventDslSerializer::toScript(const QJsonArray &commands)
                 lines += commands[i].toObject()["@parameters"].toArray()[0].toString();
                 i++;
             }
+            if (writeRawIfMultiline(out, commands, from, i, lines))
+                break;
             for (const QString &l : lines)
                 out += pfx + "# " + l + "\n";
             break;
@@ -232,6 +264,7 @@ QString EventDslSerializer::toScript(const QJsonArray &commands)
 
         // ── Script (355 + 655) ──────────────────────────────
         case 355: {
+            int from = i;
             QStringList lines;
             lines += p[0].toString();
             i++;
@@ -239,6 +272,8 @@ QString EventDslSerializer::toScript(const QJsonArray &commands)
                 lines += commands[i].toObject()["@parameters"].toArray()[0].toString();
                 i++;
             }
+            if (writeRawIfMultiline(out, commands, from, i, lines))
+                break;
             out += pfx + "script:\n";
             for (const QString &l : lines)
                 out += pfx + "    " + l + "\n";
@@ -1060,19 +1095,25 @@ QJsonArray EventDslSerializer::fromScript(const QString &text, bool *ok, QString
 
         // ── Comment (#) → code 108 + 408 continuations ──────
         if (line.startsWith('#')) {
-            QString first = line.mid(1);
-            if (!first.isEmpty() && first[0]==' ') first = first.mid(1);
-            QJsonArray p0; p0.append(first);
+            //only the indent is removed, trailing whitespace belongs to the comment
+            auto commentText = [](QString r) {
+                if (r.endsWith('\r')) r.chop(1);
+                int start = 0;
+                while (start < r.size() && r[start].isSpace()) start++;
+                QString t = r.mid(start + 1); //skip '#'
+                if (!t.isEmpty() && t[0]==' ') t = t.mid(1);
+                return t;
+            };
+            QJsonArray p0; p0.append(commentText(raw));
             result.append(makeCmd(108, ind, p0));
             i++;
             while (i < lineCount) {
                 const QString &r2 = lines[i];
                 QString l2 = r2.trimmed();
                 if (!l2.startsWith('#')) break;
-                QString cont = l2.mid(1);
-                if (!cont.isEmpty() && cont[0]==' ') cont = cont.mid(1);
-                QJsonArray pc; pc.append(cont);
-                result.append(makeCmd(408, lineIndent(r2)/4, pc));
+                if (lineIndent(r2)/4 != ind) break; //continuations always have the indent of their comment
+                QJsonArray pc; pc.append(commentText(r2));
+                result.append(makeCmd(408, ind, pc));
                 i++;
             }
             continue;

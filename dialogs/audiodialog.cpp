@@ -1,4 +1,5 @@
 #include "audiodialog.h"
+#include <QFileInfo>
 #include "ui_audiodialog.h"
 
 #include "RXIO2/rpgdb.h"
@@ -10,6 +11,7 @@ AudioDialog::AudioDialog(RPGDB *db, QString name, int volume, int pitch, int mod
 {
     ui->setupUi(this);
     player.setAudioOutput(&this->audio_out);
+    connect(&player, &QMediaPlayer::errorOccurred, this, [=](QMediaPlayer::Error error, const QString &errorString){ qDebug() << error << errorString; });
 
 
     this->db = db;
@@ -61,7 +63,7 @@ void AudioDialog::update_audio_list()
     for (QString entry : entries)
     {
         this->ui->list->addItem(entry);
-        if (this->name == entry.chopped(4))
+        if (this->name == QFileInfo(entry).completeBaseName())
         {
             this->ui->list->setCurrentItem(this->ui->list->item(this->ui->list->count()-1));
         }
@@ -73,9 +75,10 @@ void AudioDialog::on_button_ok_clicked()
     if (this->ui->list->currentItem() == 0)
         return; // do nothing
 
+    //row 0 is "(None)", RMXP stores the file name without extension
+    QString file_name = (this->ui->list->currentRow() == 0) ? QString("") : QFileInfo(this->ui->list->currentItem()->text()).completeBaseName();
     this->close();
-    if (this->ui->list->currentItem()!= 0)
-        emit ok_clicked(this->ui->list->currentItem()->text().chopped(4),this->ui->slider_volume->value(), this->ui->slider_pitch->value());
+    emit ok_clicked(file_name, this->ui->slider_volume->value(), this->ui->slider_pitch->value());
 }
 
 void AudioDialog::on_button_cancel_clicked()
@@ -85,8 +88,8 @@ void AudioDialog::on_button_cancel_clicked()
 
 void AudioDialog::on_button_play_clicked()
 {
-
-    connect(&player, &QMediaPlayer::errorOccurred, this, [=](QMediaPlayer::Error error, const QString &errorString){ qDebug() << error << errorString; });
+    if (this->ui->list->currentItem() == nullptr || this->ui->list->currentRow() == 0)
+        return; //nothing to play
 
     player.setSource(QUrl::fromLocalFile(FileOpener(this->directory,this->ui->list->currentItem()->text()).get_audio()));
     player.play();

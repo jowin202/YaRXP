@@ -63,14 +63,16 @@ public:
     enum {LEFT, RIGHT, UP, DOWN};
     void shift(int dir, int n)
     {
-        this->changes_made = true;
+        if (!mc.current_map_is_valid()) return;
+        this->undo.push(mc.get_current_map_id(),mc.current_map()->object());
         if (dir == LEFT || dir == RIGHT) this->mc.shift_map(dir==LEFT ? -n : n,0);
         else if (dir == UP || dir == DOWN) this->mc.shift_map(0,dir==UP ? -n : n);
         this->redraw();
     }
     void extend(int dir,int n)
     {
-        this->changes_made = true;
+        if (!mc.current_map_is_valid()) return;
+        this->undo.push(mc.get_current_map_id(),mc.current_map()->object());
         if (dir == RIGHT) this->mc.set_size(this->mc.get_width()+n,this->mc.get_height());
         else if (dir == DOWN) this->mc.set_size(this->mc.get_width(),this->mc.get_height()+n);
         else if (dir == LEFT) {this->mc.set_size(this->mc.get_width()+n,this->mc.get_height()); this->mc.shift_map(n,0);}
@@ -79,7 +81,11 @@ public:
     }
     void crop(int dir, int n)
     {
-        this->changes_made = true;
+        if (!mc.current_map_is_valid()) return;
+        //at least one row/column has to remain
+        if ((dir == LEFT || dir == RIGHT) && n >= this->mc.get_width()) return;
+        if ((dir == UP || dir == DOWN) && n >= this->mc.get_height()) return;
+        this->undo.push(mc.get_current_map_id(),mc.current_map()->object());
         if (dir == RIGHT) this->mc.set_size(this->mc.get_width()-n,this->mc.get_height());
         else if (dir == DOWN) this->mc.set_size(this->mc.get_width(),this->mc.get_height()-n);
         else if (dir == LEFT) {this->mc.shift_map(-n,0); this->mc.set_size(this->mc.get_width()-n,this->mc.get_height()); }
@@ -91,6 +97,16 @@ public:
 
 
     RPGMapController *get_mc() { return &this->mc; } //for editor dialog event handling in troops and common events
+
+    //forget the current map (e.g. when it gets deleted or another project is opened)
+    void close_map(bool clear_undo);
+    //called before a map gets deleted
+    void forget_map(int id)
+    {
+        if (mc.get_current_map_id() == id && mc.current_map_is_valid())
+            this->close_map(false);
+        this->undo.clear(id); //id might be reused for a new map
+    }
 signals:
     void zoom_in();
     void zoom_out();
@@ -104,6 +120,7 @@ public slots:
     void set_brush(QList<int> data);
     void do_copy()
     {
+        if (!mc.current_map_is_valid()) return;
         if (opt.mode == SELECT && this->select_rectangle != 0)
         {
             QJsonArray array;
@@ -131,12 +148,15 @@ public slots:
     }
     void do_delete()
     {
+        if (!mc.current_map_is_valid()) return;
         if (opt.mode == EVENT)
         {
-            this->undo.push(mc.get_current_map_id(),mc.current_map()->object());
             QJsonObject ev = this->mc.event_on_pos(opt.marked_tile);
             if (ev.contains("RXClass"))
+            {
+                this->undo.push(mc.get_current_map_id(),mc.current_map()->object());
                 mc.remove_event_by_id(ev.value("@id").toInt());
+            }
 
             MapTile *tile;
             if ( (tile = ((MapTile*)this->scene()->itemAt(32*opt.marked_tile,QTransform()))) != 0)
@@ -149,14 +169,9 @@ public slots:
     }
     void do_paste()
     {
+        if (!mc.current_map_is_valid()) return;
         if (opt.mode == SELECT || opt.mode == PEN)
         {
-            if (this->select_rectangle != 0)
-            {
-                //save current selection
-                this->select_rectangle->save_to_map();
-                this->kill_select_rectangle();
-            }
             QSettings settings;
             QJsonParseError err;
             QByteArray json = settings.value("copied_map_part").toByteArray();
@@ -164,8 +179,20 @@ public slots:
             if (err.error != QJsonParseError::NoError) return;
 
             QList<int> data;
-            for (int i = 0; i < doc.array().count(); i++)
-                data.append(doc.array().at(i).toInt());
+            const QJsonArray array = doc.array();
+            for (const QJsonValue &v : array)
+                data.append(v.toInt());
+            //width, height and 3 layers of tiles
+            if (data.length() < 2 || data.at(0) <= 0 || data.at(1) <= 0 || data.length() != 3*data.at(0)*data.at(1)+2)
+                return;
+
+            if (this->select_rectangle != 0)
+            {
+                //save current selection
+                this->undo.push(mc.get_current_map_id(),mc.current_map()->object());
+                this->select_rectangle->save_to_map();
+                this->kill_select_rectangle();
+            }
 
             this->set_mode(SELECT);
             this->select_rectangle = new MapSelectRectangle(&this->mc,0,0);
@@ -178,6 +205,8 @@ public slots:
         {
             QSettings settings;
             QJsonDocument doc = QJsonDocument::fromJson(settings.value("copied_event").toByteArray());
+            if (!doc.object().contains("RXClass"))
+                return; //nothing (valid) copied
             if (!mc.event_on_pos(opt.marked_tile).contains("RXClass"))
             {
                 int id = mc.get_next_event_id();
@@ -195,13 +224,26 @@ public slots:
     }
     void do_undo()
     {
+        if (!mc.current_map_is_valid()) return;
         QJsonObject obj = undo.pop(mc.get_current_map_id());
-        if (obj != QJsonObject())
-            mc.current_map()->setObject(obj);
-        this->scene()->update();
+        if (obj.isEmpty())
+            return;
+
+        //a floating selection belongs to the state that is undone
+        if (this->select_rectangle != 0)
+            this->kill_select_rectangle();
+
+        int old_width = mc.get_width();
+        int old_height = mc.get_height();
+        mc.current_map()->setObject(obj);
+        if (old_width != mc.get_width() || old_height != mc.get_height())
+            this->redraw(); //tiles have to be recreated
+        else
+            this->scene()->update();
     }
     void prepare_context_menu(QPoint pos)
     {
+        if (!mc.current_map_is_valid()) return;
         if (mapToScene(pos).x() <= 0 || mapToScene(pos).x() >= 32*mc.get_width()) return;
         if (mapToScene(pos).y() <= 0 || mapToScene(pos).y() >= 32*mc.get_height()) return;
         if (opt.mode == EVENT)
@@ -228,8 +270,7 @@ public slots:
 
 
 private:
-    bool changes_made = false;
-    RPGDB *db;
+    RPGDB *db = nullptr;
     RPGMapController mc;
     //int current_layer = 0;
 

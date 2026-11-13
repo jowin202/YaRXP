@@ -13,25 +13,37 @@ IORGSSAD::IORGSSAD(QString path, QString output_dir)
         output_dir.append(QDir::separator());
 
     this->file.setFileName(path);
-    file.open(QIODevice::ReadOnly);
+    if (!file.open(QIODevice::ReadOnly))
+        throw RXException("Could not open " + path + ": " + file.errorString());
 
     QByteArray header = file.read(8);
     if (header != QByteArray::fromHex("5247535341440001"))
         throw RXException("Invalid header");
 
-    while (true)
+    const QString output_root = QDir::cleanPath(QFileInfo(output_dir).absoluteFilePath()) + "/";
+
+    while (!this->file.atEnd())
     {
         int name_length = this->read_and_decrypt_integer();
+        if (name_length < 0 || name_length > 4096)
+            throw RXException("Invalid file name length in archive");
         QString name = this->read_and_decrypt_string(name_length);
-        name.replace("\\", QDir::separator()); // operating system independent
+        name.replace("\\", "/"); // operating system independent
         int file_size = this->read_and_decrypt_integer();
+        if (file_size < 0 || file_size > this->file.size() - this->file.pos())
+            throw RXException("Invalid file size in archive: " + name);
+
+        //do not allow the archive to write outside of the output directory (e.g. "../../file")
+        QString output_path = QDir::cleanPath(output_root + name);
+        if (QDir::isAbsolutePath(name) || !output_path.startsWith(output_root))
+            throw RXException("Invalid file name in archive: " + name);
 
         QByteArray buffer = this->file.read(file_size);
 
-        QDir().mkpath(QFileInfo(output_dir + name).absolutePath());
+        QDir().mkpath(QFileInfo(output_path).absolutePath());
 
 
-        int tempKey = key;
+        quint32 tempKey = (quint32)key;
         QByteArray key_array;
         key_array.resize(4);
         key_array[0] = ((tempKey >>  0) & 0xFF);
@@ -63,24 +75,19 @@ IORGSSAD::IORGSSAD(QString path, QString output_dir)
             j++;
         }
 
-        QFile ofile(output_dir + name);
-        ofile.open(QIODevice::WriteOnly);
+        QFile ofile(output_path);
+        if (!ofile.open(QIODevice::WriteOnly))
+            throw RXException("Could not write " + output_path + ": " + ofile.errorString());
         ofile.write(buffer);
         ofile.close();
-
-
-
-
-        if (this->file.atEnd())
-            break;
     }
 
     file.close();
 
     QFile start_file(output_dir + "Game.rxproj");
-    start_file.open(QIODevice::WriteOnly);
+    if (!start_file.open(QIODevice::WriteOnly))
+        throw RXException("Could not write " + start_file.fileName() + ": " + start_file.errorString());
     start_file.write("RPGXP 1.05");
-    start_file.flush();
     start_file.close();
 }
 

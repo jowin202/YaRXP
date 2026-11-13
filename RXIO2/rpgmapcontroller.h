@@ -7,6 +7,7 @@
 #include <QPointF>
 #include <QImage>
 #include <QJsonDocument>
+#include <QJsonObject>
 
 class RPGDB;
 
@@ -21,6 +22,7 @@ public:
     void setMap(int id, bool load_images = true);
 
     bool current_map_is_valid() { return (this->doc != 0); }
+    void unset_map() { this->doc = 0; this->current_map_id = 0; this->tileset_image = QImage(); }
 
 
     int array_position(QPoint p, int layer)
@@ -67,10 +69,12 @@ public:
     void set_jsonvalue(QString key, QJsonValue value);
 
     QJsonDocument *current_map() {return doc;}
+    //empty object if no map is loaded (e.g. in the common event or troop editor)
+    QJsonObject current_map_object() { return doc ? doc->object() : QJsonObject(); }
     int get_current_map_id() { return this->current_map_id; }
 
 private:
-    RPGDB *db;
+    RPGDB *db = nullptr;
     QJsonDocument *doc = 0;
     int current_map_id = 0;
 

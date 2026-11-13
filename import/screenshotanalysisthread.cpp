@@ -16,7 +16,6 @@ void ScreenshotAnalysisThread::run()
     {
         for (int x = 0; 32*(x+1) <= screenshot.width(); x++)
         {
-            qDebug() << x << y;
             QPair<int,int> current_pair(x,y);
             if (result.contains(current_pair)) continue;
             else

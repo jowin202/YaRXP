@@ -331,7 +331,7 @@ void AnimationLabel::open_cell_properties_dialog()
     QJsonArray cell_values = ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray().at(current_frame).toObject().value("@cell_data").toObject().value("values").toArray();
     CellPropertiesDialog *dialog = new CellPropertiesDialog(cell_values, this->current_rectangle, max_cell, max_pattern);
     dialog->show();
-    connect(dialog, &CellPropertiesDialog::ok_clicked, [=](QJsonArray cell_values)
+    connect(dialog, &CellPropertiesDialog::ok_clicked, this, [=](QJsonArray cell_values)
     {
         QJsonObject cell_data = ec->obj_get_jsonvalue(RPGDB::ANIMATIONS, "@frames").toArray().at(current_frame).toObject().value("@cell_data").toObject();
         cell_data.insert("values", cell_values);

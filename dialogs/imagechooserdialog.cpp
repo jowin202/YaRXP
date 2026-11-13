@@ -1,4 +1,5 @@
 #include "imagechooserdialog.h"
+#include <QFileInfo>
 #include "ui_imagechooserdialog.h"
 
 #include "RXIO2/rpgdb.h"
@@ -80,7 +81,7 @@ void ImageChooserDialog::update_image_list()
     for (QString entry : entries)
     {
         this->ui->list->addItem(entry);
-        if (this->character_name == entry.chopped(4))
+        if (this->character_name == QFileInfo(entry).completeBaseName())
         {
             this->ui->list->setCurrentItem(this->ui->list->item(this->ui->list->count()-1));
         }

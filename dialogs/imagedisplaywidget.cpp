@@ -121,7 +121,7 @@ void ImageDisplayWidget::mouseDoubleClickEvent(QMouseEvent *ev)
                                                             this->pattern, this->direction,
                                                             this->opacity, this->blend_type, this->tile_id,
                                                             this->tileset_id);
-        connect(dialog, &ImageChooserDialog::ok_clicked,[=](QString current_file, int hue, int pattern, int direction, int opacity, int blend_type, int tile_id){
+        connect(dialog, &ImageChooserDialog::ok_clicked, this, [=](QString current_file, int hue, int pattern, int direction, int opacity, int blend_type, int tile_id){
             this->current_file = current_file;
             this->hue = hue;
             this->pattern = pattern;

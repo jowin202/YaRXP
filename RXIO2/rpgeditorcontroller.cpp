@@ -239,13 +239,41 @@ int RPGEditorController::count_objects(int obj_type)
     return files[obj_type]->array().count()-1; //zero at beginning
 }
 
+QJsonObject RPGEditorController::create_new_object(int obj_type, int id)
+{
+    Factory factory;
+    //tables for element and state ranks need one entry per element/state (including the empty entry 0)
+    int element_num = system_file.object().value("@elements").toArray().count();
+    int state_num = state_file.array().count();
+
+    switch (obj_type)
+    {
+    case RPGDB::ACTORS: return factory.create_new_actor(id);
+    case RPGDB::CLASSES: return factory.create_new_class(id, element_num, state_num);
+    case RPGDB::SKILLS: return factory.create_new_skill(id);
+    case RPGDB::ITEMS: return factory.create_new_item(id);
+    case RPGDB::WEAPONS: return factory.create_new_weapon(id);
+    case RPGDB::ARMORS: return factory.create_new_armor(id);
+    case RPGDB::ENEMIES: return factory.create_new_enemy(id, element_num, state_num);
+    case RPGDB::TROOPS: return factory.create_new_troop(id);
+    case RPGDB::STATES: return factory.create_new_state(id);
+    case RPGDB::ANIMATIONS: return factory.create_new_animation(id);
+    case RPGDB::TILESETS: return factory.create_new_tileset(id);
+    case RPGDB::COMMONEVENTS: return factory.create_new_commonevent(id);
+    default: return QJsonObject();
+    }
+}
+
 void RPGEditorController::set_max(int obj_type, int count)
 {
+    if (obj_type == RPGDB::SYSTEM || obj_type == RPGDB::SCRIPTS)
+        return; //no list of RPG objects
+
     count++;
 
     QJsonArray array = files[obj_type]->array();
     while (array.count() > count) array.pop_back();
-    while (array.count() < count) array.append(Factory().create_new_actor(array.count()));
+    while (array.count() < count) array.append(this->create_new_object(obj_type, array.count()));
     files[obj_type]->setArray(array);
 }
 

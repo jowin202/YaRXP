@@ -44,6 +44,7 @@ show_choices("Dorf", "Burg", "Dungeon", cancel=-1):
 end_choices
 
 # Sofort-Schnitt ohne Fade (z.B. für nahtlose Übergänge mit eigenem Fade-Effekt)
-fade_out(color)
+screen_tone(r=-255, g=-255, b=-255, gray=0, dur=20)
+wait(20)
 transfer(map=6, x=1, y=1, dir=down, no_fading)
-fade_in(color)
+screen_tone(r=0, g=0, b=0, gray=0, dur=20)

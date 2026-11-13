@@ -32,6 +32,7 @@ public:
 
     int current_id = -1;
     bool clicked = false;
+    bool press_valid = false; //release only selects tiles when the press happened on the tileset
     TilesetRectangle *rectangle = 0;
     QPoint last_pos;
     int max_height = 0;

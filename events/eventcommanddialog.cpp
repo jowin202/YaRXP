@@ -120,6 +120,8 @@ void EventCommandDialog::on_button_show_text_clicked()
         QStringList list = text.split('\n');
         if (list.last() == "")
             list.removeLast();
+        if (list.isEmpty())
+            list.append(""); //empty text is still one (empty) command
 
         while (list.length() > 1)
         {
@@ -256,6 +258,8 @@ void EventCommandDialog::on_button_comment_clicked()
         QStringList list = text.split('\n');
         if (list.last() == "")
             list.removeLast();
+        if (list.isEmpty())
+            list.append(""); //empty text is still one (empty) command
 
         while (list.length() > 1)
         {
@@ -1452,6 +1456,8 @@ void EventCommandDialog::on_button_script_clicked()
         QStringList list = text.split('\n');
         if (list.last() == "")
             list.removeLast();
+        if (list.isEmpty())
+            list.append(""); //empty text is still one (empty) command
 
         while (list.length() > 1)
         {

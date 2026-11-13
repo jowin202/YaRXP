@@ -4,10 +4,30 @@
 #include "rpgeditorcontroller.h"
 #include "factory.h"
 #include "fileopener.h"
+#include "rxexception.h"
 
 RPGDB::RPGDB(QObject *parent)
     : QObject(parent)
 {
+}
+
+RPGDB::~RPGDB()
+{
+    this->close_project();
+}
+
+namespace {
+//returns the existing file (case insensitive match) or the default path if it does not exist yet
+QString data_file_path(const QString &data_dir, const QString &name)
+{
+    QString existing = FileOpener(data_dir, name).get_existing_file();
+    return existing.isEmpty() ? data_dir + name : existing;
+}
+
+QString map_file_name(int id)
+{
+    return QString("Map%1.rxdata").arg(id,3,10,QChar('0'));
+}
 }
 
 void RPGDB::load_project(QString dir)
@@ -16,8 +36,83 @@ void RPGDB::load_project(QString dir)
     {
         dir += QDir::separator();
     }
+
+    QString new_data_dir = FileOpener(dir, "Data").get_existing_directory();
+    if (new_data_dir.isEmpty())
+        throw RXException("No Data directory found in " + dir);
+
+    //parse everything into temporary documents first,
+    //so a broken file does not leave a half loaded project behind
+    auto parse = [](QJsonDocument *doc, const QString &path, bool base64 = false) { Parser parser(doc, path, base64); };
+
+    QJsonDocument new_actor_file, new_animation_file, new_armor_file, new_class_file, new_common_event_file,
+            new_enemy_file, new_item_file, new_skill_file, new_state_file, new_system_file, new_tileset_file,
+            new_troop_file, new_weapon_file, new_script_file, new_mapinfo_file;
+
+    parse(&new_actor_file,         data_file_path(new_data_dir, "Actors.rxdata"));
+    parse(&new_animation_file,     data_file_path(new_data_dir, "Animations.rxdata"));
+    parse(&new_armor_file,         data_file_path(new_data_dir, "Armors.rxdata"));
+    parse(&new_class_file,         data_file_path(new_data_dir, "Classes.rxdata"));
+    parse(&new_common_event_file,  data_file_path(new_data_dir, "CommonEvents.rxdata"));
+    parse(&new_enemy_file,         data_file_path(new_data_dir, "Enemies.rxdata"));
+    parse(&new_item_file,          data_file_path(new_data_dir, "Items.rxdata"));
+    parse(&new_skill_file,         data_file_path(new_data_dir, "Skills.rxdata"));
+    parse(&new_state_file,         data_file_path(new_data_dir, "States.rxdata"));
+    parse(&new_system_file,        data_file_path(new_data_dir, "System.rxdata"));
+    parse(&new_tileset_file,       data_file_path(new_data_dir, "Tilesets.rxdata"));
+    parse(&new_troop_file,         data_file_path(new_data_dir, "Troops.rxdata"));
+    parse(&new_weapon_file,        data_file_path(new_data_dir, "Weapons.rxdata"));
+    parse(&new_script_file,        data_file_path(new_data_dir, "Scripts.rxdata"), true); //base64
+    parse(&new_mapinfo_file,       data_file_path(new_data_dir, "MapInfos.rxdata"));
+
+    QMap<int,QJsonDocument*> new_map_files;
+    try
+    {
+        foreach (const QString& key, new_mapinfo_file.object().keys())
+        {
+            if (key == "RXClass") continue;
+            int i = key.toInt();
+            QString map_path = FileOpener(new_data_dir, map_file_name(i)).get_existing_file();
+            if (!map_path.isEmpty())
+            {
+                QJsonDocument *doc = new QJsonDocument;
+                new_map_files.insert(i,doc);
+                Parser map_parser(doc, map_path);
+            }
+            else
+            {
+                qDebug() << new_data_dir + map_file_name(i) << "does not exist";
+            }
+        }
+    }
+    catch (const RXException &)
+    {
+        qDeleteAll(new_map_files);
+        throw;
+    }
+
+    //everything parsed successfully, replace the current project
+    this->close_project();
+
+    this->actor_file = new_actor_file;
+    this->animation_file = new_animation_file;
+    this->armor_file = new_armor_file;
+    this->class_file = new_class_file;
+    this->common_event_file = new_common_event_file;
+    this->enemy_file = new_enemy_file;
+    this->item_file = new_item_file;
+    this->skill_file = new_skill_file;
+    this->state_file = new_state_file;
+    this->system_file = new_system_file;
+    this->tileset_file = new_tileset_file;
+    this->troop_file = new_troop_file;
+    this->weapon_file = new_weapon_file;
+    this->script_file = new_script_file;
+    this->mapinfo_file = new_mapinfo_file;
+    this->map_files = new_map_files;
+
     this->project_dir = dir;
-    this->data_dir = FileOpener(this->project_dir, "Data").get_existing_directory_or_create_it();
+    this->data_dir = new_data_dir;
     this->audio_dir = FileOpener(this->project_dir, "Audio").get_existing_directory_or_create_it();
 
     this->bgm_dir = FileOpener(this->audio_dir, "BGM").get_existing_directory_or_create_it();
@@ -39,76 +134,41 @@ void RPGDB::load_project(QString dir)
     this->fogs_dir = FileOpener(this->graphics_dir, "Fogs").get_existing_directory_or_create_it();
     this->titles_dir = FileOpener(this->graphics_dir, "Titles").get_existing_directory_or_create_it();
     this->gameovers_dir = FileOpener(this->graphics_dir, "Gameovers").get_existing_directory_or_create_it();
-
-
-    Parser actor_parser(&actor_file,                FileOpener(this->data_dir,"Actors.rxdata").get_existing_file());
-    Parser animation_parser(&animation_file,        FileOpener(this->data_dir,"Animations.rxdata").get_existing_file());
-    Parser armor_parser(&armor_file,                FileOpener(this->data_dir,"Armors.rxdata").get_existing_file());
-    Parser class_parser(&class_file,                FileOpener(this->data_dir,"Classes.rxdata").get_existing_file());
-    Parser common_event_parser(&common_event_file,  FileOpener(this->data_dir,"CommonEvents.rxdata").get_existing_file());
-    Parser enemy_parser(&enemy_file,                FileOpener(this->data_dir,"Enemies.rxdata").get_existing_file());
-    Parser item_parser(&item_file,                  FileOpener(this->data_dir,"Items.rxdata").get_existing_file());
-    Parser skill_parser(&skill_file,                FileOpener(this->data_dir,"Skills.rxdata").get_existing_file());
-    Parser state_parser(&state_file,                FileOpener(this->data_dir,"States.rxdata").get_existing_file());
-    Parser system_parser(&system_file,              FileOpener(this->data_dir,"System.rxdata").get_existing_file());
-    Parser tileset_parser(&tileset_file,            FileOpener(this->data_dir,"Tilesets.rxdata").get_existing_file());
-    Parser troop_parser(&troop_file,                FileOpener(this->data_dir,"Troops.rxdata").get_existing_file());
-    Parser weapon_parser(&weapon_file,              FileOpener(this->data_dir,"Weapons.rxdata").get_existing_file());
-    Parser script_parser(&script_file,              FileOpener(this->data_dir,"Scripts.rxdata").get_existing_file(), true); //base64
-
-
-    Parser mapinfo_parser(&mapinfo_file,            FileOpener(this->data_dir,"MapInfos.rxdata").get_existing_file());
-
-    foreach (const QString& key, mapinfo_file.object().keys())
-    {
-        if (key == "RXClass") continue;
-        int i = key.toInt();
-        if (QFile(QString(this->data_dir + "Map%1.rxdata").arg(i,3,10,QChar('0'))).exists())
-        {
-            QJsonDocument *doc = new QJsonDocument;
-            Parser map_parser(doc,  QString(this->data_dir + "Map%1.rxdata").arg(i,3,10,QChar('0')));
-            map_files.insert(i,doc);
-        }
-        else
-        {
-            qDebug() << QString(this->data_dir + "Map%1.rxdata").arg(i,3,10,QChar('0')) << "does not exist";
-        }
-    }
 }
 
 void RPGDB::save_project()
 {
-    Writer actor_writer(&actor_file,                FileOpener(this->data_dir, "Actors.rxdata").get_existing_file());
-    Writer animation_writer(&animation_file,        FileOpener(this->data_dir, "Animations.rxdata").get_existing_file());
-    Writer armor_writer(&armor_file,                FileOpener(this->data_dir, "Armors.rxdata").get_existing_file());
-    Writer class_writer(&class_file,                FileOpener(this->data_dir, "Classes.rxdata").get_existing_file());
-    Writer common_event_writer(&common_event_file,  FileOpener(this->data_dir, "CommonEvents.rxdata").get_existing_file());
-    Writer enemy_writer(&enemy_file,                FileOpener(this->data_dir, "Enemies.rxdata").get_existing_file());
-    Writer item_writer(&item_file,                  FileOpener(this->data_dir, "Items.rxdata").get_existing_file());
-    Writer skill_writer(&skill_file,                FileOpener(this->data_dir, "Skills.rxdata").get_existing_file());
-    Writer state_writer(&state_file,                FileOpener(this->data_dir, "States.rxdata").get_existing_file());
-    Writer system_writer(&system_file,              FileOpener(this->data_dir, "System.rxdata").get_existing_file());
-    Writer tileset_writer(&tileset_file,            FileOpener(this->data_dir, "Tilesets.rxdata").get_existing_file());
-    Writer troop_writer(&troop_file,                FileOpener(this->data_dir, "Troops.rxdata").get_existing_file());
-    Writer weapon_writer(&weapon_file,              FileOpener(this->data_dir, "Weapons.rxdata").get_existing_file());
-    Writer script_writer(&script_file,              FileOpener(this->data_dir, "Scripts.rxdata").get_existing_file(), true); //base64
+    if (this->project_dir.isEmpty())
+        return; //nothing loaded
 
-    Writer mapinfo_writer(&mapinfo_file,            FileOpener(this->data_dir, "MapInfos.rxdata").get_existing_file());
+    auto write = [](QJsonDocument *doc, const QString &path, bool base64 = false) { Writer writer(doc, path, base64); };
 
+    write(&actor_file,         data_file_path(this->data_dir, "Actors.rxdata"));
+    write(&animation_file,     data_file_path(this->data_dir, "Animations.rxdata"));
+    write(&armor_file,         data_file_path(this->data_dir, "Armors.rxdata"));
+    write(&class_file,         data_file_path(this->data_dir, "Classes.rxdata"));
+    write(&common_event_file,  data_file_path(this->data_dir, "CommonEvents.rxdata"));
+    write(&enemy_file,         data_file_path(this->data_dir, "Enemies.rxdata"));
+    write(&item_file,          data_file_path(this->data_dir, "Items.rxdata"));
+    write(&skill_file,         data_file_path(this->data_dir, "Skills.rxdata"));
+    write(&state_file,         data_file_path(this->data_dir, "States.rxdata"));
+    write(&system_file,        data_file_path(this->data_dir, "System.rxdata"));
+    write(&tileset_file,       data_file_path(this->data_dir, "Tilesets.rxdata"));
+    write(&troop_file,         data_file_path(this->data_dir, "Troops.rxdata"));
+    write(&weapon_file,        data_file_path(this->data_dir, "Weapons.rxdata"));
+    write(&script_file,        data_file_path(this->data_dir, "Scripts.rxdata"), true); //base64
 
-    foreach (int i, map_files.keys())
-    {
-        QJsonDocument *doc = map_files.value(i);
-        Writer map_writer(doc, QString(this->data_dir + "Map%1.rxdata").arg(i,3,10,QChar('0')));
-    }
+    write(&mapinfo_file,       data_file_path(this->data_dir, "MapInfos.rxdata"));
 
-
-
+    for (auto it = map_files.constBegin(); it != map_files.constEnd(); ++it)
+        write(it.value(), data_file_path(this->data_dir, map_file_name(it.key())));
 }
 
 void RPGDB::close_project()
 {
-
+    qDeleteAll(this->map_files);
+    this->map_files.clear();
+    this->project_dir.clear();
 }
 
 RPGEditorController* RPGDB::prepare_data_editor()

@@ -60,7 +60,7 @@ EventPage::EventPage(QJsonObject page, RPGMapController *mc, QWidget *parent) :
                                                 page.value("@graphic").toObject().value("@opacity").toInt(),
                                                 page.value("@graphic").toObject().value("@blend_type").toInt(),
                                                 page.value("@graphic").toObject().value("@tile_id").toInt(),
-                                                mc->current_map()->object().value("@tileset_id").toInt());
+                                                mc->current_map_object().value("@tileset_id").toInt());
 
 
     this->ui->check_always_on_top->setChecked(page.value("@always_on_top").toBool());
@@ -125,7 +125,7 @@ EventPage::EventPage(RPGMapController *mc, QWidget *parent):
                                                 255, //opacity
                                                 0, //blend type
                                                 0, //tile_id
-                                                mc->current_map()->object().value("@tileset_id").toInt());
+                                                mc->current_map_object().value("@tileset_id").toInt());
 }
 
 EventPage::~EventPage()

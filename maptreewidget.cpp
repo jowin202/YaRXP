@@ -181,9 +181,16 @@ void MapTreeWidget::list_maps()
     this->verticalScrollBar()->setValue(scroll);
 }
 
+int MapTreeWidget::current_map_id()
+{
+    if (this->currentItem() == nullptr)
+        return -1;
+    return this->currentItem()->text(2).toInt();
+}
+
 void MapTreeWidget::clicked_at_item(QTreeWidgetItem *current_item)
 {
-    if (current_item->text(2).toInt() < 0) return;
+    if (current_item == nullptr || current_item->text(2).toInt() <= 0) return;
     int list_id = current_item->text(2).toInt(); //id (2nd column) which it has in the list
     emit on_map_selected(list_id);
 }
@@ -195,23 +202,31 @@ void MapTreeWidget::prepare_context_menu( const QPoint & pos )
 
 void MapTreeWidget::show_map_properties_dialog()
 {
-    if (this->currentItem()->text(2).toInt() < 0) return;
+    if (this->current_map_id() <= 0) return;
     if (this->selectedItems().size() <= 0)
         return;
-    MapPropertiesDialog *dialog = new MapPropertiesDialog(this->db, this->mic, this->currentItem()->text(2).toInt(), 0);
-    connect(dialog, SIGNAL(ok_clicked()), this, SLOT(list_maps()));
+    int id = this->current_map_id();
+    MapPropertiesDialog *dialog = new MapPropertiesDialog(this->db, this->mic, id, 0);
+    connect(dialog, &MapPropertiesDialog::ok_clicked, this, [=](){
+        this->list_maps();
+        //size or tileset might have changed, reload the map if it is shown
+        if (this->current_map_id() == id)
+            emit on_map_selected(id);
+    });
     dialog->show();
 }
 
 void MapTreeWidget::create_new_map()
 {
-    int current = 0;
-    if (this->currentItem()->text(2).toInt() > 0)
-    {
-        current = this->currentItem()->text(2).toInt();
-    }
+    if (this->db == nullptr || this->db->project_dir.isEmpty()) return;
+    int current = qMax(0, this->current_map_id());
 
     int id = this->mic->get_lowest_available_id();
+    if (id < 0)
+    {
+        QMessageBox::warning(this, "New Map", "The maximum number of maps is reached.");
+        return;
+    }
     int parent = 0;
     if (current > 0)
         parent = this->mic->get_parent(current);
@@ -226,23 +241,23 @@ void MapTreeWidget::create_new_map()
 
 void MapTreeWidget::copy_map()
 {
-    if (this->currentItem()->text(2).toInt() < 0) return;
+    if (this->current_map_id() <= 0) return;
+    QJsonDocument *map = mic->get_db()->get_mapfile_by_id(this->current_map_id());
+    if (map == nullptr) return;
 
-    QJsonDocument doc(mic->get_db()->get_mapfile_by_id(this->currentItem()->text(2).toInt())->object());
+    QJsonDocument doc(map->object());
     QSettings settings;
     settings.setValue("copied_map", doc.toJson(QJsonDocument::Compact));
-    settings.setValue("copied_map_name", mic->get_name(this->currentItem()->text(2).toInt()));
+    settings.setValue("copied_map_name", mic->get_name(this->current_map_id()));
 }
 
 void MapTreeWidget::paste_map()
 {
-    int current = 0;
-    if (this->currentItem()->text(2).toInt() > 0)
-    {
-        current = this->currentItem()->text(2).toInt();
-    }
+    if (this->db == nullptr || this->db->project_dir.isEmpty()) return;
+    int current = qMax(0, this->current_map_id());
 
     int id = this->mic->get_lowest_available_id();
+    if (id < 0) return;
     int parent = 0;
     if (current > 0)
         parent = this->mic->get_parent(current);
@@ -251,7 +266,7 @@ void MapTreeWidget::paste_map()
     QSettings settings;
     QJsonParseError err;
     QJsonObject map_object = QJsonDocument::fromJson(settings.value("copied_map").toByteArray(), &err).object();
-    if (err.error != QJsonParseError::NoError) return;
+    if (err.error != QJsonParseError::NoError || map_object.value("RXClass").toString() != "RPG::Map") return;
 
     if (this->mic->create_map(id))
     {
@@ -265,8 +280,8 @@ void MapTreeWidget::paste_map()
 
 void MapTreeWidget::delete_map()
 {
-    if (this->currentItem()->text(2).toInt() < 0) return;
-    int id = this->currentItem()->text(2).toInt();
+    if (this->current_map_id() <= 0) return;
+    int id = this->current_map_id();
     QString name = mic->get_name(id);
 
     QJsonObject mapinfos = this->db->get_mapinfos()->object();
@@ -296,6 +311,7 @@ void MapTreeWidget::delete_map()
     {
         foreach (int id_for_delete, ids_to_delete)
         {
+            emit map_about_to_be_deleted(id_for_delete);
             mapinfos.remove(QString::number(id_for_delete));
             this->db->remove_map_file_by_id(id_for_delete);
         }

@@ -86,7 +86,9 @@ QImage RPGMapController::get_tile_from_pos(QPoint pos, int layer)
 
 QImage RPGMapController::get_tile_from_id(int id)
 {
-    if (id > 0 && id < 0x0180)
+    if (id >= 0 && id < 48)
+        return QImage(); //empty tile (ids 1-47 are not used)
+    if (id < 0x0180)
     {
         //autotiles
         int autotileset_num = id / 48 - 1;
@@ -293,7 +295,7 @@ void RPGMapController::put_elements_from_list(QPoint pos, QPoint rel_pos, QList<
 
 void RPGMapController::shift_map(int xtiles, int ytiles)
 {
-    if (doc == 0) return;
+    if (doc == 0 || this->get_width() <= 0 || this->get_height() <= 0) return;
     xtiles = xtiles % this->get_width();
     ytiles = ytiles % this->get_height();
 
@@ -320,52 +322,23 @@ void RPGMapController::shift_map(int xtiles, int ytiles)
     }
 
 
-    QJsonArray values = this->doc->object().value("@data").toObject().value("values").toArray();
+    //content moves by (xtiles,ytiles), what leaves the map on one side enters it on the other side
+    const int width = this->get_width();
+    const int height = this->get_height();
+    QJsonArray old_values = this->doc->object().value("@data").toObject().value("values").toArray();
+    QJsonArray values = old_values;
     for (int layer = 0; layer <= 2; layer++)
     {
-        for (int i = 0; i < xtiles; i++)
+        for (int y = 0; y < height; y++)
         {
-            for (int y = 0; y < this->get_height(); y++)
+            int old_y = ((y - ytiles) % height + height) % height;
+            for (int x = 0; x < width; x++)
             {
-                int pos1 = array_position(QPoint(this->get_width()-1,y),layer);
-                int pos2 = array_position(QPoint(0,y),layer);
-                int tmp = values.at(pos1).toInt();
-                values.removeAt(pos1);
-                values.insert(pos2,tmp);
-            }
-        }
-        for (int i = 0; i > xtiles; i--)
-        {
-            for (int y = 0; y < this->get_height(); y++)
-            {
-                int pos2 = array_position(QPoint(this->get_width()-1,y),layer);
-                int pos1 = array_position(QPoint(0,y),layer);
-                int tmp = values.at(pos1).toInt();
-                values.removeAt(pos1);
-                values.insert(pos2,tmp);
-            }
-        }
-
-        for (int i = 0; i < ytiles; i++)
-        {
-            for (int x = 0; x < this->get_width(); x++)
-            {
-                int pos1 = array_position(QPoint(x,this->get_height()-1),layer);
-                int pos2 = array_position(QPoint(x,0),layer);
-                int tmp = values.at(pos1).toInt();
-                values.removeAt(pos1);
-                values.insert(pos2,tmp);
-            }
-        }
-        for (int i = 0; i > ytiles; i--)
-        {
-            for (int x = this->get_width()-1; x >= 0; x--)
-            {
-                int pos2 = array_position(QPoint(x,this->get_height()-1),layer);
-                int pos1 = array_position(QPoint(x,0),layer);
-                int tmp = values.at(pos1).toInt();
-                values.removeAt(pos1);
-                values.insert(pos2,tmp);
+                int old_x = ((x - xtiles) % width + width) % width;
+                int new_pos = array_position(QPoint(x,y),layer);
+                int old_pos = array_position(QPoint(old_x,old_y),layer);
+                if (new_pos < values.count() && old_pos < old_values.count())
+                    values[new_pos] = old_values.at(old_pos);
             }
         }
     }
@@ -378,7 +351,7 @@ void RPGMapController::shift_map(int xtiles, int ytiles)
 
 void RPGMapController::set_size(int xtiles, int ytiles)
 {
-    if (doc == 0) return;
+    if (doc == 0 || xtiles <= 0 || ytiles <= 0) return;
 
     QJsonObject events = this->get_jsonvalue("@events").toObject();
     foreach (const QString &key, events.keys())
